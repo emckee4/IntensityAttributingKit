@@ -10,6 +10,13 @@
 		C031CBCA1BDB094800521393 /* IntensityAttributingKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C031CBC91BDB094800521393 /* IntensityAttributingKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C031CBD11BDB094800521393 /* IntensityAttributingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C031CBC61BDB094800521393 /* IntensityAttributingKit.framework */; };
 		C031CBD61BDB094800521393 /* IntensityAttributingKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBD51BDB094800521393 /* IntensityAttributingKitTests.swift */; };
+		C031CBE61BDB097600521393 /* Extensions+NSAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBE01BDB097600521393 /* Extensions+NSAttributedString.swift */; };
+		C031CBE71BDB097600521393 /* IATags.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBE11BDB097600521393 /* IATags.swift */; };
+		C031CBE81BDB097600521393 /* IntensityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBE21BDB097600521393 /* IntensityAttributes.swift */; };
+		C031CBE91BDB097600521393 /* IntensityTransformers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBE31BDB097600521393 /* IntensityTransformers.swift */; };
+		C031CBEA1BDB097600521393 /* IntensityTransformingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBE41BDB097600521393 /* IntensityTransformingProtocol.swift */; };
+		C031CBEB1BDB097600521393 /* MiscGlobals.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBE51BDB097600521393 /* MiscGlobals.swift */; };
+		C031CBEE1BDB09FD00521393 /* IAStringDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBED1BDB09FD00521393 /* IAStringDemoTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +36,13 @@
 		C031CBD01BDB094800521393 /* IntensityAttributingKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IntensityAttributingKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C031CBD51BDB094800521393 /* IntensityAttributingKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntensityAttributingKitTests.swift; sourceTree = "<group>"; };
 		C031CBD71BDB094800521393 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C031CBE01BDB097600521393 /* Extensions+NSAttributedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+NSAttributedString.swift"; sourceTree = "<group>"; };
+		C031CBE11BDB097600521393 /* IATags.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATags.swift; sourceTree = "<group>"; };
+		C031CBE21BDB097600521393 /* IntensityAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntensityAttributes.swift; sourceTree = "<group>"; };
+		C031CBE31BDB097600521393 /* IntensityTransformers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntensityTransformers.swift; sourceTree = "<group>"; };
+		C031CBE41BDB097600521393 /* IntensityTransformingProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntensityTransformingProtocol.swift; sourceTree = "<group>"; };
+		C031CBE51BDB097600521393 /* MiscGlobals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiscGlobals.swift; sourceTree = "<group>"; };
+		C031CBED1BDB09FD00521393 /* IAStringDemoTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringDemoTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +87,7 @@
 			children = (
 				C031CBC91BDB094800521393 /* IntensityAttributingKit.h */,
 				C031CBCB1BDB094800521393 /* Info.plist */,
+				C031CBEC1BDB097E00521393 /* IAString */,
 			);
 			path = IntensityAttributingKit;
 			sourceTree = "<group>";
@@ -81,9 +96,23 @@
 			isa = PBXGroup;
 			children = (
 				C031CBD51BDB094800521393 /* IntensityAttributingKitTests.swift */,
+				C031CBED1BDB09FD00521393 /* IAStringDemoTests.swift */,
 				C031CBD71BDB094800521393 /* Info.plist */,
 			);
 			path = IntensityAttributingKitTests;
+			sourceTree = "<group>";
+		};
+		C031CBEC1BDB097E00521393 /* IAString */ = {
+			isa = PBXGroup;
+			children = (
+				C031CBE01BDB097600521393 /* Extensions+NSAttributedString.swift */,
+				C031CBE11BDB097600521393 /* IATags.swift */,
+				C031CBE21BDB097600521393 /* IntensityAttributes.swift */,
+				C031CBE31BDB097600521393 /* IntensityTransformers.swift */,
+				C031CBE41BDB097600521393 /* IntensityTransformingProtocol.swift */,
+				C031CBE51BDB097600521393 /* MiscGlobals.swift */,
+			);
+			name = IAString;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -194,6 +223,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C031CBEA1BDB097600521393 /* IntensityTransformingProtocol.swift in Sources */,
+				C031CBE71BDB097600521393 /* IATags.swift in Sources */,
+				C031CBEB1BDB097600521393 /* MiscGlobals.swift in Sources */,
+				C031CBE61BDB097600521393 /* Extensions+NSAttributedString.swift in Sources */,
+				C031CBE81BDB097600521393 /* IntensityAttributes.swift in Sources */,
+				C031CBE91BDB097600521393 /* IntensityTransformers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -202,6 +237,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C031CBD61BDB094800521393 /* IntensityAttributingKitTests.swift in Sources */,
+				C031CBEE1BDB09FD00521393 /* IAStringDemoTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,6 +344,7 @@
 		C031CBDB1BDB094800521393 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -318,12 +355,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.McKeeMaKer.IntensityAttributingKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		C031CBDC1BDB094800521393 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
