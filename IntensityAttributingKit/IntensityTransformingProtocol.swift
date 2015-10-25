@@ -20,23 +20,43 @@ public extension IntensityTransforming {
     func transformWithSchemeInPlace(targetIAString attString: NSMutableAttributedString) {
         attString.enumerateAttributesInRange(NSRange(location: 0, length: attString.length), options: NSAttributedStringEnumerationOptions.init(rawValue: 0)) { (attrs:[String : AnyObject], range:NSRange, stop) -> Void in
             let partedAtts = IATags.partitionAttributeDict(attrs)
-            let newNSAtts = self.nsAttributesForIAAttributes(partedAtts.iaDict)
-            var newCombinedAttrs:[String:AnyObject] = partedAtts.iaDict
-            for (key,value) in newNSAtts {
-                newCombinedAttrs[key] = value
-            }
+            var newAtts:[String:AnyObject] = self.nsAttributesForIAAttributes(partedAtts.iaDict)
+            //newAtts[IATags.IAKeys] = (partedAtts.iaDict as [String:AnyObject])
+            var newIADict:[String:AnyObject] = partedAtts.iaDict
+            newIADict[IATags.IACurrentRendering] = Self.schemeName
+            newAtts[IATags.IAKeys] = newIADict
             if partedAtts.attachment != nil {
-                newCombinedAttrs[NSAttachmentAttributeName] = partedAtts.attachment!
+                newAtts[NSAttachmentAttributeName] = partedAtts.attachment!
             }
             if partedAtts.anyLink != nil {
-                newCombinedAttrs[NSLinkAttributeName] = partedAtts.anyLink!
+                newAtts[NSLinkAttributeName] = partedAtts.anyLink!
             }
-            newCombinedAttrs[IATags.IACurrentRendering] = Self.schemeName
-            ///check if the attributes still match after the transform. If so we don't need to setAttributes on this entry
-            if (newCombinedAttrs as! [String:NSObject]) != (attrs as! [String:NSObject])  {
-                attString.setAttributes(newCombinedAttrs, range: range)
+            
+            //(newAtts[IATags.IAKeys] as! [String:AnyObject])[IATags.IACurrentRendering] = Self.schemeName //[IATags.IACurrentRendering] = Self.schemeName
+            //var newCombinedAttrs:[String:AnyObject] = partedAtts.iaDict
+//            for (key,value) in newNSAtts {
+//                newCombinedAttrs[key] = value
+//            }
+//            if partedAtts.attachment != nil {
+//                newCombinedAttrs[NSAttachmentAttributeName] = partedAtts.attachment!
+//            }
+//            if partedAtts.anyLink != nil {
+//                newCombinedAttrs[NSLinkAttributeName] = partedAtts.anyLink!
+//            }
+//            newCombinedAttrs[IATags.IACurrentRendering] = Self.schemeName
+//            ///check if the attributes still match after the transform. If so we don't need to setAttributes on this entry
+
+
+            
+            if newAtts.count != attrs.count || newIADict[IATags.IACurrentRendering] as? String != partedAtts.iaDict[IATags.IACurrentRendering] as? String {
+                attString.setAttributes(newAtts, range: range)
             }
+            
+//            if (newAtts as! [String:NSObject]) != (attrs as! [String:NSObject])  {
+//                attString.setAttributes(newAtts, range: range)
+//            }
         }
     }
     
 }
+

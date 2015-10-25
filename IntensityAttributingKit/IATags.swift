@@ -1,6 +1,7 @@
 import UIKit
 
 public struct IATags {
+    public static let IAKeys = "IAKeys"
     public static let IAIntensity = "IAIntensity"
     public static let IASize = "IASize"
     public static let IABold = "IABold"
@@ -21,18 +22,16 @@ public struct IATags {
     
     
     public static func partitionAttributeDict(attrs:[String:AnyObject])->(iaDict:[String:AnyObject],nonIADict:[String:AnyObject],attachment:NSTextAttachment?, anyLink:AnyObject?){
-        let attachment = attrs[NSAttachmentAttributeName] as? NSTextAttachment
-        let anyLink = attrs[NSLinkAttributeName]
-        var iaDict:[String:AnyObject] = [:]
-        var nonIADict:[String:AnyObject] = [:]
-        for key in attrs.keys {
-            if allTags.contains(key){
-                iaDict[key] = attrs[key]
-            } else if key != NSAttachmentAttributeName && key != NSLinkAttributeName {
-                nonIADict[key] = attrs[key]
-            }
-        }
+        var nonIADict:[String:AnyObject] = attrs
+        
+        let attachment = nonIADict.removeValueForKey(NSAttachmentAttributeName) as? NSTextAttachment
+        let anyLink = nonIADict.removeValueForKey(NSFontAttributeName)
+        let iaDict:[String:AnyObject] = (nonIADict.removeValueForKey(IATags.IAKeys) as? [String:AnyObject]) ?? [:]
+        
         return (iaDict:iaDict, nonIADict:nonIADict, attachment:attachment, anyLink:anyLink)
     }
+    
+    
+    
 }
 

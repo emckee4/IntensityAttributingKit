@@ -27,12 +27,12 @@ public extension NSMutableAttributedString {
         
         
         self.enumerateAttributesInRange(range, options: NSAttributedStringEnumerationOptions.init(rawValue: 0)) { (var attrs:[String : AnyObject], enumRange:NSRange, stop) -> Void in
-            if onlyToUnattributed == false || !Set(attrs.keys).isSupersetOf(IATags.mandatoryTags) {
+            if onlyToUnattributed == false || attrs[IATags.IAKeys] == nil {
                 //replace
                 let attachment:NSTextAttachment? = attrs[NSAttachmentAttributeName] as? NSTextAttachment
                 let anyLink:AnyObject? = attrs[NSLinkAttributeName]
 
-                var newDict = attributes.asAttributeDict
+                var newDict:[String:AnyObject] = [IATags.IAKeys:attributes.asAttributeDict]
                 if attachment != nil {
                     newDict[NSAttachmentAttributeName] = attachment!
                 }
@@ -63,7 +63,7 @@ public extension NSAttributedString {
     func isFullyIntensityAttributed(checkMatchingScheme:Bool = false)->Bool{
         for i in 0..<self.length {
             let atts = self.attributesAtIndex(i, effectiveRange: nil)
-            guard atts.keys.contains(IATags.IAIntensity) && atts.keys.contains(IATags.IASize) else {return false}
+            guard atts[IATags.IAKeys] != nil else {return false }//atts.keys.contains(IATags.IAIntensity) && atts.keys.contains(IATags.IASize) else {return false}
         }
         return true
     }
@@ -93,7 +93,7 @@ public extension NSAttributedString {
     }
     
     convenience init(string:String, defaultAttributes:IntensityAttributes, renderWithScheme:String! = nil){
-        let mutableAS = NSMutableAttributedString(string: string, attributes:defaultAttributes.asAttributeDict)
+        let mutableAS = NSMutableAttributedString(string: string, attributes:[IATags.IAKeys :defaultAttributes.asAttributeDict])
         
         if let scheme = renderWithScheme as String? {
             mutableAS.transformWithRenderSchemeInPlace(scheme)
