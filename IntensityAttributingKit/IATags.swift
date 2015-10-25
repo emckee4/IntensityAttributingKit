@@ -25,7 +25,7 @@ public struct IATags {
         var nonIADict:[String:AnyObject] = attrs
         
         let attachment = nonIADict.removeValueForKey(NSAttachmentAttributeName) as? NSTextAttachment
-        let anyLink = nonIADict.removeValueForKey(NSFontAttributeName)
+        let anyLink = nonIADict.removeValueForKey(NSLinkAttributeName)
         let iaDict:[String:AnyObject] = (nonIADict.removeValueForKey(IATags.IAKeys) as? [String:AnyObject]) ?? [:]
         
         return (iaDict:iaDict, nonIADict:nonIADict, attachment:attachment, anyLink:anyLink)
