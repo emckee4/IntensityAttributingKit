@@ -17,6 +17,14 @@
 		C031CBEA1BDB097600521393 /* IntensityTransformingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBE41BDB097600521393 /* IntensityTransformingProtocol.swift */; };
 		C031CBEB1BDB097600521393 /* MiscGlobals.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBE51BDB097600521393 /* MiscGlobals.swift */; };
 		C031CBEE1BDB09FD00521393 /* IAStringDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBED1BDB09FD00521393 /* IAStringDemoTests.swift */; };
+		C031CBFE1BDD8DA700521393 /* Readme in Resources */ = {isa = PBXBuildFile; fileRef = C031CBFD1BDD8DA700521393 /* Readme */; };
+		C031CC001BDD902000521393 /* IATextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBFF1BDD902000521393 /* IATextView.swift */; };
+		C031CC021BDD917200521393 /* ProtoImplementations.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CC011BDD917200521393 /* ProtoImplementations.swift */; };
+		C031CC041BDD921100521393 /* PressureButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CC031BDD921100521393 /* PressureButton.swift */; };
+		C031CC061BDD948700521393 /* IAKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CC051BDD948700521393 /* IAKeyboard.swift */; };
+		C0E5D7C31BDEA47E00A0A814 /* IAAccessoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E5D7C21BDEA47E00A0A814 /* IAAccessoryVC.swift */; };
+		C0E5D7C51BDEA4E400A0A814 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E5D7C41BDEA4E400A0A814 /* UIImage+Extension.swift */; };
+		C0E5D7C81BDEA52C00A0A814 /* OtherExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E5D7C71BDEA52C00A0A814 /* OtherExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +51,14 @@
 		C031CBE41BDB097600521393 /* IntensityTransformingProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntensityTransformingProtocol.swift; sourceTree = "<group>"; };
 		C031CBE51BDB097600521393 /* MiscGlobals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiscGlobals.swift; sourceTree = "<group>"; };
 		C031CBED1BDB09FD00521393 /* IAStringDemoTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringDemoTests.swift; sourceTree = "<group>"; };
+		C031CBFD1BDD8DA700521393 /* Readme */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Readme; sourceTree = "<group>"; };
+		C031CBFF1BDD902000521393 /* IATextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextView.swift; sourceTree = "<group>"; };
+		C031CC011BDD917200521393 /* ProtoImplementations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProtoImplementations.swift; sourceTree = "<group>"; };
+		C031CC031BDD921100521393 /* PressureButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PressureButton.swift; sourceTree = "<group>"; };
+		C031CC051BDD948700521393 /* IAKeyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAKeyboard.swift; sourceTree = "<group>"; };
+		C0E5D7C21BDEA47E00A0A814 /* IAAccessoryVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAAccessoryVC.swift; sourceTree = "<group>"; };
+		C0E5D7C41BDEA4E400A0A814 /* UIImage+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
+		C0E5D7C71BDEA52C00A0A814 /* OtherExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OtherExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +83,7 @@
 		C031CBBC1BDB094800521393 = {
 			isa = PBXGroup;
 			children = (
+				C031CBFD1BDD8DA700521393 /* Readme */,
 				C031CBC81BDB094800521393 /* IntensityAttributingKit */,
 				C031CBD41BDB094800521393 /* IntensityAttributingKitTests */,
 				C031CBC71BDB094800521393 /* Products */,
@@ -87,6 +104,12 @@
 			children = (
 				C031CBC91BDB094800521393 /* IntensityAttributingKit.h */,
 				C031CBCB1BDB094800521393 /* Info.plist */,
+				C031CBFF1BDD902000521393 /* IATextView.swift */,
+				C0E5D7C61BDEA50400A0A814 /* UIKitExtensions */,
+				C0E5D7C21BDEA47E00A0A814 /* IAAccessoryVC.swift */,
+				C031CC011BDD917200521393 /* ProtoImplementations.swift */,
+				C031CC051BDD948700521393 /* IAKeyboard.swift */,
+				C031CC031BDD921100521393 /* PressureButton.swift */,
 				C031CBEC1BDB097E00521393 /* IAString */,
 			);
 			path = IntensityAttributingKit;
@@ -113,6 +136,15 @@
 				C031CBE51BDB097600521393 /* MiscGlobals.swift */,
 			);
 			name = IAString;
+			sourceTree = "<group>";
+		};
+		C0E5D7C61BDEA50400A0A814 /* UIKitExtensions */ = {
+			isa = PBXGroup;
+			children = (
+				C0E5D7C41BDEA4E400A0A814 /* UIImage+Extension.swift */,
+				C0E5D7C71BDEA52C00A0A814 /* OtherExtensions.swift */,
+			);
+			name = UIKitExtensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -206,6 +238,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C031CBFE1BDD8DA700521393 /* Readme in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -223,12 +256,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C031CC061BDD948700521393 /* IAKeyboard.swift in Sources */,
+				C031CC001BDD902000521393 /* IATextView.swift in Sources */,
 				C031CBEA1BDB097600521393 /* IntensityTransformingProtocol.swift in Sources */,
+				C0E5D7C51BDEA4E400A0A814 /* UIImage+Extension.swift in Sources */,
+				C031CC021BDD917200521393 /* ProtoImplementations.swift in Sources */,
 				C031CBE71BDB097600521393 /* IATags.swift in Sources */,
 				C031CBEB1BDB097600521393 /* MiscGlobals.swift in Sources */,
 				C031CBE61BDB097600521393 /* Extensions+NSAttributedString.swift in Sources */,
 				C031CBE81BDB097600521393 /* IntensityAttributes.swift in Sources */,
 				C031CBE91BDB097600521393 /* IntensityTransformers.swift in Sources */,
+				C0E5D7C81BDEA52C00A0A814 /* OtherExtensions.swift in Sources */,
+				C0E5D7C31BDEA47E00A0A814 /* IAAccessoryVC.swift in Sources */,
+				C031CC041BDD921100521393 /* PressureButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -415,6 +455,7 @@
 				C031CBDC1BDB094800521393 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C031CBDD1BDB094800521393 /* Build configuration list for PBXNativeTarget "IntensityAttributingKitTests" */ = {
 			isa = XCConfigurationList;
@@ -423,6 +464,7 @@
 				C031CBDF1BDB094800521393 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

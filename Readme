@@ -1,0 +1,37 @@
+-- find optimal stackview spacing first
+
+
+Adding IATextView:
+    -interface with IAString should minimize exposure to particulars of the current IAString implementation
+    -IAString needs a function to process current and old typingAttributes in order to determine user selection. This must be a part of the transformer and protocol
+    --need to implement better image and link handling than proto IATextView
+
+-- need placeholder keyboard, accessory view for IATV to work
+
+Keyboard:
+    need equations for layouts of keyboard taking into account:
+    screen size (iphone 6s, 6s plus: since no other devices have force touch we shouldn't even show them the pressure keyboard')
+        orientation (portrait/landscape)
+    __ should try textTitles and spritekit options (or custom spritesheet) for speed initializing
+
+
+Accessory View:
+    need different accessories for forcetouch vs standard keyboard
+    need to determine layout and features for each
+
+
+
+
+
+
+
+
+IAString Performance
+    Keeping "deep" IAattributes may significantly increase storage size
+        It may be possible to retain most of the performance benefits of deep attributes through a combination of partition and removal by range in the transform function
+        "shallow" IAAttributes would let us invalidate all in a transform, letting us skip the setter check, and possibly perform more actions by range
+
+
+
+
+
