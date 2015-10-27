@@ -15,7 +15,7 @@ class IAAccessoryVC: UIInputViewController {
     var slider:UISlider!
     var optionButton:UIButton!
     
-    var delegate:PressureAccessoryDelegate?
+    var delegate:IAAccessoryDelegate?
     
     
     
@@ -45,7 +45,8 @@ class IAAccessoryVC: UIInputViewController {
         optionButton.translatesAutoresizingMaskIntoConstraints = false
         inputView!.addSubview(optionButton)
         
-        
+        //self.view.backgroundColor = UIColor.blackColor()
+        //self.view.translatesAutoresizingMaskIntoConstraints = false
         
         setConstraints()
     }
@@ -100,7 +101,7 @@ class IAAccessoryVC: UIInputViewController {
 
 }
 
-protocol PressureAccessoryDelegate {
+protocol IAAccessoryDelegate {
     func keyboardChangeButtonPressed()
     func sliderUpdatedWithValue(value:Float)
     func optionButtonPressed()

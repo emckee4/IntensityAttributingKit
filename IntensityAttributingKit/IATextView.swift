@@ -8,7 +8,7 @@
 
 import UIKit
 
-class IATextView: UITextView, UITextViewDelegate {
+class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
     
     
     var currentAttributes:IntensityAttributes!
@@ -30,10 +30,12 @@ class IATextView: UITextView, UITextViewDelegate {
     }
     
     
-    private var _inputAccessoryVC:UIInputViewController?
+    private lazy var iaAccessory:IAAccessoryVC = {
+        return IAAccessoryVC(nibName: nil, bundle: nil)
+    }()
     override var inputAccessoryViewController:UIInputViewController? {
-        set {self._inputAccessoryVC = newValue}
-        get {return self._inputAccessoryVC}
+        //set {self.iaAccessory = newValue!}
+        get {return self.iaAccessory}
     }
     
     //    lazy var pressureAccessoryVC:PressureAccessory = {
@@ -41,13 +43,13 @@ class IATextView: UITextView, UITextViewDelegate {
     //    }()
     
     lazy var pressureKeyboardVC:UIInputViewController = {
-        return IAKeyboard(nibName: nil, bundle: nil)//HodorKBVC(nibName: nil, bundle: nil)
+        return IAKeyboard(nibName: nil, bundle: nil)
     }()
     
-    var sliderVal:Float! = 0.6//{
-    //        get {return pressureAccessoryVC.slider.value}
-    //        set {pressureAccessoryVC.slider.value = newValue}
-    //    }
+    var sliderVal:Float {
+        get {return iaAccessory.slider.value}
+        set {iaAccessory.slider.value = newValue}
+    }
     
     
     
@@ -77,10 +79,9 @@ class IATextView: UITextView, UITextViewDelegate {
     
     
     private func setupPressureTextView(){
-        //        pressureAccessoryVC.delegate = self
-        //        pressureAccessoryVC.view.backgroundColor = UIColor.blackColor()
-        //        pressureAccessoryVC.view.translatesAutoresizingMaskIntoConstraints = false
-        //        self.inputAccessoryViewController = pressureAccessoryVC
+        iaAccessory.delegate = self
+
+        
         self.inputViewController = pressureKeyboardVC
         self.delegate = self
         self.layer.cornerRadius = 10.0
@@ -102,12 +103,13 @@ class IATextView: UITextView, UITextViewDelegate {
         self.reloadInputViews()
     }
     
+    func sliderUpdatedWithValue(value: Float) {
+        
+    }
     
-    
-    //    func optionButtonPressed() {
-    //        print(attributedText)
-    //        print(attributedText.length)
-    //    }
+    func optionButtonPressed() {
+        //transform
+    }
     
     //    override func replaceRange(range: UITextRange, withText text: String) {
     //        if shouldChangeTextInRange(range, replacementText: text) {
@@ -126,28 +128,6 @@ class IATextView: UITextView, UITextViewDelegate {
     
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
         guard !didInsert else {didInsert = false; return false}
-        //print("should change: range: \(range), text: \(text)")
-        //let stringRange = textView.text.rangeFromNSRange(range)
-        //print("stringRange \(stringRange!)")
-        
-        //        let attributedText = NSMutableAttributedString(attributedString: textView.attributedText)  //existing
-        //        var newText:NSAttributedString!
-        //        if let lightKB = inputViewController as? LightKBVC where lightKB.lastKeyAvgIntensity > 0 && lightKB.lastKeyPeakIntensity > 0{
-        //            let attributes:[String:AnyObject] = [NSFontAttributeName: fontForIntensity(lightKB.lastKeyAvgIntensity!)]
-        //            newText = NSAttributedString(string: text, attributes: attributes)
-        //            lightKB.lastKeyAvgIntensity = nil
-        //            lightKB.lastKeyPeakIntensity = nil
-        //        } else {
-        //            newText = NSAttributedString(string: text, attributes: attributesForCurrentSettings())
-        //        }
-        //
-        //
-        //        attributedText.replaceCharactersInRange(range, withAttributedString: newText)
-        //
-        //        textView.attributedText = attributedText
-        //        return false
-        //print("\ntypeing attributes before update \n\(pruneAttributes(typingAttributes))")
-        
         var thisIntensity:Float!
         
         if let iaKB = inputViewController as? IAKeyboard where iaKB.lastKeyAvgIntensity > 0 && iaKB.lastKeyPeakIntensity > 0 {

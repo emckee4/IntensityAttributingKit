@@ -1,9 +1,13 @@
-kb only needs to diff on wighted bold- others can do straight checks
+
+next: basic accessory(slider,transformer)
+keyboard changing button
+
+once above are working and trnasforms are debugged:
+    try removing most constraints in keyboard, replacing with intrinsic size or unsized but using spacings on stack view
 
 
-TV: need to fix typingAttributes: need to implement IntensityAttributes functionality, updateIntensityAttributesForUserSelection (or something)
-
-Accessory: need basics, then layout, then alterative versions
+Accessory: need basics (slider, transform)      , then layout, then alterative versions
+TV: implement copy/paste, does transform work out of the box?
 
 KB: add locking button, change keyboard, begin adding other keys
 
