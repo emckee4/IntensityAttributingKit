@@ -65,7 +65,7 @@ public class WeightIntensityScheme:IntensityTransforming {
     }
     
     
-    public func updatedTypingAttributes(lastIntensityAttributes lastIA:IntensityAttributes, providedAttributes:[String:AnyObject], intensity:Float)->IntensityAttributes{
+    public func updateIntensityAttributesInScheme(lastIntensityAttributes lastIA:IntensityAttributes, providedAttributes:[String:AnyObject], intensity:Float)->IntensityAttributes{
         
         let sym = (providedAttributes[NSFontAttributeName] as! UIFont).fontDescriptor().symbolicTraits
         let providedIsBold = sym.contains(.TraitBold)
@@ -141,7 +141,7 @@ public class TextColorIntensityScheme:IntensityTransforming {
         return nsAttributes
     }
     
-    public func updatedTypingAttributes(lastIntensityAttributes lastIA:IntensityAttributes, providedAttributes:[String:AnyObject], intensity:Float)->IntensityAttributes{
+    public func updateIntensityAttributesInScheme(lastIntensityAttributes lastIA:IntensityAttributes, providedAttributes:[String:AnyObject], intensity:Float)->IntensityAttributes{
         
         let sym = (providedAttributes[NSFontAttributeName] as! UIFont).fontDescriptor().symbolicTraits
         let providedIsBold = sym.contains(.TraitBold)

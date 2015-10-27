@@ -12,8 +12,11 @@ class IATextView: UITextView, UITextViewDelegate {
     
     
     var currentAttributes:IntensityAttributes!
-    private var lastTypingAttributes:[String:AnyObject] = [:]
-    
+
+    var currentTransformer:IntensityTransforming! {
+        guard let schemeName = currentAttributes?.currentScheme else {return nil}
+        return availableIntensityTransformers[schemeName]
+    }
     
     ///tells the shouldChangeTextInRange delegate to ignore the next insertion because it's coming from an insert action (like paste) and includes text
     private var didInsert:Bool = false
@@ -82,7 +85,9 @@ class IATextView: UITextView, UITextViewDelegate {
         self.delegate = self
         self.layer.cornerRadius = 10.0
         self.textContainerInset = UIEdgeInsetsMake(7.0, 2.0, 7.0, 2.0)
-        //self.currentAttributes = IntensityAttributes(intensity: sliderVal, size: 18.0)
+        self.currentAttributes = IntensityAttributes(intensity: sliderVal, size: 18.0)
+        currentAttributes.currentScheme = "WeightScheme"//"TextColorScheme"
+        typingAttributes = currentTransformer.typingAttributesForScheme(currentAttributes)
         self.allowsEditingTextAttributes = true
         
         
@@ -143,17 +148,23 @@ class IATextView: UITextView, UITextViewDelegate {
         //        return false
         //print("\ntypeing attributes before update \n\(pruneAttributes(typingAttributes))")
         
-        
+        var thisIntensity:Float!
         
         if let iaKB = inputViewController as? IAKeyboard where iaKB.lastKeyAvgIntensity > 0 && iaKB.lastKeyPeakIntensity > 0 {
-            self.typingAttributes[NSFontAttributeName] = fontForIntensity(iaKB.lastKeyAvgIntensity!)
-            self.typingAttributes["IntensityAttributed"] = iaKB.lastKeyAvgIntensity!
+            //            self.typingAttributes[NSFontAttributeName] = fontForIntensity(iaKB.lastKeyAvgIntensity!)
+            //            self.typingAttributes["IntensityAttributed"] = iaKB.lastKeyAvgIntensity!
+            thisIntensity = iaKB.lastKeyAvgIntensity
             iaKB.lastKeyAvgIntensity = nil
             iaKB.lastKeyPeakIntensity = nil
         } else {
-            self.typingAttributes[NSFontAttributeName] = fontForIntensity(self.sliderVal)
-            self.typingAttributes["IntensityAttributed"] = self.sliderVal
+            //            self.typingAttributes[NSFontAttributeName] = fontForIntensity(self.sliderVal)
+            //            self.typingAttributes["IntensityAttributed"] = self.sliderVal
+            thisIntensity = self.sliderVal
         }
+        
+        currentAttributes = currentTransformer.updateIntensityAttributesInScheme(lastIntensityAttributes: currentAttributes, providedAttributes: typingAttributes, intensity: thisIntensity)
+        
+        typingAttributes = currentTransformer.typingAttributesForScheme(currentAttributes)
         
         
         
