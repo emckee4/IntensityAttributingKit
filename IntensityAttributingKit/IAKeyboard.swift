@@ -158,12 +158,14 @@ class IAKeyboard: UIInputViewController {
         bottomStackView.alignment = .Center
         bottomStackView.distribution = .EqualSpacing
         //
-        let shiftButton = UIButton()
-        shiftButton.widthAnchor.constraintEqualToConstant(kKeyHeight).active = true
-        shiftButton.heightAnchor.constraintEqualToConstant(kKeyHeight).active = true
-        shiftButton.translatesAutoresizingMaskIntoConstraints = false
-        shiftButton.backgroundColor = UIColor.purpleColor()
-        bottomStackView.addArrangedSubview(shiftButton)
+        let space = PressureButton()
+        space.widthAnchor.constraintEqualToConstant(kKeyHeight).active = true
+        space.heightAnchor.constraintEqualToConstant(kKeyHeight).active = true
+        space.translatesAutoresizingMaskIntoConstraints = false
+        space.backgroundColor = UIColor.purpleColor()
+        space.setTitle(" ", forState: .Normal)
+        space.addTarget(self, action: "buttonPressed:", forControlEvents: .TouchUpInside)
+        bottomStackView.addArrangedSubview(space)
         //
         //
         //        zxcvStackView.addArrangedSubview(generatePlaceholder(width: (kStandardKeyWidth / 2.0) - kStandardKeySpacing * 2) )

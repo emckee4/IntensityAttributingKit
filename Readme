@@ -1,4 +1,7 @@
--- find optimal stackview spacing first
+TV: need to fix typingAttributes: need to implement IntensityAttributes functionality, updateIntensityAttributesForUserSelection (or something)
+
+
+KB: temp spacebar, try lexicon
 
 
 Adding IATextView:
@@ -13,7 +16,7 @@ Keyboard:
     screen size (iphone 6s, 6s plus: since no other devices have force touch we shouldn't even show them the pressure keyboard')
         orientation (portrait/landscape)
     __ should try textTitles and spritekit options (or custom spritesheet) for speed initializing
-
+    -- should use overridden intrinsic content sizes for buttons, updateConstraints for modifying layout contstraints
 
 Accessory View:
     need different accessories for forcetouch vs standard keyboard
