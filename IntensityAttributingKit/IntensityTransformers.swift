@@ -64,6 +64,31 @@ public class WeightIntensityScheme:IntensityTransforming {
         return nsAttributes
     }
     
+    
+    public func updatedTypingAttributes(lastIntensityAttributes lastIA:IntensityAttributes, providedAttributes:[String:AnyObject], intensity:Float)->IntensityAttributes{
+        
+        let sym = (providedAttributes[NSFontAttributeName] as! UIFont).fontDescriptor().symbolicTraits
+        let providedIsBold = sym.contains(.TraitBold)
+        let providedIsItalic = sym.contains(.TraitItalic)
+        let providedIsUnderlined = providedAttributes[NSUnderlineStyleAttributeName] as? Int > 0
+        let providedIsStrikethrough = providedAttributes[NSStrikethroughStyleAttributeName] as? Int > 0
+        
+        var newIA = lastIA
+        if providedIsBold != newIA.isBold {
+            newIA.isBold = !newIA.isBold
+        }
+        if providedIsItalic != newIA.isItalic {
+            newIA.isItalic = !newIA.isItalic
+        }
+        if providedIsUnderlined != newIA.isUnderlined {
+            newIA.isUnderlined = !newIA.isUnderlined
+        }
+        if providedIsStrikethrough != newIA.isStrikethrough {
+            newIA.isStrikethrough = !newIA.isStrikethrough
+        }
+        newIA.intensity = intensity
+        return newIA
+    }
 }
 
 
@@ -115,6 +140,35 @@ public class TextColorIntensityScheme:IntensityTransforming {
 
         return nsAttributes
     }
+    
+    public func updatedTypingAttributes(lastIntensityAttributes lastIA:IntensityAttributes, providedAttributes:[String:AnyObject], intensity:Float)->IntensityAttributes{
+        
+        let sym = (providedAttributes[NSFontAttributeName] as! UIFont).fontDescriptor().symbolicTraits
+        let providedIsBold = sym.contains(.TraitBold)
+        let providedIsItalic = sym.contains(.TraitItalic)
+        let providedIsUnderlined = providedAttributes[NSUnderlineStyleAttributeName] as? Int > 0
+        let providedIsStrikethrough = providedAttributes[NSStrikethroughStyleAttributeName] as? Int > 0
+        
+        var newIA = lastIA
+        if providedIsBold != newIA.isBold {
+            newIA.isBold = !newIA.isBold
+        }
+        if providedIsItalic != newIA.isItalic {
+            newIA.isItalic = !newIA.isItalic
+        }
+        if providedIsUnderlined != newIA.isUnderlined {
+            newIA.isUnderlined = !newIA.isUnderlined
+        }
+        if providedIsStrikethrough != newIA.isStrikethrough {
+            newIA.isStrikethrough = !newIA.isStrikethrough
+        }
+        newIA.intensity = intensity
+        return newIA
+    }
+    
+    
+
+    
     
 }
 

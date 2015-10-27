@@ -1,8 +1,11 @@
+kb only needs to diff on wighted bold- others can do straight checks
+
+
 TV: need to fix typingAttributes: need to implement IntensityAttributes functionality, updateIntensityAttributesForUserSelection (or something)
 
+Accessory: need basics, then layout, then alterative versions
 
-KB: temp spacebar, try lexicon
-
+KB: add locking button, change keyboard, begin adding other keys
 
 Adding IATextView:
     -interface with IAString should minimize exposure to particulars of the current IAString implementation
@@ -37,4 +40,9 @@ IAString Performance
 
 
 
+copy function should use super.copy and add IAdata as another type of that
+    -- will overriding copy be sufficient for inbuilt cut to work as desired?
+
+
+Note: builtin lexicon won't work unless building as a custom keyboard extension
 
