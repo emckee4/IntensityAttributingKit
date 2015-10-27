@@ -108,7 +108,17 @@ class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
     }
     
     func optionButtonPressed() {
-        //transform
+        var nextSchemeName:String = ""
+        for name in availableIntensityTransformers.keys {
+            if name != currentAttributes.currentScheme {
+                nextSchemeName = name
+                break
+            }
+        }
+        currentAttributes.currentScheme = nextSchemeName
+        
+        attributedText = attributedText.transformWithRenderScheme(nextSchemeName)
+        typingAttributes = currentTransformer.typingAttributesForScheme(currentAttributes)
     }
     
     //    override func replaceRange(range: UITextRange, withText text: String) {
