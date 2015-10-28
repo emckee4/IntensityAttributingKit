@@ -73,17 +73,19 @@ public class WeightIntensityScheme:IntensityTransforming {
         let providedIsUnderlined = providedAttributes[NSUnderlineStyleAttributeName] as? Int > 0
         let providedIsStrikethrough = providedAttributes[NSStrikethroughStyleAttributeName] as? Int > 0
         
+        let lastShouldBeBold = weightForIntensity(lastIA.intensity, isBold: lastIA.isBold) >= UIFontWeightSemibold
+        
         var newIA = lastIA
-        if providedIsBold != newIA.isBold {
+        if providedIsBold != lastShouldBeBold {
             newIA.isBold = !newIA.isBold
         }
-        if providedIsItalic != newIA.isItalic {
+        if providedIsItalic != lastIA.isItalic {
             newIA.isItalic = !newIA.isItalic
         }
-        if providedIsUnderlined != newIA.isUnderlined {
+        if providedIsUnderlined != lastIA.isUnderlined {
             newIA.isUnderlined = !newIA.isUnderlined
         }
-        if providedIsStrikethrough != newIA.isStrikethrough {
+        if providedIsStrikethrough != lastIA.isStrikethrough {
             newIA.isStrikethrough = !newIA.isStrikethrough
         }
         newIA.intensity = intensity
@@ -120,7 +122,7 @@ public class TextColorIntensityScheme:IntensityTransforming {
             if italic {
                 symbolicsToMerge.unionInPlace(.TraitItalic)
             }
-            let newSymbolicTraits =  baseFont.fontDescriptor().symbolicTraits.union(.TraitItalic)
+            let newSymbolicTraits =  baseFont.fontDescriptor().symbolicTraits.union(symbolicsToMerge)
             let newDescriptor = baseFont.fontDescriptor().fontDescriptorWithSymbolicTraits(newSymbolicTraits)
             baseFont = UIFont(descriptor: newDescriptor, size: size)
         }

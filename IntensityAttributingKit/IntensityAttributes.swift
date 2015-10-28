@@ -43,6 +43,9 @@ public struct IntensityAttributes:CustomStringConvertible, Hashable {
         if isStrikethrough {
             dict[IATags.IAStrikethrough] = true
         }
+        if let scheme = currentScheme {
+            dict[IATags.IACurrentRendering] = scheme
+        }
         return dict
     }
     

@@ -139,23 +139,21 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
     public func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
         guard !didInsert else {didInsert = false; return false}
         var thisIntensity:Float!
-        
+        var retainedAttributes:[String:AnyObject]!
+        if let paragraphStyle = typingAttributes[NSParagraphStyleAttributeName] {
+            retainedAttributes = [NSParagraphStyleAttributeName:paragraphStyle]
+        }
         if let iaKB = inputViewController as? IAKeyboard where iaKB.lastKeyAvgIntensity > 0 && iaKB.lastKeyPeakIntensity > 0 {
-            //            self.typingAttributes[NSFontAttributeName] = fontForIntensity(iaKB.lastKeyAvgIntensity!)
-            //            self.typingAttributes["IntensityAttributed"] = iaKB.lastKeyAvgIntensity!
             thisIntensity = iaKB.lastKeyAvgIntensity
             iaKB.lastKeyAvgIntensity = nil
             iaKB.lastKeyPeakIntensity = nil
         } else {
-            //            self.typingAttributes[NSFontAttributeName] = fontForIntensity(self.sliderVal)
-            //            self.typingAttributes["IntensityAttributed"] = self.sliderVal
             thisIntensity = self.sliderVal
         }
         
         currentAttributes = currentTransformer.updateIntensityAttributesInScheme(lastIntensityAttributes: currentAttributes, providedAttributes: typingAttributes, intensity: thisIntensity)
         
-        typingAttributes = currentTransformer.typingAttributesForScheme(currentAttributes)
-        
+        typingAttributes = currentTransformer.typingAttributesForScheme(currentAttributes,retainedKeys: retainedAttributes)
         
         
         return true

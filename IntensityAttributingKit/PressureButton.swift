@@ -61,7 +61,7 @@ class PressureButton: UIButton {
     
     func pressure(touch:UITouch)->CGFloat{
         if forceTouchAvailable {
-            print("\(touch.force) / \(touch.maximumPossibleForce)")
+            //print("\(touch.force) / \(touch.maximumPossibleForce)")
             return (touch.force / touch.maximumPossibleForce)
         } else {
             return 0

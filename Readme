@@ -1,15 +1,17 @@
 
-next: basic accessory(slider,transformer)
-keyboard changing button
+
+keyboard: add changing button
 
 once above are working and trnasforms are debugged:
-    try removing most constraints in keyboard, replacing with intrinsic size or unsized but using spacings on stack view
+->    try removing most constraints in keyboard, replacing with intrinsic size or unsized but using spacings on stack view
 
 
-Accessory: need basics (slider, transform)      , then layout, then alterative versions
+
+
+Accessory: layout (what to inlcude in standard version? accessory for adding photos, etc?), then alterative versions
 TV: implement copy/paste, does transform work out of the box?
 
-KB: add locking button, change keyboard, begin adding other keys
+KB: add locking button (shift key), others like backspace, change keyboard, begin adding other keys
 
 Adding IATextView:
     -interface with IAString should minimize exposure to particulars of the current IAString implementation
