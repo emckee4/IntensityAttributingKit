@@ -8,7 +8,7 @@
 
 import UIKit
 
-class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
+public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
     
     
     var currentAttributes:IntensityAttributes!
@@ -24,7 +24,7 @@ class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
     
     
     private var _inputVC:UIInputViewController?
-    override var inputViewController:UIInputViewController? {
+    override public var inputViewController:UIInputViewController? {
         set {self._inputVC = newValue}
         get {return self._inputVC}
     }
@@ -33,7 +33,7 @@ class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
     private lazy var iaAccessory:IAAccessoryVC = {
         return IAAccessoryVC(nibName: nil, bundle: nil)
     }()
-    override var inputAccessoryViewController:UIInputViewController? {
+    override public var inputAccessoryViewController:UIInputViewController? {
         //set {self.iaAccessory = newValue!}
         get {return self.iaAccessory}
     }
@@ -57,12 +57,12 @@ class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
     
     //MARK:-inits
     
-    override init(frame: CGRect, textContainer: NSTextContainer?) {
+    public override init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
         setupPressureTextView()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setupPressureTextView()
     }
@@ -136,7 +136,7 @@ class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
     //        }
     //    }
     
-    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+    public func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
         guard !didInsert else {didInsert = false; return false}
         var thisIntensity:Float!
         
@@ -164,36 +164,36 @@ class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
     
     
     
-    func attributesForCurrentSettings()->[String:AnyObject]{
-        var attributes:[String:AnyObject] = [:]
-        attributes[NSFontAttributeName] = fontForIntensity(self.sliderVal)
-        return attributes
-    }
-    
-    
-    func fontForIntensity(intensity:Float)->UIFont{
-        let bin = Int(floor(min(intensity, 0.99) * Float(weightArray.count)))
-        print("intensity: \(intensity) => bin: \(bin)")
-        return UIFont.systemFontOfSize(18.0, weight: weightArray[bin])
-        
-    }
-    
-    
-    lazy var defaultFont:UIFont = {
-        return UIFont.systemFontOfSize(18.0, weight: UIFontWeightRegular)
-    }()
-    
-    let weightArray = [
-        UIFontWeightUltraLight,
-        UIFontWeightThin,
-        UIFontWeightLight,
-        UIFontWeightRegular,
-        UIFontWeightMedium,
-        UIFontWeightSemibold,
-        UIFontWeightBold,
-        UIFontWeightHeavy,
-        UIFontWeightBlack
-    ]
+//    func attributesForCurrentSettings()->[String:AnyObject]{
+//        var attributes:[String:AnyObject] = [:]
+//        attributes[NSFontAttributeName] = fontForIntensity(self.sliderVal)
+//        return attributes
+//    }
+//    
+//    
+//    func fontForIntensity(intensity:Float)->UIFont{
+//        let bin = Int(floor(min(intensity, 0.99) * Float(weightArray.count)))
+//        print("intensity: \(intensity) => bin: \(bin)")
+//        return UIFont.systemFontOfSize(18.0, weight: weightArray[bin])
+//        
+//    }
+//    
+//    
+//    lazy var defaultFont:UIFont = {
+//        return UIFont.systemFontOfSize(18.0, weight: UIFontWeightRegular)
+//    }()
+//    
+//    let weightArray = [
+//        UIFontWeightUltraLight,
+//        UIFontWeightThin,
+//        UIFontWeightLight,
+//        UIFontWeightRegular,
+//        UIFontWeightMedium,
+//        UIFontWeightSemibold,
+//        UIFontWeightBold,
+//        UIFontWeightHeavy,
+//        UIFontWeightBlack
+//    ]
     
     
     
