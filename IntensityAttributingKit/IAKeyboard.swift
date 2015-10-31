@@ -5,18 +5,13 @@
 //  Created by Evan Mckee on 10/25/15.
 //  Copyright © 2015 McKeeMaKer. All rights reserved.
 //
-
 import UIKit
 
 @IBDesignable
 class IAKeyboard: UIInputViewController {
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupKeyboard()
-        
-        // Do any additional setup after loading the view.
-    }
+    
+    
     
     
     /// 4 rows without autocorrect, 5 with.
@@ -31,15 +26,16 @@ class IAKeyboard: UIInputViewController {
     var lastKeyAvgIntensity:Float?
     var lastKeyPeakIntensity:Float?
     
-    //let kStandardKeyWidth:CGFloat = 30.0
-    lazy var kStandardKeyWidth:CGFloat = {
-        let width = UIScreen.mainScreen().bounds.width / 12.0
-        print(width)
-        return width
-    }()
+    
+    //    var screenWidth:CGFloat {return UIScreen.mainScreen().bounds.width}
+    //    var stackWidth:CGFloat {return screenWidth - (2 * kStackInset)}
+    //
+    //    var topRowKeyWidth:CGFloat { return(stackWidth - 9 * kStandardKeySpacing) / 10.0}
+    //
+    var shiftKey:LockingKey!
     
     let kKeyHeight:CGFloat = 40.0
-    let kStandardKeySpacing:CGFloat = 2.0
+    let kStandardKeySpacing:CGFloat = 4.0
     let kStackInset:CGFloat = 2.0
     
     let primaryMapping:[[Int:String]] = [
@@ -50,244 +46,161 @@ class IAKeyboard: UIInputViewController {
     
     let baseFont = UIFont.systemFontOfSize(20.0)
     
-    var containerView:UIView!
-    
     var verticalStackView:UIStackView!
-    
-    //var qwertyButtons:[PressureButton] = []
     var qwertyStackView:UIStackView!
-    
-    //var asdfButtons:[PressureButton] = []
     var asdfStackView:UIStackView!
-    
     var zxcvStackView:UIStackView!
-    
     var bottomStackView:UIStackView!
     
     
-    var topBarMinimized = false
+    var standardPressureKeys:[PressureButton] = []
     
-    var portraitConstraints:[NSLayoutConstraint] = []
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        setupQwertyRow()
+        setupAsdfRow()
+        setupZxcvRow()
+        setupBottomRow()
+        setupVerticalStackView()
+        setupKeyConstraints()
+    }
+    
     
     
     
     func setupQwertyRow(){
-        qwertyStackView = UIStackView()
-        qwertyStackView.axis = UILayoutConstraintAxis.Horizontal
-        qwertyStackView.distribution = .EqualSpacing
-        qwertyStackView.translatesAutoresizingMaskIntoConstraints = false
-        qwertyStackView.layoutMarginsRelativeArrangement = true
-        qwertyStackView.alignment = .Center
-        qwertyStackView.spacing = 2.0
+        qwertyStackView = generateHorizontalStackView()
+        
         for i in 0..<10 {
             let title = primaryMapping[0][i]!
-            qwertyStackView.addArrangedSubview(setupPressureKey(i, title: title))
+            let key = setupPressureKey(i, title: title)
+            qwertyStackView.addArrangedSubview(key)
+            standardPressureKeys.append(key)
         }
         
         
     }
     
     func setupAsdfRow(){
-        asdfStackView = UIStackView()
-        asdfStackView.axis = UILayoutConstraintAxis.Horizontal
-        //asdfStackView.distribution = .EqualSpacing
-        asdfStackView.translatesAutoresizingMaskIntoConstraints = false
-        asdfStackView.layoutMarginsRelativeArrangement = true
-        asdfStackView.alignment = .Center
-        asdfStackView.distribution = .EqualSpacing
+        asdfStackView = generateHorizontalStackView()
         
-        asdfStackView.addArrangedSubview(generatePlaceholder(width: (kStandardKeyWidth / 2.0) - kStandardKeySpacing) )
+        let leftPlaceholder = UIView()//generatePlaceholder(width: (kStandardKeyWidth / 2.0) - kStandardKeySpacing,height: 20.0)
+        let rightPlaceholder = UIView()//generatePlaceholder(width: (kStandardKeyWidth / 2.0) - kStandardKeySpacing, height: 20.0)
+        
+        asdfStackView.addArrangedSubview(leftPlaceholder)
         for i in 0..<9 {
             let title = primaryMapping[1][i]!
-            asdfStackView.addArrangedSubview(setupPressureKey(i, title: title))
+            let key = setupPressureKey(i, title: title)
+            asdfStackView.addArrangedSubview(key)
+            standardPressureKeys.append(key)
         }
-        asdfStackView.addArrangedSubview(generatePlaceholder(width: (kStandardKeyWidth / 2.0) - kStandardKeySpacing))
+        asdfStackView.addArrangedSubview(rightPlaceholder)
+        leftPlaceholder.widthAnchor.constraintEqualToAnchor(rightPlaceholder.widthAnchor).active = true
     }
     
     
     func setupZxcvRow(){
-        zxcvStackView = UIStackView()
-        zxcvStackView.axis = UILayoutConstraintAxis.Horizontal
-        //asdfStackView.distribution = .EqualSpacing
-        zxcvStackView.translatesAutoresizingMaskIntoConstraints = false
-        zxcvStackView.layoutMarginsRelativeArrangement = true
-        zxcvStackView.alignment = .Center
-        zxcvStackView.distribution = .EqualSpacing
+        zxcvStackView = generateHorizontalStackView()
         
-        let shiftButton = UIButton()
-        shiftButton.widthAnchor.constraintEqualToConstant(kKeyHeight).active = true
-        shiftButton.heightAnchor.constraintEqualToConstant(kKeyHeight).active = true
-        shiftButton.translatesAutoresizingMaskIntoConstraints = false
-        shiftButton.backgroundColor = UIColor.purpleColor()
-        zxcvStackView.addArrangedSubview(shiftButton)
+        shiftKey = LockingKey()
+        // shiftButton.widthAnchor.constraintEqualToConstant(kKeyHeight).active = true
+        // shiftButton.heightAnchor.constraintEqualToConstant(kKeyHeight).active = true
+        shiftKey.widthAnchor.constraintGreaterThanOrEqualToAnchor(shiftKey.heightAnchor).active = true
+        shiftKey.translatesAutoresizingMaskIntoConstraints = false
+        shiftKey.setTitle("sh", forState: .Normal)
+        shiftKey.setTitle("SH", forState: .Selected)
+        shiftKey.setTitleColor(UIColor.yellowColor(), forState: UIControlState.Highlighted.union(.Selected))
         
+        zxcvStackView.addArrangedSubview(shiftKey)
         
-        zxcvStackView.addArrangedSubview(generatePlaceholder(width: (kStandardKeyWidth / 2.0) - kStandardKeySpacing * 6) )
+        let leftPlaceholder = UIView()
+        let rightPlaceholder = UIView()
+        zxcvStackView.addArrangedSubview( leftPlaceholder)//generatePlaceholder(width: (kStandardKeyWidth / 2.0) - kStandardKeySpacing * 6,height: 10.0) )
         
         for i in 0..<7 {
-            //            let nextKey = PressureButton(type: UIButtonType.RoundedRect)
-            //            nextKey.tag = i
-            //            nextKey.setTitle("\(i)", forState: .Normal)
-            //            nextKey.backgroundColor = UIColor.lightGrayColor()
-            //            nextKey.heightAnchor.constraintEqualToConstant(kKeyHeight).active = true
-            //            nextKey.widthAnchor.constraintEqualToConstant(kStandardKeyWidth).active = true
-            //            nextKey.translatesAutoresizingMaskIntoConstraints = false
-            //            zxcvStackView.addArrangedSubview(nextKey)
             let title = primaryMapping[2][i]!
-            zxcvStackView.addArrangedSubview(setupPressureKey(i, title: title))
+            let key = setupPressureKey(i, title: title)
+            zxcvStackView.addArrangedSubview(key)
+            standardPressureKeys.append(key)
         }
         
-        zxcvStackView.addArrangedSubview(generatePlaceholder(width: (kStandardKeyWidth / 2.0) - kStandardKeySpacing * 6))
+        zxcvStackView.addArrangedSubview(rightPlaceholder)//generatePlaceholder(width: (kStandardKeyWidth / 2.0) - kStandardKeySpacing * 6,height: 10.0))
         
         
         let backspace = UIButton()
-        backspace.widthAnchor.constraintEqualToConstant(kKeyHeight).active = true
-        backspace.heightAnchor.constraintEqualToConstant(kKeyHeight).active = true
+        //backspace.widthAnchor.constraintEqualToConstant(kKeyHeight).active = true
+        //backspace.heightAnchor.constraintEqualToConstant(kKeyHeight).active = true
+        //backspace.heightAnchor.constraintEqualToAnchor(backspace.widthAnchor).active = true
         backspace.translatesAutoresizingMaskIntoConstraints = false
         backspace.backgroundColor = UIColor.purpleColor()
         zxcvStackView.addArrangedSubview(backspace)
+        backspace.addTarget(self, action: "backspaceKeyPressed", forControlEvents: .TouchUpInside)
+        shiftKey.widthAnchor.constraintEqualToAnchor(backspace.widthAnchor).active = true
+        
+        leftPlaceholder.widthAnchor.constraintEqualToAnchor(rightPlaceholder.widthAnchor).active = true
+        
     }
     
     
     func setupBottomRow(){
-        bottomStackView = UIStackView()
-        bottomStackView.axis = UILayoutConstraintAxis.Horizontal
-        //asdfStackView.distribution = .EqualSpacing
-        bottomStackView.translatesAutoresizingMaskIntoConstraints = false
-        bottomStackView.layoutMarginsRelativeArrangement = true
-        bottomStackView.alignment = .Center
-        bottomStackView.distribution = .EqualSpacing
-        //
+        bottomStackView = generateHorizontalStackView()
+        
         let space = PressureButton()
-        space.widthAnchor.constraintEqualToConstant(kKeyHeight).active = true
-        space.heightAnchor.constraintEqualToConstant(kKeyHeight).active = true
+        //space.widthAnchor.constraintEqualToConstant(kKeyHeight).active = true
+        //space.heightAnchor.constraintEqualToConstant(kKeyHeight).active = true
         space.translatesAutoresizingMaskIntoConstraints = false
         space.backgroundColor = UIColor.purpleColor()
         space.setTitle(" ", forState: .Normal)
         space.addTarget(self, action: "buttonPressed:", forControlEvents: .TouchUpInside)
         bottomStackView.addArrangedSubview(space)
-        //
-        //
-        //        zxcvStackView.addArrangedSubview(generatePlaceholder(width: (kStandardKeyWidth / 2.0) - kStandardKeySpacing * 2) )
-        //
-        //        for i in 0..<7 {
-        //            let nextKey = PressureButton(type: UIButtonType.RoundedRect)
-        //            nextKey.tag = i
-        //            nextKey.setTitle("\(i)", forState: .Normal)
-        //            nextKey.backgroundColor = UIColor.lightGrayColor()
-        //            nextKey.heightAnchor.constraintEqualToConstant(kKeyHeight).active = true
-        //            nextKey.widthAnchor.constraintEqualToConstant(kStandardKeyWidth).active = true
-        //            nextKey.translatesAutoresizingMaskIntoConstraints = false
-        //            zxcvStackView.addArrangedSubview(nextKey)
-        //        }
-        //
-        //        zxcvStackView.addArrangedSubview(generatePlaceholder(width: (kStandardKeyWidth / 2.0) - kStandardKeySpacing * 2))
-        //
-        //
-        //        let backspace = UIButton()
-        //        backspace.widthAnchor.constraintEqualToConstant(kKeyHeight).active = true
-        //        backspace.heightAnchor.constraintEqualToConstant(kKeyHeight).active = true
-        //        backspace.translatesAutoresizingMaskIntoConstraints = false
-        //        backspace.backgroundColor = UIColor.purpleColor()
-        //        zxcvStackView.addArrangedSubview(backspace)
-    }
-    
-    var topStackView:UIStackView!
-    
-    func setupTopRow(){
-        topStackView = UIStackView()
-        topStackView.axis = UILayoutConstraintAxis.Horizontal
-        //asdfStackView.distribution = .EqualSpacing
-        topStackView.translatesAutoresizingMaskIntoConstraints = false
-        topStackView.layoutMarginsRelativeArrangement = true
-        topStackView.alignment = .Center
-        topStackView.distribution = .EqualSpacing
-        //
-        let shiftButton = UIButton()
-        shiftButton.widthAnchor.constraintEqualToConstant(kKeyHeight - 2.0).active = true
-        shiftButton.heightAnchor.constraintEqualToConstant(kKeyHeight - 8.0).active = true
-        shiftButton.translatesAutoresizingMaskIntoConstraints = false
-        shiftButton.backgroundColor = UIColor.purpleColor()
-        shiftButton.addTarget(self, action: "topButtonPressed:", forControlEvents: .TouchUpInside)
-        topStackView.addArrangedSubview(shiftButton)
-    }
-    var trButton:UIButton!
-    
-    func setupTopRowRevealButton(){
-        trButton = UIButton()
-        trButton.backgroundColor = UIColor.greenColor()
-        trButton.translatesAutoresizingMaskIntoConstraints = false
-        trButton.widthAnchor.constraintEqualToConstant(UIScreen.mainScreen().bounds.width).active = true
-        trButton.heightAnchor.constraintEqualToConstant(6.0).active = true
-        trButton.layer.cornerRadius = 2.0
-        trButton.hidden = true
-        trButton.addTarget(self, action: "topButtonPressed:", forControlEvents: .TouchUpInside)
+        
     }
     
     
-    func setupKeyboard(){
-        view.translatesAutoresizingMaskIntoConstraints = false
+    
+    func setupVerticalStackView(){
         
         
-        
-        setupTopRow()
-        setupQwertyRow()
-        setupAsdfRow()
-        setupZxcvRow()
-        setupBottomRow()
-        setupTopRowRevealButton()
-        
-        //verticalStackView = UIStackView(arrangedSubviews: [qwertyStackView])
-        verticalStackView = UIStackView(arrangedSubviews: [topStackView,trButton, qwertyStackView,asdfStackView,zxcvStackView,bottomStackView])
+        verticalStackView = UIStackView(arrangedSubviews: [ qwertyStackView,asdfStackView,zxcvStackView,bottomStackView])
         verticalStackView.translatesAutoresizingMaskIntoConstraints = false
         verticalStackView.axis = .Vertical
-        verticalStackView.distribution = .EqualSpacing
-        verticalStackView.spacing = 4.0
+        verticalStackView.distribution = .FillEqually
+        verticalStackView.spacing = 5.0
+        verticalStackView.alignment = .Fill
+        verticalStackView.layoutMarginsRelativeArrangement = true
         
-        //        //self.addSubview(verticalStackView)
-        //
-        //
-        //
-        //        //let edgeInset:CGFloat = 4.0
-        //        verticalStackView.leadingAnchor.constraintEqualToAnchor(self.leadingAnchor, constant: kStackInset).active = true
-        //        verticalStackView.trailingAnchor.constraintEqualToAnchor(self.trailingAnchor, constant: -kStackInset).active = true
-        //        verticalStackView.topAnchor.constraintEqualToAnchor(self.topAnchor, constant: kStackInset).active = true
-        //        //verticalStackView.bottomAnchor.constraintEqualToAnchor(self.bottomAnchor, constant: -kStackInset).active = true
-        //        self.backgroundColor = UIColor.redColor()
+        verticalStackView.layoutMargins = UIEdgeInsets(top: kStackInset, left: kStackInset, bottom: kStackInset, right: kStackInset)
         
-        containerView = UIView()
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-        
-        
-        view.addSubview(containerView)
-        //let edgeInset:CGFloat = 4.0
-        containerView.leadingAnchor.constraintEqualToAnchor(view.leadingAnchor, constant: kStackInset).active = true
-        containerView.trailingAnchor.constraintEqualToAnchor(view.trailingAnchor, constant: -kStackInset).active = true
-        containerView.topAnchor.constraintEqualToAnchor(view.topAnchor, constant: kStackInset).active = true
-        containerView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -kStackInset).active = true
-        containerView.addSubview(verticalStackView)
-        
-        
-        verticalStackView.leadingAnchor.constraintEqualToAnchor(containerView.leadingAnchor).active = true
-        verticalStackView.trailingAnchor.constraintEqualToAnchor(containerView.trailingAnchor).active = true
-        verticalStackView.topAnchor.constraintEqualToAnchor(containerView.topAnchor).active = true
-        verticalStackView.bottomAnchor.constraintEqualToAnchor(containerView.bottomAnchor).active = true
+        view.addSubview(verticalStackView)
+        verticalStackView.topAnchor.constraintEqualToAnchor(view.topAnchor).active = true
+        verticalStackView.leftAnchor.constraintEqualToAnchor(view.leftAnchor).active = true
+        verticalStackView.rightAnchor.constraintEqualToAnchor(view.rightAnchor).active = true
+        verticalStackView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor).active = true
         
         view.backgroundColor = UIColor.redColor()
         
-        
     }
     
-    func generatePlaceholder(width width:CGFloat, height:CGFloat = 0.0)->UIView{
-        let placeholder = UIView()
-        placeholder.widthAnchor.constraintEqualToConstant(width).active = true
-        if height != 0.0 {
-            placeholder.heightAnchor.constraintEqualToConstant(height).active = true
+    func setupKeyConstraints(){
+        for key in standardPressureKeys[1..<standardPressureKeys.count]{
+            key.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor).active = true
         }
-        placeholder.translatesAutoresizingMaskIntoConstraints = false
-        return placeholder
     }
     
+    
+    
+    func generateHorizontalStackView()->UIStackView{
+        let stackview = UIStackView()
+        stackview.axis = UILayoutConstraintAxis.Horizontal
+        stackview.translatesAutoresizingMaskIntoConstraints = false
+        stackview.layoutMarginsRelativeArrangement = true
+        stackview.alignment = .Fill
+        stackview.distribution = .Fill
+        stackview.spacing = kStandardKeySpacing
+        return stackview
+    }
     
     func setupPressureKey(tag:Int, title:String)->PressureButton{
         let nextKey = PressureButton(type: UIButtonType.RoundedRect)
@@ -296,14 +209,9 @@ class IAKeyboard: UIInputViewController {
         nextKey.setAttributedTitle(NSAttributedString(string: title,attributes: [NSFontAttributeName:baseFont]), forState: .Normal)
         nextKey.backgroundColor = UIColor.lightGrayColor()
         
-        let heightConstraint = nextKey.heightAnchor.constraintGreaterThanOrEqualToConstant(kKeyHeight)
-        heightConstraint.active = true
-        portraitConstraints.append(heightConstraint)
-        let widthConstraint = nextKey.widthAnchor.constraintEqualToConstant(kStandardKeyWidth)
-        widthConstraint.active = true
-        portraitConstraints.append(widthConstraint)
+        nextKey.setContentHuggingPriority(100, forAxis: .Horizontal)
         nextKey.translatesAutoresizingMaskIntoConstraints = false
-        nextKey.addTarget(self, action: "buttonPressed:", forControlEvents: .TouchUpInside)
+        nextKey.addTarget(self, action: "charKeyPressed:", forControlEvents: .TouchUpInside)
         nextKey.layer.cornerRadius = 4.0
         return nextKey
     }
@@ -312,145 +220,31 @@ class IAKeyboard: UIInputViewController {
     
     
     
-    func buttonPressed(sender:PressureButton!){
-        
-        
+    func charKeyPressed(sender:PressureButton!){
         if let text = sender.titleLabel?.text {
             self.lastKeyAvgIntensity = Float(sender.avgPressure)
             self.lastKeyPeakIntensity = Float(sender.peakPressure)
-            self.textDocumentProxy.insertText(text)
-        }
-        
-    }
-    
-    
-    func topButtonPressed(sender:UIButton!){
-        UIView.animateWithDuration(0.5) { () -> Void in
-            if self.topBarMinimized {
-                self.topStackView.hidden = false
-                self.trButton.hidden = true
-                NSLayoutConstraint.activateConstraints(self.portraitConstraints)
+            if shiftKey.selected {
+                shiftKey.deselect(overrideSelectedLock: false)
+                self.textDocumentProxy.insertText(text.uppercaseString)
             } else {
-                self.topStackView.hidden = true
-                self.trButton.hidden = false
-                NSLayoutConstraint.deactivateConstraints(self.portraitConstraints)
+                self.textDocumentProxy.insertText(text)
             }
         }
-        topBarMinimized = !topBarMinimized
+    }
+    
+    func backspaceKeyPressed(){
+        textDocumentProxy.deleteBackward()
     }
     
     
     
     
-    
 }
 
 
 
-/*
-
-@IBOutlet var nextKeyboardButton: UIButton!
-@IBOutlet var lightButton: PressureButton!
-var lastKeyAvgIntensity:Float?
-var lastKeyPeakIntensity:Float?
-
-override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
-super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-view.translatesAutoresizingMaskIntoConstraints = false
-}
-
-required init?(coder aDecoder: NSCoder) {
-super.init(coder: aDecoder)
-}
-
-override func updateViewConstraints() {
-super.updateViewConstraints()
-
-// Add custom view sizing constraints here
-}
-override func viewDidAppear(animated: Bool) {
-super.viewDidAppear(true)
-lastKeyAvgIntensity = nil
-lastKeyPeakIntensity = nil
-}
-
-override func viewDidLoad() {
-super.viewDidLoad()
-
-// Perform custom UI setup here
-self.nextKeyboardButton = UIButton(type: .System)
-
-self.nextKeyboardButton.setTitle(NSLocalizedString("Next keyboard", comment: "Title for 'Next Keyboard' button"), forState: .Normal)
-self.nextKeyboardButton.sizeToFit()
-self.nextKeyboardButton.translatesAutoresizingMaskIntoConstraints = false
-
-self.nextKeyboardButton.titleLabel!.font = UIFont(name: "Helvetica", size: 10)
-
-self.nextKeyboardButton.addTarget(self, action: "advanceToNextInputMode", forControlEvents: .TouchUpInside)
-
-self.view.addSubview(self.nextKeyboardButton)
-
-var nextKeyboardButtonLeftSideConstraint = NSLayoutConstraint(item: self.nextKeyboardButton, attribute: .Left, relatedBy: .Equal, toItem: self.view, attribute: .Left, multiplier: 1.0, constant: 0.0)
-var nextKeyboardButtonBottomConstraint = NSLayoutConstraint(item: self.nextKeyboardButton, attribute: .Bottom, relatedBy: .Equal, toItem: self.view, attribute: .Bottom, multiplier: 1.0, constant: 0.0)
-self.view.addConstraints([nextKeyboardButtonLeftSideConstraint, nextKeyboardButtonBottomConstraint])
-
-// lightButton button
-
-self.lightButton = PressureButton(type:.System)
-
-self.lightButton.setTitle(NSLocalizedString("light", comment: "lightButton button"), forState: .Normal)
-self.lightButton.sizeToFit()
-self.lightButton.translatesAutoresizingMaskIntoConstraints = false
-
-self.lightButton.titleLabel!.font = UIFont(name: "Helvetica", size: 50)
-
-self.lightButton.addTarget(self, action: "lightButtonPressed:", forControlEvents: .TouchUpInside)
-
-self.view.addSubview(self.lightButton)
-
-var lightButtonCenterXConstraint = NSLayoutConstraint(item: self.lightButton, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1.0, constant: 0.0)
-var lightButtonCenterYConstraint = NSLayoutConstraint(item: self.lightButton, attribute: .CenterY, relatedBy: .Equal, toItem: self.view, attribute: .CenterY, multiplier: 1.0, constant: 0.0)
-self.view.addConstraints([lightButtonCenterXConstraint, lightButtonCenterYConstraint])
-}
-
-func lightButtonPressed(sender:PressureButton!) {
-if sender?.avgPressure > 0.0 && sender?.peakPressure > 0.0 {
-self.lastKeyPeakIntensity = Float(sender.avgPressure)
-self.lastKeyAvgIntensity = Float(sender.peakPressure)
-} else {
-self.lastKeyPeakIntensity = 0
-self.lastKeyAvgIntensity = 0
-}
-
-let proxy = self.textDocumentProxy as UITextDocumentProxy
-proxy.insertText("Light ")
-}
-
-override func didReceiveMemoryWarning() {
-super.didReceiveMemoryWarning()
-// Dispose of any resources that can be recreated
-}
-
-override func textWillChange(textInput: UITextInput?) {
-// The app is about to change the document's contents. Perform any preparation here.
-//print("text will change: \(textInput)")
-}
 
 
-override func textDidChange(textInput: UITextInput?) {
-// The app has just changed the document's contents, the document context has been updated.
 
-var textColor: UIColor
-let proxy = self.textDocumentProxy as UITextDocumentProxy
-if proxy.keyboardAppearance == UIKeyboardAppearance.Dark {
-textColor = UIColor.whiteColor()
-} else {
-textColor = UIColor.blackColor()
-}
-self.nextKeyboardButton.setTitleColor(textColor, forState: .Normal)
-self.lightButton.setTitleColor(textColor, forState: .Normal)
-//print("text did change: \(textInput)")
-}
-
-*/
 

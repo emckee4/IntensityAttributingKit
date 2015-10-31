@@ -1,35 +1,25 @@
+Fix keyboard spacing and constants --> need to handle spacing change on rotation,
+add remaining keyboard buttons -> bottom row, then additional punctuation/numeric views
+
+Accessory view:
+    Need different accessoryView layouts depending on orientation
+        use popup for overflow of normal options, including Transform style
+    Different Accessories:
+        Accessory w/pressure:
+        [swap?, intensity dropdown/indicator, insert photo, etc, options?, send/send-as]
+
+        Accessory w/system:
+        [swap, intensityslider, ?? options, popup options]
+
+        Accessory no pressure:
+        [insert, intensity, options, sendas]
+
+need to reimplement copy/paste in iatextview
+    copy function should use super.copy and add IAdata as another type of that
+        -- will overriding copy be sufficient for inbuilt cut to work as desired?
 
 
-keyboard: add changing button
-
-once above are working and trnasforms are debugged:
-->    try removing most constraints in keyboard, replacing with intrinsic size or unsized but using spacings on stack view
-
-
-
-
-Accessory: layout (what to inlcude in standard version? accessory for adding photos, etc?), then alterative versions
-TV: implement copy/paste, does transform work out of the box?
-
-KB: add locking button (shift key), others like backspace, change keyboard, begin adding other keys
-
-Adding IATextView:
-    -interface with IAString should minimize exposure to particulars of the current IAString implementation
-    -IAString needs a function to process current and old typingAttributes in order to determine user selection. This must be a part of the transformer and protocol
-    --need to implement better image and link handling than proto IATextView
-
--- need placeholder keyboard, accessory view for IATV to work
-
-Keyboard:
-    need equations for layouts of keyboard taking into account:
-    screen size (iphone 6s, 6s plus: since no other devices have force touch we shouldn't even show them the pressure keyboard')
-        orientation (portrait/landscape)
-    __ should try textTitles and spritekit options (or custom spritesheet) for speed initializing
-    -- should use overridden intrinsic content sizes for buttons, updateConstraints for modifying layout contstraints
-
-Accessory View:
-    need different accessories for forcetouch vs standard keyboard
-    need to determine layout and features for each
+--refactor how transformers are added? could use enum or add a singleton manager class to hold refs, or both
 
 
 
@@ -38,17 +28,21 @@ Accessory View:
 
 
 
-IAString Performance
-    Keeping "deep" IAattributes may significantly increase storage size
-        It may be possible to retain most of the performance benefits of deep attributes through a combination of partition and removal by range in the transform function
-        "shallow" IAAttributes would let us invalidate all in a transform, letting us skip the setter check, and possibly perform more actions by range
+
+
+--Performance:
+    KB rendering:
+        consider using spritesheet for keys
+
+
+
+    IAString Performance
+        Keeping "deep" IAattributes may significantly increase storage size
+            It may be possible to retain most of the performance benefits of deep attributes through a combination of partition and removal by range in the transform function
+            "shallow" IAAttributes would let us invalidate all in a transform, letting us skip the setter check, and possibly perform more actions by range
 
 
 
 
-copy function should use super.copy and add IAdata as another type of that
-    -- will overriding copy be sufficient for inbuilt cut to work as desired?
 
-
-Note: builtin lexicon won't work unless building as a custom keyboard extension
 
