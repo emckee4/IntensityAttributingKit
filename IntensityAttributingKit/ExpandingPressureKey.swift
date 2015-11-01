@@ -15,7 +15,7 @@ Add animation by animating frame expansion prior to expanding constraints to mat
 Consider giving leway on out of bounds presses
 Give option for dynamicly reordering keys so that the last pressed will become the default key
  
-Further cleanup code, consider switching back to selector based actions (or handle potential for closure related strong reference cycles). Note this may cause issues with passing of RawIntensity items since structs are pure swift
+Further cleanup code, consider switching back to selector based actions (or handle potential for closure related strong reference cycles). Note this may cause issues with passing of RawIntensity items since structs are pure swift. Also consider renaming "Key" based names to avoid ambiguity
 */
 @IBDesignable class ExpandingPressureKey: UIView {
     
@@ -162,7 +162,10 @@ Further cleanup code, consider switching back to selector based actions (or hand
         label.layer.borderColor = UIColor.clearColor().CGColor
     }
     
-    
+    func removeAllKeys(){
+        for pk in pressureKeys{ containedStackView.removeArrangedSubview(pk.view) }
+        pressureKeys = []
+    }
     
     
     private func findTouchedEPKey(touch:UITouch,event:UIEvent?)->EPKey?{
