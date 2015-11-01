@@ -23,7 +23,25 @@ Further cleanup code, consider switching back to selector based actions (or hand
     //expansion direction
     
     ///this is private set until means for reordering the subviews are added
-    @IBInspectable private(set) var expansionDirection:PKExpansionDirection = .Up
+    @IBInspectable var expansionDirection:PKExpansionDirection = .Up {
+        didSet
+        {
+            if oldValue.hasForwardLayoutDirection() != expansionDirection.hasForwardLayoutDirection() && !pressureKeys.isEmpty{
+                for pk in pressureKeys {
+                    containedStackView.removeArrangedSubview(pk.view)
+                }
+                if expansionDirection.hasForwardLayoutDirection(){
+                    for pk in pressureKeys{
+                        containedStackView.addArrangedSubview(pk.view)
+                    }
+                } else {
+                    for pk in pressureKeys {
+                        containedStackView.insertArrangedSubview(pk.view, atIndex: 0)
+                    }
+                }
+            }
+        }
+    }
     @IBInspectable var cornerRadius:CGFloat = 0.0 {
         didSet{self.layer.cornerRadius = cornerRadius; _ = pressureKeys.map({$0.view.layer.cornerRadius = cornerRadius})}
     }
@@ -305,6 +323,10 @@ private class EPKey {
 ///The direction in which an ExpandingPressureKey grows on selection
 enum PKExpansionDirection {
     case Up,Down,Left,Right
+    
+    private func hasForwardLayoutDirection()->Bool{
+        return self == .Down || self == .Right
+    }
 }
 
 
