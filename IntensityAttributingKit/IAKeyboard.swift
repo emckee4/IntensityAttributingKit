@@ -26,17 +26,19 @@ class IAKeyboard: UIInputViewController {
     var lastKeyAvgIntensity:Float?
     var lastKeyPeakIntensity:Float?
     
+    let kKeyBackgroundColor = UIColor.lightGrayColor()
     
     //    var screenWidth:CGFloat {return UIScreen.mainScreen().bounds.width}
     //    var stackWidth:CGFloat {return screenWidth - (2 * kStackInset)}
     //
     //    var topRowKeyWidth:CGFloat { return(stackWidth - 9 * kStandardKeySpacing) / 10.0}
     //
-    var shiftKey:LockingKey!
+    
     
     let kKeyHeight:CGFloat = 40.0
     let kStandardKeySpacing:CGFloat = 4.0
     let kStackInset:CGFloat = 2.0
+    let kKeyCornerRadius:CGFloat = 4.0
     
     let primaryMapping:[[Int:String]] = [
         [0:"q",1:"w",2:"e",3:"r",4:"t",5:"y",6:"u",7:"i",8:"o",9:"p"],
@@ -54,7 +56,10 @@ class IAKeyboard: UIInputViewController {
     
     
     var standardPressureKeys:[PressureButton] = []
-    
+    var shiftKey:LockingKey!
+    var swapKeysetButton:UIButton!
+    var returnKey:PressureButton!
+    var spacebar:PressureButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -142,20 +147,59 @@ class IAKeyboard: UIInputViewController {
         leftPlaceholder.widthAnchor.constraintEqualToAnchor(rightPlaceholder.widthAnchor).active = true
         
     }
-    
+    var expandingKey:ExpandingPressureKey!
     
     func setupBottomRow(){
         bottomStackView = generateHorizontalStackView()
         
-        let space = PressureButton()
-        //space.widthAnchor.constraintEqualToConstant(kKeyHeight).active = true
-        //space.heightAnchor.constraintEqualToConstant(kKeyHeight).active = true
-        space.translatesAutoresizingMaskIntoConstraints = false
-        space.backgroundColor = UIColor.purpleColor()
-        space.setTitle(" ", forState: .Normal)
-        space.addTarget(self, action: "buttonPressed:", forControlEvents: .TouchUpInside)
-        bottomStackView.addArrangedSubview(space)
+        swapKeysetButton = UIButton(type: .System)
+        swapKeysetButton.setTitle("12/*", forState: .Normal)
+        swapKeysetButton.translatesAutoresizingMaskIntoConstraints = false
+        swapKeysetButton.backgroundColor = kKeyBackgroundColor
+        swapKeysetButton.layer.cornerRadius = kKeyCornerRadius
+        swapKeysetButton.addTarget(self, action: "swapKeyset", forControlEvents: .TouchUpInside)
+        bottomStackView.addArrangedSubview(swapKeysetButton)
         
+        //spacebar
+        
+        spacebar = PressureButton()
+        spacebar.translatesAutoresizingMaskIntoConstraints = false
+        spacebar.backgroundColor = kKeyBackgroundColor
+        spacebar.setTitle(" ", forState: .Normal)
+        spacebar.addTarget(self, action: "charKeyPressed:", forControlEvents: .TouchUpInside)
+        spacebar.layer.cornerRadius = kKeyCornerRadius
+        bottomStackView.addArrangedSubview(spacebar)
+        
+        //expanding punctuation key
+        
+        expandingKey = ExpandingPressureKey(frame:CGRectZero)
+        expandingKey.backgroundColor = kKeyBackgroundColor
+        
+        expandingKey.addKey(withTextLabel: ".") { (intensity) -> Void in
+            self.expandingCharKeyPressed(".", intensity: intensity)
+        }
+        expandingKey.addKey(withTextLabel: ",") { (intensity) -> Void in
+            self.expandingCharKeyPressed(",", intensity: intensity)
+        }
+        expandingKey.addKey(withTextLabel: "?") { (intensity) -> Void in
+            self.expandingCharKeyPressed("?", intensity: intensity)
+        }
+        expandingKey.addKey(withTextLabel: "!") { (intensity) -> Void in
+            self.expandingCharKeyPressed("!", intensity: intensity)
+        }
+        expandingKey.cornerRadius = kKeyCornerRadius
+        bottomStackView.addArrangedSubview(expandingKey)
+        expandingKey.widthAnchor.constraintGreaterThanOrEqualToAnchor(expandingKey.heightAnchor).active = true
+        
+        
+        
+        returnKey = PressureButton()
+        returnKey.setTitle("Return", forState: .Normal)
+        returnKey.addTarget(self, action: "returnKeyPressed:", forControlEvents: .TouchUpInside)
+        returnKey.backgroundColor = kKeyBackgroundColor
+        returnKey.layer.cornerRadius = kKeyCornerRadius
+        bottomStackView.addArrangedSubview(returnKey)
+
     }
     
     
@@ -187,6 +231,9 @@ class IAKeyboard: UIInputViewController {
         for key in standardPressureKeys[1..<standardPressureKeys.count]{
             key.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor).active = true
         }
+        expandingKey.widthAnchor.constraintGreaterThanOrEqualToAnchor(standardPressureKeys[0].widthAnchor).active = true
+        swapKeysetButton.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor).active = true
+        spacebar.widthAnchor.constraintGreaterThanOrEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 3.0).active = true
     }
     
     
@@ -203,7 +250,7 @@ class IAKeyboard: UIInputViewController {
     }
     
     func setupPressureKey(tag:Int, title:String)->PressureButton{
-        let nextKey = PressureButton(type: UIButtonType.RoundedRect)
+        let nextKey = PressureButton(type: UIButtonType.System)
         nextKey.tag = tag
         //nextKey.setTitle("\(title)", forState: .Normal)
         nextKey.setAttributedTitle(NSAttributedString(string: title,attributes: [NSFontAttributeName:baseFont]), forState: .Normal)
@@ -212,11 +259,22 @@ class IAKeyboard: UIInputViewController {
         nextKey.setContentHuggingPriority(100, forAxis: .Horizontal)
         nextKey.translatesAutoresizingMaskIntoConstraints = false
         nextKey.addTarget(self, action: "charKeyPressed:", forControlEvents: .TouchUpInside)
-        nextKey.layer.cornerRadius = 4.0
+        nextKey.layer.cornerRadius = kKeyCornerRadius
         return nextKey
     }
     
     
+    func expandingCharKeyPressed(text:String,intensity:RawIntensity){
+        self.lastKeyAvgIntensity = Float(intensity.avgPressure)
+        self.lastKeyPeakIntensity = Float(intensity.peakPressure)
+        if shiftKey.selected {
+            shiftKey.deselect(overrideSelectedLock: false)
+            self.textDocumentProxy.insertText(text.uppercaseString)
+        } else {
+            self.textDocumentProxy.insertText(text)
+        }
+        
+    }
     
     
     
@@ -232,10 +290,22 @@ class IAKeyboard: UIInputViewController {
             }
         }
     }
+    func returnKeyPressed(sender:PressureButton!){
+        self.lastKeyAvgIntensity = Float(sender.avgPressure)
+        self.lastKeyPeakIntensity = Float(sender.peakPressure)
+        self.textDocumentProxy.insertText("\n")
+        shiftKey.deselect(overrideSelectedLock: false)
+    }
     
     func backspaceKeyPressed(){
         textDocumentProxy.deleteBackward()
     }
+    
+    func swapKeyset(){
+        print("swap keyset")
+    }
+    
+ 
     
     
     
