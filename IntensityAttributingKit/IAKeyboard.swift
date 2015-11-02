@@ -26,7 +26,7 @@ class IAKeyboard: UIInputViewController {
     var lastKeyAvgIntensity:Float?
     var lastKeyPeakIntensity:Float?
     
-    let kKeyBackgroundColor = UIColor.lightGrayColor()
+    private let kKeyBackgroundColor = UIColor.lightGrayColor()
     
     //    var screenWidth:CGFloat {return UIScreen.mainScreen().bounds.width}
     //    var stackWidth:CGFloat {return screenWidth - (2 * kStackInset)}
@@ -34,32 +34,35 @@ class IAKeyboard: UIInputViewController {
     //    var topRowKeyWidth:CGFloat { return(stackWidth - 9 * kStandardKeySpacing) / 10.0}
     //
     
+    private let kKeyHeight:CGFloat = 40.0
+    private let kStandardKeySpacing:CGFloat = 4.0
+    private let kStackInset:CGFloat = 2.0
+    private let kKeyCornerRadius:CGFloat = 4.0
     
-    let kKeyHeight:CGFloat = 40.0
-    let kStandardKeySpacing:CGFloat = 4.0
-    let kStackInset:CGFloat = 2.0
-    let kKeyCornerRadius:CGFloat = 4.0
-    
-    let primaryMapping:[[Int:String]] = [
+    private let primaryMapping:[[Int:String]] = [
         [0:"q",1:"w",2:"e",3:"r",4:"t",5:"y",6:"u",7:"i",8:"o",9:"p"],
         [0:"a",1:"s",2:"d",3:"f",4:"g",5:"h",6:"j",7:"k",8:"l"],
         [0:"z",1:"x",2:"c",3:"v",4:"b",5:"n",6:"m"]
     ]
     
-    let baseFont = UIFont.systemFontOfSize(20.0)
+    private let baseFont = UIFont.systemFontOfSize(20.0)
     
-    var verticalStackView:UIStackView!
-    var qwertyStackView:UIStackView!
-    var asdfStackView:UIStackView!
-    var zxcvStackView:UIStackView!
-    var bottomStackView:UIStackView!
+    private var verticalStackView:UIStackView!
+    private var qwertyStackView:UIStackView!
+    private var asdfStackView:UIStackView!
+    private var zxcvStackView:UIStackView!
+    private var bottomStackView:UIStackView!
     
+    private var portraitOnlyConstraints:[NSLayoutConstraint] = []
+    private var landscapeOnlyConstraints:[NSLayoutConstraint] = []
     
-    var standardPressureKeys:[PressureButton] = []
-    var shiftKey:LockingKey!
-    var swapKeysetButton:UIButton!
-    var returnKey:PressureButton!
-    var spacebar:PressureButton!
+    private var standardPressureKeys:[PressureButton] = []
+    private var shiftKey:LockingKey!
+    private var backspace:UIButton!
+    private var swapKeysetButton:UIButton!
+    private var returnKey:PressureButton!
+    private var spacebar:PressureButton!
+    private var expandingKey:ExpandingPressureKey!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,12 +73,30 @@ class IAKeyboard: UIInputViewController {
         setupBottomRow()
         setupVerticalStackView()
         setupKeyConstraints()
+       
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        if verticalStackView.hidden {verticalStackView.hidden = false}
+        if UIScreen.mainScreen().bounds.width > UIScreen.mainScreen().bounds.height {
+            prepareForLandscape()
+        } else {
+            prepareForPortrait()
+        }
+    }
     
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        print("viewWillTransitionToSize: \(size), \(coordinator)")
+        if size.width > size.height {
+            prepareForLandscape()
+        } else {
+            prepareForPortrait()
+        }
+        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+    }
     
-    
-    func setupQwertyRow(){
+    private func setupQwertyRow(){
         qwertyStackView = generateHorizontalStackView()
         
         for i in 0..<10 {
@@ -88,7 +109,7 @@ class IAKeyboard: UIInputViewController {
         
     }
     
-    func setupAsdfRow(){
+    private func setupAsdfRow(){
         asdfStackView = generateHorizontalStackView()
         
         let leftPlaceholder = UIView()//generatePlaceholder(width: (kStandardKeyWidth / 2.0) - kStandardKeySpacing,height: 20.0)
@@ -102,17 +123,16 @@ class IAKeyboard: UIInputViewController {
             standardPressureKeys.append(key)
         }
         asdfStackView.addArrangedSubview(rightPlaceholder)
-        leftPlaceholder.widthAnchor.constraintEqualToAnchor(rightPlaceholder.widthAnchor).active = true
+        leftPlaceholder.widthAnchor.constraintEqualToAnchor(rightPlaceholder.widthAnchor).active = true  //local placeholders, any orientation
     }
     
     
-    func setupZxcvRow(){
+    private func setupZxcvRow(){
         zxcvStackView = generateHorizontalStackView()
         
         shiftKey = LockingKey()
-        // shiftButton.widthAnchor.constraintEqualToConstant(kKeyHeight).active = true
-        // shiftButton.heightAnchor.constraintEqualToConstant(kKeyHeight).active = true
-        shiftKey.widthAnchor.constraintGreaterThanOrEqualToAnchor(shiftKey.heightAnchor).active = true
+
+        
         shiftKey.translatesAutoresizingMaskIntoConstraints = false
         shiftKey.setTitle("sh", forState: .Normal)
         shiftKey.setTitle("SH", forState: .Selected)
@@ -134,22 +154,19 @@ class IAKeyboard: UIInputViewController {
         zxcvStackView.addArrangedSubview(rightPlaceholder)//generatePlaceholder(width: (kStandardKeyWidth / 2.0) - kStandardKeySpacing * 6,height: 10.0))
         
         
-        let backspace = UIButton()
-        //backspace.widthAnchor.constraintEqualToConstant(kKeyHeight).active = true
-        //backspace.heightAnchor.constraintEqualToConstant(kKeyHeight).active = true
-        //backspace.heightAnchor.constraintEqualToAnchor(backspace.widthAnchor).active = true
+        backspace = UIButton()
         backspace.translatesAutoresizingMaskIntoConstraints = false
         backspace.backgroundColor = UIColor.purpleColor()
         zxcvStackView.addArrangedSubview(backspace)
         backspace.addTarget(self, action: "backspaceKeyPressed", forControlEvents: .TouchUpInside)
-        shiftKey.widthAnchor.constraintEqualToAnchor(backspace.widthAnchor).active = true
         
-        leftPlaceholder.widthAnchor.constraintEqualToAnchor(rightPlaceholder.widthAnchor).active = true
+        
+        leftPlaceholder.widthAnchor.constraintEqualToAnchor(rightPlaceholder.widthAnchor).active = true  //local placeholders, any orientation
         
     }
-    var expandingKey:ExpandingPressureKey!
     
-    func setupBottomRow(){
+    
+    private func setupBottomRow(){
         bottomStackView = generateHorizontalStackView()
         
         swapKeysetButton = UIButton(type: .System)
@@ -189,7 +206,7 @@ class IAKeyboard: UIInputViewController {
         }
         expandingKey.cornerRadius = kKeyCornerRadius
         bottomStackView.addArrangedSubview(expandingKey)
-        expandingKey.widthAnchor.constraintGreaterThanOrEqualToAnchor(expandingKey.heightAnchor).active = true
+        
         
         
         
@@ -204,7 +221,7 @@ class IAKeyboard: UIInputViewController {
     
     
     
-    func setupVerticalStackView(){
+    private func setupVerticalStackView(){
         
         
         verticalStackView = UIStackView(arrangedSubviews: [ qwertyStackView,asdfStackView,zxcvStackView,bottomStackView])
@@ -227,16 +244,49 @@ class IAKeyboard: UIInputViewController {
         
     }
     
-    func setupKeyConstraints(){
+
+    
+    private func setupKeyConstraints(){
         for key in standardPressureKeys[1..<standardPressureKeys.count]{
             key.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor).active = true
         }
-        expandingKey.widthAnchor.constraintGreaterThanOrEqualToAnchor(standardPressureKeys[0].widthAnchor).active = true
-        swapKeysetButton.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor).active = true
-        spacebar.widthAnchor.constraintGreaterThanOrEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 3.0).active = true
+        
+        backspace.widthAnchor.constraintEqualToAnchor(shiftKey.widthAnchor).active = true   //any orientation
+        swapKeysetButton.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor).active = true //any orientation
+        
+        bottomStackView.heightAnchor.constraintEqualToAnchor(qwertyStackView.heightAnchor).active = true
+        zxcvStackView.heightAnchor.constraintEqualToAnchor(qwertyStackView.heightAnchor).active = true
+        asdfStackView.heightAnchor.constraintEqualToAnchor(qwertyStackView.heightAnchor).active = true
+
+        
+        ///setup portrait constraints
+        portraitOnlyConstraints.append( expandingKey.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 1.5) )
+        portraitOnlyConstraints.append( shiftKey.widthAnchor.constraintGreaterThanOrEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 1.3) )
+        portraitOnlyConstraints.append( shiftKey.widthAnchor.constraintLessThanOrEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 1.5) )
+        portraitOnlyConstraints.append( returnKey.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 2.0) )
+        
+        ///setup landscape constraints
+        landscapeOnlyConstraints.append( expandingKey.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 1.0) )
+        landscapeOnlyConstraints.append( shiftKey.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor) )
+        landscapeOnlyConstraints.append( returnKey.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 1.0) )
+
     }
     
+    private func prepareForLandscape(){
+        NSLayoutConstraint.deactivateConstraints(portraitOnlyConstraints)
+        NSLayoutConstraint.activateConstraints(landscapeOnlyConstraints)
+        //perform any key hides/unhides in stackviews here
+        
+    }
     
+    private func prepareForPortrait(){
+        NSLayoutConstraint.deactivateConstraints(landscapeOnlyConstraints)
+        NSLayoutConstraint.activateConstraints(portraitOnlyConstraints)
+        //perform any key hides/unhides in stackviews here
+        
+    }
+    
+
     
     func generateHorizontalStackView()->UIStackView{
         let stackview = UIStackView()
