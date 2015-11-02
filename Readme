@@ -5,8 +5,7 @@ ExpandingPressureKey:
     enable dynamic reordering (changing default key)
 
 
-Fix keyboard spacing and constants --> need to handle spacing change on rotation,
-add remaining keyboard buttons -> bottom row, then additional punctuation/numeric views
+add additional punctuation/numeric views
 
 Accessory view:
     Need different accessoryView layouts depending on orientation
@@ -29,7 +28,7 @@ need to reimplement copy/paste in iatextview
 --refactor how transformers are added? could use enum or add a singleton manager class to hold refs, or both
 
 
-
+fix locking key not displaying 3 phases
 
 
 

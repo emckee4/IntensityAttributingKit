@@ -12,14 +12,16 @@ import UIKit
 ///Sticky state toggling button which supports a locking selected state on double tap
 class LockingKey:UIButton {
     
-    let kSelectedLockedOnState = 1 << 16
+//    let kSelectedLockedOnFlag:UInt = 1 << 16
+//    let kSelectedLockedOnState:UIControlState = UIControlState(rawValue: (1 << 16))
+    private let cgClear = UIColor.clearColor().CGColor
+    private let cgBlack = UIColor.blackColor().CGColor
     
     var selectedLockedOn = false {
         didSet{
             if selectedLockedOn != oldValue {
                 selected = selectedLockedOn
-                self.highlighted = selectedLockedOn
-                //self.setNeedsLayout()
+                layer.borderColor = selectedLockedOn ? cgBlack : cgClear
             }
         }
     }
@@ -28,15 +30,17 @@ class LockingKey:UIButton {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.addTarget(self, action: "changeSelected", forControlEvents: .TouchUpInside)
+        self.addTarget(self, action: "changeSelected", forControlEvents: .TouchDown)
         self.addTarget(self, action: "setSelectedLockedOn", forControlEvents: .TouchDownRepeat)
+        self.layer.borderWidth = 1.0
+        self.layer.borderColor = cgClear
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     func changeSelected(){
-        guard !ignoreNextTouchupInside else {ignoreNextTouchupInside = false; return}
+        //guard !ignoreNextTouchupInside else {ignoreNextTouchupInside = false; return}
         if self.selected {
             deselect(overrideSelectedLock: true)
         } else {
@@ -47,7 +51,7 @@ class LockingKey:UIButton {
     func setSelectedLockedOn(){
         self.selectedLockedOn = true
         selected = true
-        ignoreNextTouchupInside = true
+        //ignoreNextTouchupInside = true
     }
     
     func deselect(overrideSelectedLock overriding:Bool){
@@ -59,6 +63,10 @@ class LockingKey:UIButton {
         }
     }
     
+//    override var state:UIControlState {
+//        get { if selectedLockedOn { return super.state.union(kSelectedLockedOnState) } else { return super.state.subtract(kSelectedLockedOnState) } }
+//    }
+    
     /*
     setImageForSelectionLock
     
@@ -67,5 +75,6 @@ class LockingKey:UIButton {
     setHighlighting, bgcolor, bgimage, etc for selectionLock
     
     */
+
     
 }

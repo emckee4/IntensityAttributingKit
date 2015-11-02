@@ -87,7 +87,6 @@ class IAKeyboard: UIInputViewController {
     }
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        print("viewWillTransitionToSize: \(size), \(coordinator)")
         if size.width > size.height {
             prepareForLandscape()
         } else {
@@ -135,8 +134,9 @@ class IAKeyboard: UIInputViewController {
         
         shiftKey.translatesAutoresizingMaskIntoConstraints = false
         shiftKey.setTitle("sh", forState: .Normal)
+        shiftKey.layer.cornerRadius = kKeyCornerRadius
+        shiftKey.backgroundColor = kKeyBackgroundColor
         shiftKey.setTitle("SH", forState: .Selected)
-        shiftKey.setTitleColor(UIColor.yellowColor(), forState: UIControlState.Highlighted.union(.Selected))
         
         zxcvStackView.addArrangedSubview(shiftKey)
         
@@ -156,7 +156,8 @@ class IAKeyboard: UIInputViewController {
         
         backspace = UIButton()
         backspace.translatesAutoresizingMaskIntoConstraints = false
-        backspace.backgroundColor = UIColor.purpleColor()
+        backspace.backgroundColor = kKeyBackgroundColor
+        backspace.layer.cornerRadius = kKeyCornerRadius
         zxcvStackView.addArrangedSubview(backspace)
         backspace.addTarget(self, action: "backspaceKeyPressed", forControlEvents: .TouchUpInside)
         
