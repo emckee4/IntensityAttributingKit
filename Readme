@@ -28,8 +28,7 @@ need to reimplement copy/paste in iatextview
 --refactor how transformers are added? could use enum or add a singleton manager class to hold refs, or both
 
 
-fix locking key not displaying 3 phases
-
+Icons: shift/capslock, backspace, return, !keyboard swap (compose circular arrow on top of keyboard?), options/popup options
 
 
 

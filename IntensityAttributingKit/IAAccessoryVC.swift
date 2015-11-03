@@ -17,7 +17,7 @@ class IAAccessoryVC: UIInputViewController {
     
     var delegate:IAAccessoryDelegate?
     
-    
+    private lazy var bundle:NSBundle = { return NSBundle(forClass: self.dynamicType) }()
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -26,12 +26,15 @@ class IAAccessoryVC: UIInputViewController {
         self.inputView!.translatesAutoresizingMaskIntoConstraints = false
         
         kbSwitchButton = UIButton(type: .System)
-        kbSwitchButton.setTitle("swapKB", forState: .Normal)
+        kbSwitchButton.setImage(UIImage(named: "Keyboard", inBundle: bundle, compatibleWithTraitCollection: nil), forState: .Normal )
+        kbSwitchButton.imageView?.contentMode = .ScaleAspectFit
         kbSwitchButton.backgroundColor = UIColor.blueColor()
+        kbSwitchButton.imageEdgeInsets = UIEdgeInsets(top: 4.0, left: 4.0, bottom: 4.0, right: 4.0)
         kbSwitchButton.addTarget(self, action: "kbSwitchButtonPressed:", forControlEvents: .TouchUpInside)
         kbSwitchButton.translatesAutoresizingMaskIntoConstraints = false
         inputView!.addSubview(kbSwitchButton)
-        
+        kbSwitchButton.widthAnchor.constraintEqualToAnchor(self.view.widthAnchor, multiplier: 0.12).active = true
+       
         slider = UISlider(frame:CGRectZero)
         slider.value = 0.4
         slider.addTarget(self, action: "sliderUpdatedWithValue:", forControlEvents: .ValueChanged)

@@ -26,14 +26,14 @@ class IAKeyboard: UIInputViewController {
     var lastKeyAvgIntensity:Float?
     var lastKeyPeakIntensity:Float?
     
-    private let kKeyBackgroundColor = UIColor.lightGrayColor()
+    
     
     //    var screenWidth:CGFloat {return UIScreen.mainScreen().bounds.width}
     //    var stackWidth:CGFloat {return screenWidth - (2 * kStackInset)}
     //
     //    var topRowKeyWidth:CGFloat { return(stackWidth - 9 * kStandardKeySpacing) / 10.0}
     //
-    
+    private let kKeyBackgroundColor = UIColor.lightGrayColor()
     private let kKeyHeight:CGFloat = 40.0
     private let kStandardKeySpacing:CGFloat = 4.0
     private let kStackInset:CGFloat = 2.0
@@ -63,6 +63,9 @@ class IAKeyboard: UIInputViewController {
     private var returnKey:PressureButton!
     private var spacebar:PressureButton!
     private var expandingKey:ExpandingPressureKey!
+    
+    
+    private lazy var bundle:NSBundle = { return NSBundle(forClass: self.dynamicType) }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -131,12 +134,15 @@ class IAKeyboard: UIInputViewController {
         
         shiftKey = LockingKey()
 
-        
+        let imageEdgeInsets = UIEdgeInsets(top: 7.0, left: 7.0, bottom: 7.0, right: 7.0)
         shiftKey.translatesAutoresizingMaskIntoConstraints = false
-        shiftKey.setTitle("sh", forState: .Normal)
+        shiftKey.setImage(UIImage(named: "caps1", inBundle: bundle, compatibleWithTraitCollection: nil), forState: .Normal )
+        shiftKey.imageEdgeInsets = imageEdgeInsets
+        shiftKey.imageView!.contentMode = .ScaleAspectFit
         shiftKey.layer.cornerRadius = kKeyCornerRadius
         shiftKey.backgroundColor = kKeyBackgroundColor
-        shiftKey.setTitle("SH", forState: .Selected)
+        shiftKey.setImage(UIImage(named: "caps2", inBundle: bundle, compatibleWithTraitCollection: nil), forState: .Selected)
+        //shiftKey.setTitle("SH", forState: .Selected)
         
         zxcvStackView.addArrangedSubview(shiftKey)
         
@@ -156,6 +162,9 @@ class IAKeyboard: UIInputViewController {
         
         backspace = UIButton()
         backspace.translatesAutoresizingMaskIntoConstraints = false
+        backspace.setImage(UIImage(named: "backspace", inBundle: bundle, compatibleWithTraitCollection: nil), forState: .Normal )
+        backspace.imageEdgeInsets = imageEdgeInsets
+        backspace.imageView!.contentMode = .ScaleAspectFit
         backspace.backgroundColor = kKeyBackgroundColor
         backspace.layer.cornerRadius = kKeyCornerRadius
         zxcvStackView.addArrangedSubview(backspace)
