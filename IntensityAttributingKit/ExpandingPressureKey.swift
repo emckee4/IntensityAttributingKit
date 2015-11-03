@@ -46,7 +46,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
         didSet{self.layer.cornerRadius = cornerRadius; _ = pressureKeys.map({$0.view.layer.cornerRadius = cornerRadius})}
     }
     
-    
+    ///This is the stack view which is actually displayed, holding all of the subviews which are acting as buttons.
     private var containedStackView:UIStackView!
     
     private var topSVConstraint:NSLayoutConstraint!
@@ -59,12 +59,24 @@ Further cleanup code, consider switching back to selector based actions (or hand
     }()
     
     private var pressureKeys:[EPKey] = []
-    private var selectedEPKey:EPKey?
+    private var selectedEPKey:EPKey? {
+        didSet {
+            if selectedEPKey?.view != oldValue?.view {
+                _ = pressureKeys.map({$0.view.backgroundColor = self.backgroundColor})
+                selectedEPKey?.view.backgroundColor = self.highlightColor
+            }
+        }
+    }
     
 
     
     private var touchIntensity: RawIntensity = RawIntensity()
     
+    
+    override var backgroundColor:UIColor? {
+        didSet{_ = pressureKeys.map({$0.view.backgroundColor = self.backgroundColor}) }
+    }
+    var highlightColor:UIColor? = UIColor.darkGrayColor()
 
     
 
@@ -136,6 +148,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
         keyView.layer.cornerRadius = self.cornerRadius
         keyView.layer.borderWidth = 1.0
         keyView.layer.borderColor = UIColor.clearColor().CGColor
+        keyView.backgroundColor = self.backgroundColor
     }
     
     
@@ -228,11 +241,12 @@ Further cleanup code, consider switching back to selector based actions (or hand
         } else {
             print("touch failed: ended on nil touch")
         }
-        
+        selectedEPKey = nil
         shrinkView()
     }
     override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
         print("touches cancelled")
+        selectedEPKey = nil
         shrinkView()
         super.touchesCancelled(touches, withEvent: event)
         
