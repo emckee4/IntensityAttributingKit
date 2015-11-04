@@ -198,7 +198,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
         //there should be one and only one touch in the touches set in touchesBegan since we have multitouch disabled
         if let touch = touches.first {
             expand()
-            touchIntensity = forceTouchAvailable ? RawIntensity(withValue: touch.force / touch.maximumPossibleForce) : RawIntensity()
+            touchIntensity = forceTouchAvailable ? RawIntensity(withValue: touch.force, maximumPossibleForce: touch.maximumPossibleForce) : RawIntensity()
             selectedEPKey = findTouchedEPKey(touch, event: event)
         }
         
@@ -215,9 +215,9 @@ Further cleanup code, consider switching back to selector based actions (or hand
                 selectedEPKey = nil
             } else if newSelectedKey?.view != selectedEPKey?.view {
                 selectedEPKey = newSelectedKey
-                touchIntensity = forceTouchAvailable ? RawIntensity(withValue: touch.force / touch.maximumPossibleForce) : RawIntensity()
+                touchIntensity = forceTouchAvailable ? RawIntensity(withValue: touch.force, maximumPossibleForce: touch.maximumPossibleForce) : RawIntensity()
             } else {
-                forceTouchAvailable ? touchIntensity.append(touch.force / touch.maximumPossibleForce) : ()
+                forceTouchAvailable ? touchIntensity.append(touch.force) : ()
             }
         }
     }
@@ -227,10 +227,10 @@ Further cleanup code, consider switching back to selector based actions (or hand
         if let touch = touches.first {
             if let newSelectedKey = findTouchedEPKey(touch, event: event) {
                 if newSelectedKey.view == selectedEPKey?.view {
-                    forceTouchAvailable ? touchIntensity.append(touch.force / touch.maximumPossibleForce) : ()
+                    forceTouchAvailable ? touchIntensity.append(touch.force) : ()
                 } else {
                     selectedEPKey = newSelectedKey
-                    touchIntensity = forceTouchAvailable ? RawIntensity(withValue: touch.force / touch.maximumPossibleForce) : RawIntensity()
+                    touchIntensity = forceTouchAvailable ? RawIntensity(withValue: touch.force, maximumPossibleForce: touch.maximumPossibleForce) : RawIntensity()
                 }
                 //perform closure or selector here
                 selectedEPKey!.closure(intensity: touchIntensity)

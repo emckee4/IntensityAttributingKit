@@ -1,3 +1,14 @@
+Today:
+    -finish refactoring for new rawIntensity (commit before moving on)
+    Other types should be refactored to support new RawIntensity functionality
+        -- PressureButton and EPK will need some other means of communicating besides target-action since RawIntensity is a struct. Either delegates or closures (either way watch for retention cycles). class-only protocol delegates can be set as appropriately weak
+        -- Single intensity value (derived from global mapping) should reach IATextView
+
+    build pressure view for...
+    build IntensityAdjuster
+    finish remaining accessory view
+    --after refactoring, could make key-press highlighting/background change force specific for all pressure sensitive keys
+
 ExpandingPressureKey:
     tuning:
         enable subview highlighting?
@@ -7,7 +18,16 @@ ExpandingPressureKey:
 
 add additional punctuation/numeric views
 
+
+IntensityAdjuster:
+tap toggle lock, long press or double tap brings up menu (or swap control?: want at least options for changing/adding control as well as possibly including option for changing intensity mapping scheme, though this might be better dealt with under global options)
+
 Accessory view:
+    -link insertion should be as pasted NSURL with NSLinkAttributeName, or link should be detected and inserted at send time
+    -send button could be an expanding button with delay to offer sending as email
+
+
+
     Need different accessoryView layouts depending on orientation
         use popup for overflow of normal options, including Transform style
     Different Accessories:

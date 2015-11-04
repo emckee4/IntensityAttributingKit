@@ -325,7 +325,7 @@ class IAKeyboard: UIInputViewController {
     
     
     func expandingCharKeyPressed(text:String,intensity:RawIntensity){
-        self.lastKeyAvgIntensity = Float(intensity.avgPressure)
+        self.lastKeyAvgIntensity = intensity.intensity  
         self.lastKeyPeakIntensity = Float(intensity.peakPressure)
         if shiftKey.selected {
             shiftKey.deselect(overrideSelectedLock: false)
