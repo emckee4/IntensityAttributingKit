@@ -61,7 +61,7 @@ class IAKeyboard: UIInputViewController {
     private var swapKeysetButton:UIButton!
     private var returnKey:PressureButton!
     private var spacebar:PressureButton!
-    private var expandingKey:ExpandingPressureKey!
+    private var expandingPuncKey:ExpandingPressureKey!
     
     
     private lazy var bundle:NSBundle = { return NSBundle(forClass: self.dynamicType) }()
@@ -197,24 +197,24 @@ class IAKeyboard: UIInputViewController {
         bottomStackView.addArrangedSubview(spacebar)
         
         //expanding punctuation key
+
+        expandingPuncKey = ExpandingPressureKey(frame:CGRectZero)
+        expandingPuncKey.backgroundColor = kKeyBackgroundColor
         
-        expandingKey = ExpandingPressureKey(frame:CGRectZero)
-        expandingKey.backgroundColor = kKeyBackgroundColor
-        
-        expandingKey.addKey(withTextLabel: ".") { (intensity) -> Void in
+        expandingPuncKey.addKey(withTextLabel: ".") { [unowned self] (intensity) -> Void in
             self.expandingCharKeyPressed(".", intensity: intensity)
         }
-        expandingKey.addKey(withTextLabel: ",") { (intensity) -> Void in
+        expandingPuncKey.addKey(withTextLabel: ",") { [unowned self] (intensity) -> Void in
             self.expandingCharKeyPressed(",", intensity: intensity)
         }
-        expandingKey.addKey(withTextLabel: "?") { (intensity) -> Void in
+        expandingPuncKey.addKey(withTextLabel: "?") { [unowned self] (intensity) -> Void in
             self.expandingCharKeyPressed("?", intensity: intensity)
         }
-        expandingKey.addKey(withTextLabel: "!") { (intensity) -> Void in
+        expandingPuncKey.addKey(withTextLabel: "!") { [unowned self] (intensity) -> Void in
             self.expandingCharKeyPressed("!", intensity: intensity)
         }
-        expandingKey.cornerRadius = kKeyCornerRadius
-        bottomStackView.addArrangedSubview(expandingKey)
+        expandingPuncKey.cornerRadius = kKeyCornerRadius
+        bottomStackView.addArrangedSubview(expandingPuncKey)
         
         
         
@@ -269,13 +269,13 @@ class IAKeyboard: UIInputViewController {
 
         
         ///setup portrait constraints
-        portraitOnlyConstraints.append( expandingKey.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 1.5) )
+        portraitOnlyConstraints.append( expandingPuncKey.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 1.5) )
         portraitOnlyConstraints.append( shiftKey.widthAnchor.constraintGreaterThanOrEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 1.3) )
         portraitOnlyConstraints.append( shiftKey.widthAnchor.constraintLessThanOrEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 1.5) )
         portraitOnlyConstraints.append( returnKey.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 2.0) )
         
         ///setup landscape constraints
-        landscapeOnlyConstraints.append( expandingKey.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 1.0) )
+        landscapeOnlyConstraints.append( expandingPuncKey.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 1.0) )
         landscapeOnlyConstraints.append( shiftKey.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor) )
         landscapeOnlyConstraints.append( returnKey.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 1.0) )
 
