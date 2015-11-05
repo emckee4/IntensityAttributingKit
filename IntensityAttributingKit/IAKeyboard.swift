@@ -23,8 +23,7 @@ class IAKeyboard: UIInputViewController {
     //
     //need array of pressure buttons
     //need nextKeyboard button
-    var lastKeyAvgIntensity:Float?
-    var lastKeyPeakIntensity:Float?
+    var intensity:Float!
     
     
     
@@ -325,8 +324,7 @@ class IAKeyboard: UIInputViewController {
     
     
     func expandingCharKeyPressed(text:String,intensity:RawIntensity){
-        self.lastKeyAvgIntensity = intensity.intensity  
-        self.lastKeyPeakIntensity = Float(intensity.peakPressure)
+        self.intensity = intensity.intensity
         if shiftKey.selected {
             shiftKey.deselect(overrideSelectedLock: false)
             self.textDocumentProxy.insertText(text.uppercaseString)
@@ -340,8 +338,7 @@ class IAKeyboard: UIInputViewController {
     
     func charKeyPressed(sender:PressureButton!){
         if let text = sender.titleLabel?.text {
-            self.lastKeyAvgIntensity = Float(sender.avgPressure)
-            self.lastKeyPeakIntensity = Float(sender.peakPressure)
+            self.intensity = Float(sender.avgPressure)
             if shiftKey.selected {
                 shiftKey.deselect(overrideSelectedLock: false)
                 self.textDocumentProxy.insertText(text.uppercaseString)
@@ -351,8 +348,7 @@ class IAKeyboard: UIInputViewController {
         }
     }
     func returnKeyPressed(sender:PressureButton!){
-        self.lastKeyAvgIntensity = Float(sender.avgPressure)
-        self.lastKeyPeakIntensity = Float(sender.peakPressure)
+        self.intensity = Float(sender.avgPressure)
         self.textDocumentProxy.insertText("\n")
         shiftKey.deselect(overrideSelectedLock: false)
     }

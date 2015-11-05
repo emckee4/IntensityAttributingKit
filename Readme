@@ -1,5 +1,11 @@
 Today:
-    -finish refactoring for new rawIntensity (commit before moving on)
+    -> RawIntensity should explicitly store force values as Float
+
+    Fix intensity passing from IAKeyboard to IATextView to pass only single intensity value.
+    Refactor PressureButton to support RawIntensity and PressureAction delegate. Add/Fix selection indication.
+    EPK should use new delegate pattern
+
+
     Other types should be refactored to support new RawIntensity functionality
         -- PressureButton and EPK will need some other means of communicating besides target-action since RawIntensity is a struct. Either delegates or closures (either way watch for retention cycles). class-only protocol delegates can be set as appropriately weak
         -- Single intensity value (derived from global mapping) should reach IATextView

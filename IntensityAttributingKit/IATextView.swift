@@ -143,10 +143,9 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
         if let paragraphStyle = typingAttributes[NSParagraphStyleAttributeName] {
             retainedAttributes = [NSParagraphStyleAttributeName:paragraphStyle]
         }
-        if let iaKB = inputViewController as? IAKeyboard where iaKB.lastKeyAvgIntensity > 0 && iaKB.lastKeyPeakIntensity > 0 {
-            thisIntensity = iaKB.lastKeyAvgIntensity
-            iaKB.lastKeyAvgIntensity = nil
-            iaKB.lastKeyPeakIntensity = nil
+        if let iaKB = inputViewController as? IAKeyboard where iaKB.intensity > 0 {
+            thisIntensity = iaKB.intensity
+            iaKB.intensity = nil
         } else {
             thisIntensity = self.sliderVal
         }
