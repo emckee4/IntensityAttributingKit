@@ -338,7 +338,7 @@ class IAKeyboard: UIInputViewController {
     
     func charKeyPressed(sender:PressureButton!){
         if let text = sender.titleLabel?.text {
-            self.intensity = Float(sender.avgPressure)
+            self.intensity = sender.lastIntensity
             if shiftKey.selected {
                 shiftKey.deselect(overrideSelectedLock: false)
                 self.textDocumentProxy.insertText(text.uppercaseString)
@@ -348,7 +348,7 @@ class IAKeyboard: UIInputViewController {
         }
     }
     func returnKeyPressed(sender:PressureButton!){
-        self.intensity = Float(sender.avgPressure)
+        self.intensity = sender.lastIntensity
         self.textDocumentProxy.insertText("\n")
         shiftKey.deselect(overrideSelectedLock: false)
     }
