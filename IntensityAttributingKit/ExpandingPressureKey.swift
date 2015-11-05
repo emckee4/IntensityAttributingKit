@@ -61,9 +61,16 @@ Further cleanup code, consider switching back to selector based actions (or hand
     private var pressureKeys:[EPKey] = []
     private var selectedEPKey:EPKey? {
         didSet {
-            if selectedEPKey?.view != oldValue?.view {
-                _ = pressureKeys.map({$0.view.backgroundColor = self.backgroundColor})
-                selectedEPKey?.view.backgroundColor = self.highlightColor
+            if selectedEPKey != nil {
+                for pk in pressureKeys {
+                    if pk.view == selectedEPKey!.view {
+                        pk.view.backgroundColor = bgColorForSelectionIntensity()
+                    } else {
+                        pk.view.backgroundColor = self.backgroundColor
+                    }
+                }
+            } else {
+                _ = pressureKeys.map({ $0.view.backgroundColor = self.backgroundColor })
             }
         }
     }
@@ -73,10 +80,12 @@ Further cleanup code, consider switching back to selector based actions (or hand
     private var touchIntensity: RawIntensity = RawIntensity()
     
     
+    
     override var backgroundColor:UIColor? {
-        didSet{_ = pressureKeys.map({$0.view.backgroundColor = self.backgroundColor}) }
+        didSet {_ = pressureKeys.map({$0.view.backgroundColor = self.backgroundColor})}
     }
-    var highlightColor:UIColor? = UIColor.darkGrayColor()
+    ///Color for background of selected cell if 3dTouch (and so our dynamic selection background color) are not available
+    var nonTouchSelectionBGColor = UIColor.darkGrayColor()
 
     
 
@@ -124,6 +133,18 @@ Further cleanup code, consider switching back to selector based actions (or hand
         
     }
     
+    private func bgColorForSelectionIntensity()->UIColor?{
+        guard backgroundColor != nil else {return nonTouchSelectionBGColor}
+        ///If the device doesn't support force touch then we return darkGrey
+        guard forceTouchAvailable else {return nonTouchSelectionBGColor}
+        var white:CGFloat = 0.0
+        var alpha:CGFloat = 1.0
+        backgroundColor!.getWhite(&white, alpha: &alpha)
+        let intensity = touchIntensity.intensity
+        let newAlpha:CGFloat = max(alpha * CGFloat(1 + intensity), 1.0)
+        let newWhite:CGFloat = white * CGFloat(1 - intensity)
+        return UIColor(white: newWhite, alpha: newAlpha)
+    }
     
     override func intrinsicContentSize() -> CGSize {
         return containedStackView.arrangedSubviews.first?.intrinsicContentSize() ?? CGSizeZero
@@ -214,10 +235,11 @@ Further cleanup code, consider switching back to selector based actions (or hand
                 touchIntensity.reset()
                 selectedEPKey = nil
             } else if newSelectedKey?.view != selectedEPKey?.view {
-                selectedEPKey = newSelectedKey
                 touchIntensity = forceTouchAvailable ? RawIntensity(withValue: touch.force, maximumPossibleForce: touch.maximumPossibleForce) : RawIntensity()
+                selectedEPKey = newSelectedKey
             } else {
                 forceTouchAvailable ? touchIntensity.append(touch.force) : ()
+                selectedEPKey = newSelectedKey //this value is the same but we want to trigger the didSet closure so that the background updates
             }
         }
     }

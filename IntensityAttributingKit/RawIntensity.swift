@@ -87,7 +87,7 @@ struct ForceIntensityMappingFunctions {
             return (raw.forceHistory[1..<count].reduce(0.0, combine: +) / Float(count - 1)) / raw.maximumPossibleForce
         }
         
-        ///average discarding first value. If the history is of length greater than ten then this only uses the ten most recent values.
+        ///Average discarding first value. If the history is of length greater than ten then this only uses the ten most recent values. The interval over which 10 sequential touch events (within the same touch) occur seems to typically work out to a little less than 0.15 seconds in testing.
         static func averageLastTen(raw:RawIntensity)->Float{
             let count = raw.forceHistory.count
             guard count > 1 else {return 0.0}
