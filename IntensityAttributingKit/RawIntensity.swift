@@ -11,9 +11,9 @@ import Foundation
 
 struct RawIntensity {
     ///raw force value
-    var forceHistory:[CGFloat]
+    var forceHistory:[Float]
     ///As far as I can tell this is constant on a device and may well be 6.667 across all devices.
-    var maximumPossibleForce:CGFloat
+    var maximumPossibleForce:Float
     
     ///returns the intensity value for this RawIntensity object as determined using the global static var forceIntensityMapping(RawIntensity)
     var intensity:Float {
@@ -25,28 +25,35 @@ struct RawIntensity {
         let count = forceHistory.count
         guard count > 1 else {return 0.0}
         if count < 10 {
-            return Float((forceHistory[1..<count].reduce(0.0, combine: +) / CGFloat(count - 1)) / self.maximumPossibleForce)
+            return (forceHistory[1..<count].reduce(0.0, combine: +) / Float(count - 1)) / self.maximumPossibleForce
         } else {
-            return Float((forceHistory[(count - 10)..<count].reduce(0.0, combine: +) / CGFloat(10)) / self.maximumPossibleForce)
+            return (forceHistory[(count - 10)..<count].reduce(0.0, combine: +) / Float(10)) / self.maximumPossibleForce
         }
         
     }
     
     var peakPressure:Float {
-        return Float((forceHistory.maxElement() ?? 0.0) / self.maximumPossibleForce)
+        return (forceHistory.maxElement() ?? 0.0) / self.maximumPossibleForce
     }
     
     mutating func reset(withValue:CGFloat = 0.0){
-        forceHistory = [withValue]
+        forceHistory = [Float(withValue)]
     }
     
     mutating func append(value:CGFloat){
+        forceHistory.append(Float(value))
+    }
+    mutating func append(value:Float){
         forceHistory.append(value)
     }
     
+    init(withValue:CGFloat, maximumPossibleForce:CGFloat = RawIntensity.maximumPossibleForceForDevice){
+        forceHistory = [Float(withValue)]
+        self.maximumPossibleForce = Float(maximumPossibleForce)
+    }
     
-    init(withValue:CGFloat = 0.0, maximumPossibleForce:CGFloat = RawIntensity.maximumPossibleForceForDevice){
-        forceHistory = [withValue]
+    init(withFloatValue float:Float = 0.0, maximumPossibleForce:Float = Float(RawIntensity.maximumPossibleForceForDevice)){
+        forceHistory = [float]
         self.maximumPossibleForce = maximumPossibleForce
     }
     
@@ -71,13 +78,13 @@ struct ForceIntensityMappingFunctions {
     struct Linear {
         ///returns max(forceHistory) /
         static func maxForce(raw:RawIntensity)->Float{
-            return Float((raw.forceHistory.maxElement() ?? 0.0) / raw.maximumPossibleForce)
+            return (raw.forceHistory.maxElement() ?? 0.0) / raw.maximumPossibleForce
         }
         
         ///average not including first value
         static func averageForce(raw:RawIntensity)->Float{
             let count = raw.forceHistory.count
-            return Float((raw.forceHistory[1..<count].reduce(0.0, combine: +) / CGFloat(count - 1)) / raw.maximumPossibleForce)
+            return (raw.forceHistory[1..<count].reduce(0.0, combine: +) / Float(count - 1)) / raw.maximumPossibleForce
         }
         
         ///average discarding first value. If the history is of length greater than ten then this only uses the ten most recent values.
@@ -85,9 +92,9 @@ struct ForceIntensityMappingFunctions {
             let count = raw.forceHistory.count
             guard count > 1 else {return 0.0}
             if count < 10 {
-                return Float((raw.forceHistory[1..<count].reduce(0.0, combine: +) / CGFloat(count - 1)) / raw.maximumPossibleForce)
+                return (raw.forceHistory[1..<count].reduce(0.0, combine: +) / Float(count - 1)) / raw.maximumPossibleForce
             } else {
-                return Float((raw.forceHistory[(count - 10)..<count].reduce(0.0, combine: +) / CGFloat(10)) / raw.maximumPossibleForce)
+                return (raw.forceHistory[(count - 10)..<count].reduce(0.0, combine: +) / Float(10)) / raw.maximumPossibleForce
             }
         }
     }
