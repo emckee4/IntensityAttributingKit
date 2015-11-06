@@ -8,7 +8,7 @@
 import UIKit
 
 @IBDesignable
-class IAKeyboard: UIInputViewController {
+class IAKeyboard: UIInputViewController, PressureKeyAction {
     
     
     
@@ -199,20 +199,14 @@ class IAKeyboard: UIInputViewController {
         //expanding punctuation key
 
         expandingPuncKey = ExpandingPressureKey(frame:CGRectZero)
+        expandingPuncKey.delegate = self
         expandingPuncKey.backgroundColor = kKeyBackgroundColor
+
+        expandingPuncKey.addCharKey(charToInsert: ".")
+        expandingPuncKey.addCharKey(charToInsert: ",")
+        expandingPuncKey.addCharKey(charToInsert: "?")
+        expandingPuncKey.addCharKey(charToInsert: "!")
         
-        expandingPuncKey.addKey(withTextLabel: ".") { [unowned self] (intensity) -> Void in
-            self.expandingCharKeyPressed(".", intensity: intensity)
-        }
-        expandingPuncKey.addKey(withTextLabel: ",") { [unowned self] (intensity) -> Void in
-            self.expandingCharKeyPressed(",", intensity: intensity)
-        }
-        expandingPuncKey.addKey(withTextLabel: "?") { [unowned self] (intensity) -> Void in
-            self.expandingCharKeyPressed("?", intensity: intensity)
-        }
-        expandingPuncKey.addKey(withTextLabel: "!") { [unowned self] (intensity) -> Void in
-            self.expandingCharKeyPressed("!", intensity: intensity)
-        }
         expandingPuncKey.cornerRadius = kKeyCornerRadius
         bottomStackView.addArrangedSubview(expandingPuncKey)
         
@@ -361,10 +355,20 @@ class IAKeyboard: UIInputViewController {
         print("swap keyset")
     }
     
- 
-    
-    
-    
+    func pressureKeyPressed(sender: PressureControl, actionName: String, actionType: PressureKeyActionType, intensity: Float) {
+        if actionType == .CharInsert {
+            self.intensity = intensity
+            if shiftKey.selected {
+                shiftKey.deselect(overrideSelectedLock: false)
+                self.textDocumentProxy.insertText(actionName.uppercaseString)
+            } else {
+                self.textDocumentProxy.insertText(actionName)
+            }
+        } else if actionType == .TriggerFunction {
+            //handle function calling...
+        }
+    }
+
     
 }
 

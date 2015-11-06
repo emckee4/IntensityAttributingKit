@@ -195,7 +195,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
         label.layer.borderColor = UIColor.clearColor().CGColor
     }
     
-    func addCharKey(charToInsert char:String, actionName:String){
+    func addCharKey(charToInsert char:String){
         let label = UILabel()
         label.text = char
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -203,7 +203,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
         label.font = UIFont.systemFontOfSize(20.0)
         
         let stackIndex = pressureKeys.count
-        pressureKeys.append(EPKey(view: label, actionName: actionName, actionType: .CharInsert))
+        pressureKeys.append(EPKey(view: label, actionName: char, actionType: .CharInsert))
         label.hidden = stackIndex != 0
         
         if expansionDirection == .Down || expansionDirection == .Right {
@@ -278,7 +278,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
                     touchIntensity = forceTouchAvailable ? RawIntensity(withValue: touch.force, maximumPossibleForce: touch.maximumPossibleForce) : RawIntensity()
                 }
                 //perform closure or selector here
-                delegate?.pressureKeyPressed(self, actionName: selectedEPKey!.actionName, intensity: touchIntensity.intensity)
+                delegate?.pressureKeyPressed(self, actionName: selectedEPKey!.actionName, actionType:selectedEPKey!.actionType, intensity: touchIntensity.intensity)
             } else {
                 selectedEPKey = nil
                 print("touch failed: ended on touch of non subview")

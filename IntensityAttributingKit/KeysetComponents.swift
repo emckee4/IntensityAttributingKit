@@ -58,7 +58,7 @@ struct BasicEnglishKeyset {
 
 
 protocol PressureKeyAction {
-    func pressureKeyPressed(sender:PressureControl, actionName:String, intensity:Float)
+    func pressureKeyPressed(sender:PressureControl, actionName:String, actionType:PressureKeyActionType, intensity:Float)
 }
 
 enum PressureKeyActionType {
