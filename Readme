@@ -1,9 +1,16 @@
-add functionality for duration tracking method of intensity tracking
-
 Today:
+    Rebuild IAAccessory to use stackview for layout:
+        Row layout functions will instantiate and arrange objects and constraints for multiple layout options for each row
+        Later config functions will be able to make visible and hide elements as needed for a specific row layout, setting constraints as needed.
+        tagging format should be set up
+
+    Once layout has been separated from key contents:
+        build keyset formats
+        implement basic english keyset
+
     Need to cleanup IntensityAdjuster, particularly constraints and bounds issues
 
-    Need to rebuild IAAccessory to use stackview for layout
+    
 
 add additional punctuation/numeric views--
     should add some sort of type with keysets for the view, any relevent layout info (like key count), and any linkages to other related keysets
@@ -13,7 +20,7 @@ want option menu of some sort on accessory view for, among other things, changin
 
 want camera picker on accessory view
 
-want send button on accessory view
+-->send button belongs with textview, handled by containing app, though iakit should make available an HTML encoding
 
 ???? move text field to top of accessory view? or attach it later in code of final app?
 -- probably later option with send button attached.
@@ -22,6 +29,10 @@ ExpandingPressureKey (later optional improvements)
     on selection: flash item?, haptic?, option to reorder array and set as default
     enable dynamic reordering (changing default key)
 
+
+RawIntensity:
+    test in sim if keypress events stop if press isn't moving/varying in force (in which case duration method will need to pass in a start time)
+    give duration struct a static method which can be used by the pressure with duration functions to make duration based intensity tunable
 
 Accessory view:
     -link insertion should be as pasted NSURL with NSLinkAttributeName, or link should be detected and inserted at send time
@@ -53,7 +64,8 @@ Icons: return, options, camera, ?
 
 -Make kb text color consistant, add highlight effect (background change color?)
 
-
+--Longer term:
+    make all keys some derivative of expanding keys, include larger expansion style option as used in system keyboard popups
 
 
 
