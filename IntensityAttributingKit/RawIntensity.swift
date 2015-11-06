@@ -98,6 +98,16 @@ struct ForceIntensityMappingFunctions {
             }
         }
     }
+    struct Duration {
+        static func eventCount(raw:RawIntensity)->Float{
+            return min(Float(raw.forceHistory.count) / 100.0, 1.0)
+        }
+        static func eventCountFast2(raw:RawIntensity)->Float{
+            return min(Float(raw.forceHistory.count) / 50.0, 1.0)
+        }
+
+
+    }
 }
 
 

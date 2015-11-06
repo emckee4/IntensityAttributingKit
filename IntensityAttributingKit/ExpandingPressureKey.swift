@@ -261,7 +261,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
                 touchIntensity = forceTouchAvailable ? RawIntensity(withValue: touch.force, maximumPossibleForce: touch.maximumPossibleForce) : RawIntensity()
                 selectedEPKey = newSelectedKey
             } else {
-                forceTouchAvailable ? touchIntensity.append(touch.force) : ()
+                touchIntensity.append(forceTouchAvailable ? touch.force : 0.0)
                 selectedEPKey = newSelectedKey //this value is the same but we want to trigger the didSet closure so that the background updates
             }
         }
