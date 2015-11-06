@@ -1,32 +1,23 @@
 Today:
-    -> RawIntensity should explicitly store force values as Float
+    Need to cleanup IntensityAdjuster, particularly constraints and bounds issues
 
-    Fix intensity passing from IAKeyboard to IATextView to pass only single intensity value.
-    Refactor PressureButton to support RawIntensity and PressureAction delegate. Add/Fix selection indication.
-    EPK should use new delegate pattern
-
-
-    Other types should be refactored to support new RawIntensity functionality
-        -- PressureButton and EPK will need some other means of communicating besides target-action since RawIntensity is a struct. Either delegates or closures (either way watch for retention cycles). class-only protocol delegates can be set as appropriately weak
-        -- Single intensity value (derived from global mapping) should reach IATextView
-
-    build pressure view for...
-    build IntensityAdjuster
-    finish remaining accessory view
-    --after refactoring, could make key-press highlighting/background change force specific for all pressure sensitive keys
-
-ExpandingPressureKey:
-    tuning:
-        enable subview highlighting?
-        on selection: flash item?, haptic?, option to reorder array and set as default
-    enable dynamic reordering (changing default key)
-
+    Need to rebuild IAAccessory to use stackview for layout
 
 add additional punctuation/numeric views
 
+want option menu of some sort on accessory view for, among other things, changing intensity renderings
 
-IntensityAdjuster:
-tap toggle lock, long press or double tap brings up menu (or swap control?: want at least options for changing/adding control as well as possibly including option for changing intensity mapping scheme, though this might be better dealt with under global options)
+want camera picker on accessory view
+
+want send button on accessory view
+
+???? move text field to top of accessory view? or attach it later in code of final app?
+-- probably later option with send button attached.
+
+ExpandingPressureKey (later optional improvements)
+    on selection: flash item?, haptic?, option to reorder array and set as default
+    enable dynamic reordering (changing default key)
+
 
 Accessory view:
     -link insertion should be as pasted NSURL with NSLinkAttributeName, or link should be detected and inserted at send time
@@ -54,7 +45,7 @@ need to reimplement copy/paste in iatextview
 --refactor how transformers are added? could use enum or add a singleton manager class to hold refs, or both
 
 
-Icons: return, !keyboard swap (compose circular arrow on top of keyboard?), options/popup options
+Icons: return, options, camera, ?
 
 -Make kb text color consistant, add highlight effect (background change color?)
 

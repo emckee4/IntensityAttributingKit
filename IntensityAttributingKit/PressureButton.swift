@@ -33,6 +33,7 @@ class PressureButton: UIButton {
     var nonTouchSelectionBGColor = UIColor.darkGrayColor()
     
     private func setBackgroundColorForIntensity(){
+        guard baseBackgroundColor != nil else {return}
         guard forceTouchAvailable else {super.backgroundColor = nonTouchSelectionBGColor; return}
         let intensity = rawIntensity.intensity
         guard intensity > 0.0 else {super.backgroundColor = baseBackgroundColor; return}
@@ -53,6 +54,7 @@ class PressureButton: UIButton {
         if touchInside {
             forceTouchAvailable ? rawIntensity.reset(touch.force) : rawIntensity.reset(0.0)
             setBackgroundColorForIntensity()
+            sendActionsForControlEvents(.ValueChanged)
         }
         return super.beginTrackingWithTouch(touch, withEvent: event)
     }
@@ -60,12 +62,14 @@ class PressureButton: UIButton {
         if touchInside {
             rawIntensity.append(touch.force)
             setBackgroundColorForIntensity()
+            sendActionsForControlEvents(.ValueChanged)
         }
         return super.continueTrackingWithTouch(touch, withEvent: event)
     }
     override func endTrackingWithTouch(touch: UITouch?, withEvent event: UIEvent?) {
         if touchInside && touch != nil {
             rawIntensity.append(touch!.force)
+            sendActionsForControlEvents(.ValueChanged)
         }
         resetBackground()
         super.endTrackingWithTouch(touch, withEvent: event)

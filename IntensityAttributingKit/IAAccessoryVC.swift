@@ -12,7 +12,8 @@ class IAAccessoryVC: UIInputViewController {
 
     
     var kbSwitchButton:UIButton!
-    var slider:UISlider!
+    //var slider:UISlider!
+    var intensityAdjuster:IntensityAdjuster!
     var optionButton:UIButton!
     
     var delegate:IAAccessoryDelegate?
@@ -35,11 +36,13 @@ class IAAccessoryVC: UIInputViewController {
         inputView!.addSubview(kbSwitchButton)
         kbSwitchButton.widthAnchor.constraintEqualToAnchor(self.view.widthAnchor, multiplier: 0.12).active = true
        
-        slider = UISlider(frame:CGRectZero)
-        slider.value = 0.4
-        slider.addTarget(self, action: "sliderUpdatedWithValue:", forControlEvents: .ValueChanged)
-        slider.translatesAutoresizingMaskIntoConstraints = false
-        inputView!.addSubview(slider)
+//        slider = UISlider(frame:CGRectZero)
+//        slider.value = 0.4
+//        slider.addTarget(self, action: "sliderUpdatedWithValue:", forControlEvents: .ValueChanged)
+        intensityAdjuster = IntensityAdjuster()
+        intensityAdjuster.translatesAutoresizingMaskIntoConstraints = false
+        intensityAdjuster.commonBackgroundColor = UIColor.lightGrayColor()
+        inputView!.addSubview(intensityAdjuster)
         
         optionButton = UIButton(type: .Custom)
         optionButton.backgroundColor = UIColor.greenColor()
@@ -60,16 +63,16 @@ class IAAccessoryVC: UIInputViewController {
         kbSwitchButton.bottomAnchor.constraintEqualToAnchor(inputView!.bottomAnchor).active = true
         kbSwitchButton.leadingAnchor.constraintEqualToAnchor(inputView!.leadingAnchor).active = true
         
-        slider.leadingAnchor.constraintEqualToAnchor(kbSwitchButton.trailingAnchor, constant: 5.0).active = true
+        intensityAdjuster.leadingAnchor.constraintEqualToAnchor(kbSwitchButton.trailingAnchor, constant: 5.0).active = true
         
-        slider.topAnchor.constraintGreaterThanOrEqualToAnchor(inputView!.topAnchor, constant: 1.0).active = true
-        slider.bottomAnchor.constraintLessThanOrEqualToAnchor(inputView!.bottomAnchor, constant: -1.0).active = true
+        intensityAdjuster.topAnchor.constraintGreaterThanOrEqualToAnchor(inputView!.topAnchor, constant: 1.0).active = true
+        intensityAdjuster.bottomAnchor.constraintLessThanOrEqualToAnchor(inputView!.bottomAnchor, constant: -1.0).active = true
         
-        optionButton.leadingAnchor.constraintEqualToAnchor(slider.trailingAnchor, constant: 2.0).active = true
+        optionButton.leadingAnchor.constraintGreaterThanOrEqualToAnchor(intensityAdjuster.trailingAnchor, constant: 2.0).active = true
         
         optionButton.topAnchor.constraintEqualToAnchor(inputView!.topAnchor).active = true
         optionButton.bottomAnchor.constraintEqualToAnchor(inputView!.bottomAnchor).active = true
-        
+        optionButton.widthAnchor.constraintEqualToConstant(60.0).active = true
         optionButton.trailingAnchor.constraintEqualToAnchor(inputView!.trailingAnchor, constant: -1.0).active = true
     }
     
@@ -78,8 +81,23 @@ class IAAccessoryVC: UIInputViewController {
     }
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
+        layoutForBounds(UIScreen.mainScreen().bounds.size)
+
     }
+    
+    func layoutForBounds(size:CGSize){
+        if !intensityAdjuster.forceTouchAvailable {
+            intensityAdjuster.showPressureSlider = true
+            intensityAdjuster.showPressurePad = false
+        } else if size.width > size.height {
+            intensityAdjuster.showPressureSlider = true
+            intensityAdjuster.showPressurePad = true
+        } else {
+            intensityAdjuster.showPressurePad = true
+            intensityAdjuster.showPressureSlider = false
+        }
+    }
+    
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -90,22 +108,24 @@ class IAAccessoryVC: UIInputViewController {
         delegate?.keyboardChangeButtonPressed()
     }
     
-    func sliderUpdatedWithValue(sender:UISlider!){
-        delegate?.sliderUpdatedWithValue(sender.value)
-    }
+//    func defaultIntensityUpdatedWithValue(sender:UISlider!){
+//        delegate?.sliderUpdatedWithValue(sender.value)
+//    }
     
     func optionButtonPressed(){
         delegate?.optionButtonPressed()
     }
     
 
-    
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        layoutForBounds(size)
+    }
 
 
 }
 
 protocol IAAccessoryDelegate {
     func keyboardChangeButtonPressed()
-    func sliderUpdatedWithValue(value:Float)
+    //func sliderUpdatedWithValue(value:Float)
     func optionButtonPressed()
 }

@@ -46,9 +46,9 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
         return IAKeyboard(nibName: nil, bundle: nil)
     }()
     
-    var sliderVal:Float {
-        get {return iaAccessory.slider.value}
-        set {iaAccessory.slider.value = newValue}
+    var defaultIntensity:Float {
+        get {return iaAccessory.intensityAdjuster.defaultIntensity}
+        set {if !iaAccessory.intensityAdjuster.defaultLocked {iaAccessory.intensityAdjuster.defaultIntensity = newValue}}
     }
     
     
@@ -86,7 +86,7 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
         self.delegate = self
         self.layer.cornerRadius = 10.0
         self.textContainerInset = UIEdgeInsetsMake(7.0, 2.0, 7.0, 2.0)
-        self.currentAttributes = IntensityAttributes(intensity: sliderVal, size: 18.0)
+        self.currentAttributes = IntensityAttributes(intensity: defaultIntensity, size: 18.0)
         currentAttributes.currentScheme = "WeightScheme"//"TextColorScheme"
         typingAttributes = currentTransformer.typingAttributesForScheme(currentAttributes)
         self.allowsEditingTextAttributes = true
@@ -103,9 +103,9 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
         self.reloadInputViews()
     }
     
-    func sliderUpdatedWithValue(value: Float) {
-        
-    }
+//    func defaultIntensityUpdatedWithValue(value: Float) {
+//        
+//    }
     
     func optionButtonPressed() {
         var nextSchemeName:String = ""
@@ -129,8 +129,8 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
     //                iaKB.lastKeyAvgIntensity = nil
     //                iaKB.lastKeyPeakIntensity = nil
     //            } else {
-    //                self.typingAttributes[NSFontAttributeName] = fontForIntensity(self.sliderVal)
-    //                self.typingAttributes["IntensityAttributed"] = self.sliderVal
+    //                self.typingAttributes[NSFontAttributeName] = fontForIntensity(self.defaultIntensity)
+    //                self.typingAttributes["IntensityAttributed"] = self.defaultIntensity
     //            }
     //
     //        }
@@ -147,7 +147,7 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
             thisIntensity = iaKB.intensity
             iaKB.intensity = nil
         } else {
-            thisIntensity = self.sliderVal
+            thisIntensity = self.defaultIntensity
         }
         
         currentAttributes = currentTransformer.updateIntensityAttributesInScheme(lastIntensityAttributes: currentAttributes, providedAttributes: typingAttributes, intensity: thisIntensity)
@@ -163,7 +163,7 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
     
 //    func attributesForCurrentSettings()->[String:AnyObject]{
 //        var attributes:[String:AnyObject] = [:]
-//        attributes[NSFontAttributeName] = fontForIntensity(self.sliderVal)
+//        attributes[NSFontAttributeName] = fontForIntensity(self.defaultIntensity)
 //        return attributes
 //    }
 //    
