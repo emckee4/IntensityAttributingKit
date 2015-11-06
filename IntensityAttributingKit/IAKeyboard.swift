@@ -55,12 +55,12 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
     private var portraitOnlyConstraints:[NSLayoutConstraint] = []
     private var landscapeOnlyConstraints:[NSLayoutConstraint] = []
     
-    private var standardPressureKeys:[PressureButton] = []
+    private var standardPressureKeys:[PressureView] = []
     private var shiftKey:LockingKey!
     private var backspace:UIButton!
     private var swapKeysetButton:UIButton!
-    private var returnKey:PressureButton!
-    private var spacebar:PressureButton!
+    private var returnKey:PressureView!
+    private var spacebar:PressureView!
     private var expandingPuncKey:ExpandingPressureKey!
     
     
@@ -188,11 +188,10 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
         
         //spacebar
         
-        spacebar = PressureButton()
-        spacebar.translatesAutoresizingMaskIntoConstraints = false
+        spacebar = PressureView()
         spacebar.backgroundColor = kKeyBackgroundColor
-        spacebar.setTitle(" ", forState: .Normal)
-        spacebar.addTarget(self, action: "charKeyPressed:", forControlEvents: .TouchUpInside)
+        spacebar.setAsCharKey(" ")
+        spacebar.delegate = self
         spacebar.layer.cornerRadius = kKeyCornerRadius
         bottomStackView.addArrangedSubview(spacebar)
         
@@ -213,9 +212,12 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
         
         
         
-        returnKey = PressureButton()
-        returnKey.setTitle("Return", forState: .Normal)
-        returnKey.addTarget(self, action: "returnKeyPressed:", forControlEvents: .TouchUpInside)
+        returnKey = PressureView()
+        returnKey.delegate = self
+        let returnKeyView = UILabel()
+        returnKeyView.text = "Return"
+        returnKeyView.textAlignment = .Center
+        returnKey.setAsSpecialKey(returnKeyView, actionName: "\n", actionType: .CharInsert)
         returnKey.backgroundColor = kKeyBackgroundColor
         returnKey.layer.cornerRadius = kKeyCornerRadius
         bottomStackView.addArrangedSubview(returnKey)
@@ -302,19 +304,31 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
         return stackview
     }
     
-    func setupPressureKey(tag:Int, title:String)->PressureButton{
-        let nextKey = PressureButton(type: UIButtonType.System)
+//    func setupPressureKey(tag:Int, title:String)->PressureButton{
+//        let nextKey = PressureButton(type: UIButtonType.System)
+//        nextKey.tag = tag
+//        //nextKey.setTitle("\(title)", forState: .Normal)
+//        nextKey.setAttributedTitle(NSAttributedString(string: title,attributes: [NSFontAttributeName:baseFont]), forState: .Normal)
+//        nextKey.backgroundColor = UIColor.lightGrayColor()
+//        
+//        nextKey.setContentHuggingPriority(100, forAxis: .Horizontal)
+//        nextKey.translatesAutoresizingMaskIntoConstraints = false
+//        nextKey.addTarget(self, action: "charKeyPressed:", forControlEvents: .TouchUpInside)
+//        nextKey.layer.cornerRadius = kKeyCornerRadius
+//        return nextKey
+//    }
+    func setupPressureKey(tag:Int, title:String)->PressureView{
+        let nextKey = PressureView()
         nextKey.tag = tag
         //nextKey.setTitle("\(title)", forState: .Normal)
-        nextKey.setAttributedTitle(NSAttributedString(string: title,attributes: [NSFontAttributeName:baseFont]), forState: .Normal)
-        nextKey.backgroundColor = UIColor.lightGrayColor()
+        nextKey.setAsCharKey(title)
+        nextKey.delegate = self
+        nextKey.backgroundColor = kKeyBackgroundColor
         
-        nextKey.setContentHuggingPriority(100, forAxis: .Horizontal)
-        nextKey.translatesAutoresizingMaskIntoConstraints = false
-        nextKey.addTarget(self, action: "charKeyPressed:", forControlEvents: .TouchUpInside)
         nextKey.layer.cornerRadius = kKeyCornerRadius
         return nextKey
     }
+
     
     
     func expandingCharKeyPressed(text:String,intensity:RawIntensity){
@@ -341,11 +355,11 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
             }
         }
     }
-    func returnKeyPressed(sender:PressureButton!){
-        self.intensity = sender.lastIntensity
-        self.textDocumentProxy.insertText("\n")
-        shiftKey.deselect(overrideSelectedLock: false)
-    }
+//    func returnKeyPressed(sender:PressureButton!){
+//        self.intensity = sender.lastIntensity
+//        self.textDocumentProxy.insertText("\n")
+//        shiftKey.deselect(overrideSelectedLock: false)
+//    }
     
     func backspaceKeyPressed(){
         textDocumentProxy.deleteBackward()

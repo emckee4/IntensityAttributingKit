@@ -22,7 +22,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
     private(set) var isExpanded = false   //at moment of expansion this view should capture its bounds so it can return to its original status on completion
     //expansion direction
     
-    var delegate:PressureKeyAction?
+    weak var delegate:PressureKeyAction?
     
     ///this is private set until means for reordering the subviews are added
     @IBInspectable var expansionDirection:PKExpansionDirection = .Up {

@@ -46,10 +46,9 @@ protocol IAKeyType {
 
 
 
-///protocol for both PressureButton and ExpandingControls
+///protocol for PressureView and ExpandingPressureKey for the pressure sensitive buttons using the PressureKeyAction delegate pattern
 protocol PressureControl {
-    //var lastTriggeredName:String {get}
-    //var lastIntensity:Float {get}
+    weak var delegate:PressureKeyAction? {get set}
 }
 
 struct BasicEnglishKeyset {
@@ -57,7 +56,7 @@ struct BasicEnglishKeyset {
 }
 
 
-protocol PressureKeyAction {
+protocol PressureKeyAction:class {
     func pressureKeyPressed(sender:PressureControl, actionName:String, actionType:PressureKeyActionType, intensity:Float)
 }
 
