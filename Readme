@@ -1,9 +1,13 @@
+add functionality for duration tracking method of intensity tracking
+
 Today:
     Need to cleanup IntensityAdjuster, particularly constraints and bounds issues
 
     Need to rebuild IAAccessory to use stackview for layout
 
-add additional punctuation/numeric views
+add additional punctuation/numeric views--
+    should add some sort of type with keysets for the view, any relevent layout info (like key count), and any linkages to other related keysets
+    add functions for changing and loading keysets into iakeyboard
 
 want option menu of some sort on accessory view for, among other things, changing intensity renderings
 

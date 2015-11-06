@@ -17,10 +17,12 @@ Give option for dynamicly reordering keys so that the last pressed will become t
  
 Further cleanup code, consider switching back to selector based actions (or handle potential for closure related strong reference cycles). Note this may cause issues with passing of RawIntensity items since structs are pure swift. Also consider renaming "Key" based names to avoid ambiguity
 */
-@IBDesignable class ExpandingPressureKey: UIView {
+@IBDesignable class ExpandingPressureKey: UIView, PressureControl {
     
     private(set) var isExpanded = false   //at moment of expansion this view should capture its bounds so it can return to its original status on completion
     //expansion direction
+    
+    var delegate:PressureKeyAction?
     
     ///this is private set until means for reordering the subviews are added
     @IBInspectable var expansionDirection:PKExpansionDirection = .Up {
@@ -150,14 +152,11 @@ Further cleanup code, consider switching back to selector based actions (or hand
         return containedStackView.arrangedSubviews.first?.intrinsicContentSize() ?? CGSizeZero
     }
     
-    ///needs unique event state most likely but can use target action if so inclined
-    //needs direction for expansion
-    //needs array of items and what to display in each: display can be handled by it being any subclass of uiview: need means for applying action for each
-    
-    func addKey(keyView:UIView, onSelection:(intensity:RawIntensity)->()){
+
+    func addKey(keyView:UIView, triggeredActionName name:String, actionType:PressureKeyActionType){
         guard !containedStackView.arrangedSubviews.contains(keyView) else {return}
         let stackIndex = pressureKeys.count
-        pressureKeys.append(EPKey(view: keyView, closure: onSelection))
+        pressureKeys.append(EPKey(view: keyView, actionName: name, actionType: actionType))
         keyView.hidden = stackIndex != 0
         
         if expansionDirection == .Down || expansionDirection == .Right {
@@ -173,7 +172,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
     }
     
     
-    func addKey(withTextLabel text:String, withFont font:UIFont=UIFont.systemFontOfSize(20.0), onSelection:(intensity:RawIntensity)->Void){
+    func addKey(withTextLabel text:String, withFont font:UIFont=UIFont.systemFontOfSize(20.0), actionName: String, actionType:PressureKeyActionType){
         let label = UILabel()
         label.text = text
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -181,7 +180,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
         label.font = font
         
         let stackIndex = pressureKeys.count
-        pressureKeys.append(EPKey(view: label, closure: onSelection))
+        pressureKeys.append(EPKey(view: label, actionName: actionName, actionType: actionType))
         label.hidden = stackIndex != 0
         
         if expansionDirection == .Down || expansionDirection == .Right {
@@ -194,6 +193,30 @@ Further cleanup code, consider switching back to selector based actions (or hand
         label.backgroundColor = self.backgroundColor
         label.layer.borderWidth = 1.0
         label.layer.borderColor = UIColor.clearColor().CGColor
+    }
+    
+    func addCharKey(charToInsert char:String, actionName:String){
+        let label = UILabel()
+        label.text = char
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .Center
+        label.font = UIFont.systemFontOfSize(20.0)
+        
+        let stackIndex = pressureKeys.count
+        pressureKeys.append(EPKey(view: label, actionName: actionName, actionType: .CharInsert))
+        label.hidden = stackIndex != 0
+        
+        if expansionDirection == .Down || expansionDirection == .Right {
+            containedStackView.addArrangedSubview(label)
+        } else {
+            containedStackView.insertArrangedSubview(label, atIndex: 0)
+        }
+        label.clipsToBounds = true
+        label.layer.cornerRadius = self.cornerRadius
+        label.backgroundColor = self.backgroundColor
+        label.layer.borderWidth = 1.0
+        label.layer.borderColor = UIColor.clearColor().CGColor
+        
     }
     
     func removeAllKeys(){
@@ -255,7 +278,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
                     touchIntensity = forceTouchAvailable ? RawIntensity(withValue: touch.force, maximumPossibleForce: touch.maximumPossibleForce) : RawIntensity()
                 }
                 //perform closure or selector here
-                selectedEPKey!.closure(intensity: touchIntensity)
+                delegate?.pressureKeyPressed(self, actionName: selectedEPKey!.actionName, intensity: touchIntensity.intensity)
             } else {
                 selectedEPKey = nil
                 print("touch failed: ended on touch of non subview")
@@ -345,7 +368,8 @@ Further cleanup code, consider switching back to selector based actions (or hand
 ///Provides the grouping of the view and closure for the ExpandingPressureView while also providing a handful of convenience functions
 private class EPKey {
     var view:UIView
-    var closure:(intensity:RawIntensity)->Void
+    var actionName:String
+    var actionType:PressureKeyActionType
 //    var indexFromCenter:Int
     
     var hidden:Bool {
@@ -353,9 +377,10 @@ private class EPKey {
         get {return view.hidden}
     }
     
-    init(view:UIView,closure:(intensity:RawIntensity)->Void){
+    init(view:UIView,actionName:String, actionType:PressureKeyActionType){
         self.view = view
-        self.closure = closure
+        self.actionName = actionName
+        self.actionType = actionType
     }
 }
 
