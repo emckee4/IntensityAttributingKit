@@ -138,12 +138,13 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
     
     public func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
         guard !didInsert else {didInsert = false; return false}
+        guard text != "" else {return true}
         var thisIntensity:Float!
         var retainedAttributes:[String:AnyObject]!
         if let paragraphStyle = typingAttributes[NSParagraphStyleAttributeName] {
             retainedAttributes = [NSParagraphStyleAttributeName:paragraphStyle]
         }
-        if let iaKB = inputViewController as? IAKeyboard where iaKB.intensity > 0 {
+        if let iaKB = inputViewController as? IAKeyboard where iaKB.intensity != nil && iaKB.intensity > 0 {
             thisIntensity = iaKB.intensity
             iaKB.intensity = nil
         } else {
