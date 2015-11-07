@@ -43,6 +43,16 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
         [0:"a",1:"s",2:"d",3:"f",4:"g",5:"h",6:"j",7:"k",8:"l"],
         [0:"z",1:"x",2:"c",3:"v",4:"b",5:"n",6:"m"]
     ]
+    private let basicEnglishMapping:[[String]] = [
+        ["q","w","e","r","t","y","u","i","o","p"],
+        ["a","s","d","f","g","h","j","k","l"],
+        ["z","x","c","v","b","n","m"]
+    ]
+    private let numpad:[[String]] = [
+        ["1","2","3","4","5","6","7","8","9","0"],
+        ["-","/",":",";","(",")","$","&","@","\""],
+        [".","+","=","*","*","\\","'"]
+    ]
     
     private let baseFont = UIFont.systemFontOfSize(20.0)
     
@@ -76,6 +86,7 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
         setupVerticalStackView()
         setupKeyConstraints()
        
+        setKeyMapping(basicEnglishMapping)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -101,8 +112,7 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
         qwertyStackView = generateHorizontalStackView()
         
         for i in 0..<10 {
-            let title = primaryMapping[0][i]!
-            let key = setupPressureKey(i, title: title)
+            let key = setupPressureKey(i + 1000)
             qwertyStackView.addArrangedSubview(key)
             standardPressureKeys.append(key)
         }
@@ -113,18 +123,20 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
     private func setupAsdfRow(){
         asdfStackView = generateHorizontalStackView()
         
-        let leftPlaceholder = UIView()//generatePlaceholder(width: (kStandardKeyWidth / 2.0) - kStandardKeySpacing,height: 20.0)
+        let leftPlaceholder = UIView()
+        leftPlaceholder.tag = 2100
         let rightPlaceholder = UIView()//generatePlaceholder(width: (kStandardKeyWidth / 2.0) - kStandardKeySpacing, height: 20.0)
-        
+        rightPlaceholder.tag = 2101
         asdfStackView.addArrangedSubview(leftPlaceholder)
-        for i in 0..<9 {
-            let title = primaryMapping[1][i]!
-            let key = setupPressureKey(i, title: title)
+        for i in 0..<10 {
+            let key = setupPressureKey(i + 2000)
             asdfStackView.addArrangedSubview(key)
             standardPressureKeys.append(key)
         }
         asdfStackView.addArrangedSubview(rightPlaceholder)
-        leftPlaceholder.widthAnchor.constraintEqualToAnchor(rightPlaceholder.widthAnchor).active = true  //local placeholders, any orientation
+        let placeholderWidth = leftPlaceholder.widthAnchor.constraintEqualToAnchor(rightPlaceholder.widthAnchor) //local placeholders, any orientation
+        placeholderWidth.priority = 999
+        placeholderWidth.active = true
     }
     
     
@@ -132,6 +144,7 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
         zxcvStackView = generateHorizontalStackView()
         
         shiftKey = LockingKey()
+        shiftKey.tag = 3900
 
         let imageEdgeInsets = UIEdgeInsets(top: 7.0, left: 7.0, bottom: 7.0, right: 7.0)
         shiftKey.translatesAutoresizingMaskIntoConstraints = false
@@ -146,12 +159,13 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
         zxcvStackView.addArrangedSubview(shiftKey)
         
         let leftPlaceholder = UIView()
+        leftPlaceholder.tag = 3100
         let rightPlaceholder = UIView()
+        rightPlaceholder.tag = 3101
         zxcvStackView.addArrangedSubview( leftPlaceholder)//generatePlaceholder(width: (kStandardKeyWidth / 2.0) - kStandardKeySpacing * 6,height: 10.0) )
         
-        for i in 0..<7 {
-            let title = primaryMapping[2][i]!
-            let key = setupPressureKey(i, title: title)
+        for i in 0..<8 {
+            let key = setupPressureKey(i + 3001)
             zxcvStackView.addArrangedSubview(key)
             standardPressureKeys.append(key)
         }
@@ -160,6 +174,7 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
         
         
         backspace = UIButton()
+        backspace.tag = 3901
         backspace.translatesAutoresizingMaskIntoConstraints = false
         backspace.setImage(UIImage(named: "backspace", inBundle: bundle, compatibleWithTraitCollection: nil), forState: .Normal )
         backspace.imageEdgeInsets = imageEdgeInsets
@@ -170,8 +185,9 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
         backspace.addTarget(self, action: "backspaceKeyPressed", forControlEvents: .TouchUpInside)
         
         
-        leftPlaceholder.widthAnchor.constraintEqualToAnchor(rightPlaceholder.widthAnchor).active = true  //local placeholders, any orientation
-        
+        let placeholderWidth = leftPlaceholder.widthAnchor.constraintEqualToAnchor(rightPlaceholder.widthAnchor)  //local placeholders, any orientation
+        placeholderWidth.priority = 999
+        placeholderWidth.active = true
     }
     
     
@@ -179,6 +195,7 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
         bottomStackView = generateHorizontalStackView()
         
         swapKeysetButton = UIButton(type: .System)
+        swapKeysetButton.tag = 4900
         swapKeysetButton.setTitle("12/*", forState: .Normal)
         swapKeysetButton.translatesAutoresizingMaskIntoConstraints = false
         swapKeysetButton.backgroundColor = kKeyBackgroundColor
@@ -189,6 +206,7 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
         //spacebar
         
         spacebar = PressureView()
+        spacebar.tag = 4901
         spacebar.backgroundColor = kKeyBackgroundColor
         spacebar.setAsCharKey(" ")
         spacebar.delegate = self
@@ -198,6 +216,7 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
         //expanding punctuation key
 
         expandingPuncKey = ExpandingPressureKey(frame:CGRectZero)
+        expandingPuncKey.tag = 4900
         expandingPuncKey.delegate = self
         expandingPuncKey.backgroundColor = kKeyBackgroundColor
 
@@ -213,6 +232,7 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
         
         
         returnKey = PressureView()
+        returnKey.tag = 4002
         returnKey.delegate = self
         let returnKeyView = UILabel()
         returnKeyView.text = "Return"
@@ -253,7 +273,9 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
     
     private func setupKeyConstraints(){
         for key in standardPressureKeys[1..<standardPressureKeys.count]{
-            key.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor).active = true
+            let widthConstraint = key.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor)
+            widthConstraint.priority = 999
+            widthConstraint.active = true
         }
         
         backspace.widthAnchor.constraintEqualToAnchor(shiftKey.widthAnchor).active = true   //any orientation
@@ -290,8 +312,59 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
         //perform any key hides/unhides in stackviews here
         
     }
+    //always 10, simple case
+    func setQRowWithMapping(mapping:[String]){
+        for (i,keyName) in mapping.enumerate() {
+            (qwertyStackView.arrangedSubviews[i] as! PressureView).setAsCharKey(keyName)
+        }
+    }
     
+    func setARowWithMapping(mapping:[String]){
+        let pressureKeys = asdfStackView.arrangedSubviews.filter({($0 is PressureView)}) as! [PressureView]
+        if mapping.count == 9 {
+            _ = asdfStackView.arrangedSubviews.filter({!($0 is PressureControl)}).map({$0.hidden = false}) //placeholders unhidden
+            //aRowPlaceholderConstraint.active = true
+            
+            pressureKeys.last!.hidden = true //lastKey hidden
 
+        } else {
+            pressureKeys.last!.hidden = false //lastKey unhidden
+            //aRowPlaceholderConstraint.active = false
+            _ = asdfStackView.arrangedSubviews.filter({!($0 is PressureControl)}).map({$0.hidden = true}) //placeholders hidden
+        }
+        for i in 0..<min(mapping.count,pressureKeys.count){
+            pressureKeys[i].setAsCharKey(mapping[i])
+        }
+    }
+    
+    //start assuming 7 only
+    func setZRowWithMapping(mapping:[String]){
+        let pressureKeys = zxcvStackView.arrangedSubviews.filter({($0 is PressureView)}) as! [PressureView]
+        if mapping.count == 7 {
+            pressureKeys.last!.hidden = true //lastKey hidden
+            _ = zxcvStackView.arrangedSubviews.filter({!($0 is PressureControl)}).map({$0.hidden = false}) //placeholders unhidden
+            //zRowPlaceholderConstraint.active = true
+        }
+//        } else {
+//            pressureKeys.last!.hidden = false //lastKey unhidden
+//            _ = asdfStackView.arrangedSubviews.filter({!($0 is PressureControl)}).map({$0.hidden = true}) //placeholders hidden
+//        }
+        for i in 0..<min(mapping.count,pressureKeys.count){
+            pressureKeys[i].setAsCharKey(mapping[i])
+        }
+        
+    }
+    
+    func setKeyMapping(mapping:[[String]]){
+        //UIView.animateWithDuration(0.3) { () -> Void in
+            self.setQRowWithMapping(mapping[0])
+            self.setARowWithMapping(mapping[1])
+            self.setZRowWithMapping(mapping[2])
+        //}
+        
+        
+    }
+    
     
     func generateHorizontalStackView()->UIStackView{
         let stackview = UIStackView()
@@ -317,14 +390,13 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
 //        nextKey.layer.cornerRadius = kKeyCornerRadius
 //        return nextKey
 //    }
-    func setupPressureKey(tag:Int, title:String)->PressureView{
+    
+    
+    func setupPressureKey(tag:Int)->PressureView{
         let nextKey = PressureView()
         nextKey.tag = tag
-        //nextKey.setTitle("\(title)", forState: .Normal)
-        nextKey.setAsCharKey(title)
         nextKey.delegate = self
         nextKey.backgroundColor = kKeyBackgroundColor
-        
         nextKey.layer.cornerRadius = kKeyCornerRadius
         return nextKey
     }
@@ -365,8 +437,16 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
         textDocumentProxy.deleteBackward()
     }
     
+    var current = 0
+    
     func swapKeyset(){
-        print("swap keyset")
+        if current == 0 {
+            current++
+            setKeyMapping(numpad)
+        } else {
+            current = 0
+            setKeyMapping(basicEnglishMapping)
+        }
     }
     
     func pressureKeyPressed(sender: PressureControl, actionName: String, actionType: PressureKeyActionType, intensity: Float) {

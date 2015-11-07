@@ -132,7 +132,7 @@ class PressureView:UIView, PressureControl {
         super.touchesMoved(touches, withEvent: event)
         guard contentView != nil  else {return}
         if let touch = touches.first {
-            if pointInside(touch.locationInView(contentView), withEvent: event){
+            if pointInside(touch.locationInView(self), withEvent: event){
                 rawIntensity.append(forceTouchAvailable ? touch.force : 0.0)
                 setBackgroundColorForIntensity()
             } else {
@@ -146,7 +146,7 @@ class PressureView:UIView, PressureControl {
         super.touchesEnded(touches, withEvent: event)
         guard contentView != nil else {return}
         if let touch = touches.first {
-            if pointInside(touch.locationInView(contentView), withEvent: event){
+            if pointInside(touch.locationInView(self), withEvent: event){
                 rawIntensity.append(forceTouchAvailable ? touch.force : 0.0)
                 if actionName != nil && actionType != nil {
                     self.delegate?.pressureKeyPressed(self, actionName: self.actionName, actionType: self.actionType, intensity: rawIntensity.intensity)

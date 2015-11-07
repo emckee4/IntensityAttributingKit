@@ -62,7 +62,7 @@ struct RawIntensity {
     
     
     ///Global mapping function between Force and intensity value
-    static var forceIntensityMapping:(raw:RawIntensity)->Float = ForceIntensityMappingFunctions.Linear.averageLastTen
+    static var forceIntensityMapping:(raw:RawIntensity)->Float = ForceIntensityMappingFunctions.Linear.smoothedAverageLastTen
     
 
     
@@ -97,6 +97,27 @@ struct ForceIntensityMappingFunctions {
                 return (raw.forceHistory[(count - 10)..<count].reduce(0.0, combine: +) / Float(10)) / raw.maximumPossibleForce
             }
         }
+        
+        ///Similar to averageLastTen except it removes the high and low values in the last 10
+        static func smoothedAverageLastTen(raw:RawIntensity)->Float{
+            let count = raw.forceHistory.count
+            guard count > 2 else {return raw.forceHistory.maxElement() ?? 0.0}
+            var truncated:[Float]!
+            if count < 10 {
+                truncated = Array<Float>(raw.forceHistory[1..<count])
+            } else {
+                truncated = Array<Float>(raw.forceHistory[(count - 10)..<count])
+            }
+            
+            truncated.sortInPlace()
+            truncated.removeLast()
+            truncated.removeFirst()
+            
+            return (truncated.reduce(0.0, combine: +) / Float(truncated.count)) / raw.maximumPossibleForce
+        }
+
+        
+        
     }
     struct Duration {
         static func eventCount(raw:RawIntensity)->Float{
