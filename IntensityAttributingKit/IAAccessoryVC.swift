@@ -8,83 +8,140 @@
 
 import UIKit
 
-class IAAccessoryVC: UIInputViewController {
+class IAAccessoryVC: UIInputViewController, PressureKeyAction {
 
     
     var kbSwitchButton:UIButton!
-    //var slider:UISlider!
     var intensityAdjuster:IntensityAdjuster!
     var optionButton:UIButton!
+    var transformButton:ExpandingPressureKey!
+    var stackView:UIStackView!
     
     var delegate:IAAccessoryDelegate?
     
     private lazy var bundle:NSBundle = { return NSBundle(forClass: self.dynamicType) }()
     
+    //MARK:- layout constants
+    
+    let kAccessoryHeight:CGFloat = 44.0
+    let kButtonCornerRadius:CGFloat = 5.0
+    let kButtonBorderThickness:CGFloat = 1.0
+    let kButtonBorderColor:CGColor = UIColor.darkGrayColor().CGColor
+    let kButtonBackgroundColor:UIColor = UIColor.lightGrayColor()
+    //let kButtonTextColor = UIColor.darkGrayColor()
+    
+    
+    
+    //MARK:- init and setup
+    
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        
-        self.inputView!.frame = CGRect(x: 0, y: 0, width: UIScreen.mainScreen().bounds.width, height: 41)
+        setupVC()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupVC()
+    }
+    
+    func setupVC(){
+        self.inputView!.backgroundColor = UIColor(white: 0.8, alpha: 1.0)
         self.inputView!.translatesAutoresizingMaskIntoConstraints = false
+
         
         kbSwitchButton = UIButton(type: .System)
         kbSwitchButton.setImage(UIImage(named: "Keyboard", inBundle: bundle, compatibleWithTraitCollection: nil), forState: .Normal )
         kbSwitchButton.imageView?.contentMode = .ScaleAspectFit
-        kbSwitchButton.backgroundColor = UIColor.blueColor()
+        kbSwitchButton.backgroundColor = kButtonBackgroundColor
         kbSwitchButton.imageEdgeInsets = UIEdgeInsets(top: 4.0, left: 4.0, bottom: 4.0, right: 4.0)
         kbSwitchButton.addTarget(self, action: "kbSwitchButtonPressed:", forControlEvents: .TouchUpInside)
         kbSwitchButton.translatesAutoresizingMaskIntoConstraints = false
-        inputView!.addSubview(kbSwitchButton)
-        kbSwitchButton.widthAnchor.constraintEqualToAnchor(self.view.widthAnchor, multiplier: 0.12).active = true
-       
-//        slider = UISlider(frame:CGRectZero)
-//        slider.value = 0.4
-//        slider.addTarget(self, action: "sliderUpdatedWithValue:", forControlEvents: .ValueChanged)
+        kbSwitchButton.layer.cornerRadius = kButtonCornerRadius
+        kbSwitchButton.layer.borderColor = kButtonBorderColor
+        kbSwitchButton.layer.borderWidth = kButtonBorderThickness
+        kbSwitchButton.clipsToBounds = true
+        
+
         intensityAdjuster = IntensityAdjuster()
         intensityAdjuster.translatesAutoresizingMaskIntoConstraints = false
-        intensityAdjuster.commonBackgroundColor = UIColor.lightGrayColor()
-        inputView!.addSubview(intensityAdjuster)
+        intensityAdjuster.componentBackgroundColor = kButtonBackgroundColor
+        intensityAdjuster.componentBorderColor = kButtonBorderColor
+        intensityAdjuster.componentBorderWidth = kButtonBorderThickness
+        intensityAdjuster.componentCornerRadius = kButtonCornerRadius
+        intensityAdjuster.stackViewSpacing = 2.0
+        intensityAdjuster.heightAnchor.constraintEqualToConstant(kAccessoryHeight).active = true
+        //intensityAdjuster.showPressureSlider = true
+        intensityAdjuster.clipsToBounds = true
+
         
         optionButton = UIButton(type: .Custom)
-        optionButton.backgroundColor = UIColor.greenColor()
+        optionButton.backgroundColor = kButtonBackgroundColor
         optionButton.setTitle("Options", forState: .Normal)
         optionButton.addTarget(self, action: "optionButtonPressed", forControlEvents: .TouchUpInside)
+        optionButton.layer.cornerRadius = kButtonCornerRadius
+        optionButton.layer.borderColor = kButtonBorderColor
+        optionButton.layer.borderWidth = kButtonBorderThickness
         optionButton.translatesAutoresizingMaskIntoConstraints = false
-        inputView!.addSubview(optionButton)
+ 
+
+        transformButton = ExpandingPressureKey(expansionDirection: .Up)
+        transformButton.delegate = self
+        let weightSample = availableIntensityTransformers[IntensityTransformers.WeightScheme.rawValue]!.generateSampleFromText("abc", size: 20.0)
+        let colorBYRSample = availableIntensityTransformers[IntensityTransformers.TextColorScheme.rawValue]!.generateSampleFromText("abc", size: 20.0)
+        transformButton.addKey(withAttributedText: weightSample, actionName: IntensityTransformers.WeightScheme.rawValue, actionType: .TriggerFunction)
+        transformButton.addKey(withAttributedText: colorBYRSample, actionName: IntensityTransformers.TextColorScheme.rawValue, actionType: .TriggerFunction)
         
-        //self.view.backgroundColor = UIColor.blackColor()
-        //self.view.translatesAutoresizingMaskIntoConstraints = false
+        transformButton.backgroundColor = kButtonBackgroundColor
+        transformButton.cornerRadius = kButtonCornerRadius
+        transformButton.widthAnchor.constraintGreaterThanOrEqualToConstant(transformButton.intrinsicContentSize().width + 10.0).active = true
+        transformButton.layer.borderColor = kButtonBorderColor
+        transformButton.layer.borderWidth = kButtonBorderThickness
+        //add config here
         
-        setConstraints()
+        
+        
+        
+
+        stackView = UIStackView(arrangedSubviews: [kbSwitchButton, intensityAdjuster, transformButton ,optionButton])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.alignment = .Fill
+        stackView.axis = .Horizontal
+        stackView.distribution = .Fill
+        stackView.spacing = 2.0
+        
+        inputView!.addSubview(stackView)
+        
+        //setup constraints now that all views have been added
+
+        
+        let topConstraint = stackView.topAnchor.constraintEqualToAnchor(view.topAnchor)
+            topConstraint.priority = 999
+            topConstraint.active = true
+        let bottomConstraint = stackView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor)
+            bottomConstraint.priority = 999
+            bottomConstraint.active = true
+        let leftConstraint = stackView.leftAnchor.constraintEqualToAnchor(view.leftAnchor)
+            leftConstraint.priority = 999
+            leftConstraint.active = true
+        let rightConstraint = stackView.rightAnchor.constraintEqualToAnchor(view.rightAnchor)
+            rightConstraint.priority = 999
+            rightConstraint.active = true
+        
+        self.inputView!.frame = CGRect(x: 0, y: 0, width: UIScreen.mainScreen().bounds.width, height: kAccessoryHeight)
     }
     
-    func setConstraints(){
-        kbSwitchButton.topAnchor.constraintEqualToAnchor(inputView!.topAnchor).active = true
-        
-        kbSwitchButton.bottomAnchor.constraintEqualToAnchor(inputView!.bottomAnchor).active = true
-        kbSwitchButton.leadingAnchor.constraintEqualToAnchor(inputView!.leadingAnchor).active = true
-        
-        intensityAdjuster.leadingAnchor.constraintEqualToAnchor(kbSwitchButton.trailingAnchor, constant: 5.0).active = true
-        
-        intensityAdjuster.topAnchor.constraintGreaterThanOrEqualToAnchor(inputView!.topAnchor, constant: 1.0).active = true
-        intensityAdjuster.bottomAnchor.constraintLessThanOrEqualToAnchor(inputView!.bottomAnchor, constant: -1.0).active = true
-        
-        optionButton.leadingAnchor.constraintGreaterThanOrEqualToAnchor(intensityAdjuster.trailingAnchor, constant: 2.0).active = true
-        
-        optionButton.topAnchor.constraintEqualToAnchor(inputView!.topAnchor).active = true
-        optionButton.bottomAnchor.constraintEqualToAnchor(inputView!.bottomAnchor).active = true
-        optionButton.widthAnchor.constraintEqualToConstant(60.0).active = true
-        optionButton.trailingAnchor.constraintEqualToAnchor(inputView!.trailingAnchor, constant: -1.0).active = true
-    }
+    //MARK:- Lifecycle and resizing layout
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         layoutForBounds(UIScreen.mainScreen().bounds.size)
 
     }
     
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        layoutForBounds(size)
+    }
+
     func layoutForBounds(size:CGSize){
         if !intensityAdjuster.forceTouchAvailable {
             intensityAdjuster.showPressureSlider = true
@@ -97,35 +154,31 @@ class IAAccessoryVC: UIInputViewController {
             intensityAdjuster.showPressureSlider = false
         }
     }
-    
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
+
+    //MARK:- user interface actions
     
     func kbSwitchButtonPressed(sender:UIButton!){
         print("accessory view frame \(self.inputView!.frame)")
         delegate?.keyboardChangeButtonPressed()
     }
-    
-//    func defaultIntensityUpdatedWithValue(sender:UISlider!){
-//        delegate?.sliderUpdatedWithValue(sender.value)
-//    }
-    
+
     func optionButtonPressed(){
         delegate?.optionButtonPressed()
     }
     
-
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        layoutForBounds(size)
+    func pressureKeyPressed(sender: PressureControl, actionName: String, actionType: PressureKeyActionType, intensity: Float) {
+        if actionName == IntensityTransformers.WeightScheme.rawValue {
+            self.delegate?.requestTransformerChange(toTransformerWithName: actionName)
+        } else if actionName == IntensityTransformers.TextColorScheme.rawValue{
+            self.delegate?.requestTransformerChange(toTransformerWithName: actionName)
+        }
     }
 
-
 }
-
+///IAAccessoryDelegate delivers actions from the IAAccessory to the IATextView
 protocol IAAccessoryDelegate {
     func keyboardChangeButtonPressed()
-    //func sliderUpdatedWithValue(value:Float)
+    //func defaultIntensityUpdated(withValue value:Float)
     func optionButtonPressed()
+    func requestTransformerChange(toTransformerWithName name:String)
 }

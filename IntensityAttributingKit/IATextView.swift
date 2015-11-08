@@ -103,9 +103,16 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
         self.reloadInputViews()
     }
     
-//    func defaultIntensityUpdatedWithValue(value: Float) {
+//    func defaultIntensityUpdated(withValue value:Float) {
 //        
 //    }
+    
+    func requestTransformerChange(toTransformerWithName name:String){
+        guard availableIntensityTransformers[name] != nil else {return}
+        currentAttributes.currentScheme = name
+        attributedText = attributedText.transformWithRenderScheme(name)
+        typingAttributes = currentTransformer.typingAttributesForScheme(currentAttributes)
+    }
     
     func optionButtonPressed() {
         var nextSchemeName:String = ""
