@@ -195,6 +195,28 @@ Further cleanup code, consider switching back to selector based actions (or hand
         label.layer.borderColor = UIColor.clearColor().CGColor
     }
     
+    func addKey(withAttributedText attributedText:NSAttributedString, actionName: String, actionType:PressureKeyActionType){
+        let label = UILabel()
+        label.attributedText = attributedText
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .Center
+        
+        let stackIndex = pressureKeys.count
+        pressureKeys.append(EPKey(view: label, actionName: actionName, actionType: actionType))
+        label.hidden = stackIndex != 0
+        
+        if expansionDirection == .Down || expansionDirection == .Right {
+            containedStackView.addArrangedSubview(label)
+        } else {
+            containedStackView.insertArrangedSubview(label, atIndex: 0)
+        }
+        label.clipsToBounds = true
+        label.layer.cornerRadius = self.cornerRadius
+        label.backgroundColor = self.backgroundColor
+        label.layer.borderWidth = 1.0
+        label.layer.borderColor = UIColor.clearColor().CGColor
+    }
+    
     func addCharKey(charToInsert char:String){
         let label = UILabel()
         label.text = char
