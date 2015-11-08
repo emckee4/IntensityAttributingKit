@@ -39,9 +39,24 @@ class IntensityAdjuster: UIView {
         didSet {slider?.hidden = !showPressureSlider}
     }
     
-    var commonBackgroundColor:UIColor? {
-        didSet{_ = stackView!.arrangedSubviews.map({$0.backgroundColor = commonBackgroundColor})}
+    var stackViewSpacing:CGFloat {
+        get{return stackView.spacing}
+        set{stackView?.spacing = newValue}
     }
+    
+    var componentBackgroundColor:UIColor? {
+        didSet{_ = stackView!.arrangedSubviews.map({$0.backgroundColor = componentBackgroundColor})}
+    }
+    var componentCornerRadius:CGFloat = 0.0{
+        didSet{_ = stackView!.arrangedSubviews.map({$0.layer.cornerRadius = componentCornerRadius})}
+    }
+    var componentBorderWidth:CGFloat = 0.0 {
+        didSet{_ = stackView!.arrangedSubviews.map({$0.layer.borderWidth = componentBorderWidth})}
+    }
+    var componentBorderColor:CGColor? {
+        didSet{_ = stackView!.arrangedSubviews.map({$0.layer.borderColor = componentBorderColor})}
+    }
+    
     
     ///when true this causes values in the intensityDisplay button and the slider to update on .ValueChanged of the pressurePad rather than waiting for .TouchUpInside
     var updateWithPressesInProgress = false {
@@ -104,11 +119,11 @@ class IntensityAdjuster: UIView {
         stackView.leftAnchor.constraintEqualToAnchor(self.leftAnchor).active = true
         stackView.rightAnchor.constraintEqualToAnchor(self.rightAnchor).active = true
         
-        intensityDisplay.widthAnchor.constraintLessThanOrEqualToAnchor(intensityDisplay.heightAnchor, multiplier: 1.25).active = true
-        intensityDisplay.widthAnchor.constraintGreaterThanOrEqualToAnchor(intensityDisplay.heightAnchor).active = true
+        intensityDisplay.widthAnchor.constraintLessThanOrEqualToAnchor(intensityDisplay.heightAnchor, multiplier: 2).active = true
+        intensityDisplay.widthAnchor.constraintGreaterThanOrEqualToAnchor(intensityDisplay.heightAnchor, multiplier: 1.25).active = true
         
-        pressurePad.widthAnchor.constraintLessThanOrEqualToAnchor(pressurePad.heightAnchor, multiplier: 1.25).active = true
-        pressurePad.widthAnchor.constraintGreaterThanOrEqualToAnchor(pressurePad.heightAnchor).active = true
+        pressurePad.widthAnchor.constraintLessThanOrEqualToAnchor(pressurePad.heightAnchor, multiplier: 2.0).active = true
+        pressurePad.widthAnchor.constraintGreaterThanOrEqualToAnchor(pressurePad.heightAnchor, multiplier: 1.25).active = true
         
         
     }
