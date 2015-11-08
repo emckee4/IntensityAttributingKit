@@ -45,7 +45,7 @@ class PressureView:UIView, PressureControl {
     
     private func setBackgroundColorForIntensity(){
         guard self.backgroundColor != nil else {return}
-        guard forceTouchAvailable else {super.backgroundColor = nonTouchSelectionBGColor; return}
+        guard forceTouchAvailable else {contentView?.backgroundColor = nonTouchSelectionBGColor; return}
         let intensity = rawIntensity.intensity
         guard intensity > 0.0 else {contentView.backgroundColor = self.backgroundColor; return}
         var white:CGFloat = -1.0
@@ -123,7 +123,7 @@ class PressureView:UIView, PressureControl {
         guard contentView != nil else {return}
         //there should be one and only one touch in the touches set in touchesBegan since we have multitouch disabled
         if let touch = touches.first {
-            forceTouchAvailable ? rawIntensity = RawIntensity(withValue: touch.force, maximumPossibleForce: touch.maximumPossibleForce) : rawIntensity.reset()
+            rawIntensity = RawIntensity(withValue: touch.force,maximumPossibleForce: touch.maximumPossibleForce)
             setBackgroundColorForIntensity()
         }
     }
@@ -133,7 +133,7 @@ class PressureView:UIView, PressureControl {
         guard contentView != nil  else {return}
         if let touch = touches.first {
             if pointInside(touch.locationInView(self), withEvent: event){
-                rawIntensity.append(forceTouchAvailable ? touch.force : 0.0)
+                rawIntensity.append(touch.force)
                 setBackgroundColorForIntensity()
             } else {
                 rawIntensity.reset()
@@ -147,7 +147,7 @@ class PressureView:UIView, PressureControl {
         guard contentView != nil else {return}
         if let touch = touches.first {
             if pointInside(touch.locationInView(self), withEvent: event){
-                rawIntensity.append(forceTouchAvailable ? touch.force : 0.0)
+                rawIntensity.append(touch.force)
                 if actionName != nil && actionType != nil {
                     self.delegate?.pressureKeyPressed(self, actionName: self.actionName, actionType: self.actionType, intensity: rawIntensity.intensity)
                     if self.delegate == nil {
