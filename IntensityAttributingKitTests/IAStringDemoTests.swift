@@ -201,7 +201,7 @@ class IAStringDemoTests: XCTestCase {
 
         count = 0
         cycleCount = 0
-        currentScheme = "TextColorScheme"//"WeightScheme"
+        currentScheme = "HueGYRScheme"//"WeightScheme"
         retainedMAS = NSMutableAttributedString()
         
 //        if preserveText && NSFileManager.defaultManager().fileExistsAtPath(mutFP){

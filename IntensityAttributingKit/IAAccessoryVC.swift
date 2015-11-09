@@ -102,9 +102,9 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction {
         transformButton.delegate = self
         transformButton.intensityTrackingDisabled = true
         let weightSample = IntensityTransformers.WeightScheme.transformer.generateSampleFromText("abc", size: 20.0)
-        let colorBYRSample = IntensityTransformers.TextColorScheme.transformer.generateSampleFromText("abc", size: 20.0)
+        let colorBYRSample = IntensityTransformers.HueGYRScheme.transformer.generateSampleFromText("abc", size: 20.0)
         transformButton.addKey(withAttributedText: weightSample, actionName: IntensityTransformers.WeightScheme.rawValue, actionType: .TriggerFunction)
-        transformButton.addKey(withAttributedText: colorBYRSample, actionName: IntensityTransformers.TextColorScheme.rawValue, actionType: .TriggerFunction)
+        transformButton.addKey(withAttributedText: colorBYRSample, actionName: IntensityTransformers.HueGYRScheme.rawValue, actionType: .TriggerFunction)
         
         transformButton.backgroundColor = kButtonBackgroundColor
         transformButton.cornerRadius = kButtonCornerRadius
@@ -188,7 +188,7 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction {
     func pressureKeyPressed(sender: PressureControl, actionName: String, actionType: PressureKeyActionType, intensity: Float) {
         if actionName == IntensityTransformers.WeightScheme.rawValue {
             self.delegate?.requestTransformerChange(toTransformerWithName: actionName)
-        } else if actionName == IntensityTransformers.TextColorScheme.rawValue{
+        } else if actionName == IntensityTransformers.HueGYRScheme.rawValue{
             self.delegate?.requestTransformerChange(toTransformerWithName: actionName)
         }
     }

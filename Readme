@@ -25,7 +25,6 @@ need to reimplement copy/paste in iatextview
         -- will overriding copy be sufficient for inbuilt cut to work as desired?
 
 
---refactor how transformers are added? could use enum or add a singleton manager class to hold refs, or both
 
 
 Icons: return, options, camera, ?

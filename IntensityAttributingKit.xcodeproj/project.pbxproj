@@ -26,6 +26,8 @@
 		C06B1D501BEE8B61009F427A /* Keysets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D4F1BEE8B61009F427A /* Keysets.swift */; };
 		C06B1D531BEE8C4F009F427A /* KeyProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D521BEE8C4F009F427A /* KeyProtocols.swift */; };
 		C06B1D561BEE9C40009F427A /* ForceIntensityMappingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D551BEE9C40009F427A /* ForceIntensityMappingFunctions.swift */; };
+		C06B1D591BF15AD9009F427A /* WeightIntensityScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D581BF15AD8009F427A /* WeightIntensityScheme.swift */; };
+		C06B1D5B1BF15C18009F427A /* HueGYRIntensityScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D5A1BF15C18009F427A /* HueGYRIntensityScheme.swift */; };
 		C08253B11BE571910017AC14 /* LockingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08253B01BE571910017AC14 /* LockingKey.swift */; };
 		C08253B61BE572AE0017AC14 /* ExpandingPressureKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08253B51BE572AE0017AC14 /* ExpandingPressureKey.swift */; };
 		C0D4474A1BE6BC16003204E7 /* RawIntensity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D447491BE6BC16003204E7 /* RawIntensity.swift */; };
@@ -69,6 +71,8 @@
 		C06B1D4F1BEE8B61009F427A /* Keysets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keysets.swift; sourceTree = "<group>"; };
 		C06B1D521BEE8C4F009F427A /* KeyProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyProtocols.swift; sourceTree = "<group>"; };
 		C06B1D551BEE9C40009F427A /* ForceIntensityMappingFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForceIntensityMappingFunctions.swift; sourceTree = "<group>"; };
+		C06B1D581BF15AD8009F427A /* WeightIntensityScheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeightIntensityScheme.swift; sourceTree = "<group>"; };
+		C06B1D5A1BF15C18009F427A /* HueGYRIntensityScheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HueGYRIntensityScheme.swift; sourceTree = "<group>"; };
 		C08253B01BE571910017AC14 /* LockingKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LockingKey.swift; sourceTree = "<group>"; };
 		C08253B51BE572AE0017AC14 /* ExpandingPressureKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ExpandingPressureKey.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		C0D447491BE6BC16003204E7 /* RawIntensity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawIntensity.swift; sourceTree = "<group>"; };
@@ -147,7 +151,7 @@
 				C031CBE01BDB097600521393 /* Extensions+NSAttributedString.swift */,
 				C031CBE11BDB097600521393 /* IATags.swift */,
 				C031CBE21BDB097600521393 /* IntensityAttributes.swift */,
-				C031CBE31BDB097600521393 /* IntensityTransformers.swift */,
+				C06B1D571BF15AB5009F427A /* Transformers */,
 				C031CBE41BDB097600521393 /* IntensityTransformingProtocol.swift */,
 				C031CBE51BDB097600521393 /* MiscGlobals.swift */,
 			);
@@ -171,6 +175,16 @@
 				C06B1D551BEE9C40009F427A /* ForceIntensityMappingFunctions.swift */,
 			);
 			name = ForceIntensityMapping;
+			sourceTree = "<group>";
+		};
+		C06B1D571BF15AB5009F427A /* Transformers */ = {
+			isa = PBXGroup;
+			children = (
+				C031CBE31BDB097600521393 /* IntensityTransformers.swift */,
+				C06B1D581BF15AD8009F427A /* WeightIntensityScheme.swift */,
+				C06B1D5A1BF15C18009F427A /* HueGYRIntensityScheme.swift */,
+			);
+			name = Transformers;
 			sourceTree = "<group>";
 		};
 		C08253B21BE571C70017AC14 /* CustomControls */ = {
@@ -334,10 +348,12 @@
 				C06B1D501BEE8B61009F427A /* Keysets.swift in Sources */,
 				C031CBE71BDB097600521393 /* IATags.swift in Sources */,
 				C031CBEB1BDB097600521393 /* MiscGlobals.swift in Sources */,
+				C06B1D591BF15AD9009F427A /* WeightIntensityScheme.swift in Sources */,
 				C031CBE61BDB097600521393 /* Extensions+NSAttributedString.swift in Sources */,
 				C031CBE81BDB097600521393 /* IntensityAttributes.swift in Sources */,
 				C031CBE91BDB097600521393 /* IntensityTransformers.swift in Sources */,
 				C0D4474E1BE97578003204E7 /* IntensityAdjuster.swift in Sources */,
+				C06B1D5B1BF15C18009F427A /* HueGYRIntensityScheme.swift in Sources */,
 				C06B1D271BEC5FCC009F427A /* KeysetComponents.swift in Sources */,
 				C0E5D7C81BDEA52C00A0A814 /* OtherExtensions.swift in Sources */,
 				C0D4474A1BE6BC16003204E7 /* RawIntensity.swift in Sources */,

@@ -92,7 +92,7 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
         self.layer.cornerRadius = 10.0
         self.textContainerInset = UIEdgeInsetsMake(7.0, 2.0, 7.0, 2.0)
         self.currentAttributes = IntensityAttributes(intensity: defaultIntensity, size: 18.0)
-        currentAttributes.currentScheme = "WeightScheme"//"TextColorScheme"
+        currentAttributes.currentScheme = "WeightScheme"//"HueGYRScheme"
         typingAttributes = currentTransformer.typingAttributesForScheme(currentAttributes)
         self.allowsEditingTextAttributes = true
         
