@@ -5,7 +5,7 @@ import UIKit
 
 
 public enum IntensityTransformers:String {
-    case HueGYRScheme = "HueGYRScheme", WeightScheme = "WeightScheme"
+    case HueGYRScheme = "HueGYRScheme", WeightScheme = "WeightScheme", FontSizeScheme = "FontSizeScheme"
     
     var transformer:IntensityTransforming {
         if let thisTransformer = IntensityTransformers.storedTransformers[self] {
@@ -17,7 +17,7 @@ public enum IntensityTransformers:String {
         }
     }
     ///
-    private static var transformerTypes:[IntensityTransformers:IntensityTransforming.Type] = [.HueGYRScheme:HueGYRIntensityScheme.self, .WeightScheme:WeightIntensityScheme.self]
+    private static var transformerTypes:[IntensityTransformers:IntensityTransforming.Type] = [.HueGYRScheme:HueGYRIntensityScheme.self, .WeightScheme:WeightIntensityScheme.self, FontSizeScheme:FontSizeIntensityScheme.self]
     ///Instances of transformers are lazily added to this array as they're requested and instantiated using transformerTypes
     private static var storedTransformers:[IntensityTransformers:IntensityTransforming] = [:]
     
