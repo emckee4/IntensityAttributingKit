@@ -26,21 +26,9 @@ Further cleanup code, consider switching back to selector based actions (or hand
     
     ///this is private set until means for reordering the subviews are added
     @IBInspectable var expansionDirection:PKExpansionDirection = .Up {
-        didSet
-        {
+        didSet{
             if oldValue.hasForwardLayoutDirection() != expansionDirection.hasForwardLayoutDirection() && !pressureKeys.isEmpty{
-                for pk in pressureKeys {
-                    containedStackView.removeArrangedSubview(pk.view)
-                }
-                if expansionDirection.hasForwardLayoutDirection(){
-                    for pk in pressureKeys{
-                        containedStackView.addArrangedSubview(pk.view)
-                    }
-                } else {
-                    for pk in pressureKeys {
-                        containedStackView.insertArrangedSubview(pk.view, atIndex: 0)
-                    }
-                }
+                layoutKeysForExpansionDirection()
             }
         }
     }
@@ -63,17 +51,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
     private var pressureKeys:[EPKey] = []
     private var selectedEPKey:EPKey? {
         didSet {
-            if selectedEPKey != nil {
-                for pk in pressureKeys {
-                    if pk.view == selectedEPKey!.view {
-                        pk.view.backgroundColor = bgColorForSelectionIntensity()
-                    } else {
-                        pk.view.backgroundColor = self.backgroundColor
-                    }
-                }
-            } else {
-                _ = pressureKeys.map({ $0.view.backgroundColor = self.backgroundColor })
-            }
+            highlightSelectedEPKey()
         }
     }
     
@@ -92,6 +70,8 @@ Further cleanup code, consider switching back to selector based actions (or hand
     ///The control doesn't track RawIntensity and uses two level highlighting only
     var intensityTrackingDisabled = false
     
+    ///When a key is selected it will automatically become the first/primary key
+    var selectedBecomesFirst = false
 
     init(){
         super.init(frame:CGRectZero)
@@ -148,6 +128,21 @@ Further cleanup code, consider switching back to selector based actions (or hand
         let newAlpha:CGFloat = max(alpha * CGFloat(1 + intensity), 1.0)
         let newWhite:CGFloat = white * CGFloat(1 - intensity)
         return UIColor(white: newWhite, alpha: newAlpha)
+    }
+    
+    ///Updates highlighting for selected and unselected keys
+    private func highlightSelectedEPKey(){
+        if selectedEPKey != nil {
+            for pk in pressureKeys {
+                if pk.view == selectedEPKey!.view {
+                    pk.view.backgroundColor = bgColorForSelectionIntensity()
+                } else {
+                    pk.view.backgroundColor = self.backgroundColor
+                }
+            }
+        } else {
+            _ = pressureKeys.map({ $0.view.backgroundColor = self.backgroundColor })
+        }
     }
     
     override func intrinsicContentSize() -> CGSize {
@@ -252,6 +247,22 @@ Further cleanup code, consider switching back to selector based actions (or hand
         pressureKeys = []
     }
     
+    ///Removes all key views from the stackview and inserts them in forward or reverse order of pressureKeys, depending on whether the expansionDirection has a forward or reverse layout
+    private func layoutKeysForExpansionDirection(){
+        for pk in pressureKeys {
+            containedStackView.removeArrangedSubview(pk.view)
+        }
+        if expansionDirection.hasForwardLayoutDirection(){
+            for pk in pressureKeys{
+                containedStackView.addArrangedSubview(pk.view)
+            }
+        } else {
+            for pk in pressureKeys {
+                containedStackView.insertArrangedSubview(pk.view, atIndex: 0)
+            }
+        }
+    }
+    
     ///Moves the key with the actionName specified to the center most position
     func centerKeyWithActionName(actionName:String){
         for pk in pressureKeys{
@@ -261,14 +272,9 @@ Further cleanup code, consider switching back to selector based actions (or hand
             }
         }
     }
-
+    
+    ///The provided EPKey will be moved to the primary position
     private func moveEPKeyToFirst(key:EPKey){
-        containedStackView.removeArrangedSubview(key.view)
-        if expansionDirection.hasForwardLayoutDirection() {
-            containedStackView.insertArrangedSubview(key.view, atIndex: 0)
-        } else {
-            containedStackView.addArrangedSubview(key.view)
-        }
         for (i,pk) in pressureKeys.enumerate(){
             if pk.actionName == key.actionName {
                 pressureKeys.removeAtIndex(i)
@@ -276,6 +282,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
                 break
             }
         }
+        layoutKeysForExpansionDirection()
     }
     
     private func findTouchedEPKey(touch:UITouch,event:UIEvent?)->EPKey?{
@@ -347,6 +354,11 @@ Further cleanup code, consider switching back to selector based actions (or hand
                     delegate?.pressureKeyPressed(self, actionName: selectedEPKey!.actionName, actionType:selectedEPKey!.actionType, intensity: touchIntensity.intensity)
                 } else {
                     delegate?.pressureKeyPressed(self, actionName: selectedEPKey!.actionName, actionType:selectedEPKey!.actionType, intensity: 0.0)
+                }
+                if selectedBecomesFirst {
+                    defer{
+                        moveEPKeyToFirst(newSelectedKey)
+                    }
                 }
             } else {
                 selectedEPKey = nil
@@ -439,7 +451,6 @@ private class EPKey {
     var view:UIView
     var actionName:String
     var actionType:PressureKeyActionType
-//    var indexFromCenter:Int
     
     var hidden:Bool {
         set {view.hidden = newValue}
