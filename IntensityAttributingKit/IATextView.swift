@@ -11,7 +11,12 @@ import UIKit
 public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
     
     
-    var currentAttributes:IntensityAttributes!
+    var currentAttributes:IntensityAttributes! {
+        didSet{if let schemeName = currentAttributes?.currentScheme where availableIntensityTransformers.keys.contains(schemeName){
+            iaAccessory.setTransformKeyForScheme(withName: schemeName)
+            }
+        }
+    }
 
     var currentTransformer:IntensityTransforming! {
         guard let schemeName = currentAttributes?.currentScheme else {return nil}

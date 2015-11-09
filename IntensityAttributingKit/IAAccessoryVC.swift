@@ -86,6 +86,7 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction {
 
         transformButton = ExpandingPressureKey(expansionDirection: .Up)
         transformButton.delegate = self
+        transformButton.intensityTrackingDisabled = true
         let weightSample = availableIntensityTransformers[IntensityTransformers.WeightScheme.rawValue]!.generateSampleFromText("abc", size: 20.0)
         let colorBYRSample = availableIntensityTransformers[IntensityTransformers.TextColorScheme.rawValue]!.generateSampleFromText("abc", size: 20.0)
         transformButton.addKey(withAttributedText: weightSample, actionName: IntensityTransformers.WeightScheme.rawValue, actionType: .TriggerFunction)
@@ -174,6 +175,10 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction {
         }
     }
 
+    func setTransformKeyForScheme(withName schemeName:String){
+        self.transformButton.centerKeyWithActionName(schemeName)
+    }
+    
 }
 ///IAAccessoryDelegate delivers actions from the IAAccessory to the IATextView
 protocol IAAccessoryDelegate {
