@@ -47,7 +47,7 @@ public extension NSMutableAttributedString {
     
     func transformWithRenderSchemeInPlace(schemeName: String){
         guard self.isFullyIntensityAttributed() else {print("transformWithRenderScheme: data not fully IA");return}
-        guard let transformer = availableIntensityTransformers[schemeName]
+        guard let transformer = IntensityTransformers(rawValue: schemeName)?.transformer
             else {fatalError("transformWithRenderSchemeInPlace received unknown schemeName parameter: \(schemeName)")}
         transformer.transformWithSchemeInPlace(targetIAString: self)
     }
@@ -73,7 +73,7 @@ public extension NSAttributedString {
     //transform
     func transformWithRenderScheme(schemeName:String)->NSAttributedString!{
         guard self.isFullyIntensityAttributed() else {print("transformWithRenderScheme: data not fully IA");return nil}
-        guard let transformer = availableIntensityTransformers[schemeName]
+        guard let transformer = IntensityTransformers(rawValue: schemeName)?.transformer
             else {fatalError("transformWithRenderScheme received unknown schemeName parameter: \(schemeName)")}
         return transformer.transformWithScheme(targetIAString: self)
     }

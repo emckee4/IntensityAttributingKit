@@ -12,7 +12,7 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
     
     
     var currentAttributes:IntensityAttributes! {
-        didSet{if let schemeName = currentAttributes?.currentScheme where availableIntensityTransformers.keys.contains(schemeName){
+        didSet{if let schemeName = currentAttributes?.currentScheme where IntensityTransformers(rawValue: schemeName) != nil {
             iaAccessory.setTransformKeyForScheme(withName: schemeName)
             }
         }
@@ -20,7 +20,7 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
 
     var currentTransformer:IntensityTransforming! {
         guard let schemeName = currentAttributes?.currentScheme else {return nil}
-        return availableIntensityTransformers[schemeName]
+        return IntensityTransformers(rawValue: schemeName)?.transformer ?? nil
     }
     
     ///tells the shouldChangeTextInRange delegate to ignore the next insertion because it's coming from an insert action (like paste) and includes text
@@ -117,24 +117,14 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
 //    }
     
     func requestTransformerChange(toTransformerWithName name:String){
-        guard availableIntensityTransformers[name] != nil else {return}
+        guard let _ = IntensityTransformers(rawValue: name) else {return} 
         currentAttributes.currentScheme = name
         attributedText = attributedText.transformWithRenderScheme(name)
         typingAttributes = currentTransformer.typingAttributesForScheme(currentAttributes)
     }
     
     func optionButtonPressed() {
-        var nextSchemeName:String = ""
-        for name in availableIntensityTransformers.keys {
-            if name != currentAttributes.currentScheme {
-                nextSchemeName = name
-                break
-            }
-        }
-        currentAttributes.currentScheme = nextSchemeName
-        
-        attributedText = attributedText.transformWithRenderScheme(nextSchemeName)
-        typingAttributes = currentTransformer.typingAttributesForScheme(currentAttributes)
+        print("option pressed")
     }
     
     //    override func replaceRange(range: UITextRange, withText text: String) {

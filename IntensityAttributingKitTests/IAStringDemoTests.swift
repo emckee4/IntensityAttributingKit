@@ -211,7 +211,8 @@ class IAStringDemoTests: XCTestCase {
     }
     
     func toggleScheme(){
-        let possibleSchemes:[String] = Array(availableIntensityTransformers.keys)
+        fatalError("fix intensity transformer usage below before resuming testing")
+        let possibleSchemes:[String] = []//= Array(availableIntensityTransformers.keys)
         let currentIndex = possibleSchemes.indexOf(currentScheme)!
         currentScheme = currentIndex < possibleSchemes.count - 1 ? possibleSchemes[currentIndex + 1] : possibleSchemes[0]
     }

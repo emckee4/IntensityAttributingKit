@@ -4,12 +4,6 @@ import UIKit
 
 
 
-
-public var availableIntensityTransformers:[String:IntensityTransforming] = {
-    return [WeightIntensityScheme.schemeName:WeightIntensityScheme(), TextColorIntensityScheme.schemeName: TextColorIntensityScheme()]
-}()
-
-
 public enum IntensityTransformers:String {
     case TextColorScheme = "TextColorScheme", WeightScheme = "WeightScheme"
     

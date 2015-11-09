@@ -101,8 +101,8 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction {
         transformButton = ExpandingPressureKey(expansionDirection: .Up)
         transformButton.delegate = self
         transformButton.intensityTrackingDisabled = true
-        let weightSample = availableIntensityTransformers[IntensityTransformers.WeightScheme.rawValue]!.generateSampleFromText("abc", size: 20.0)
-        let colorBYRSample = availableIntensityTransformers[IntensityTransformers.TextColorScheme.rawValue]!.generateSampleFromText("abc", size: 20.0)
+        let weightSample = IntensityTransformers.WeightScheme.transformer.generateSampleFromText("abc", size: 20.0)
+        let colorBYRSample = IntensityTransformers.TextColorScheme.transformer.generateSampleFromText("abc", size: 20.0)
         transformButton.addKey(withAttributedText: weightSample, actionName: IntensityTransformers.WeightScheme.rawValue, actionType: .TriggerFunction)
         transformButton.addKey(withAttributedText: colorBYRSample, actionName: IntensityTransformers.TextColorScheme.rawValue, actionType: .TriggerFunction)
         
