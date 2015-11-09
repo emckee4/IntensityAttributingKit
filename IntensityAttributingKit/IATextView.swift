@@ -108,6 +108,10 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
         self.reloadInputViews()
     }
     
+    func cameraButtonPressed() {
+        print("camera button pressed...")
+    }
+    
 //    func defaultIntensityUpdated(withValue value:Float) {
 //        
 //    }

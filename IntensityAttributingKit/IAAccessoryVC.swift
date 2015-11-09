@@ -12,6 +12,7 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction {
 
     
     var kbSwitchButton:UIButton!
+    var cameraButton:UIButton!
     var intensityAdjuster:IntensityAdjuster!
     var optionButton:UIButton!
     var transformButton:ExpandingPressureKey!
@@ -62,6 +63,19 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction {
         kbSwitchButton.clipsToBounds = true
         
 
+        cameraButton = UIButton(type: .System)
+        cameraButton.setImage(UIImage(named: "camera", inBundle: bundle, compatibleWithTraitCollection: nil)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal), forState: .Normal )
+        cameraButton.imageView?.contentMode = .ScaleAspectFit
+        cameraButton.backgroundColor = kButtonBackgroundColor
+        cameraButton.imageEdgeInsets = UIEdgeInsets(top: 4.0, left: 4.0, bottom: 4.0, right: 4.0)
+        cameraButton.addTarget(self, action: "cameraButtonPressed:", forControlEvents: .TouchUpInside)
+        cameraButton.translatesAutoresizingMaskIntoConstraints = false
+        cameraButton.layer.cornerRadius = kButtonCornerRadius
+        cameraButton.layer.borderColor = kButtonBorderColor
+        cameraButton.layer.borderWidth = kButtonBorderThickness
+        cameraButton.clipsToBounds = true
+        cameraButton.widthAnchor.constraintEqualToAnchor(cameraButton.heightAnchor).activateWithPriority(800)
+        
         intensityAdjuster = IntensityAdjuster()
         intensityAdjuster.translatesAutoresizingMaskIntoConstraints = false
         intensityAdjuster.componentBackgroundColor = kButtonBackgroundColor
@@ -76,7 +90,7 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction {
         
         optionButton = UIButton(type: .Custom)
         optionButton.backgroundColor = kButtonBackgroundColor
-        optionButton.setTitle("Options", forState: .Normal)
+        optionButton.setTitle("Opts", forState: .Normal)
         optionButton.addTarget(self, action: "optionButtonPressed", forControlEvents: .TouchUpInside)
         optionButton.layer.cornerRadius = kButtonCornerRadius
         optionButton.layer.borderColor = kButtonBorderColor
@@ -103,7 +117,7 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction {
         
         
 
-        stackView = UIStackView(arrangedSubviews: [kbSwitchButton, intensityAdjuster, transformButton ,optionButton])
+        stackView = UIStackView(arrangedSubviews: [kbSwitchButton, cameraButton, intensityAdjuster, transformButton ,optionButton])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.alignment = .Fill
         stackView.axis = .Horizontal
@@ -162,6 +176,10 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction {
         print("accessory view frame \(self.inputView!.frame)")
         delegate?.keyboardChangeButtonPressed()
     }
+    
+    func cameraButtonPressed(sender:UIButton!){
+        delegate?.cameraButtonPressed() 
+    }
 
     func optionButtonPressed(){
         delegate?.optionButtonPressed()
@@ -183,6 +201,7 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction {
 ///IAAccessoryDelegate delivers actions from the IAAccessory to the IATextView
 protocol IAAccessoryDelegate {
     func keyboardChangeButtonPressed()
+    func cameraButtonPressed()
     //func defaultIntensityUpdated(withValue value:Float)
     func optionButtonPressed()
     func requestTransformerChange(toTransformerWithName name:String)
