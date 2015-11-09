@@ -88,7 +88,9 @@ Further cleanup code, consider switching back to selector based actions (or hand
     }
     ///Color for background of selected cell if 3dTouch (and so our dynamic selection background color) are not available
     var nonTouchSelectionBGColor = UIColor.darkGrayColor()
-
+    
+    ///The control doesn't track RawIntensity and uses two level highlighting only
+    var intensityTrackingDisabled = false
     
 
     init(){
@@ -138,7 +140,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
     private func bgColorForSelectionIntensity()->UIColor?{
         guard backgroundColor != nil else {return nonTouchSelectionBGColor}
         ///If the device doesn't support force touch then we return darkGrey
-        guard forceTouchAvailable else {return nonTouchSelectionBGColor}
+        guard forceTouchAvailable && !intensityTrackingDisabled else {return nonTouchSelectionBGColor}
         var white:CGFloat = 0.0
         var alpha:CGFloat = 1.0
         backgroundColor!.getWhite(&white, alpha: &alpha)
@@ -155,6 +157,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
 
     func addKey(keyView:UIView, triggeredActionName name:String, actionType:PressureKeyActionType){
         guard !containedStackView.arrangedSubviews.contains(keyView) else {return}
+        guard !(pressureKeys.map({$0.actionName == name}).contains(true)) else {return}
         let stackIndex = pressureKeys.count
         pressureKeys.append(EPKey(view: keyView, actionName: name, actionType: actionType))
         keyView.hidden = stackIndex != 0
@@ -173,6 +176,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
     
     
     func addKey(withTextLabel text:String, withFont font:UIFont=UIFont.systemFontOfSize(20.0), actionName: String, actionType:PressureKeyActionType){
+        guard !(pressureKeys.map({$0.actionName == actionName}).contains(true)) else {return}
         let label = UILabel()
         label.text = text
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -196,6 +200,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
     }
     
     func addKey(withAttributedText attributedText:NSAttributedString, actionName: String, actionType:PressureKeyActionType){
+        guard !(pressureKeys.map({$0.actionName == actionName}).contains(true)) else {return}
         let label = UILabel()
         label.attributedText = attributedText
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -218,6 +223,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
     }
     
     func addCharKey(charToInsert char:String){
+        guard !(pressureKeys.map({$0.actionName == char}).contains(true)) else {return}
         let label = UILabel()
         label.text = char
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -246,6 +252,31 @@ Further cleanup code, consider switching back to selector based actions (or hand
         pressureKeys = []
     }
     
+    ///Moves the key with the actionName specified to the center most position
+    func centerKeyWithActionName(actionName:String){
+        for pk in pressureKeys{
+            if pk.actionName == actionName {
+                moveEPKeyToFirst(pk)
+                return
+            }
+        }
+    }
+
+    private func moveEPKeyToFirst(key:EPKey){
+        containedStackView.removeArrangedSubview(key.view)
+        if expansionDirection.hasForwardLayoutDirection() {
+            containedStackView.insertArrangedSubview(key.view, atIndex: 0)
+        } else {
+            containedStackView.addArrangedSubview(key.view)
+        }
+        for (i,pk) in pressureKeys.enumerate(){
+            if pk.actionName == key.actionName {
+                pressureKeys.removeAtIndex(i)
+                pressureKeys.insert(key, atIndex: 0)
+                break
+            }
+        }
+    }
     
     private func findTouchedEPKey(touch:UITouch,event:UIEvent?)->EPKey?{
         for pk in pressureKeys {
@@ -264,7 +295,9 @@ Further cleanup code, consider switching back to selector based actions (or hand
         //there should be one and only one touch in the touches set in touchesBegan since we have multitouch disabled
         if let touch = touches.first {
             expand()
-            touchIntensity = forceTouchAvailable ? RawIntensity(withValue: touch.force, maximumPossibleForce: touch.maximumPossibleForce) : RawIntensity()
+            if !intensityTrackingDisabled{
+                touchIntensity = RawIntensity(withValue: touch.force, maximumPossibleForce: touch.maximumPossibleForce)
+            }
             selectedEPKey = findTouchedEPKey(touch, event: event)
         }
         
@@ -277,13 +310,19 @@ Further cleanup code, consider switching back to selector based actions (or hand
         if let touch = touches.first {
             let newSelectedKey = findTouchedEPKey(touch, event: event)
             if newSelectedKey == nil {
-                touchIntensity.reset()
+                if !intensityTrackingDisabled{
+                    touchIntensity.reset()
+                }
                 selectedEPKey = nil
             } else if newSelectedKey?.view != selectedEPKey?.view {
-                touchIntensity = forceTouchAvailable ? RawIntensity(withValue: touch.force, maximumPossibleForce: touch.maximumPossibleForce) : RawIntensity()
+                if !intensityTrackingDisabled{
+                    touchIntensity.reset(touch.force)
+                }
                 selectedEPKey = newSelectedKey
             } else {
-                touchIntensity.append(forceTouchAvailable ? touch.force : 0.0)
+                if !intensityTrackingDisabled {
+                    touchIntensity.append(touch.force)
+                }
                 selectedEPKey = newSelectedKey //this value is the same but we want to trigger the didSet closure so that the background updates
             }
         }
@@ -294,13 +333,21 @@ Further cleanup code, consider switching back to selector based actions (or hand
         if let touch = touches.first {
             if let newSelectedKey = findTouchedEPKey(touch, event: event) {
                 if newSelectedKey.view == selectedEPKey?.view {
-                    forceTouchAvailable ? touchIntensity.append(touch.force) : ()
+                    if !intensityTrackingDisabled{
+                        touchIntensity.append(touch.force)
+                    }
                 } else {
                     selectedEPKey = newSelectedKey
-                    touchIntensity = forceTouchAvailable ? RawIntensity(withValue: touch.force, maximumPossibleForce: touch.maximumPossibleForce) : RawIntensity()
+                    if !intensityTrackingDisabled{
+                        touchIntensity =  RawIntensity(withValue: touch.force, maximumPossibleForce: touch.maximumPossibleForce)
+                    }
                 }
                 //perform closure or selector here
-                delegate?.pressureKeyPressed(self, actionName: selectedEPKey!.actionName, actionType:selectedEPKey!.actionType, intensity: touchIntensity.intensity)
+                if !intensityTrackingDisabled{
+                    delegate?.pressureKeyPressed(self, actionName: selectedEPKey!.actionName, actionType:selectedEPKey!.actionType, intensity: touchIntensity.intensity)
+                } else {
+                    delegate?.pressureKeyPressed(self, actionName: selectedEPKey!.actionName, actionType:selectedEPKey!.actionType, intensity: 0.0)
+                }
             } else {
                 selectedEPKey = nil
                 print("touch failed: ended on touch of non subview")
