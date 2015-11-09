@@ -106,7 +106,8 @@ class IntensityAdjuster: UIView {
         slider.maximumValue = 1.0
         slider.addTarget(self, action: "sliderUpdated:", forControlEvents: .ValueChanged)
         slider.translatesAutoresizingMaskIntoConstraints = false
-        slider?.hidden = !showPressureSlider
+        slider.hidden = !showPressureSlider
+
         
         stackView = UIStackView(arrangedSubviews: [intensityDisplay, slider, pressurePad])
         stackView.axis = .Horizontal
@@ -146,84 +147,6 @@ class IntensityAdjuster: UIView {
     
     
 }
-
-/*
-
-///This pressure based controller suports .ValueChanged UIControlEvents for pressure values. This control is rather useless on a non-3dTouch device and should be replaced by more appropriate controls in that context
-class PressureControl: UIControl {
-    
-    var contentView:UIView!
-    
-    lazy var forceTouchAvailable:Bool = {
-        return self.traitCollection.forceTouchCapability == UIForceTouchCapability.Available
-    }()
-    
-    lazy var rawIntensity:RawIntensity = RawIntensity()
-    var intensity:Float {
-        return rawIntensity.intensity
-    }
-    
-    private var baseBackgroundColor:UIColor? {
-        didSet {super.backgroundColor = baseBackgroundColor}
-    }
-    override var backgroundColor:UIColor? {
-        get{return baseBackgroundColor }
-        set{baseBackgroundColor = newValue}
-    }
-    
-    ///Color for background of selected cell if 3dTouch (and so our dynamic selection background color) are not available
-    var nonTouchSelectionBGColor = UIColor.darkGrayColor()
-    
-    private func setBackgroundColorForIntensity(){
-        guard forceTouchAvailable else {super.backgroundColor = nonTouchSelectionBGColor; return}
-        let intensity = rawIntensity.intensity
-        guard intensity > 0.0 else {super.backgroundColor = baseBackgroundColor; return}
-        var white:CGFloat = -1.0
-        var alpha:CGFloat = 1.0
-        baseBackgroundColor!.getWhite(&white, alpha: &alpha)
-        let newAlpha:CGFloat = max(alpha * CGFloat(1 + intensity), 1.0)
-        let newWhite:CGFloat = white * CGFloat(1 - intensity)
-        super.backgroundColor = UIColor(white: newWhite, alpha: newAlpha)
-    }
-    ///When the touch ends this sets the background color to normal
-    private func resetBackground(){
-        super.backgroundColor = baseBackgroundColor
-    }
-    
-    override func beginTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool {
-        rawIntensity.reset( forceTouchAvailable ? touch.force : 0.0 )
-        sendActionsForControlEvents(.ValueChanged)
-        setBackgroundColorForIntensity()
-        return super.beginTrackingWithTouch(touch, withEvent: event)
-    }
-    
-    override func continueTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool {
-        if touchInside {
-            rawIntensity.append( forceTouchAvailable ? touch.force : 0.0 )
-            sendActionsForControlEvents(.ValueChanged)
-            setBackgroundColorForIntensity()
-        } else {
-            resetBackground()
-            return false
-        }
-        return super.continueTrackingWithTouch(touch, withEvent: event)
-    }
-    
-    override func endTrackingWithTouch(touch: UITouch?, withEvent event: UIEvent?) {
-        if let touch = touch {
-            if self.pointInside((touch.locationInView(self)), withEvent: event) {
-                rawIntensity.append( forceTouchAvailable ? touch.force : 0.0 )
-                sendActionsForControlEvents(.ValueChanged)
-            }
-        }
-        resetBackground()
-        super.endTrackingWithTouch(touch, withEvent: event)
-    }
-}
-
-
-*/
-
 
 
 

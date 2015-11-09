@@ -1,29 +1,17 @@
+
 Today:
-    Rebuild IAAccessory to use stackview for layout:
-        Row layout functions will instantiate and arrange objects and constraints for multiple layout options for each row
-        Later config functions will be able to make visible and hide elements as needed for a specific row layout, setting constraints as needed.
-        tagging format should be set up
+ExpandingPressureKey: need to add a reorder or setViewAsFirst option, should add an ignorePressureData option
+IATransformer protocol: add generate sample from text function, which divides the provided text into as many bins as possible and returns intensityAttributed text
 
-    Once layout has been separated from key contents:
-        build keyset formats
-        implement basic english keyset
+IAKit:
+    Globals: max embedded image size (total pictures), default rendering,
+    add size transformer
 
-    Need to cleanup IntensityAdjuster, particularly constraints and bounds issues
+IATV:
+    -reenable copy and paste
+    -link inserution should be as pasted NSURL with NSLinkAttributeName, or link should be detected and inserted at send time (add finalize()->NSAttributedString)
 
-    
 
-add additional punctuation/numeric views--
-    should add some sort of type with keysets for the view, any relevent layout info (like key count), and any linkages to other related keysets
-    add functions for changing and loading keysets into iakeyboard
-
-want option menu of some sort on accessory view for, among other things, changing intensity renderings
-
-want camera picker on accessory view
-
--->send button belongs with textview, handled by containing app, though iakit should make available an HTML encoding
-
-???? move text field to top of accessory view? or attach it later in code of final app?
--- probably later option with send button attached.
 
 ExpandingPressureKey (later optional improvements)
     on selection: flash item?, haptic?, option to reorder array and set as default
@@ -31,14 +19,12 @@ ExpandingPressureKey (later optional improvements)
 
 
 RawIntensity:
-    test in sim if keypress events stop if press isn't moving/varying in force (in which case duration method will need to pass in a start time)
-    give duration struct a static method which can be used by the pressure with duration functions to make duration based intensity tunable
+    -add tunable non-linear algo for force-intensity mapping
 
 Accessory view:
-    -link insertion should be as pasted NSURL with NSLinkAttributeName, or link should be detected and inserted at send time
-    -send button could be an expanding button with delay to offer sending as email
-
-
+    want option menu of some sort on accessory view for, among other things, changing intensity renderings
+    want camera picker on accessory view
+    --intensityAdjuster update with latest values from keyboard
 
     Need different accessoryView layouts depending on orientation
         use popup for overflow of normal options, including Transform style
