@@ -10,6 +10,14 @@ import UIKit
 
 
 
+extension NSLayoutConstraint {
+    func activateWithPriority(priority:Float)->NSLayoutConstraint{
+        self.priority = priority
+        self.active = true
+        return self
+    }
+}
+
 
 //extension String {
 //    func rangeFromNSRange(nsRange : NSRange) -> Range<String.Index>? {

@@ -1,7 +1,5 @@
 
 Today:
-ExpandingPressureKey: need to add a reorder or setViewAsFirst option, should add an ignorePressureData option
-IATransformer protocol: add generate sample from text function, which divides the provided text into as many bins as possible and returns intensityAttributed text
 
 IAKit:
     Globals: max embedded image size (total pictures), default rendering,
@@ -13,30 +11,14 @@ IATV:
 
 
 
-ExpandingPressureKey (later optional improvements)
-    on selection: flash item?, haptic?, option to reorder array and set as default
-    enable dynamic reordering (changing default key)
-
-
 RawIntensity:
     -add tunable non-linear algo for force-intensity mapping
 
 Accessory view:
-    want option menu of some sort on accessory view for, among other things, changing intensity renderings
-    want camera picker on accessory view
-    --intensityAdjuster update with latest values from keyboard
+    OPTION MENU: want option menu of some sort on accessory view for, among other things, changing intensity renderings
+    tweak constraints (particularly in intensityAdjuster), also large, squareish camera, wider transform sample
 
-    Need different accessoryView layouts depending on orientation
-        use popup for overflow of normal options, including Transform style
-    Different Accessories:
-        Accessory w/pressure:
-        [swap?, intensity dropdown/indicator, insert photo, etc, options?, send/send-as]
 
-        Accessory w/system:
-        [swap, intensityslider, ?? options, popup options]
-
-        Accessory no pressure:
-        [insert, intensity, options, sendas]
 
 need to reimplement copy/paste in iatextview
     copy function should use super.copy and add IAdata as another type of that
@@ -52,7 +34,7 @@ Icons: return, options, camera, ?
 
 --Longer term:
     make all keys some derivative of expanding keys, include larger expansion style option as used in system keyboard popups
-
+        -give some sort of feedback on selection, like flash with duration before hiding or light haptic/ click if something suitable is available
 
 
 --Performance:
