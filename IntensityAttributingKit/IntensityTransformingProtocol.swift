@@ -11,6 +11,7 @@ public protocol IntensityTransforming {
     func updateIntensityAttributesInScheme(lastIntensityAttributes lastIA:IntensityAttributes, providedAttributes:[String:AnyObject], intensity:Float)->IntensityAttributes
     func typingAttributesForScheme(intensityAttributes:IntensityAttributes, retainedKeys:[String:AnyObject]?)->[String:AnyObject]
     func generateSampleFromText(text:String, size:CGFloat)->NSAttributedString
+    init()
 }
 
 ///Default implementations for the mutable and immutable transformations. These each rely on nsAttributesForIAAttributes to do the scheme specific work.

@@ -12,13 +12,30 @@ public var availableIntensityTransformers:[String:IntensityTransforming] = {
 
 public enum IntensityTransformers:String {
     case TextColorScheme = "TextColorScheme", WeightScheme = "WeightScheme"
+    
+    var transformer:IntensityTransforming {
+        if let thisTransformer = IntensityTransformers.storedTransformers[self] {
+            return thisTransformer
+        } else {
+            let trans = IntensityTransformers.transformerTypes[self]!.init()
+            IntensityTransformers.storedTransformers[self] = trans
+            return trans
+        }
+    }
+    ///
+    private static var transformerTypes:[IntensityTransformers:IntensityTransforming.Type] = [.TextColorScheme:TextColorIntensityScheme.self, .WeightScheme:WeightIntensityScheme.self]
+    ///Instances of transformers are lazily added to this array as they're requested and instantiated using transformerTypes
+    private static var storedTransformers:[IntensityTransformers:IntensityTransforming] = [:]
+    
 }
 
 
 
 public class WeightIntensityScheme:IntensityTransforming {
     public static let schemeName = "WeightScheme"
-    
+
+    required public init(){}
+
     let weightArray = [
         UIFontWeightUltraLight,
         UIFontWeightThin,
@@ -95,7 +112,7 @@ public class WeightIntensityScheme:IntensityTransforming {
 
 
 public class TextColorIntensityScheme:IntensityTransforming {
-    
+    required public init(){}
     public static let schemeName = "TextColorScheme"
     
     private var fontCache:[CGFloat:UIFont] = [:]
