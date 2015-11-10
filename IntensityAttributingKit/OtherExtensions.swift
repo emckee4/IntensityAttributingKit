@@ -19,6 +19,25 @@ extension NSLayoutConstraint {
 }
 
 
+extension CGSize {
+    ///Returns the largest CGSize that will fit in the provided container size without changing the aspect ratio
+    func sizeThatFitsMaintainingAspect(containerSize containerSize:CGSize, expandIfRoom:Bool = false)->CGSize{
+        let widthScaleFactor =  containerSize.width / self.width
+        let heightScaleFactor = containerSize.height / self.height
+        if widthScaleFactor >= 1.0 && heightScaleFactor >= 1.0 {
+            if expandIfRoom == false {
+                return self
+            }else {
+                let newScale = min(widthScaleFactor,heightScaleFactor)
+                return CGSizeApplyAffineTransform(self, CGAffineTransformMakeScale(newScale, newScale))
+            }
+        } else {
+            let newScale = min(widthScaleFactor,heightScaleFactor)
+            return CGSizeApplyAffineTransform(self, CGAffineTransformMakeScale(newScale, newScale))
+        }
+    }
+}
+
 //extension String {
 //    func rangeFromNSRange(nsRange : NSRange) -> Range<String.Index>? {
 //        let from16 = utf16.startIndex.advancedBy(nsRange.location, limit: utf16.endIndex)
