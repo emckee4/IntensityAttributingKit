@@ -2,7 +2,7 @@ import UIKit
 
 
 public extension NSMutableAttributedString {
-    ///applies intensity attributes but
+    ///Strips nonIA attributes (other than attachments and links), then applies IAAttributes of the supplied IntensityAttributes
     func applyIntensityAttributes(attributes:IntensityAttributes, toRange:NSRange! = nil, onlyToUnattributed:Bool = false){
         let range = toRange ?? NSRange(location: 0, length: self.length)
         //        //first remove optional tags
@@ -101,5 +101,19 @@ public extension NSAttributedString {
         self.init(attributedString: mutableAS)
     
     }
-
+    
+    ///initializes an NSAttributedString with an image attachment, performing requisite scaling, bounds adjustment, and application of intensity attributes
+    convenience init(image:UIImage, intensityAttributes:IntensityAttributes, displayMaxSize:CGSize, cropToMaxSize:CGSize) {
+            let attachment = NSTextAttachment()
+            attachment.image = image.resizeImageToFit(maxSize: cropToMaxSize)
+            let imageSize = attachment.image!.size
+            let displaySize = image.size.sizeThatFitsMaintainingAspect(containerSize: displayMaxSize)
+            attachment.bounds = CGRect(origin: CGPointZero, size: displaySize)
+            var iaAttributes = intensityAttributes.asAttributeDict
+            iaAttributes[IATags.IAAttachmentSize] = ["w":imageSize.width,"h":imageSize.height]
+            let attributes = [NSAttachmentAttributeName:attachment, IATags.IAKeys: iaAttributes]
+            self.init(string: "\u{FFFC}", attributes: attributes)
+    }
+    
+    
 }
