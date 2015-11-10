@@ -96,6 +96,8 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction {
         optionButton.layer.borderColor = kButtonBorderColor
         optionButton.layer.borderWidth = kButtonBorderThickness
         optionButton.translatesAutoresizingMaskIntoConstraints = false
+        optionButton.setContentCompressionResistancePriority(400, forAxis: .Horizontal)
+        optionButton.widthAnchor.constraintEqualToAnchor(optionButton.heightAnchor).activateWithPriority(500)
  
 
         transformButton = ExpandingPressureKey(expansionDirection: .Up)
@@ -111,6 +113,7 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction {
         transformButton.backgroundColor = kButtonBackgroundColor
         transformButton.cornerRadius = kButtonCornerRadius
         transformButton.widthAnchor.constraintGreaterThanOrEqualToConstant(transformButton.intrinsicContentSize().width + 10.0).active = true
+        transformButton.widthAnchor.constraintGreaterThanOrEqualToAnchor(transformButton.heightAnchor).active = true
         transformButton.layer.borderColor = kButtonBorderColor
         transformButton.layer.borderWidth = kButtonBorderThickness
         //add config here

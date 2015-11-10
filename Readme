@@ -1,51 +1,92 @@
+IntensityAttributingKit is a pure swift framework which provides a means of creating, displaying, and converting text with "intensity" attributes by the user on an iOS device. Ideally the user would have a 3dTouch capable phone so that intensity of a character can be derived from the pressure applied to the key, but intensity can also be applied using touch duration or a manual control.
 
-Today:
 
-IAKit:
-    Globals: max embedded image size (total pictures), default rendering,
-    add size transformer
+____________________________________________
+v0.1 goals:
+
 
 IATV:
-    -reenable copy and paste
-    -link inserution should be as pasted NSURL with NSLinkAttributeName, or link should be detected and inserted at send time (add finalize()->NSAttributedString)
+    -reenable copy and paste :
+        copy function should use super.copy and add IAdata as another type of that -- will overriding copy be sufficient for inbuilt cut to work as desired?
 
+IAAccessory:
+    tweak constraints (particularly in intensityAdjuster), wider transform sample, options:(icon, square constraints)
 
 
 RawIntensity:
     -add tunable non-linear algo for force-intensity mapping
 
+Icons: return?, options, sliderThumb
+
+-Make kb and accessory text color consistant, add highlight effect (background change color?)
+
+
+IAKit:
+    serialize data
+    display immutable data
+    cleanup detritus
+
+
+
+____________________________________________
+v0.2 goals:
+
+IAKit:
+    Globals: max embedded image size (total pictures), default rendering, store keyboard (or keyboard singleton), default keyboard, etc
+
+IATV:
+    -link insertion should be as pasted NSURL with NSLinkAttributeName, or link should be detected and inserted at send time (add finalize()->NSAttributedString)
+
 Accessory view:
-    OPTION MENU: want option menu of some sort on accessory view for, among other things, changing intensity renderings
-    tweak constraints (particularly in intensityAdjuster), also large, squareish camera, wider transform sample
-
-
-
-need to reimplement copy/paste in iatextview
-    copy function should use super.copy and add IAdata as another type of that
-        -- will overriding copy be sufficient for inbuilt cut to work as desired?
+    OPTION MENU: want option menu of some sort on accessory view for: intensity scaling method and constant tuning, changing default intensity rendering, ?preference for IAAdjuster type (always slider vs always pressurepad or both), keyset chooser, ?max image size (it may be preferable to set a fixed size in code)
 
 
 
 
-Icons: return, options, camera, ?
 
--Make kb text color consistant, add highlight effect (background change color?)
 
---Longer term:
-    make all keys some derivative of expanding keys, include larger expansion style option as used in system keyboard popups
-        -give some sort of feedback on selection, like flash with duration before hiding or light haptic/ click if something suitable is available
+
+____________________________________________
+eventually:
+
+
+
+
+make all keys some derivative of expanding keys, include larger expansion style option as used in system keyboard popups
+-give some sort of feedback on selection, like flash with duration before hiding or light haptic/ click if something suitable is available
 
 
 --Performance:
-    KB rendering:
-        consider using spritesheet for keys
+KB rendering options:
+    spritesheet for keys
+    single image with normally transparent keys overlaying
+    single image with single control, placing views over specific parts as needed
 
 
 
-    IAString Performance
-        Keeping "deep" IAattributes may significantly increase storage size
-            It may be possible to retain most of the performance benefits of deep attributes through a combination of partition and removal by range in the transform function
-            "shallow" IAAttributes would let us invalidate all in a transform, letting us skip the setter check, and possibly perform more actions by range
+IAString Performance
+Keeping "deep" IAattributes may significantly increase storage size
+It may be possible to retain most of the performance benefits of deep attributes through a combination of partition and removal by range in the transform function
+"shallow" IAAttributes would let us invalidate all in a transform, letting us skip the setter check, and possibly perform more actions by range
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
