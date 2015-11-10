@@ -52,8 +52,19 @@ public extension NSMutableAttributedString {
         transformer.transformWithSchemeInPlace(targetIAString: self)
     }
     
-    
-    
+    ///This will set max displayed bounds to all attached images, maintaining aspect fit. This function is necessary when reconstituting an NSTextAttachment which has been archived (e.g. in a copy and paste).
+    func applyStoredImageConstraints(maxDisplayedSize mdSize:CGSize){
+        self.enumerateAttribute(NSAttachmentAttributeName, inRange: NSRange(location: 0, length: self.length), options: NSAttributedStringEnumerationOptions(rawValue: 0)) { (anyAttach, enumRange, stop) -> Void in
+            if let attachment = anyAttach as? NSTextAttachment{
+                if let iaKeys = self.attribute(IATags.IAKeys, atIndex: enumRange.location, effectiveRange: nil) as? [String:AnyObject]{
+                    if let imageWidth = iaKeys[IATags.IAAttachmentSize]?["w"] as? CGFloat, imageHeight = iaKeys[IATags.IAAttachmentSize]?["h"] as? CGFloat {
+                        let newSize = CGSize(width: imageWidth, height: imageHeight).sizeThatFitsMaintainingAspect(containerSize: mdSize)
+                        attachment.bounds = CGRect(origin: CGPointZero, size: newSize)
+                    }
+                }
+            }
+        }
+    }
 }
 
 

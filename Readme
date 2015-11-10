@@ -12,13 +12,15 @@ IATV:
 IAAccessory:
     tweak constraints (particularly in intensityAdjuster), wider transform sample, options:(icon, square constraints)
 
-
 RawIntensity:
     -add tunable non-linear algo for force-intensity mapping
+        -add static var for tuning
 
 Icons: return?, options, sliderThumb
 
--Make kb and accessory text color consistant, add highlight effect (background change color?)
+IAKeyboard:
+    -Make kb and accessory text color consistant
+    backspace should change background on touchdown
 
 
 IAKit:
@@ -38,6 +40,7 @@ IATV:
     -link insertion should be as pasted NSURL with NSLinkAttributeName, or link should be detected and inserted at send time (add finalize()->NSAttributedString)
 
 Accessory view:
+    lock default button should visually fixed, should update faster, should be capable of receiving values from IATextView's last values
     OPTION MENU: want option menu of some sort on accessory view for: intensity scaling method and constant tuning, changing default intensity rendering, ?preference for IAAdjuster type (always slider vs always pressurepad or both), keyset chooser, ?max image size (it may be preferable to set a fixed size in code)
 
 
