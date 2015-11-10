@@ -22,11 +22,13 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
         guard let schemeName = currentAttributes?.currentScheme else {return nil}
         return IntensityTransformers(rawValue: schemeName)?.transformer ?? nil
     }
+
+    var defaultIntensity:Float {
+        get {return iaAccessory.intensityAdjuster.defaultIntensity}
+        set {if !iaAccessory.intensityAdjuster.defaultLocked {iaAccessory.intensityAdjuster.defaultIntensity = newValue}}
+    }
     
-    ///tells the shouldChangeTextInRange delegate to ignore the next insertion because it's coming from an insert action (like paste) and includes text
-    private var didInsert:Bool = false
-    
-    
+    //Mark:- Input view controllers (keyboard and accessory)
     
     private var _inputVC:UIInputViewController?
     override public var inputViewController:UIInputViewController? {
@@ -43,24 +45,20 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
         get {return self.iaAccessory}
     }
     
-    //    lazy var pressureAccessoryVC:PressureAccessory = {
-    //        return PressureAccessory(nibName: nil, bundle: nil)
-    //    }()
-    
     lazy var pressureKeyboardVC:UIInputViewController = {
         return IAKeyboard(nibName: nil, bundle: nil)
     }()
     
-    var defaultIntensity:Float {
-        get {return iaAccessory.intensityAdjuster.defaultIntensity}
-        set {if !iaAccessory.intensityAdjuster.defaultLocked {iaAccessory.intensityAdjuster.defaultIntensity = newValue}}
-    }
+
+    
+    ///display max size for images displayed in text
+    var preferedImageDisplaySize = CGSize(width: 200, height: 200)
+    ///images pasted in from other programs will have their original size modified to fit within this size, maintaining aspect fit
+    var resizePastedImagesToMaxSize = CGSize(width: 500, height: 500)
     
     
     
-    
-    
-    //MARK:-inits
+    //MARK:-inits and setup
     
     public override init(frame: CGRect, textContainer: NSTextContainer?) {
         super.init(frame: frame, textContainer: textContainer)
@@ -72,78 +70,24 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
         setupPressureTextView()
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     private func setupPressureTextView(){
         iaAccessory.delegate = self
-
-        
         self.inputViewController = pressureKeyboardVC
         self.delegate = self
         self.layer.cornerRadius = 10.0
         self.textContainerInset = UIEdgeInsetsMake(7.0, 2.0, 7.0, 2.0)
         self.currentAttributes = IntensityAttributes(intensity: defaultIntensity, size: 18.0)
-        currentAttributes.currentScheme = "WeightScheme"//"HueGYRScheme"
+        currentAttributes.currentScheme = "WeightScheme"//"HueGYRScheme" //this should draw from global prefs
         typingAttributes = currentTransformer.typingAttributesForScheme(currentAttributes)
         self.allowsEditingTextAttributes = true
-        
-        
     }
     
-    func keyboardChangeButtonPressed() {
-        if self.inputViewController == nil {
-            self.inputViewController = pressureKeyboardVC
-        } else {
-            self.inputViewController = nil
-        }
-        self.reloadInputViews()
-    }
+
+    //MARK:- shouldChangeTextInRange()
     
-    func cameraButtonPressed() {
-        print("camera button pressed...")
-    }
-    
-//    func defaultIntensityUpdated(withValue value:Float) {
-//        
-//    }
-    
-    func requestTransformerChange(toTransformerWithName name:String){
-        guard let _ = IntensityTransformers(rawValue: name) else {return} 
-        currentAttributes.currentScheme = name
-        attributedText = attributedText.transformWithRenderScheme(name)
-        typingAttributes = currentTransformer.typingAttributesForScheme(currentAttributes)
-    }
-    
-    func optionButtonPressed() {
-        print("option pressed")
-    }
-    
-    //    override func replaceRange(range: UITextRange, withText text: String) {
-    //        if shouldChangeTextInRange(range, replacementText: text) {
-    //            if let iaKB = inputViewController as? IAKeyboard where iaKB.lastKeyAvgIntensity > 0 && iaKB.lastKeyPeakIntensity > 0 {
-    //                self.typingAttributes[NSFontAttributeName] = fontForIntensity(iaKB.lastKeyAvgIntensity!)
-    //                self.typingAttributes["IntensityAttributed"] = iaKB.lastKeyAvgIntensity!
-    //                iaKB.lastKeyAvgIntensity = nil
-    //                iaKB.lastKeyPeakIntensity = nil
-    //            } else {
-    //                self.typingAttributes[NSFontAttributeName] = fontForIntensity(self.defaultIntensity)
-    //                self.typingAttributes["IntensityAttributed"] = self.defaultIntensity
-    //            }
-    //
-    //        }
-    //    }
-    
+    ///We adopt the UIViewDelegate ourselves to implement this one function internally
     public func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-        guard !didInsert else {didInsert = false; return false}
         guard text != "" else {return true}
         var thisIntensity:Float!
         var retainedAttributes:[String:AnyObject]!
@@ -166,200 +110,142 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
     }
     
     
+    //MARK:- IAAccessoryDelegate functions
     
-    
-//    func attributesForCurrentSettings()->[String:AnyObject]{
-//        var attributes:[String:AnyObject] = [:]
-//        attributes[NSFontAttributeName] = fontForIntensity(self.defaultIntensity)
-//        return attributes
-//    }
-//    
-//    
-//    func fontForIntensity(intensity:Float)->UIFont{
-//        let bin = Int(floor(min(intensity, 0.99) * Float(weightArray.count)))
-//        print("intensity: \(intensity) => bin: \(bin)")
-//        return UIFont.systemFontOfSize(18.0, weight: weightArray[bin])
-//        
-//    }
-//    
-//    
-//    lazy var defaultFont:UIFont = {
-//        return UIFont.systemFontOfSize(18.0, weight: UIFontWeightRegular)
-//    }()
-//    
-//    let weightArray = [
-//        UIFontWeightUltraLight,
-//        UIFontWeightThin,
-//        UIFontWeightLight,
-//        UIFontWeightRegular,
-//        UIFontWeightMedium,
-//        UIFontWeightSemibold,
-//        UIFontWeightBold,
-//        UIFontWeightHeavy,
-//        UIFontWeightBlack
-//    ]
-    
-    
-    
-    /*
-    
-    override func cut(sender: AnyObject?) {
-    
-    copy(nil)
-    delete(nil)
+    func keyboardChangeButtonPressed() {
+        if self.inputViewController == nil {
+            self.inputViewController = pressureKeyboardVC
+        } else {
+            self.inputViewController = nil
+        }
+        self.reloadInputViews()
     }
     
-    override func copy(sender: AnyObject?) {
-    let pb = UIPasteboard.generalPasteboard()
-    let copiedText = attributedText.attributedSubstringFromRange(selectedRange)
-    var itemDict:[String:AnyObject] = [:]
-    //let dataRepresentation = NSKeyedArchiver.archivedDataWithRootObject(cutItem)
-    if let utf8Rep = try? copiedText.dataFromRange(NSMakeRange(0, copiedText.length), documentAttributes: [NSDocumentTypeDocumentAttribute:NSPlainTextDocumentType]) {
-    itemDict[UTITypes.PlainText] = utf8Rep
+    func cameraButtonPressed() {
+        print("camera button pressed...")
     }
     
-    if let rtfd = try? copiedText.dataFromRange(NSMakeRange(0, copiedText.length), documentAttributes: [NSDocumentTypeDocumentAttribute:NSRTFDTextDocumentType]){
-    itemDict[UTITypes.RTFD] = rtfd
-    }
-    let intensityAttributed = NSKeyedArchiver.archivedDataWithRootObject(copiedText)
-    itemDict[UTITypes.IntensityArchive] = intensityAttributed
-    pb.items = [itemDict]
-    }
-    
-    override func delete(sender: AnyObject?) {
-    let oldRange = selectedRange
-    let mutableAttributedString = NSMutableAttributedString(attributedString: attributedText)
-    mutableAttributedString.deleteCharactersInRange(selectedRange)
-    attributedText = mutableAttributedString
-    selectedRange.length = 0
-    selectedRange.location = oldRange.location
-    
-    }
-    
-    
-    override func paste(sender: AnyObject?) {
-    let pb = UIPasteboard.generalPasteboard()
-    var pasteText:NSAttributedString!
-    if let intensityData = pb.items[0][UTITypes.IntensityArchive] as? NSData {
-    pasteText = NSKeyedUnarchiver.unarchiveObjectWithData(intensityData) as! NSAttributedString
-    
-    } else if let rtfdData = pb.items[0][UTITypes.RTFD] as? NSData {
-    pasteText = try? NSMutableAttributedString(data: rtfdData, options: [NSDocumentTypeDocumentAttribute:NSRTFDTextDocumentType], documentAttributes: nil)
-    if pasteText != nil {
-    applyCurrentAttributesToString(&pasteText!)
-    }
-    }
-    if pasteText == nil {
-    if let pbString = pb.string where pbString.utf16.count > 0 {
-    pasteText = NSMutableAttributedString(string: pbString)
-    }
-    if pasteText != nil {
-    applyCurrentAttributesToString(&pasteText!)
-    }
-    }
-    
-    if pasteText == nil {
-    if let image = pb.image {
-    insertImageAtCursor(image)
-    return
-    }
-    
-    }
-    
-    if pasteText != nil {
-    insertAttributedStringAtCursor(pasteText)
-    }
-    
-    
-    
-    }
-    
-    func insertImageAtCursor(image:UIImage){
-    
-    let attachement = NSTextAttachment()//NSTextAttachment(data: UIImageJPEGRepresentation(image, 0.9), ofType: "kUTTypeJPEG")
-    
-    attachement.image = image//image.resizeWithMaxWidthAndHeight(maxWidth: 300.0, maxHeight: 300.0)
-    let displaySize = image.resizeWithMaxWidthAndHeight(maxWidth: 300.0, maxHeight: 300.0).size
-    attachement.bounds = CGRect(origin: CGPointZero, size: displaySize)
-    var attString = NSAttributedString(attachment: attachement)
-    applyCurrentAttributesToString(&attString)
-    print("attstring")
-    print(attString.string.utf16)
-    insertAttributedStringAtCursor(attString)
-    }
-    
+    //    func defaultIntensityUpdated(withValue value:Float) {
     //
-    func applyCurrentAttributesToString(inout text:NSAttributedString){
-    if text is NSMutableAttributedString {
-    //need to apply current slider as intensity to all, should apply default font, etc to all
+    //    }
     
-    } else {
-    var attStringCopy = NSMutableAttributedString(attributedString: text)
-    
-    
-    
-    }
+    func requestTransformerChange(toTransformerWithName name:String){
+        guard let _ = IntensityTransformers(rawValue: name) else {return}
+        currentAttributes.currentScheme = name
+        attributedText = attributedText.transformWithRenderScheme(name)
+        typingAttributes = currentTransformer.typingAttributesForScheme(currentAttributes)
     }
     
-    ///Enabling the pasting of images from the pasteboard
+    func optionButtonPressed() {
+        print("option pressed")
+    }
+    
+    
+    
+    
+    //MARK:- Copy & Paste + helpers
+    
+    
+    override public func copy(sender: AnyObject?){
+        super.copy()
+        let pb = UIPasteboard.generalPasteboard()
+        let pbDict = pb.items.first as! NSMutableDictionary
+        
+        let copiedText = attributedText.attributedSubstringFromRange(selectedRange)
+        let archive = NSKeyedArchiver.archivedDataWithRootObject(copiedText)
+        pbDict.setValue(archive, forKey: UTITypes.IntensityArchive)
+        pb.items[0] = pbDict
+    }
+
+    
+    override public func cut(sender: AnyObject?) {
+        let copiedText = attributedText.attributedSubstringFromRange(selectedRange)
+        let archive = NSKeyedArchiver.archivedDataWithRootObject(copiedText)
+        super.cut(sender)
+        
+        let pb = UIPasteboard.generalPasteboard()
+        let pbDict = pb.items.first as! NSMutableDictionary
+        pbDict.setValue(archive, forKey: UTITypes.IntensityArchive)
+        pb.items[0] = pbDict
+    }
+    
+    override public func delete(sender: AnyObject?) {
+        deleteBackward()
+    }
+    
+    
+    ///Pasting of RTFD isn't supported at the moment.
+    public override func paste(sender: AnyObject?) {
+        let pb = UIPasteboard.generalPasteboard()
+        var pasteText:NSMutableAttributedString!
+        if let intensityData = pb.items[0][UTITypes.IntensityArchive] as? NSData {
+            let raw = NSKeyedUnarchiver.unarchiveObjectWithData(intensityData) as! NSAttributedString
+            pasteText = NSMutableAttributedString(attributedString: raw)
+            
+        }
+//  For RTF paste to work: need to go through all of RTFD and apply IA image size attributes and perform risizing like NSAttributedString(image...) does
+//        else if let rtfdData = pb.items[0][UTITypes.RTFD] as? NSData {
+//            let rawAttString = try? NSMutableAttributedString(data: rtfdData, options: [NSDocumentTypeDocumentAttribute:NSRTFDTextDocumentType], documentAttributes: nil)
+//            if rawAttString != nil {
+//                //strip existing attributes except attachment atts, apply typing attributes
+//                rawAttString!.applyIntensityAttributes(currentAttributes)
+//                
+//            }
+//        }
+        if pasteText == nil {
+            if let pbString = pb.string where pbString.utf16.count > 0 {
+                let attString = NSMutableAttributedString(string: pbString)
+                attString.applyIntensityAttributes(currentAttributes)
+                pasteText = attString
+            }
+        }
+        if pasteText == nil {
+            if let image = pb.image {
+                let attString = NSMutableAttributedString( attributedString: NSAttributedString(image: image, intensityAttributes: currentAttributes, displayMaxSize: preferedImageDisplaySize, scaleToMaxSize: resizePastedImagesToMaxSize) )
+                pasteText = attString
+            }
+            
+        }
+        if pasteText != nil {
+            print(pasteText)
+            pasteText.applyStoredImageConstraints(maxDisplayedSize: CGSize(width: 200, height: 200))
+            insertAttributedStringAtCursor(pasteText.transformWithRenderScheme(currentAttributes!.currentScheme))
+        }
+    }
+    /// utility broken out of the paste function
+    private func insertAttributedStringAtCursor(attString:NSAttributedString){
+        let originalSelectedRange = selectedRange
+        let currentText = NSMutableAttributedString(attributedString: attributedText)
+        currentText.replaceCharactersInRange(selectedRange, withAttributedString: attString)
+        attributedText = currentText
+        selectedRange.length = 0
+        selectedRange.location = originalSelectedRange.location + attString.length
+    }
+    
+/*
+    ///With the current construction of the copy&paste functions I haven't found any cases where this is necessary again
     override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
-    if sender is UIMenuController && action == Selector("paste:") {
-    let pb = UIPasteboard.generalPasteboard()
-    if pb.image != nil {
-    return true
+        if sender is UIMenuController && action == Selector("paste:") {
+            let pb = UIPasteboard.generalPasteboard()
+            if pb.image != nil {
+                return true
+            }
+            if pb.pasteboardTypes().contains(UTITypes.IntensityArchive){
+                return true
+            }
+        }
+        return super.canPerformAction(action, withSender: sender)
     }
-    if pb.pasteboardTypes().contains(UTITypes.IntensityArchive){
-    return true
-    }
-    }
-    return super.canPerformAction(action, withSender: sender)
-    }
-    
-    
-    func insertAttributedStringAtCursor(attString:NSAttributedString){
-    let ReplacementCharacter = "\u{FFFC}".utf16.first!
-    for i in attString.string.utf16.generate() {
-    if i != ReplacementCharacter{
-    didInsert = true
-    }
-    }
-    
-    let originalSelectedRange = selectedRange
-    let currentText = NSMutableAttributedString(attributedString: attributedText)
-    currentText.replaceCharactersInRange(selectedRange, withAttributedString: attString)
-    attributedText = currentText
-    selectedRange.length = 0
-    selectedRange.location = originalSelectedRange.location + attString.length
-    }
-    
+*/
     private struct UTITypes {
-    static let PlainText = "public.utf8-plain-text"
-    static let RTFD = "com.apple.flat-rtfd"
-    static let IntensityArchive = "com.mckeemaker.IntensityAttributedTextArchive"
+        static let PlainText = "public.utf8-plain-text"
+        static let RTFD = "com.apple.flat-rtfd"
+        static let IntensityArchive = "com.mckeemaker.IntensityAttributedTextArchive"
     }
-    */
-}
-
-
-extension IATextView {
-    //diags
-    //    override var typingAttributes:[String:AnyObject] {
-    //        get {return super.typingAttributes}
-    //        set {if newValue.keys.map({$0}) != super.typingAttributes.keys.map({$0}) || newValue[NSFontAttributeName] as? UIFont != super.typingAttributes[NSFontAttributeName] as? UIFont {
-    //
-    //            print("\n__________________\ntypingAttributes changed- \nold: \(pruneAttributes(super.typingAttributes))  \nnewvalues: \(pruneAttributes(newValue)))")}; super.typingAttributes = newValue}
-    //    }
     
-    //    override var typingAttributes:[String:AnyObject] {
-    //        didSet{print("did set: oldValue: \n \(pruneAttributes(oldValue))\nNewValue:\n\(pruneAttributes(typingAttributes))")}
-    //    }
-    //
-    //    func pruneAttributes(atts:[String:AnyObject])->[String:AnyObject]{
-    //        var prunedAttributes:[String:AnyObject] = atts
-    //        prunedAttributes.removeValueForKey(NSParagraphStyleAttributeName)
-    //        return prunedAttributes
-    //    }
 }
+
+
 
 
 
