@@ -5,10 +5,6 @@ ____________________________________________
 v0.1 goals:
 
 
-IATV:
-    -reenable copy and paste :
-        copy function should use super.copy and add IAdata as another type of that -- will overriding copy be sufficient for inbuilt cut to work as desired?
-
 IAAccessory:
     tweak constraints (particularly in intensityAdjuster), wider transform sample, options:(icon, square constraints)
 
@@ -38,6 +34,8 @@ IAKit:
 
 IATV:
     -link insertion should be as pasted NSURL with NSLinkAttributeName, or link should be detected and inserted at send time (add finalize()->NSAttributedString)
+    -Enable pasting of RTFD, fix copying of images and mix content so that more than plain text can be pasted out
+    -add delegate which can inform app that image or link has been tapped for purposes of opening new modals to view them- alternatively these could be included directly in the kit with some customization options
 
 Accessory view:
     lock default button should visually fixed, should update faster, should be capable of receiving values from IATextView's last values

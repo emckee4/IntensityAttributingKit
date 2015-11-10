@@ -114,9 +114,9 @@ public extension NSAttributedString {
     }
     
     ///initializes an NSAttributedString with an image attachment, performing requisite scaling, bounds adjustment, and application of intensity attributes
-    convenience init(image:UIImage, intensityAttributes:IntensityAttributes, displayMaxSize:CGSize, cropToMaxSize:CGSize) {
+    convenience init(image:UIImage, intensityAttributes:IntensityAttributes, displayMaxSize:CGSize, scaleToMaxSize:CGSize) {
             let attachment = NSTextAttachment()
-            attachment.image = image.resizeImageToFit(maxSize: cropToMaxSize)
+            attachment.image = image.resizeImageToFit(maxSize: scaleToMaxSize)
             let imageSize = attachment.image!.size
             let displaySize = image.size.sizeThatFitsMaintainingAspect(containerSize: displayMaxSize)
             attachment.bounds = CGRect(origin: CGPointZero, size: displaySize)

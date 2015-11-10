@@ -8,24 +8,24 @@ import UIKit
 }
 
 
-let ReplacementChar:String = "\u{FFFC}"
-let ReplacementCodeUnit:UInt16 = "\u{FFFC}".utf16.first!
+//let ReplacementChar:String = "\u{FFFC}"
+//let ReplacementCodeUnit:UInt16 = "\u{FFFC}".utf16.first!
 
 
-public let fontWeightArray = [
-    UIFontWeightUltraLight,
-    UIFontWeightThin,
-    UIFontWeightLight,
-    UIFontWeightRegular,
-    UIFontWeightMedium,
-    UIFontWeightSemibold,
-    UIFontWeightBold,
-    UIFontWeightHeavy,
-    UIFontWeightBlack
-]
+//public let fontWeightArray = [
+//    UIFontWeightUltraLight,
+//    UIFontWeightThin,
+//    UIFontWeightLight,
+//    UIFontWeightRegular,
+//    UIFontWeightMedium,
+//    UIFontWeightSemibold,
+//    UIFontWeightBold,
+//    UIFontWeightHeavy,
+//    UIFontWeightBlack
+//]
 
 
-
+//func
 
 
 
