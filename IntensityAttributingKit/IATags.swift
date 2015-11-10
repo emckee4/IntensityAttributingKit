@@ -9,15 +9,17 @@ public struct IATags {
     public static let IAUnderline = "IAUnderline"
     public static let IAStrikethrough = "IAStrikethrough"
     public static let IACurrentRendering = "IACurrentRendering"
+    ///width, height tupple
+    public static let IAAttachmentSize = "IAAttachSize"
     
     public static var allTags:[String] {
-        return [IAIntensity, IASize, IABold, IAItalic, IAUnderline, IAStrikethrough, IACurrentRendering]
+        return [IAIntensity, IASize, IABold, IAItalic, IAUnderline, IAStrikethrough, IACurrentRendering, IAAttachmentSize]
     }
     public static var mandatoryTags:[String] {
         return [IAIntensity, IASize]
     }
     public static var optionalTags:[String] {
-        return [IABold, IAItalic, IAUnderline, IAStrikethrough, IACurrentRendering]
+        return [IABold, IAItalic, IAUnderline, IAStrikethrough, IACurrentRendering, IAAttachmentSize]
     }
     
     
