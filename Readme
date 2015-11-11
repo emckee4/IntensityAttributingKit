@@ -4,6 +4,16 @@ IntensityAttributingKit is a pure swift framework which provides a means of crea
 ____________________________________________
 v0.1 goals:
 
+Today:
+    IAIntermediate needs:
+
+        extension?:
+        output as json ( or objects easily convertable)
+        json to intermediate
+
+--test IAIntermediate saving- then build basic CoreData app/stack, parse interface
+next: Preparation for saving/upload:
+    what format in coredata (attributedText or uploading format?)
 
 IAAccessory:
     tweak constraints (particularly in intensityAdjuster), wider transform sample, options:(icon, square constraints)
@@ -12,7 +22,7 @@ RawIntensity:
     -add tunable non-linear algo for force-intensity mapping
         -add static var for tuning
 
-Icons: return?, options, sliderThumb
+Icons: return?, options, sliderThumb -- fix opacity on camera: alpha 50% on background
 
 IAKeyboard:
     -Make kb and accessory text color consistant
@@ -20,7 +30,7 @@ IAKeyboard:
 
 
 IAKit:
-    serialize data
+    serialize data/ or prepare for upload
     display immutable data
     cleanup detritus
 

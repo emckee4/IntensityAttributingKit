@@ -15,6 +15,7 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
         didSet{if let schemeName = currentAttributes?.currentScheme where IntensityTransformers(rawValue: schemeName) != nil {
             iaAccessory.setTransformKeyForScheme(withName: schemeName)
             }
+            defaultIntensity = currentAttributes.intensity
         }
     }
 
@@ -207,8 +208,7 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
             
         }
         if pasteText != nil {
-            print(pasteText)
-            pasteText.applyStoredImageConstraints(maxDisplayedSize: CGSize(width: 200, height: 200))
+            pasteText.applyStoredImageConstraints(maxDisplayedSize: preferedImageDisplaySize)
             insertAttributedStringAtCursor(pasteText.transformWithRenderScheme(currentAttributes!.currentScheme))
         }
     }
