@@ -12,7 +12,7 @@ import Foundation
 
 
 
-class IAIntermediate {
+public class IAIntermediate {
     
     var text:NSString
     var intensities:[Float] = []
@@ -32,7 +32,7 @@ class IAIntermediate {
     
     var renderScheme:IntensityTransformers!
     
-    init!(iaString:NSAttributedString){
+    public init!(iaString:NSAttributedString){
         guard iaString.length > 0 else {text = "";return nil}
         //[IAIntensity, IASize, IABold, IAItalic, IAUnderline, IAStrikethrough, IACurrentRendering, IAAttachmentSize]
         
@@ -73,15 +73,15 @@ class IAIntermediate {
         
         self.textSizes = extractValueStreaks(tempIAAtts.map({$0[IATags.IASize]! as! CGFloat}))
         
-        self.bolds = extractTrueRanges(tempIAAtts.map({($0[IATags.IABold]! as? Bool) ?? false}))
-        self.italics = extractTrueRanges(tempIAAtts.map({($0[IATags.IAItalic]! as? Bool) ?? false}))
-        self.underlines = extractTrueRanges(tempIAAtts.map({($0[IATags.IAUnderline]! as? Bool) ?? false}))
-        self.strikethroughs = extractTrueRanges(tempIAAtts.map({($0[IATags.IAStrikethrough]! as? Bool) ?? false}))
+        self.bolds = extractTrueRanges(tempIAAtts.map({($0[IATags.IABold] as? Bool) ?? false}))
+        self.italics = extractTrueRanges(tempIAAtts.map({($0[IATags.IAItalic] as? Bool) ?? false}))
+        self.underlines = extractTrueRanges(tempIAAtts.map({($0[IATags.IAUnderline] as? Bool) ?? false}))
+        self.strikethroughs = extractTrueRanges(tempIAAtts.map({($0[IATags.IAStrikethrough] as? Bool) ?? false}))
         
     }
     
     
-    func toIAAttributedString(performRender:Bool = false)->NSAttributedString{
+    public func toIAAttributedString(performRender:Bool = false)->NSAttributedString{
         let attString = NSMutableAttributedString(string: self.text as String)
         
         for linkVWR in links {

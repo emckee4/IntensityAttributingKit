@@ -17,6 +17,7 @@ next: Preparation for saving/upload:
 
 IAAccessory:
     tweak constraints (particularly in intensityAdjuster), wider transform sample, options:(icon, square constraints)
+        Reverse lock display/default on lcoking display: highlight should be unlocked state
 
 RawIntensity:
     -add tunable non-linear algo for force-intensity mapping
