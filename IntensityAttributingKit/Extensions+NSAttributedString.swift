@@ -89,6 +89,10 @@ public extension NSAttributedString {
         return transformer.transformWithScheme(targetIAString: self)
     }
     
+    func transformWithRenderScheme(scheme:IntensityTransformers)->NSAttributedString!{
+        guard self.isFullyIntensityAttributed() else {print("transformWithRenderScheme: data not fully IA");return nil}
+        return scheme.transformer.transformWithScheme(targetIAString: self)
+    }
     
     
     convenience init(attributedString:NSAttributedString, defaultAttributes:IntensityAttributes, overwriteAttributes:Bool = false, renderWithScheme:String! = nil){
@@ -126,5 +130,10 @@ public extension NSAttributedString {
             self.init(string: "\u{FFFC}", attributes: attributes)
     }
     
+    
+    func convertToHTMLApproximationWithScheme(scheme:IntensityTransformers)->String?{
+        guard let rawHTMLData = try? self.dataFromRange(NSMakeRange(0, self.length), documentAttributes: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType]) else {return nil}
+            return String(data: rawHTMLData, encoding: NSUTF8StringEncoding)
+    }
     
 }
