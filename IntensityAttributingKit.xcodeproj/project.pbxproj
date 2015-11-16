@@ -32,6 +32,7 @@
 		C06BAFD31BF2AECE004CECA9 /* IAIntermediate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06BAFD21BF2AECE004CECA9 /* IAIntermediate.swift */; };
 		C08253B11BE571910017AC14 /* LockingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08253B01BE571910017AC14 /* LockingKey.swift */; };
 		C08253B61BE572AE0017AC14 /* ExpandingPressureKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08253B51BE572AE0017AC14 /* ExpandingPressureKey.swift */; };
+		C0BCB6C41BFA60BE00654E0A /* ValueWithRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BCB6C31BFA60BE00654E0A /* ValueWithRange.swift */; };
 		C0D4474A1BE6BC16003204E7 /* RawIntensity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D447491BE6BC16003204E7 /* RawIntensity.swift */; };
 		C0D4474C1BE82381003204E7 /* ImageAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0D4474B1BE82381003204E7 /* ImageAssets.xcassets */; };
 		C0D4474E1BE97578003204E7 /* IntensityAdjuster.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D4474D1BE97578003204E7 /* IntensityAdjuster.swift */; };
@@ -79,6 +80,7 @@
 		C06BAFD21BF2AECE004CECA9 /* IAIntermediate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAIntermediate.swift; sourceTree = "<group>"; };
 		C08253B01BE571910017AC14 /* LockingKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LockingKey.swift; sourceTree = "<group>"; };
 		C08253B51BE572AE0017AC14 /* ExpandingPressureKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ExpandingPressureKey.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		C0BCB6C31BFA60BE00654E0A /* ValueWithRange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueWithRange.swift; sourceTree = "<group>"; };
 		C0D447491BE6BC16003204E7 /* RawIntensity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawIntensity.swift; sourceTree = "<group>"; };
 		C0D4474B1BE82381003204E7 /* ImageAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ImageAssets.xcassets; sourceTree = "<group>"; };
 		C0D4474D1BE97578003204E7 /* IntensityAdjuster.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntensityAdjuster.swift; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 				C031CBE41BDB097600521393 /* IntensityTransformingProtocol.swift */,
 				C031CBE51BDB097600521393 /* MiscGlobals.swift */,
 				C06BAFD21BF2AECE004CECA9 /* IAIntermediate.swift */,
+				C0BCB6C31BFA60BE00654E0A /* ValueWithRange.swift */,
 			);
 			name = IAString;
 			sourceTree = "<group>";
@@ -369,6 +372,7 @@
 				C031CC041BDD921100521393 /* PressureButton.swift in Sources */,
 				C06B1D5D1BF15CDC009F427A /* FontSizeIntensityScheme.swift in Sources */,
 				C06B1D561BEE9C40009F427A /* ForceIntensityMappingFunctions.swift in Sources */,
+				C0BCB6C41BFA60BE00654E0A /* ValueWithRange.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
