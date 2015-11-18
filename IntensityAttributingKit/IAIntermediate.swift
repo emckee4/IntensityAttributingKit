@@ -148,11 +148,62 @@ public class IAIntermediate {
         return NSAttributedString(attributedString: attString)
     }
     
+    ///converts the IAIntermediate to a tupple containing a JSON ready dictionary and an array of NSData for the text attachments in sequential order. We use the locations of the attachSizeVWRanges as the locations for our attachments when reconstructing
+    public func convertToJSONReadyDictWithData()->([String:AnyObject],[NSData]){
+        var dict:[String:AnyObject] = [:]
+        dict[IntermediateKeys.text] = self.text
+        dict[IntermediateKeys.intensities] = self.intensities
+        dict[IntermediateKeys.textSizeVWRanges] = self.textSizes.map({$0.asArray})
+        
+        dict[IntermediateKeys.boldRanges] = self.bolds.map({[$0.location,$0.length]})
+        dict[IntermediateKeys.italicRanges] = self.italics.map({[$0.location,$0.length]})
+        dict[IntermediateKeys.underlineRanges] = self.underlines.map({[$0.location,$0.length]})
+        dict[IntermediateKeys.strikethroughRanges] = self.strikethroughs.map({[$0.location,$0.length]})
+        dict[IntermediateKeys.linkVWRanges] = self.links.map({$0.asArray}).map({[$0[0],$0[1],($0[2] as! NSURL).absoluteString]})
+        dict[IntermediateKeys.attachSizeVWRanges] = self.attachmentSizes.map({$0.asArray})
+        
+        
+        if let scheme = self.renderScheme {
+            dict[IntermediateKeys.renderScheme] = scheme.rawValue
+        }
+        
+        var dataArray:[NSData] = []
+        for attachVWR in self.attachments {
+            let nsTA = attachVWR.value as! NSTextAttachment
+            if let data = nsTA.contents {
+                dataArray.append(data)
+            } else if let wrapper = nsTA.fileWrapper where wrapper.regularFileContents != nil {
+                dataArray.append(wrapper.regularFileContents!)
+            } else if let image = nsTA.image {
+                dataArray.append(UIImageJPEGRepresentation(image, 0.8)!)
+            } else {
+                print("error converting text attachment to NSData. Appending empty placeholder instead")
+                dataArray.append(NSData())
+            }
+        }
+        
+        return (dict, dataArray)
+    }
     
     
-    
+
 }
 
+public struct IntermediateKeys {
+    public static let text = "text"
+    public static let intensities = "intensities"
+    public static let textSizeVWRanges = "textSizeVWRanges"
+    public static let boldRanges = "boldRanges"
+    public static let italicRanges = "italicRanges"
+    public static let underlineRanges = "underlineRanges"
+    public static let strikethroughRanges = "strikethroughRanges"
+    public static let linkVWRanges = "linkVWRanges"
+    public static let attachSizeVWRanges = "attachSizeVWRanges"
+    public static let attachmentVWRanges = "attachmentVWRanges"
+    public static let renderScheme = "renderScheme"
+}
+
+///extracts NSRanges of true values from arrays of boolean values. "false" values are ignored since they can be inferred.
 private func extractTrueRanges(array:[Bool])->[NSRange]{
     var trueRanges:[NSRange] = []
     var currentStart:Int!
@@ -203,17 +254,5 @@ private func extractValueStreaks(array:[NSObject])->[ValueWithRange]{
 
 
 
-struct ValueWithRange: CustomStringConvertible {
-    var value:Any
-    var location:Int
-    var length:Int
-    
-    var description:String {
-        return "value:\(self.value), location:\(self.location), length:\(self.length)"
-    }
-    
-    var range:NSRange {
-        get {return NSRange(location: location, length: length)}
-        set {self.location = newValue.location; self.length = newValue.length}
-    }
-}
+
+
