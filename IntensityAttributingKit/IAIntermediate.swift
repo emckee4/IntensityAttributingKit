@@ -149,7 +149,7 @@ public class IAIntermediate {
     }
     
     ///converts the IAIntermediate to a tupple containing a JSON ready dictionary and an array of NSData for the text attachments in sequential order. We use the locations of the attachSizeVWRanges as the locations for our attachments when reconstructing
-    public func convertToJSONReadyDictWithData()->([String:AnyObject],[NSData]){
+    public func convertToJSONReadyDictWithData()->([String:AnyObject],[Int:NSData]){
         var dict:[String:AnyObject] = [:]
         dict[IntermediateKeys.text] = self.text
         dict[IntermediateKeys.intensities] = self.intensities
@@ -167,22 +167,22 @@ public class IAIntermediate {
             dict[IntermediateKeys.renderScheme] = scheme.rawValue
         }
         
-        var dataArray:[NSData] = []
+        var dataDict:[Int:NSData] = [:]
         for attachVWR in self.attachments {
             let nsTA = attachVWR.value as! NSTextAttachment
             if let data = nsTA.contents {
-                dataArray.append(data)
+                dataDict[attachVWR.location] = data
             } else if let wrapper = nsTA.fileWrapper where wrapper.regularFileContents != nil {
-                dataArray.append(wrapper.regularFileContents!)
+                dataDict[attachVWR.location] = wrapper.regularFileContents!
             } else if let image = nsTA.image {
-                dataArray.append(UIImageJPEGRepresentation(image, 0.8)!)
+                dataDict[attachVWR.location] = UIImageJPEGRepresentation(image, 0.8)!
             } else {
                 print("error converting text attachment to NSData. Appending empty placeholder instead")
-                dataArray.append(NSData())
+                dataDict[attachVWR.location] = NSData()
             }
         }
         
-        return (dict, dataArray)
+        return (dict, dataDict)
     }
     
     
