@@ -97,9 +97,12 @@ public class IAIntermediate {
             }
         }
         
-        for attach in attachments {
-            print("attachment in toIAAttributedString: \(attach)")
-            //also insert attachSize
+        ///attachment and attachSize should always exist together
+        for attachVWR in attachments {
+            attString.addAttribute(NSAttachmentAttributeName, value: attachVWR.value as! NSTextAttachment, range: attachVWR.range)
+        }
+        for attachSizeVWR in attachmentSizes {
+            attString.addAttribute(NSAttachmentAttributeName, value: attachSizeVWR.value as! AnyObject, range: attachSizeVWR.range)
         }
         
         var iaAttributes:[IntensityAttributes] = []
@@ -185,7 +188,82 @@ public class IAIntermediate {
         return (dict, dataDict)
     }
     
-    
+    ///inverse of convertToJSONReadyDictWithData with the exception of attachment data: NSTextAttachments are added at the proper indexes but left empty
+    public init!(dict:[String:AnyObject]){
+        guard let newText = dict[IntermediateKeys.text] as? String, newIntensities = dict[IntermediateKeys.intensities] as? [Float] else {
+            print("IAIntermediate received incomplete data"); self.text = "";return nil
+        }
+        //string
+        self.text = newText
+        //array
+        self.intensities = newIntensities
+        
+        //arrays of VWRs
+        if let newSizes = dict[IntermediateKeys.textSizeVWRanges] as? [[AnyObject]]{
+            for sizeObject in newSizes {
+                if let vwr = ValueWithRange(arrayRepresentation: sizeObject) {
+                    self.textSizes.append(vwr)
+                }
+            }
+        }
+        if let newLinks = dict[IntermediateKeys.linkVWRanges] as? [[AnyObject]]{
+            for link in newLinks {
+                var linkVWR = ValueWithRange(arrayRepresentation: link) //with string
+                if let url = NSURL(string:(linkVWR?.value as? String) ?? "") {
+                    linkVWR.value = url
+                    self.links.append(linkVWR)
+                }
+                
+            }
+        }
+        if let newAttachSizes = dict[IntermediateKeys.attachSizeVWRanges] as? [[AnyObject]]{
+            for attachSize in newAttachSizes {
+                if let vwr = ValueWithRange(arrayRepresentation: attachSize) {
+                    self.attachmentSizes.append(vwr)
+                    //attachmentSizes always correspond to an NSTextAttachment, so we can create an empty one here as a placeholder to be given content later
+                    self.attachments.append(ValueWithRange(value: NSTextAttachment(), location: vwr.location, length: vwr.length))
+                }
+            }
+        }
+        
+        //single value
+        if let scheme = dict[IntermediateKeys.renderScheme] as? String {
+            self.renderScheme = IntensityTransformers(rawValue: scheme)
+        }
+        
+        //true ranges
+        
+        if let boldRanges = dict[IntermediateKeys.boldRanges] as? [[Int]] {
+            for bRange in boldRanges {
+                if bRange.count == 2 {
+                    bolds.append(NSMakeRange(bRange[0], bRange[1]))
+                }
+            }
+        }
+        
+        if let italicRanges = dict[IntermediateKeys.italicRanges] as? [[Int]] {
+            for iRange in italicRanges {
+                if iRange.count == 2 {
+                    italics.append(NSMakeRange(iRange[0], iRange[1]))
+                }
+            }
+        }
+        if let underRanges = dict[IntermediateKeys.underlineRanges] as? [[Int]] {
+            for uRange in underRanges {
+                if uRange.count == 2 {
+                    underlines.append(NSMakeRange(uRange[0], uRange[1]))
+                }
+            }
+        }
+        if let strikeRanges = dict[IntermediateKeys.strikethroughRanges] as? [[Int]] {
+            for sRange in strikeRanges {
+                if sRange.count == 2 {
+                    strikethroughs.append(NSMakeRange(sRange[0], sRange[1]))
+                }
+            }
+        }
+        
+    }
 
 }
 
