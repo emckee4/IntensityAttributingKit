@@ -80,7 +80,7 @@ public class IAIntermediate {
         
     }
     
-    
+    ///Converts the IAIntermediate object to an IA NSAttributedString. performRender defaults to false.
     public func toIAAttributedString(performRender:Bool = false)->NSAttributedString{
         let attString = NSMutableAttributedString(string: self.text as String)
         
