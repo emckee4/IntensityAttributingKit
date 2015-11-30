@@ -79,7 +79,7 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
         self.layer.cornerRadius = 10.0
         self.textContainerInset = UIEdgeInsetsMake(7.0, 2.0, 7.0, 2.0)
         self.currentAttributes = IntensityAttributes(intensity: defaultIntensity, size: 18.0)
-        currentAttributes.currentScheme = "WeightScheme"//"HueGYRScheme" //this should draw from global prefs
+        currentAttributes.currentScheme = "WeightScheme"
         typingAttributes = currentTransformer.typingAttributesForScheme(currentAttributes)
         self.allowsEditingTextAttributes = true
     }
@@ -222,21 +222,24 @@ public class IATextView: UITextView, UITextViewDelegate, IAAccessoryDelegate {
         selectedRange.location = originalSelectedRange.location + attString.length
     }
     
-/*
+
     ///With the current construction of the copy&paste functions I haven't found any cases where this is necessary again
-    override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
-        if sender is UIMenuController && action == Selector("paste:") {
-            let pb = UIPasteboard.generalPasteboard()
-            if pb.image != nil {
-                return true
-            }
-            if pb.pasteboardTypes().contains(UTITypes.IntensityArchive){
-                return true
-            }
+    override public func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
+//        if sender is UIMenuController && action == Selector("paste:") {
+//            let pb = UIPasteboard.generalPasteboard()
+//            if pb.image != nil {
+//                return true
+//            }
+//            if pb.pasteboardTypes().contains(UTITypes.IntensityArchive){
+//                return true
+//            }
+//        }
+        if sender is UIMenuController && action == Selector("delete:") {
+            return false
         }
         return super.canPerformAction(action, withSender: sender)
     }
-*/
+
     private struct UTITypes {
         static let PlainText = "public.utf8-plain-text"
         static let RTFD = "com.apple.flat-rtfd"
