@@ -1,19 +1,9 @@
-IntensityAttributingKit is a pure swift framework which provides a means of creating, displaying, and converting text with "intensity" attributes by the user on an iOS device. Ideally the user would have a 3dTouch capable phone so that intensity of a character can be derived from the pressure applied to the key, but intensity can also be applied using touch duration or a manual control.
+IntensityAttributingKit is a swift framework which provides a means of creating, displaying, and converting text with "intensity" attributes by the user on an iOS device. Ideally the user would have a 3dTouch capable phone so that intensity of a character can be derived from the pressure applied to the key, but intensity can also be applied using touch duration or a manual control.
 
 
 ____________________________________________
 v0.1 goals:
 
-Today:
-    IAIntermediate needs:
-
-        extension?:
-        output as json ( or objects easily convertable)
-        json to intermediate
-
---test IAIntermediate saving- then build basic CoreData app/stack, parse interface
-next: Preparation for saving/upload:
-    what format in coredata (attributedText or uploading format?)
 
 IAAccessory:
     tweak constraints (particularly in intensityAdjuster), wider transform sample, options:(icon, square constraints)
@@ -27,11 +17,10 @@ Icons: return?, options, sliderThumb -- fix opacity on camera: alpha 50% on back
 
 IAKeyboard:
     -Make kb and accessory text color consistant
-    backspace should change background on touchdown
+    backspace should change background color on touchdown
 
 
 IAKit:
-    serialize data/ or prepare for upload
     display immutable data
     cleanup detritus
 

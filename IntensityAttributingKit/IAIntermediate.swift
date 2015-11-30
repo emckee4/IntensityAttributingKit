@@ -102,14 +102,14 @@ public class IAIntermediate {
             attString.addAttribute(NSAttachmentAttributeName, value: attachVWR.value as! NSTextAttachment, range: attachVWR.range)
         }
         for attachSizeVWR in attachmentSizes {
-            attString.addAttribute(NSAttachmentAttributeName, value: attachSizeVWR.value as! AnyObject, range: attachSizeVWR.range)
+            attString.addAttribute(IATags.IAAttachmentSize, value: attachSizeVWR.value as! AnyObject, range: attachSizeVWR.range)
         }
         
         var iaAttributes:[IntensityAttributes] = []
         
         
         for sizeVWR in textSizes {
-            for index in (sizeVWR.location)..<(sizeVWR.length){
+            for index in (sizeVWR.location)..<(sizeVWR.location + sizeVWR.length){
                 var ia = IntensityAttributes(intensity: self.intensities[index], size: sizeVWR.value as! CGFloat)
                 if self.renderScheme != nil {
                     ia.currentScheme = renderScheme.rawValue
@@ -119,22 +119,22 @@ public class IAIntermediate {
         }
         
         for boldRange in bolds {
-            for i in (boldRange.location)..<(boldRange.length) {
+            for i in (boldRange.location)..<(boldRange.location + boldRange.length) {
                 iaAttributes[i].isBold = true
             }
         }
         for italRange in italics {
-            for i in (italRange.location)..<(italRange.length) {
+            for i in (italRange.location)..<(italRange.location + italRange.length) {
                 iaAttributes[i].isItalic = true
             }
         }
         for undRange in underlines {
-            for i in (undRange.location)..<(undRange.length) {
+            for i in (undRange.location)..<(undRange.location + undRange.length) {
                 iaAttributes[i].isUnderlined = true
             }
         }
         for strikeRange in strikethroughs {
-            for i in (strikeRange.location)..<(strikeRange.length) {
+            for i in (strikeRange.location)..<(strikeRange.location + strikeRange.length) {
                 iaAttributes[i].isStrikethrough = true
             }
         }
