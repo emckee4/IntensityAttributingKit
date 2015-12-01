@@ -5,27 +5,6 @@ public extension NSMutableAttributedString {
     ///Strips nonIA attributes (other than attachments and links), then applies IAAttributes of the supplied IntensityAttributes
     func applyIntensityAttributes(attributes:IntensityAttributes, toRange:NSRange! = nil, onlyToUnattributed:Bool = false){
         let range = toRange ?? NSRange(location: 0, length: self.length)
-        //        //first remove optional tags
-        //        for iaTag in IATags.optionalTags {
-        //            self.removeAttribute(iaTag, range: range)
-        //        }
-        //        //check for any text attachments that need to be saved:
-        //        var attachments:[Int:NSTextAttachment] = [:]
-        //        self.enumerateAttribute(NSAttachmentAttributeName, inRange: range, options: NSAttributedStringEnumerationOptions.LongestEffectiveRangeNotRequired) { (value:AnyObject?, attRange:NSRange, stop:UnsafeMutablePointer<ObjCBool>) -> Void in
-        //            if let attachment = value as? NSTextAttachment {
-        //                attachments[attRange.location] = attachment
-        //                if attRange.length != 1 {
-        //                    print("enumerateAttribute: length of textAttachment attributed != 1: \(attRange.length)")
-        //                }
-        //            }
-        //        }
-        //        ///now apply all attributes over the range
-        //        self.setAttributes(attributes.asAttributeDict, range: range)
-        //        for (index,attachment) in attachments {
-        //            self.addAttribute(NSAttachmentAttributeName, value: attachment, range: NSRange(location: index, length: 1))
-        //        }
-        
-        
         self.enumerateAttributesInRange(range, options: NSAttributedStringEnumerationOptions.init(rawValue: 0)) { (var attrs:[String : AnyObject], enumRange:NSRange, stop) -> Void in
             if onlyToUnattributed == false || attrs[IATags.IAKeys] == nil {
                 //replace
@@ -134,6 +113,19 @@ public extension NSAttributedString {
     func convertToHTMLApproximationWithScheme(scheme:IntensityTransformers)->String?{
         guard let rawHTMLData = try? self.dataFromRange(NSMakeRange(0, self.length), documentAttributes: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType]) else {return nil}
             return String(data: rawHTMLData, encoding: NSUTF8StringEncoding)
+    }
+    
+    func setMaxSizeForAllAttachments(maxSize:CGSize){
+        self.enumerateAttribute(IATags.IAAttachmentSize, inRange: NSRange(location:0, length:self.length), options: []) { (sizeObject, thisRange, stop) -> Void in
+            if let thisWidth = (sizeObject as? [String:AnyObject])?["w"] as? CGFloat, thisHeight = (sizeObject as? [String:AnyObject])?["h"] as? CGFloat {
+                if let thisAttachment = self.attribute(NSAttachmentAttributeName, atIndex: thisRange.location, effectiveRange: nil) as? NSTextAttachment{
+                    let fittedSize = CGSizeMake(thisWidth, thisHeight).sizeThatFitsMaintainingAspect(containerSize: maxSize)
+                    thisAttachment.bounds = CGRect(origin: CGPointZero, size: fittedSize)
+                }
+                
+            }
+        }
+        
     }
     
 }
