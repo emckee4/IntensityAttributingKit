@@ -21,6 +21,8 @@
 		C031CC001BDD902000521393 /* IATextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBFF1BDD902000521393 /* IATextView.swift */; };
 		C031CC041BDD921100521393 /* PressureButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CC031BDD921100521393 /* PressureButton.swift */; };
 		C031CC061BDD948700521393 /* IAKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CC051BDD948700521393 /* IAKeyboard.swift */; };
+		C040C5041C0CE857007C1685 /* IATextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C040C5031C0CE857007C1685 /* IATextEditor.swift */; };
+		C040C5081C0E4283007C1685 /* IAKitOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C040C5071C0E4283007C1685 /* IAKitOptions.swift */; };
 		C06B1D271BEC5FCC009F427A /* KeysetComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D261BEC5FCC009F427A /* KeysetComponents.swift */; };
 		C06B1D4E1BED2DCC009F427A /* PressureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D4D1BED2DCC009F427A /* PressureView.swift */; };
 		C06B1D501BEE8B61009F427A /* Keysets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D4F1BEE8B61009F427A /* Keysets.swift */; };
@@ -69,6 +71,8 @@
 		C031CBFF1BDD902000521393 /* IATextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextView.swift; sourceTree = "<group>"; };
 		C031CC031BDD921100521393 /* PressureButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PressureButton.swift; sourceTree = "<group>"; };
 		C031CC051BDD948700521393 /* IAKeyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAKeyboard.swift; sourceTree = "<group>"; };
+		C040C5031C0CE857007C1685 /* IATextEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextEditor.swift; sourceTree = "<group>"; };
+		C040C5071C0E4283007C1685 /* IAKitOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAKitOptions.swift; sourceTree = "<group>"; };
 		C06B1D261BEC5FCC009F427A /* KeysetComponents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeysetComponents.swift; sourceTree = "<group>"; };
 		C06B1D4D1BED2DCC009F427A /* PressureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PressureView.swift; sourceTree = "<group>"; };
 		C06B1D4F1BEE8B61009F427A /* Keysets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keysets.swift; sourceTree = "<group>"; };
@@ -131,12 +135,14 @@
 			isa = PBXGroup;
 			children = (
 				C031CBFF1BDD902000521393 /* IATextView.swift */,
+				C040C5071C0E4283007C1685 /* IAKitOptions.swift */,
+				C040C5031C0CE857007C1685 /* IATextEditor.swift */,
 				C06B1D541BEE9BDA009F427A /* ForceIntensityMapping */,
 				C08253B21BE571C70017AC14 /* CustomControls */,
 				C08253B31BE571E00017AC14 /* KB+Accessory */,
 				C031CBEC1BDB097E00521393 /* IAString */,
-				C08253B41BE572260017AC14 /* Supporting Files */,
 				C0E5D7C61BDEA50400A0A814 /* UIKitExtensions */,
+				C08253B41BE572260017AC14 /* Supporting Files */,
 			);
 			path = IntensityAttributingKit;
 			sourceTree = "<group>";
@@ -347,6 +353,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C040C5081C0E4283007C1685 /* IAKitOptions.swift in Sources */,
 				C06BAFD31BF2AECE004CECA9 /* IAIntermediate.swift in Sources */,
 				C031CC061BDD948700521393 /* IAKeyboard.swift in Sources */,
 				C08253B61BE572AE0017AC14 /* ExpandingPressureKey.swift in Sources */,
@@ -365,6 +372,7 @@
 				C0D4474E1BE97578003204E7 /* IntensityAdjuster.swift in Sources */,
 				C06B1D5B1BF15C18009F427A /* HueGYRIntensityScheme.swift in Sources */,
 				C06B1D271BEC5FCC009F427A /* KeysetComponents.swift in Sources */,
+				C040C5041C0CE857007C1685 /* IATextEditor.swift in Sources */,
 				C0E5D7C81BDEA52C00A0A814 /* OtherExtensions.swift in Sources */,
 				C0D4474A1BE6BC16003204E7 /* RawIntensity.swift in Sources */,
 				C06B1D4E1BED2DCC009F427A /* PressureView.swift in Sources */,
