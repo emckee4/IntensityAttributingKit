@@ -15,7 +15,7 @@ class EPKey {
     var actionName:String
     var actionType:PressureKeyActionType
     weak var target:AnyObject?
-    var triggeredSelector:String?
+    var selector:String?
     
     var hidden:Bool {
         set {view.hidden = newValue}
@@ -35,6 +35,6 @@ class EPKey {
         self.actionName = actionName
         self.actionType = PressureKeyActionType.TriggerFunction
         self.target = target
-        self.triggeredSelector = selector
+        self.selector = selector
     }
 }
