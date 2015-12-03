@@ -26,7 +26,6 @@ public class IATextView: UITextView {
 
     
     
-    
     //MARK:-inits and setup
     
     public override init(frame: CGRect, textContainer: NSTextContainer?) {
@@ -48,7 +47,7 @@ public class IATextView: UITextView {
     
     
     ///Prefered method for setting stored IAText for display. By default this assumes text has been prerendered and only needs bounds set on its images. If needsRendering is set as true then this will render according to whatever its included schemeName is.
-    func setIAText(iaText:NSAttributedString, needsRendering:Bool = false){
+    public func setIAText(iaText:NSAttributedString, needsRendering:Bool = false){
         //get default rendering from iaText and set that for this instance
         guard let textTransformer = IntensityTransformers(rawValue: ((iaText.attribute(IATags.IAKeys, atIndex: 0, effectiveRange: nil) as? [String:AnyObject])?[IATags.IACurrentRendering] as? String) ?? "") else {return}
         self.currentTransformer = textTransformer

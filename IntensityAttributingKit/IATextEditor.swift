@@ -15,7 +15,7 @@ public class IATextEditor: IATextView, IAAccessoryDelegate, UITextViewDelegate {
     
     var currentAttributes:IntensityAttributes! {
         didSet{if let schemeName = currentAttributes?.currentScheme where IntensityTransformers(rawValue: schemeName) != nil {
-            iaAccessory?.setTransformKeyForScheme(withName: schemeName)
+            iaAccessory.setTransformKeyForScheme(withName: schemeName)
             }
             defaultIntensity = currentAttributes.intensity
         }
@@ -32,10 +32,10 @@ public class IATextEditor: IATextView, IAAccessoryDelegate, UITextViewDelegate {
     }
     
     var defaultIntensity:Float {
-        get {return iaAccessory?.intensityAdjuster.defaultIntensity ?? IAKitOptions.singleton.defaultIntensity}
+        get {return iaAccessory.intensityAdjuster.defaultIntensity }
         set {
-            if iaAccessory != nil && !iaAccessory!.intensityAdjuster.defaultLocked {
-                iaAccessory!.intensityAdjuster.defaultIntensity = newValue
+            if !iaAccessory.intensityAdjuster.defaultLocked {
+                iaAccessory.intensityAdjuster.defaultIntensity = newValue
             }
         }
     }
@@ -50,14 +50,18 @@ public class IATextEditor: IATextView, IAAccessoryDelegate, UITextViewDelegate {
     }
 //
 //    
-    private var iaAccessory:IAAccessoryVC?
+    private var iaAccessory:IAAccessoryVC {
+        return IAKitOptions.singleton.accessory
+    }
     
-    private var iaKeyboardVC:IAKeyboard?
-//    override public var inputAccessoryViewController:UIInputViewController? {
-//        //set {self.iaAccessory = newValue!}
-//        get {return self.iaAccessory}
-//    }
-//    
+    private var iaKeyboardVC:IAKeyboard {
+        return IAKitOptions.singleton.keyboard
+    }
+    
+    override public var inputAccessoryViewController:UIInputViewController? {
+        get {return self.iaAccessory}
+    }
+//
 //    lazy var pressureKeyboardVC:UIInputViewController = {
 //        return IAKeyboard(nibName: nil, bundle: nil)
 //    }()
@@ -65,18 +69,20 @@ public class IATextEditor: IATextView, IAAccessoryDelegate, UITextViewDelegate {
     
     public override func becomeFirstResponder() -> Bool {
         if super.becomeFirstResponder() {
-            iaAccessory = IAKitOptions.singleton.accessory
-            iaAccessory?.delegate = self
-            iaKeyboardVC = IAKitOptions.singleton.keyboard
+            print("becoming first responder")
+            //iaAccessory = IAKitOptions.singleton.accessory
+            iaAccessory.delegate = self
+            //iaKeyboardVC = IAKitOptions.singleton.keyboard
+            _inputVC = iaKeyboardVC
             return true
         }
         return false
     }
     public override func resignFirstResponder() -> Bool {
         if super.resignFirstResponder() {
-            iaAccessory?.delegate = nil
-            iaAccessory = nil
-            iaKeyboardVC = nil
+            //iaAccessory.delegate = nil
+            //iaAccessory = nil
+            //iaKeyboardVC = nil
             return true
         }
         return false
@@ -84,7 +90,7 @@ public class IATextEditor: IATextView, IAAccessoryDelegate, UITextViewDelegate {
     
     internal override func setupPressureTextView(){
         self.editable = true
-        iaAccessory?.delegate = self
+        //iaAccessory?.delegate = self
         self.inputViewController = iaKeyboardVC
         self.delegate = self
         self.layer.cornerRadius = 10.0
