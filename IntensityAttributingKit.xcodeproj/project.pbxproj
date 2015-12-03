@@ -26,7 +26,7 @@
 		C06B1D271BEC5FCC009F427A /* KeysetComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D261BEC5FCC009F427A /* KeysetComponents.swift */; };
 		C06B1D4E1BED2DCC009F427A /* PressureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D4D1BED2DCC009F427A /* PressureView.swift */; };
 		C06B1D501BEE8B61009F427A /* Keysets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D4F1BEE8B61009F427A /* Keysets.swift */; };
-		C06B1D531BEE8C4F009F427A /* KeyProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D521BEE8C4F009F427A /* KeyProtocols.swift */; };
+		C06B1D531BEE8C4F009F427A /* PressureKeyProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D521BEE8C4F009F427A /* PressureKeyProtocols.swift */; };
 		C06B1D561BEE9C40009F427A /* ForceIntensityMappingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D551BEE9C40009F427A /* ForceIntensityMappingFunctions.swift */; };
 		C06B1D591BF15AD9009F427A /* WeightIntensityScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D581BF15AD8009F427A /* WeightIntensityScheme.swift */; };
 		C06B1D5B1BF15C18009F427A /* HueGYRIntensityScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D5A1BF15C18009F427A /* HueGYRIntensityScheme.swift */; };
@@ -41,6 +41,8 @@
 		C0E5D7C31BDEA47E00A0A814 /* IAAccessoryVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E5D7C21BDEA47E00A0A814 /* IAAccessoryVC.swift */; };
 		C0E5D7C51BDEA4E400A0A814 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E5D7C41BDEA4E400A0A814 /* UIImage+Extension.swift */; };
 		C0E5D7C81BDEA52C00A0A814 /* OtherExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E5D7C71BDEA52C00A0A814 /* OtherExtensions.swift */; };
+		C0E68E6D1C10C1AF005162F7 /* PKExpansionDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E68E6C1C10C1AF005162F7 /* PKExpansionDirection.swift */; };
+		C0E68E6F1C10C1D5005162F7 /* EPKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E68E6E1C10C1D5005162F7 /* EPKey.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,7 +78,7 @@
 		C06B1D261BEC5FCC009F427A /* KeysetComponents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeysetComponents.swift; sourceTree = "<group>"; };
 		C06B1D4D1BED2DCC009F427A /* PressureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PressureView.swift; sourceTree = "<group>"; };
 		C06B1D4F1BEE8B61009F427A /* Keysets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keysets.swift; sourceTree = "<group>"; };
-		C06B1D521BEE8C4F009F427A /* KeyProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyProtocols.swift; sourceTree = "<group>"; };
+		C06B1D521BEE8C4F009F427A /* PressureKeyProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PressureKeyProtocols.swift; sourceTree = "<group>"; };
 		C06B1D551BEE9C40009F427A /* ForceIntensityMappingFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForceIntensityMappingFunctions.swift; sourceTree = "<group>"; };
 		C06B1D581BF15AD8009F427A /* WeightIntensityScheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeightIntensityScheme.swift; sourceTree = "<group>"; };
 		C06B1D5A1BF15C18009F427A /* HueGYRIntensityScheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HueGYRIntensityScheme.swift; sourceTree = "<group>"; };
@@ -91,6 +93,8 @@
 		C0E5D7C21BDEA47E00A0A814 /* IAAccessoryVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAAccessoryVC.swift; sourceTree = "<group>"; };
 		C0E5D7C41BDEA4E400A0A814 /* UIImage+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		C0E5D7C71BDEA52C00A0A814 /* OtherExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OtherExtensions.swift; sourceTree = "<group>"; };
+		C0E68E6C1C10C1AF005162F7 /* PKExpansionDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PKExpansionDirection.swift; sourceTree = "<group>"; };
+		C0E68E6E1C10C1D5005162F7 /* EPKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EPKey.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,7 +180,6 @@
 			isa = PBXGroup;
 			children = (
 				C06B1D261BEC5FCC009F427A /* KeysetComponents.swift */,
-				C06B1D521BEE8C4F009F427A /* KeyProtocols.swift */,
 				C06B1D4F1BEE8B61009F427A /* Keysets.swift */,
 			);
 			name = "Keyset Management";
@@ -209,7 +212,8 @@
 				C0D4474D1BE97578003204E7 /* IntensityAdjuster.swift */,
 				C031CC031BDD921100521393 /* PressureButton.swift */,
 				C06B1D4D1BED2DCC009F427A /* PressureView.swift */,
-				C08253B51BE572AE0017AC14 /* ExpandingPressureKey.swift */,
+				C0E68E691C10C14F005162F7 /* ExpandingKeys */,
+				C06B1D521BEE8C4F009F427A /* PressureKeyProtocols.swift */,
 				C06B1D511BEE8BDC009F427A /* Keyset Management */,
 			);
 			name = CustomControls;
@@ -241,6 +245,16 @@
 				C0E5D7C71BDEA52C00A0A814 /* OtherExtensions.swift */,
 			);
 			name = UIKitExtensions;
+			sourceTree = "<group>";
+		};
+		C0E68E691C10C14F005162F7 /* ExpandingKeys */ = {
+			isa = PBXGroup;
+			children = (
+				C08253B51BE572AE0017AC14 /* ExpandingPressureKey.swift */,
+				C0E68E6C1C10C1AF005162F7 /* PKExpansionDirection.swift */,
+				C0E68E6E1C10C1D5005162F7 /* EPKey.swift */,
+			);
+			name = ExpandingKeys;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -357,8 +371,9 @@
 				C06BAFD31BF2AECE004CECA9 /* IAIntermediate.swift in Sources */,
 				C031CC061BDD948700521393 /* IAKeyboard.swift in Sources */,
 				C08253B61BE572AE0017AC14 /* ExpandingPressureKey.swift in Sources */,
+				C0E68E6F1C10C1D5005162F7 /* EPKey.swift in Sources */,
 				C031CC001BDD902000521393 /* IATextView.swift in Sources */,
-				C06B1D531BEE8C4F009F427A /* KeyProtocols.swift in Sources */,
+				C06B1D531BEE8C4F009F427A /* PressureKeyProtocols.swift in Sources */,
 				C031CBEA1BDB097600521393 /* IntensityTransformingProtocol.swift in Sources */,
 				C08253B11BE571910017AC14 /* LockingKey.swift in Sources */,
 				C0E5D7C51BDEA4E400A0A814 /* UIImage+Extension.swift in Sources */,
@@ -381,6 +396,7 @@
 				C06B1D5D1BF15CDC009F427A /* FontSizeIntensityScheme.swift in Sources */,
 				C06B1D561BEE9C40009F427A /* ForceIntensityMappingFunctions.swift in Sources */,
 				C0BCB6C41BFA60BE00654E0A /* ValueWithRange.swift in Sources */,
+				C0E68E6D1C10C1AF005162F7 /* PKExpansionDirection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

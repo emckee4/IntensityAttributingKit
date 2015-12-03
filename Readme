@@ -4,6 +4,9 @@ IntensityAttributingKit is a swift framework which provides a means of creating,
 ____________________________________________
 v0.1 goals:
 
+Consider:
+    don't cache accessory view since it's more variable than the keyboard
+
 Steps in splitting IATextView:
     Before splitting:
         clean up IATextView:

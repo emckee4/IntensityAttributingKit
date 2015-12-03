@@ -13,26 +13,25 @@ import UIKit
 Future changes: 
 Add animation by animating frame expansion prior to expanding constraints to match.
 Consider giving leway on out of bounds presses
-Give option for dynamicly reordering keys so that the last pressed will become the default key
  
 Further cleanup code, consider switching back to selector based actions (or handle potential for closure related strong reference cycles). Note this may cause issues with passing of RawIntensity items since structs are pure swift. Also consider renaming "Key" based names to avoid ambiguity
 */
-@IBDesignable class ExpandingPressureKey: UIView, PressureControl {
+@IBDesignable public class ExpandingPressureKey: UIView, PressureControl {
     
     private(set) var isExpanded = false   //at moment of expansion this view should capture its bounds so it can return to its original status on completion
     //expansion direction
     
-    weak var delegate:PressureKeyAction?
+    public weak var delegate:PressureKeyAction?
     
     ///this is private set until means for reordering the subviews are added
-    @IBInspectable var expansionDirection:PKExpansionDirection = .Up {
+    @IBInspectable public var expansionDirection:PKExpansionDirection = .Up {
         didSet{
             if oldValue.hasForwardLayoutDirection() != expansionDirection.hasForwardLayoutDirection() && !pressureKeys.isEmpty{
                 layoutKeysForExpansionDirection()
             }
         }
     }
-    @IBInspectable var cornerRadius:CGFloat = 0.0 {
+    @IBInspectable public var cornerRadius:CGFloat = 0.0 {
         didSet{self.layer.cornerRadius = cornerRadius; _ = pressureKeys.map({$0.view.layer.cornerRadius = cornerRadius})}
     }
     
@@ -61,24 +60,24 @@ Further cleanup code, consider switching back to selector based actions (or hand
     
     
     
-    override var backgroundColor:UIColor? {
+    override public var backgroundColor:UIColor? {
         didSet {_ = pressureKeys.map({$0.view.backgroundColor = self.backgroundColor})}
     }
     ///Color for background of selected cell if 3dTouch (and so our dynamic selection background color) are not available
-    var nonTouchSelectionBGColor = UIColor.darkGrayColor()
+    public var nonTouchSelectionBGColor = UIColor.darkGrayColor()
     
     ///The control doesn't track RawIntensity and uses two level highlighting only
-    var intensityTrackingDisabled = false
+    public var intensityTrackingDisabled = false
     
     ///When a key is selected it will automatically become the first/primary key
-    var selectedBecomesFirst = false
+    public var selectedBecomesFirst = false
 
     init(){
         super.init(frame:CGRectZero)
         postInitSetup()
     }
     
-    init(expansionDirection:PKExpansionDirection){
+    public init(expansionDirection:PKExpansionDirection){
         super.init(frame:CGRectZero)
         self.expansionDirection = expansionDirection
         postInitSetup()
@@ -89,7 +88,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
         postInitSetup()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         postInitSetup()
     }
@@ -145,12 +144,12 @@ Further cleanup code, consider switching back to selector based actions (or hand
         }
     }
     
-    override func intrinsicContentSize() -> CGSize {
+    override public func intrinsicContentSize() -> CGSize {
         return containedStackView.arrangedSubviews.first?.intrinsicContentSize() ?? CGSizeZero
     }
     
 
-    func addKey(keyView:UIView, triggeredActionName name:String, actionType:PressureKeyActionType){
+    public func addKey(keyView:UIView, triggeredActionName name:String, actionType:PressureKeyActionType){
         guard !containedStackView.arrangedSubviews.contains(keyView) else {return}
         guard !(pressureKeys.map({$0.actionName == name}).contains(true)) else {return}
         let stackIndex = pressureKeys.count
@@ -170,7 +169,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
     }
     
     
-    func addKey(withTextLabel text:String, withFont font:UIFont=UIFont.systemFontOfSize(20.0), actionName: String, actionType:PressureKeyActionType){
+    public func addKey(withTextLabel text:String, withFont font:UIFont=UIFont.systemFontOfSize(20.0), actionName: String, actionType:PressureKeyActionType){
         guard !(pressureKeys.map({$0.actionName == actionName}).contains(true)) else {return}
         let label = UILabel()
         label.text = text
@@ -194,7 +193,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
         label.layer.borderColor = UIColor.clearColor().CGColor
     }
     
-    func addKey(withAttributedText attributedText:NSAttributedString, actionName: String, actionType:PressureKeyActionType){
+    public func addKey(withAttributedText attributedText:NSAttributedString, actionName: String, actionType:PressureKeyActionType){
         guard !(pressureKeys.map({$0.actionName == actionName}).contains(true)) else {return}
         let label = UILabel()
         label.attributedText = attributedText
@@ -217,7 +216,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
         label.layer.borderColor = UIColor.clearColor().CGColor
     }
     
-    func addCharKey(charToInsert char:String){
+    public func addCharKey(charToInsert char:String){
         guard !(pressureKeys.map({$0.actionName == char}).contains(true)) else {return}
         let label = UILabel()
         label.text = char
@@ -239,10 +238,9 @@ Further cleanup code, consider switching back to selector based actions (or hand
         label.backgroundColor = self.backgroundColor
         label.layer.borderWidth = 1.0
         label.layer.borderColor = UIColor.clearColor().CGColor
-        
     }
     
-    func removeAllKeys(){
+    public func removeAllKeys(){
         for pk in pressureKeys{ containedStackView.removeArrangedSubview(pk.view) }
         pressureKeys = []
     }
@@ -264,7 +262,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
     }
     
     ///Moves the key with the actionName specified to the center most position
-    func centerKeyWithActionName(actionName:String){
+    public func centerKeyWithActionName(actionName:String){
         for pk in pressureKeys{
             if pk.actionName == actionName {
                 moveEPKeyToFirst(pk)
@@ -296,7 +294,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
     }
     
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override public func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         super.touchesBegan(touches, withEvent: event)
         guard !pressureKeys.isEmpty else {return}
         //there should be one and only one touch in the touches set in touchesBegan since we have multitouch disabled
@@ -311,7 +309,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
         
     }
     
-    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override public func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         super.touchesMoved(touches, withEvent: event)
         guard !pressureKeys.isEmpty else {return}
         if let touch = touches.first {
@@ -334,7 +332,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
             }
         }
     }
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override public func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         super.touchesEnded(touches, withEvent: event)
         guard !pressureKeys.isEmpty else {return}
         if let touch = touches.first {
@@ -370,7 +368,7 @@ Further cleanup code, consider switching back to selector based actions (or hand
         selectedEPKey = nil
         shrinkView()
     }
-    override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
+    override public func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
         print("touches cancelled")
         selectedEPKey = nil
         shrinkView()
@@ -444,33 +442,6 @@ Further cleanup code, consider switching back to selector based actions (or hand
     }
     
 
-}
-
-///Provides the grouping of the view and closure for the ExpandingPressureView while also providing a handful of convenience functions
-private class EPKey {
-    var view:UIView
-    var actionName:String
-    var actionType:PressureKeyActionType
-    
-    var hidden:Bool {
-        set {view.hidden = newValue}
-        get {return view.hidden}
-    }
-    
-    init(view:UIView,actionName:String, actionType:PressureKeyActionType){
-        self.view = view
-        self.actionName = actionName
-        self.actionType = actionType
-    }
-}
-
-///The direction in which an ExpandingPressureKey grows on selection
-enum PKExpansionDirection {
-    case Up,Down,Left,Right
-    
-    private func hasForwardLayoutDirection()->Bool{
-        return self == .Down || self == .Right
-    }
 }
 
 

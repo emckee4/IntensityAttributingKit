@@ -1,5 +1,5 @@
 //
-//  KeyProtocols.swift
+//  PressureKeyProtocols.swift
 //  IntensityAttributingKit
 //
 //  Created by Evan Mckee on 11/7/15.
@@ -13,17 +13,17 @@ import Foundation
 
 
 ///protocol for PressureView and ExpandingPressureKey for the pressure sensitive buttons using the PressureKeyAction delegate pattern
-protocol PressureControl {
+public protocol PressureControl {
     weak var delegate:PressureKeyAction? {get set}
 }
 
 ///Protocol for delegate used by PressureView and ExpandingPressureKey
-protocol PressureKeyAction:class {
+public protocol PressureKeyAction:class {
     func pressureKeyPressed(sender:PressureControl, actionName:String, actionType:PressureKeyActionType, intensity:Float)
 }
 
 
-enum PressureKeyActionType {
+public enum PressureKeyActionType {
     case CharInsert, TriggerFunction
 }
 
