@@ -66,10 +66,11 @@ public class IATextEditor: IATextView, IAAccessoryDelegate, UITextViewDelegate {
 //        return IAKeyboard(nibName: nil, bundle: nil)
 //    }()
     
+    /**When replacing a range via autocorrect, the shouldChangeTextInRange function is triggered but the typing attributes that are set are not used for the main text string that is inserted, except for the space that is inserted afterwards. This creates a non-IA string which is problematic. The workaround is that when shouldChangeTextInRange sees a replacement of length > 0 text on a length > 0 range, it will set this value so that at the conclusion of insert sequence (textViewDidChange), this attribute dictionary will be applied to any non-IA text in the attributedText. Fixing this in a less hacky way would require largely rebuilding a UITextView from scratch since some of the functions which must be modified seem to be final.*/
+    private var attributeDictForRangeReplace:[String:AnyObject]?
     
     public override func becomeFirstResponder() -> Bool {
         if super.becomeFirstResponder() {
-            print("becoming first responder")
             //iaAccessory = IAKitOptions.singleton.accessory
             iaAccessory.delegate = self
             //iaKeyboardVC = IAKitOptions.singleton.keyboard
@@ -114,6 +115,8 @@ public class IATextEditor: IATextView, IAAccessoryDelegate, UITextViewDelegate {
         if let iaKB = inputViewController as? IAKeyboard where iaKB.intensity != nil && iaKB.intensity > 0 {
             thisIntensity = iaKB.intensity
             iaKB.intensity = nil
+        } else if text.utf16.count > 0 && range.length > 0 { //range replacement uses average of text being replaced if not already attributed
+            thisIntensity = attributedText.averageIntensityForRange(range)
         } else {
             thisIntensity = self.defaultIntensity
         }
@@ -122,11 +125,27 @@ public class IATextEditor: IATextView, IAAccessoryDelegate, UITextViewDelegate {
         
         typingAttributes = currentTransformer.transformer.typingAttributesForScheme(currentAttributes,retainedKeys: retainedAttributes)
         
+        //range replaces may be from autocorrect, potentially leaving unattributed text afterwards. By setting attributeDictForRangeReplace, this will be checked and fixed if necessary.
+        if text.utf16.count > 0 && range.length > 0 {
+            attributeDictForRangeReplace = typingAttributes
+        }
         
         return true
     }
     
-    
+    public func textViewDidChange(textView: UITextView) {
+        if attributeDictForRangeReplace != nil {
+            let modRanges = attributedText.getNonIARanges()
+            if  modRanges.count > 0 {
+                let newAttString = NSMutableAttributedString(attributedString: attributedText)
+                for modRange in  modRanges{
+                    newAttString.setAttributes(attributeDictForRangeReplace, range: modRange)
+                }
+                self.attributedText = newAttString
+            }
+            attributeDictForRangeReplace = nil
+        }
+    }
     
     
     //MARK:- IAAccessoryDelegate functions
