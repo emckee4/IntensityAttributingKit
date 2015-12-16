@@ -49,7 +49,7 @@ public extension NSMutableAttributedString {
 
 
 public extension NSAttributedString {
-    //verifies that every element in string has IAIntensity and IASize. Maybe add IACurrentRendering???
+    ///verifies that every element in string has IAIntensity and IASize.
     func isFullyIntensityAttributed(checkMatchingScheme:Bool = false)->Bool{
         for i in 0..<self.length {
             let atts = self.attributesAtIndex(i, effectiveRange: nil)
@@ -58,7 +58,45 @@ public extension NSAttributedString {
         return true
     }
     
+    ///Returns an array of NSRanges of text in self which is not IAAttributed
+    func getNonIARanges()->[NSRange]{
+        var nonIAIndices:[Int] = []
+        for i in 0..<self.length {
+            let atts = self.attributesAtIndex(i, effectiveRange: nil)
+            if atts[IATags.IAKeys] == nil {
+                nonIAIndices.append(i)
+            }
+        }
+        var nonIARanges:[NSRange] = []
+        while nonIAIndices.count > 0 {
+            let firstIndex = nonIAIndices.first!
+            var newRange:NSRange?
+            for (k, index) in nonIAIndices.enumerate(){
+                //if we've found a non-consecutive entry then we consider the range to have ended with length = prior value of k
+                if index - k != firstIndex {
+                    newRange = NSRange(location: firstIndex, length: k)
+                    break
+                }
+            }
+            if newRange == nil { //this means this was the last range that needs to be found
+                newRange = NSRange(location: firstIndex, length: nonIAIndices.count)
+            }
+            nonIARanges.append(newRange!)
+            nonIAIndices.removeRange(0..<(newRange!.length))
+        }
+        return nonIARanges
+    }
     
+    ///Returns the average intensity value for a range of IA text. Returns 0.0 if an IAIntensity value is not found
+    func averageIntensityForRange(range:NSRange)->Float{
+        var intensities:[Float] = []
+        for i in (range.location)..<(range.location + range.length){
+            guard let iaAtts = self.attribute(IATags.IAKeys, atIndex: i, effectiveRange: nil) as? [String:AnyObject] else {return 0}
+            guard let thisIntensity = iaAtts[IATags.IAIntensity] as? Float else {return 0}
+            intensities.append(thisIntensity)
+        }
+        return intensities.reduce(0.0, combine: +) / Float(intensities.count)
+    }
     
     //transform
     func transformWithRenderScheme(schemeName:String)->NSAttributedString!{

@@ -50,7 +50,7 @@ public class IAIntermediate {
         
         
         iaString.enumerateAttributesInRange(fullRange, options: []) { (atts, blockRange, stop) -> Void in
-            guard let thisIAAtts = atts[IATags.IAKeys] as? [String:AnyObject] else {fatalError("non ia string")}
+            guard let thisIAAtts = atts[IATags.IAKeys] as? [String:AnyObject] else {fatalError("non ia string: \(iaString)")}
             
             if let textAttach = atts[NSAttachmentAttributeName] as? NSTextAttachment, attachSize = thisIAAtts[IATags.IAAttachmentSize] as? [String:AnyObject]{
                 self.attachments.append(ValueWithRange(value: textAttach, location: blockRange.location, length: 1))
