@@ -8,7 +8,7 @@
 
 import UIKit
 
-class IAAccessoryVC: UIInputViewController, PressureKeyAction {
+class IAAccessoryVC: UIInputViewController, PressureKeyAction, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     
     var kbSwitchButton:UIButton!
@@ -17,6 +17,7 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction {
     var optionButton:UIButton!
     var transformButton:ExpandingPressureKey!
     var stackView:UIStackView!
+    var imagePicker:UIImagePickerController!
     
     var delegate:IAAccessoryDelegate?
     
@@ -141,10 +142,10 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction {
             bottomConstraint.priority = 999
             bottomConstraint.active = true
         let leftConstraint = stackView.leftAnchor.constraintEqualToAnchor(view.leftAnchor)
-            leftConstraint.priority = 999
+            leftConstraint.priority = 1000
             leftConstraint.active = true
         let rightConstraint = stackView.rightAnchor.constraintEqualToAnchor(view.rightAnchor)
-            rightConstraint.priority = 999
+            rightConstraint.priority = 900
             rightConstraint.active = true
         
         self.inputView!.frame = CGRect(x: 0, y: 0, width: UIScreen.mainScreen().bounds.width, height: kAccessoryHeight)
@@ -160,6 +161,7 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction {
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         layoutForBounds(size)
+        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
     }
 
     func layoutForBounds(size:CGSize){
@@ -183,7 +185,32 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction {
     }
     
     func cameraButtonPressed(sender:UIButton!){
-        delegate?.cameraButtonPressed() 
+        if imagePicker == nil {
+            imagePicker = UIImagePickerController()
+            imagePicker.allowsEditing = true
+            imagePicker.delegate = self
+        }
+        
+        let launchPicker:()->() = {
+            self.delegate?.presentingVC?.presentViewController(self.imagePicker, animated: true, completion: nil)
+        }
+        
+        if UIImagePickerController.isCameraDeviceAvailable(.Rear) {
+            let alert = UIAlertController(title: "Insert Photo", message: "Choose source", preferredStyle: .ActionSheet)
+            alert.addAction(UIAlertAction(title: "Photo Library", style: .Default, handler: { (action) -> Void in
+                self.imagePicker.sourceType = .SavedPhotosAlbum
+                launchPicker()
+            }))
+            alert.addAction(UIAlertAction(title: "Camera", style: .Default, handler: { (action) -> Void in
+                self.imagePicker.sourceType = .Camera
+                launchPicker()
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+            self.delegate?.presentingVC?.presentViewController(alert, animated: true, completion: nil)
+        } else {
+            imagePicker.sourceType = .SavedPhotosAlbum
+            launchPicker()
+        }
     }
 
     func optionButtonPressed(){
@@ -200,12 +227,29 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction {
         self.transformButton.centerKeyWithActionName(schemeName)
     }
     
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        picker.dismissViewControllerAnimated(true, completion: nil)
+        
+        if let image = info[UIImagePickerControllerEditedImage] as? UIImage{
+            self.delegate?.imageChosen(image)
+        } else if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            self.delegate?.imageChosen(image)
+        } else {
+            self.delegate?.imageChosen(nil)
+        }
+    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        self.delegate?.imageChosen(nil)
+    }
 }
+
 ///IAAccessoryDelegate delivers actions from the IAAccessory to the IATextView
-protocol IAAccessoryDelegate {
+protocol IAAccessoryDelegate:class {
     func keyboardChangeButtonPressed()
-    func cameraButtonPressed()
+    func imageChosen(image:UIImage!)
     //func defaultIntensityUpdated(withValue value:Float)
     func optionButtonPressed()
     func requestTransformerChange(toTransformerWithName name:String)
+    weak var presentingVC:UIViewController? {get}
 }

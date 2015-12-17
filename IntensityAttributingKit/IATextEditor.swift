@@ -61,6 +61,9 @@ public class IATextEditor: IATextView, IAAccessoryDelegate, UITextViewDelegate {
     override public var inputAccessoryViewController:UIInputViewController? {
         get {return self.iaAccessory}
     }
+    
+    ///This is the viewcontroller which is/will display the IATextEditor. We need to keep a week reference so that the accessory can present a UIPhotoPicker in the correct view hierarchy. This violates MVC but makes the IntensityAttributingKit more self contained.
+    public weak var presentingVC:UIViewController?
 //
 //    lazy var pressureKeyboardVC:UIInputViewController = {
 //        return IAKeyboard(nibName: nil, bundle: nil)
@@ -159,8 +162,13 @@ public class IATextEditor: IATextView, IAAccessoryDelegate, UITextViewDelegate {
         self.reloadInputViews()
     }
     
-    func cameraButtonPressed() {
-        print("camera button pressed...")
+    func imageChosen(image: UIImage!) {
+        if let image = image {
+            let attString = NSMutableAttributedString( attributedString: NSAttributedString(image: image, intensityAttributes: currentAttributes, displayMaxSize: preferedImageDisplaySize, scaleToMaxSize: IAKitOptions.singleton.maxSavedImageDimensions) )
+            attString.applyStoredImageConstraints(maxDisplayedSize: preferedImageDisplaySize)
+            insertAttributedStringAtCursor(attString.transformWithRenderScheme(currentAttributes!.currentScheme))
+        }
+        self.becomeFirstResponder()
     }
     
     //    func defaultIntensityUpdated(withValue value:Float) {
