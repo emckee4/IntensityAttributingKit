@@ -35,8 +35,8 @@ public extension NSMutableAttributedString {
     func applyStoredImageConstraints(maxDisplayedSize mdSize:CGSize){
         self.enumerateAttribute(NSAttachmentAttributeName, inRange: NSRange(location: 0, length: self.length), options: NSAttributedStringEnumerationOptions(rawValue: 0)) { (anyAttach, enumRange, stop) -> Void in
             if let attachment = anyAttach as? NSTextAttachment{
-                if let iaKeys = self.attribute(IATags.IAKeys, atIndex: enumRange.location, effectiveRange: nil) as? [String:AnyObject]{
-                    if let imageWidth = iaKeys[IATags.IAAttachmentSize]?["w"] as? CGFloat, imageHeight = iaKeys[IATags.IAAttachmentSize]?["h"] as? CGFloat {
+                if let iaAttachSize = self.attribute(IATags.IAAttachmentSize, atIndex: enumRange.location, effectiveRange: nil) as? [String:AnyObject]{
+                    if let imageWidth = iaAttachSize["w"] as? CGFloat, imageHeight = iaAttachSize["h"] as? CGFloat {
                         let newSize = CGSize(width: imageWidth, height: imageHeight).sizeThatFitsMaintainingAspect(containerSize: mdSize)
                         attachment.bounds = CGRect(origin: CGPointZero, size: newSize)
                     }
