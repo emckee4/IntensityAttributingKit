@@ -1,53 +1,30 @@
 IntensityAttributingKit is a swift framework which provides a means of creating, displaying, and converting text with "intensity" attributes by the user on an iOS device. Ideally the user would have a 3dTouch capable phone so that intensity of a character can be derived from the pressure applied to the key, but intensity can also be applied using touch duration or a manual control.
 
 
-____________________________________________
-v0.1 goals:
+Main goals going forward:
 
-Consider:
-    don't cache accessory view since it's more variable than the keyboard
+Features:
+Implement proper link handling
+Implement image viewing
+Enable more control over options
+Saving of options and defaults
 
-Steps in splitting IATextView:
-    Before splitting:
-        clean up IATextView:
-            //add function for inserting external, prerendedered text (adjusting image attachment bounds in the process)
-            simplify transformer selection
-            //consider singleton for keyboard (should respond to global memory warnings by unloading if not visible)
-    Splitting:
-        //move definite editor only items (paste, unused insertion stuff, keyboard refs)
-        //what's left that's ambiguous?
-        //what's left that needs to be implemented differently?
+Performance Related:
+    Provide the means for caching rendered text/textContainers
+    Later:
+    Consider rebuilding IATextEditor and IATextView as subclasses of UIView to improve performance. Consider moving away from NSAttributedStrings as the medium of local storage
+        Building a custom subclass would allow more direct control over the text insertion process as well which among other things would free up the delegate
 
-
-mainQueue singleton posibilities:
-    primary singleton should respond to memory warnings (consider storing keyboard/accessory in NSCache)
-        should store preferences unstored elsewhere (what about statics currently stored in ForceIntensityFunctions?)
-    intensityTransformers: use dispatch_once for all instantiation of transformers, force all writes on mainQueue, share resources across threads
+Caching:
+    What and how?
+    KB instance?
+    Rendered Keyboard/Accessory?
 
 
-
-
-
-IAAccessory:
-    tweak constraints (particularly in intensityAdjuster), wider transform sample, options:(icon, square constraints)
-        Reverse lock display/default on lcoking display: highlight should be unlocked state
-
-RawIntensity:
-    -add tunable non-linear algo for force-intensity mapping
-        -add static var for tuning
-
-Icons: return?, options, sliderThumb -- fix opacity on camera: alpha 50% on background
-
-IAKeyboard:
-    -Make kb and accessory text color consistant
-    backspace should change background color on touchdown
-
-
-IAKit:
-    display immutable data
-    cleanup detritus
-
-
+Visual:
+    Decide on color scheme
+    Fix lock button
+    Add icon for pressure button
 
 ____________________________________________
 v0.2 goals:
@@ -71,7 +48,7 @@ Accessory view:
 
 
 ____________________________________________
-eventually:
+eventually?:
 
 
 
