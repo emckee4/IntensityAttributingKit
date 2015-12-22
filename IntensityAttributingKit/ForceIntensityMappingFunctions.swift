@@ -72,15 +72,29 @@ public struct ForceIntensityMappingFunctions {
     
     public enum AvailableFunctions:String {
         case SmoothedAverageLastTen = "SmoothedAverageLastTen"
+        case MaxForce = "MaxForce"
+        case AverageLastTenForce = "AverageLastTenForce"
+        
         case DurationLinearScaleToConstant = "DurationLinearScaleToConstant"
         
         static var allAvailableNames:[String] {
-            return ["SmoothedAverageLastTen","DurationLinearScaleToConstant"]
+            return availableDurationOnlyNames + availableForceOnlyNames
+        }
+        
+        static var availableDurationOnlyNames:[String] {
+            return ["DurationLinearScaleToConstant"]
+        }
+        
+        static var availableForceOnlyNames:[String] {
+            return ["SmoothedAverageLastTen","MaxForce","DurationLinearScaleToConstant"]
         }
         
         var namedFunction:(raw:RawIntensity)->Float {
             switch self {
             case .SmoothedAverageLastTen: return Linear.smoothedAverageLastTen
+            case .MaxForce: return Linear.maxForce
+            case .AverageLastTenForce: return Linear.averageLastTen
+                
             case .DurationLinearScaleToConstant: return Duration.linearScaleToConstant
             }
         }

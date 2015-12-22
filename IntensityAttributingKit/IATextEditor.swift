@@ -182,7 +182,34 @@ public class IATextEditor: IATextView, IAAccessoryDelegate {
     }
     
     func optionButtonPressed() {
-        print("option pressed")
+        guard presentingVC != nil else {return}
+        let alert = UIAlertController(title: "Options", message: "Choose your intensity mapper:", preferredStyle: .ActionSheet)
+        if self.traitCollection.forceTouchCapability == UIForceTouchCapability.Available {
+            for fim in ForceIntensityMappingFunctions.AvailableFunctions.availableForceOnlyNames {
+                alert.addAction(UIAlertAction(title: fim, style: .Default, handler: { (action) -> Void in
+                    let newMapping = ForceIntensityMappingFunctions.AvailableFunctions(rawValue: fim)
+                    IAKitOptions.singleton.forceIntensityMapping = newMapping
+                    IAKitOptions.singleton.saveOptions()
+                    RawIntensity.forceIntensityMapping = newMapping!.namedFunction
+                }))
+            }
+        } else {
+            for fim in ForceIntensityMappingFunctions.AvailableFunctions.availableForceOnlyNames {
+                let disabledAction = UIAlertAction(title: fim, style: .Default, handler: nil)
+                alert.addAction(disabledAction)
+                disabledAction.enabled = false
+            }
+        }
+        for fim in ForceIntensityMappingFunctions.AvailableFunctions.availableDurationOnlyNames {
+            alert.addAction(UIAlertAction(title: fim, style: .Default, handler: { (action) -> Void in
+                let newMapping = ForceIntensityMappingFunctions.AvailableFunctions(rawValue: fim)
+                IAKitOptions.singleton.forceIntensityMapping = newMapping
+                IAKitOptions.singleton.saveOptions()
+                RawIntensity.forceIntensityMapping = newMapping!.namedFunction
+            }))
+        }
+        
+        presentingVC?.presentViewController(alert, animated: true, completion: nil)
     }
     
     ///This can be call by the owning VC upon applicationDidBecomeActive in order to restore potentially lost connections
