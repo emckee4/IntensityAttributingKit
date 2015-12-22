@@ -148,7 +148,21 @@ public extension NSAttributedString {
     }
     
     
-    func convertToHTMLApproximationWithScheme(scheme:IntensityTransformers)->String?{
+    func convertToHTMLApproximation()->String?{
+        //let temp = NSMutableAttributedString(attributedString: self)
+        /*issues:
+            Need to drop in placeholder before conversion
+            replace them after conversion with placeholders giving index (hopefully compatible with the indexing format used in suffixes of the image filenames
+            maintain attributes associated with placeholder?-- only need a prefered display size really
+            Send should replace placeholders with desired image URLs
+            
+        
+        */
+//        while let attachRange = (temp.string as NSString).rangeOfString("\u{FFFC}") as NSRange? where attachRange.location != NSNotFound{
+//            let placeholder = NSAttributedString(
+//            temp.replaceCharactersInRange(attachRange, withAttributedString: placeholder)
+//        }
+//        
         guard let rawHTMLData = try? self.dataFromRange(NSMakeRange(0, self.length), documentAttributes: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType]) else {return nil}
             return String(data: rawHTMLData, encoding: NSUTF8StringEncoding)
     }
