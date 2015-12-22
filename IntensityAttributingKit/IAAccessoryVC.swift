@@ -65,7 +65,7 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction, UIImagePickerCont
         
 
         cameraButton = UIButton(type: .System)
-        cameraButton.setImage(UIImage(named: "camera", inBundle: bundle, compatibleWithTraitCollection: nil)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal), forState: .Normal )
+        cameraButton.setImage(UIImage(named: "camera", inBundle: bundle, compatibleWithTraitCollection: nil), forState: .Normal )
         cameraButton.imageView?.contentMode = .ScaleAspectFit
         cameraButton.backgroundColor = kButtonBackgroundColor
         cameraButton.imageEdgeInsets = UIEdgeInsets(top: 4.0, left: 4.0, bottom: 4.0, right: 4.0)
@@ -180,7 +180,6 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction, UIImagePickerCont
     //MARK:- user interface actions
     
     func kbSwitchButtonPressed(sender:UIButton!){
-        print("accessory view frame \(self.inputView!.frame)")
         delegate?.keyboardChangeButtonPressed()
     }
     
