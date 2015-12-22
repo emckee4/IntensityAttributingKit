@@ -8,9 +8,9 @@
 
 import UIKit
 
-public class IATextView: UITextView {
+public class IATextView: UITextView, UITextViewDelegate {
     
-    
+    weak public var iaDelegate:IATextViewDelegate?
     var currentTransformer:IntensityTransformers!
     
     ///display max size for images displayed in text
@@ -41,8 +41,10 @@ public class IATextView: UITextView {
     
     func setupPressureTextView(){
         self.editable = false
+        self.selectable = true
         self.layer.cornerRadius = 10.0
         self.textContainerInset = UIEdgeInsetsMake(7.0, 2.0, 7.0, 2.0)
+        self.delegate = self
     }
     
     
@@ -58,18 +60,28 @@ public class IATextView: UITextView {
         self.attributedText = renderedIAText
     }
     
+    ///Allows iaDelegate to control interaction with textAttachment. Defaults to true
+    public func textView(textView: UITextView, shouldInteractWithTextAttachment textAttachment: NSTextAttachment, inRange characterRange: NSRange) -> Bool {
+        if let iaTV = textView as? IATextView {
+            return iaDelegate?.iaTextView?(iaTV, shouldInteractWithTextAttachment: textAttachment, inRange: characterRange) ?? true
+        }
+        return true
+    }
     
     //MARK:- Copy
     
     override public func copy(sender: AnyObject?){
         super.copy()
         let pb = UIPasteboard.generalPasteboard()
-        let pbDict = pb.items.first as! NSMutableDictionary
-        
         let copiedText = attributedText.attributedSubstringFromRange(selectedRange)
         let archive = NSKeyedArchiver.archivedDataWithRootObject(copiedText)
+        let pbDict = pb.items.first as? NSMutableDictionary ?? NSMutableDictionary()
         pbDict.setValue(archive, forKey: UTITypes.IntensityArchive)
-        pb.items[0] = pbDict
+        if pb.items.count > 0 {
+            pb.items[0] = pbDict
+        } else {
+            pb.items.append(pbDict)
+        }
     }
 
      
@@ -82,8 +94,12 @@ public class IATextView: UITextView {
     
 }
 
-
-
+///Since the IATextView and IATextEditor must subscribe to their own UITextView delegate in order to manage some of the important functionality internally, the IATextViewDelegate is used to expose certain delegate functionality to the outside world. Note: implementing functions intended for IATextEditor in a delegate of an iaTextView will do nothing.
+@objc public protocol IATextViewDelegate:class {
+    optional func iaTextView(iaTextView: IATextView, shouldInteractWithTextAttachment textAttachment: NSTextAttachment, inRange characterRange: NSRange) -> Bool
+    ///Pass in the view controller that will present the UIImagePicker or nil if it shouldn't be presented.
+    //optional func iaTextEditorRequestsPresentationOfImagePicker(iaTextEditor:IATextEditor)->UIViewController?
+}
 
 
 

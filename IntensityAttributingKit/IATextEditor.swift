@@ -10,8 +10,7 @@ import UIKit
 
 
 
-public class IATextEditor: IATextView, IAAccessoryDelegate, UITextViewDelegate {
-    
+public class IATextEditor: IATextView, IAAccessoryDelegate {
     
     var currentAttributes:IntensityAttributes! {
         didSet{if let schemeName = currentAttributes?.currentScheme where IntensityTransformers(rawValue: schemeName) != nil {
@@ -186,7 +185,13 @@ public class IATextEditor: IATextView, IAAccessoryDelegate, UITextViewDelegate {
         print("option pressed")
     }
     
-    
+    ///This can be call by the owning VC upon applicationDidBecomeActive in order to restore potentially lost connections
+    public func resumeLastState(owningVC:UIViewController?){
+        self.presentingVC = owningVC
+        if self.isFirstResponder() {
+            iaAccessory.delegate = self
+        }
+    }
     
     //MARK:- Copy & Paste + helpers
     
@@ -274,7 +279,4 @@ public class IATextEditor: IATextView, IAAccessoryDelegate, UITextViewDelegate {
         return super.canPerformAction(action, withSender: sender)
     }
 
-    
-    
-    
 }
