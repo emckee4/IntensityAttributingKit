@@ -60,7 +60,7 @@ class IAKitOptions:NSObject, NSCoding {
     
     var maxSavedImageDimensions:CGSize = CGSize(width: 640, height: 640)
     
-    
+    var forceIntensityMapping:ForceIntensityMappingFunctions.AvailableFunctions?
     ////
     
     private override init(){
@@ -72,14 +72,30 @@ class IAKitOptions:NSObject, NSCoding {
     
     required init?(coder aDecoder: NSCoder) {
         vcCache = NSCache()
-
+        if let fim = aDecoder.decodeObjectForKey("forceIntensityMappingName") as? String {
+            forceIntensityMapping = ForceIntensityMappingFunctions.AvailableFunctions(rawValue: fim)
+        }
     }
     
     func encodeWithCoder(aCoder: NSCoder) {
-
+        if let fim = forceIntensityMapping{
+            aCoder.encodeObject(fim.rawValue, forKey: "forceIntensityMappingName")
+        }
     }
     
-    
+    func saveOptions(){
+        let saveBlock = {
+            let data = NSKeyedArchiver.archivedDataWithRootObject(self)
+            NSUserDefaults.standardUserDefaults().setObject(data, forKey: "iaKitOptions")
+        }
+        if NSThread.isMainThread() {
+            saveBlock()
+        } else {
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                saveBlock()
+            })
+        }
+    }
     
     
 }

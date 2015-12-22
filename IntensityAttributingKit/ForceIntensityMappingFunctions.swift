@@ -69,4 +69,21 @@ public struct ForceIntensityMappingFunctions {
         
         
     }
+    
+    public enum AvailableFunctions:String {
+        case SmoothedAverageLastTen = "SmoothedAverageLastTen"
+        case DurationLinearScaleToConstant = "DurationLinearScaleToConstant"
+        
+        static var allAvailableNames:[String] {
+            return ["SmoothedAverageLastTen","DurationLinearScaleToConstant"]
+        }
+        
+        var namedFunction:(raw:RawIntensity)->Float {
+            switch self {
+            case .SmoothedAverageLastTen: return Linear.smoothedAverageLastTen
+            case .DurationLinearScaleToConstant: return Duration.linearScaleToConstant
+            }
+        }
+    }
 }
+

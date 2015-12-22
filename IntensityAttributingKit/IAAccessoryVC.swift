@@ -149,6 +149,19 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction, UIImagePickerCont
             rightConstraint.active = true
         
         self.inputView!.frame = CGRect(x: 0, y: 0, width: UIScreen.mainScreen().bounds.width, height: kAccessoryHeight)
+        
+        if let mapping = IAKitOptions.singleton.forceIntensityMapping {
+            RawIntensity.forceIntensityMapping = mapping.namedFunction
+        } else {
+            if self.traitCollection.forceTouchCapability == UIForceTouchCapability.Available {
+                IAKitOptions.singleton.forceIntensityMapping = ForceIntensityMappingFunctions.AvailableFunctions.SmoothedAverageLastTen
+                RawIntensity.forceIntensityMapping = ForceIntensityMappingFunctions.AvailableFunctions.SmoothedAverageLastTen.namedFunction
+            } else {
+                IAKitOptions.singleton.forceIntensityMapping = ForceIntensityMappingFunctions.AvailableFunctions.DurationLinearScaleToConstant
+                RawIntensity.forceIntensityMapping = ForceIntensityMappingFunctions.AvailableFunctions.DurationLinearScaleToConstant.namedFunction
+            }
+            IAKitOptions.singleton.saveOptions()
+        }
     }
     
     //MARK:- Lifecycle and resizing layout
@@ -165,7 +178,7 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction, UIImagePickerCont
     }
 
     func layoutForBounds(size:CGSize){
-        if !intensityAdjuster.forceTouchAvailable {
+        if !intensityAdjuster.forceTouchAvailable && size.width > 350{
             intensityAdjuster.showPressureSlider = true
             intensityAdjuster.showPressurePad = false
         } else if size.width > size.height {
