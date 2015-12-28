@@ -68,6 +68,10 @@ public class IATextView: UITextView, UITextViewDelegate {
         return true
     }
     
+    public func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
+        return true
+    }
+    
     //MARK:- Copy
     
     override public func copy(sender: AnyObject?){

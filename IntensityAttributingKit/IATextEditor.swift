@@ -71,6 +71,47 @@ public class IATextEditor: IATextView, IAAccessoryDelegate {
     /**When replacing a range via autocorrect, the shouldChangeTextInRange function is triggered but the typing attributes that are set are not used for the main text string that is inserted, except for the space that is inserted afterwards. This creates a non-IA string which is problematic. The workaround is that when shouldChangeTextInRange sees a replacement of length > 0 text on a length > 0 range, it will set this value so that at the conclusion of insert sequence (textViewDidChange), this attribute dictionary will be applied to any non-IA text in the attributedText. Fixing this in a less hacky way would require largely rebuilding a UITextView from scratch since some of the functions which must be modified seem to be final.*/
     private var attributeDictForRangeReplace:[String:AnyObject]?
     
+    
+//    let types:NSTextCheckingType = [
+//        .Orthography,   //1
+//        .Spelling,      //2
+//        .Grammar,       //4
+//        .Date,          //8
+//        .Address,       //16
+//        .Link,          //32
+//        .Quote,         //64
+//        .Dash,          //128
+//        .Replacement,   //256
+//        .Correction,    //512
+//        .RegularExpression, //1024
+//        .PhoneNumber,       //2048
+//        .TransitInformation //4096
+//    ]  // sum = 8191
+    let detector = try! NSDataDetector(types: 8191)
+    
+    func checkText(){
+        let modified = NSMutableAttributedString(attributedString: self.attributedText)
+        var changes = false
+        detector.enumerateMatchesInString(self.text, options: .WithTransparentBounds, range: NSRange(location: 0, length: (self.text as NSString).length)) { (result, flags, stop) -> Void in
+            if let result = result {
+                changes = true
+                print("result: \(result.resultType)")
+                if result.URL != nil {
+                    print("url result: \(result.URL!)")
+                    
+                    modified.addAttribute(NSLinkAttributeName, value: result.URL!, range: result.range)
+                }
+            } else {
+                print("Nil result")
+            }
+        }
+        
+        if changes {
+            self.attributedText = modified
+        }
+    }
+    
+    
     public override func becomeFirstResponder() -> Bool {
         if super.becomeFirstResponder() {
             //iaAccessory = IAKitOptions.singleton.accessory
@@ -147,6 +188,7 @@ public class IATextEditor: IATextView, IAAccessoryDelegate {
             }
             attributeDictForRangeReplace = nil
         }
+        checkText()
     }
     
     
