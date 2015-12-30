@@ -29,6 +29,9 @@ public class IAIntermediate {
     var links:[ValueWithRange] = []
     var attachmentSizes: [ValueWithRange] = []
     var attachments: [ValueWithRange] = []
+    public var attachmentCount:Int {
+        return attachments.count
+    }
     
     var renderScheme:IntensityTransformers!
     
