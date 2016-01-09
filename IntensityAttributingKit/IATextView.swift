@@ -14,16 +14,16 @@ public class IATextView: UITextView, UITextViewDelegate {
     var currentTransformer:IntensityTransformers!
     
     ///display max size for images displayed in text
-    var preferedImageDisplaySize:CGSize {
-        //checking against these minimum bounds sizes is a workable proxy to determine if the view has been setup properly in the view hierarchy
-        if self.bounds.width > 20.0 && self.bounds.height > 10.0 {
-            let sideDimension = max(self.bounds.width,self.bounds.height) / 2.0
-            return CGSizeMake(sideDimension, sideDimension)
-        } else {
-            return CGSizeMake(150.0, 150.0)
-        }
-    }
-
+//    var preferedImageDisplaySize:CGSize {
+//        //checking against these minimum bounds sizes is a workable proxy to determine if the view has been setup properly in the view hierarchy
+//        if self.bounds.width > 20.0 && self.bounds.height > 10.0 {
+//            let sideDimension = max(self.bounds.width,self.bounds.height) / 2.0
+//            return CGSizeMake(sideDimension, sideDimension)
+//        } else {
+//            return CGSizeMake(150.0, 150.0)
+//        }
+//    }
+    public var thumbSizesForAttachments: ThumbSize = .Medium
     
     
     //MARK:-inits and setup
@@ -56,13 +56,14 @@ public class IATextView: UITextView, UITextViewDelegate {
         //render if necessary
         let renderedIAText = needsRendering ? iaText.transformWithRenderScheme(currentTransformer) : iaText
         //if attachments then size them for display
-        renderedIAText.setMaxSizeForAllAttachments(preferedImageDisplaySize)
+        //renderedIAText.setMaxSizeForAllAttachments(preferedImageDisplaySize)
+        renderedIAText.setThumbSizesForAttachments(self.thumbSizesForAttachments)
         self.attributedText = renderedIAText
     }
     
     ///Allows iaDelegate to control interaction with textAttachment. Defaults to true
     public func textView(textView: UITextView, shouldInteractWithTextAttachment textAttachment: NSTextAttachment, inRange characterRange: NSRange) -> Bool {
-        if let iaTV = textView as? IATextView {
+        if let iaTV = textView as? IATextView, textAttachment = textAttachment as? IATextAttachment {
             return iaDelegate?.iaTextView?(iaTV, shouldInteractWithTextAttachment: textAttachment, inRange: characterRange) ?? true
         }
         return true
@@ -100,7 +101,7 @@ public class IATextView: UITextView, UITextViewDelegate {
 
 ///Since the IATextView and IATextEditor must subscribe to their own UITextView delegate in order to manage some of the important functionality internally, the IATextViewDelegate is used to expose certain delegate functionality to the outside world. Note: implementing functions intended for IATextEditor in a delegate of an iaTextView will do nothing.
 @objc public protocol IATextViewDelegate:class {
-    optional func iaTextView(iaTextView: IATextView, shouldInteractWithTextAttachment textAttachment: NSTextAttachment, inRange characterRange: NSRange) -> Bool
+    optional func iaTextView(iaTextView: IATextView, shouldInteractWithTextAttachment textAttachment: IATextAttachment, inRange characterRange: NSRange) -> Bool
     ///Pass in the view controller that will present the UIImagePicker or nil if it shouldn't be presented.
     //optional func iaTextEditorRequestsPresentationOfImagePicker(iaTextEditor:IATextEditor)->UIViewController?
 }

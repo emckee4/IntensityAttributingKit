@@ -55,7 +55,7 @@ public class IAIntermediate {
         iaString.enumerateAttributesInRange(fullRange, options: []) { (atts, blockRange, stop) -> Void in
             guard let thisIAAtts = atts[IATags.IAKeys] as? [String:AnyObject] else {fatalError("non ia string: \(iaString)")}
             
-            if let textAttach = atts[NSAttachmentAttributeName] as? NSTextAttachment, attachSize = thisIAAtts[IATags.IAAttachmentSize] as? [String:AnyObject]{
+            if let textAttach = atts[NSAttachmentAttributeName] as? IATextAttachment, attachSize = thisIAAtts[IATags.IAAttachmentSize] as? [String:AnyObject]{
                 self.attachments.append(ValueWithRange(value: textAttach, location: blockRange.location, length: 1))
                 self.attachmentSizes.append(ValueWithRange(value: attachSize, location: blockRange.location, length: 1))
             }
@@ -102,7 +102,7 @@ public class IAIntermediate {
         
         ///attachment and attachSize should always exist together
         for attachVWR in attachments {
-            attString.addAttribute(NSAttachmentAttributeName, value: attachVWR.value as! NSTextAttachment, range: attachVWR.range)
+            attString.addAttribute(NSAttachmentAttributeName, value: attachVWR.value as! IATextAttachment, range: attachVWR.range)
         }
         for attachSizeVWR in attachmentSizes {
             attString.addAttribute(IATags.IAAttachmentSize, value: attachSizeVWR.value as! AnyObject, range: attachSizeVWR.range)
@@ -175,7 +175,7 @@ public class IAIntermediate {
         
         var dataDict:[Int:NSData] = [:]
         for attachVWR in self.attachments {
-            let nsTA = attachVWR.value as! NSTextAttachment
+            let nsTA = attachVWR.value as! IATextAttachment
             if let data = nsTA.contents {
                 dataDict[attachVWR.location] = data
             } else if let wrapper = nsTA.fileWrapper where wrapper.regularFileContents != nil {
@@ -191,7 +191,7 @@ public class IAIntermediate {
         return (dict, dataDict)
     }
     
-    ///inverse of convertToJSONReadyDictWithData with the exception of attachment data: NSTextAttachments are added at the proper indexes but left empty
+    ///inverse of convertToJSONReadyDictWithData with the exception of attachment data: IATextAttachments are added at the proper indexes but left empty
     public init!(dict:[String:AnyObject]){
         guard let newText = dict[IntermediateKeys.text] as? String, newIntensities = dict[IntermediateKeys.intensities] as? [Float] else {
             print("IAIntermediate received incomplete data"); self.text = "";return nil
@@ -223,8 +223,8 @@ public class IAIntermediate {
             for attachSize in newAttachSizes {
                 if let vwr = ValueWithRange(arrayRepresentation: attachSize) {
                     self.attachmentSizes.append(vwr)
-                    //attachmentSizes always correspond to an NSTextAttachment, so we can create an empty one here as a placeholder to be given content later
-                    self.attachments.append(ValueWithRange(value: NSTextAttachment(), location: vwr.location, length: vwr.length))
+                    //attachmentSizes always correspond to an IATextAttachment, so we can create an empty one here as a placeholder to be given content later
+                    self.attachments.append(ValueWithRange(value: IATextAttachment(), location: vwr.location, length: vwr.length))
                 }
             }
         }

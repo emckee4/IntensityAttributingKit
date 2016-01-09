@@ -8,7 +8,7 @@ public extension NSMutableAttributedString {
         self.enumerateAttributesInRange(range, options: NSAttributedStringEnumerationOptions.init(rawValue: 0)) { (var attrs:[String : AnyObject], enumRange:NSRange, stop) -> Void in
             if onlyToUnattributed == false || attrs[IATags.IAKeys] == nil {
                 //replace
-                let attachment:NSTextAttachment? = attrs[NSAttachmentAttributeName] as? NSTextAttachment
+                let attachment:IATextAttachment? = attrs[NSAttachmentAttributeName] as? IATextAttachment
                 let anyLink:AnyObject? = attrs[NSLinkAttributeName]
 
                 var newDict:[String:AnyObject] = [IATags.IAKeys:attributes.asAttributeDict]
@@ -31,19 +31,19 @@ public extension NSMutableAttributedString {
         transformer.transformWithSchemeInPlace(targetIAString: self)
     }
     
-    ///This will set max displayed bounds to all attached images, maintaining aspect fit. This function is necessary when reconstituting an NSTextAttachment which has been archived (e.g. in a copy and paste).
-    func applyStoredImageConstraints(maxDisplayedSize mdSize:CGSize){
-        self.enumerateAttribute(NSAttachmentAttributeName, inRange: NSRange(location: 0, length: self.length), options: NSAttributedStringEnumerationOptions(rawValue: 0)) { (anyAttach, enumRange, stop) -> Void in
-            if let attachment = anyAttach as? NSTextAttachment{
-                if let iaAttachSize = self.attribute(IATags.IAAttachmentSize, atIndex: enumRange.location, effectiveRange: nil) as? [String:AnyObject]{
-                    if let imageWidth = iaAttachSize["w"] as? CGFloat, imageHeight = iaAttachSize["h"] as? CGFloat {
-                        let newSize = CGSize(width: imageWidth, height: imageHeight).sizeThatFitsMaintainingAspect(containerSize: mdSize)
-                        attachment.bounds = CGRect(origin: CGPointZero, size: newSize)
-                    }
-                }
-            }
-        }
-    }
+    ///This will set max displayed bounds to all attached images, maintaining aspect fit. This function is necessary when reconstituting an IATextAttachment which has been archived (e.g. in a copy and paste).
+//    func applyStoredImageConstraints(maxDisplayedSize mdSize:CGSize){
+//        self.enumerateAttribute(NSAttachmentAttributeName, inRange: NSRange(location: 0, length: self.length), options: NSAttributedStringEnumerationOptions(rawValue: 0)) { (anyAttach, enumRange, stop) -> Void in
+//            if let attachment = anyAttach as? IATextAttachment{
+//                if let iaAttachSize = self.attribute(IATags.IAAttachmentSize, atIndex: enumRange.location, effectiveRange: nil) as? [String:AnyObject]{
+//                    if let imageWidth = iaAttachSize["w"] as? CGFloat, imageHeight = iaAttachSize["h"] as? CGFloat {
+//                        let newSize = CGSize(width: imageWidth, height: imageHeight).sizeThatFitsMaintainingAspect(containerSize: mdSize)
+//                        attachment.bounds = CGRect(origin: CGPointZero, size: newSize)
+//                    }
+//                }
+//            }
+//        }
+//    }
 }
 
 
@@ -135,12 +135,11 @@ public extension NSAttributedString {
     }
     
     ///initializes an NSAttributedString with an image attachment, performing requisite scaling, bounds adjustment, and application of intensity attributes
-    convenience init(image:UIImage, intensityAttributes:IntensityAttributes, displayMaxSize:CGSize, scaleToMaxSize:CGSize) {
-            let attachment = NSTextAttachment()
+    convenience init(image:UIImage, intensityAttributes:IntensityAttributes, thumbSize:ThumbSize = .Medium, scaleToMaxSize:CGSize) {
+            let attachment = IATextAttachment()
             attachment.image = image.resizeImageToFit(maxSize: scaleToMaxSize)
+            attachment.thumbSize = thumbSize
             let imageSize = attachment.image!.size
-            let displaySize = image.size.sizeThatFitsMaintainingAspect(containerSize: displayMaxSize)
-            attachment.bounds = CGRect(origin: CGPointZero, size: displaySize)
             var iaAttributes = intensityAttributes.asAttributeDict
             iaAttributes[IATags.IAAttachmentSize] = ["w":imageSize.width,"h":imageSize.height]
             let attributes = [NSAttachmentAttributeName:attachment, IATags.IAKeys: iaAttributes]
@@ -167,17 +166,25 @@ public extension NSAttributedString {
             return String(data: rawHTMLData, encoding: NSUTF8StringEncoding)
     }
     
-    func setMaxSizeForAllAttachments(maxSize:CGSize){
-        self.enumerateAttribute(IATags.IAAttachmentSize, inRange: NSRange(location:0, length:self.length), options: []) { (sizeObject, thisRange, stop) -> Void in
-            if let thisWidth = (sizeObject as? [String:AnyObject])?["w"] as? CGFloat, thisHeight = (sizeObject as? [String:AnyObject])?["h"] as? CGFloat {
-                if let thisAttachment = self.attribute(NSAttachmentAttributeName, atIndex: thisRange.location, effectiveRange: nil) as? NSTextAttachment{
-                    let fittedSize = CGSizeMake(thisWidth, thisHeight).sizeThatFitsMaintainingAspect(containerSize: maxSize)
-                    thisAttachment.bounds = CGRect(origin: CGPointZero, size: fittedSize)
-                }
-                
+//    func setMaxSizeForAllAttachments(maxSize:CGSize){
+//        self.enumerateAttribute(IATags.IAAttachmentSize, inRange: NSRange(location:0, length:self.length), options: []) { (sizeObject, thisRange, stop) -> Void in
+//            if let thisWidth = (sizeObject as? [String:AnyObject])?["w"] as? CGFloat, thisHeight = (sizeObject as? [String:AnyObject])?["h"] as? CGFloat {
+//                if let thisAttachment = self.attribute(NSAttachmentAttributeName, atIndex: thisRange.location, effectiveRange: nil) as? IATextAttachment{
+//                    let fittedSize = CGSizeMake(thisWidth, thisHeight).sizeThatFitsMaintainingAspect(containerSize: maxSize)
+//                    thisAttachment.bounds = CGRect(origin: CGPointZero, size: fittedSize)
+//                }
+//                
+//            }
+//        }
+//        
+//    }
+    
+    func setThumbSizesForAttachments(thumbSize:ThumbSize){
+        self.enumerateAttribute(NSAttachmentAttributeName, inRange: NSRange(location:0, length:self.length), options: []) { (attach, thisRange, stop) -> Void in
+            if let attach = attach as? IATextAttachment{
+                attach.thumbSize = thumbSize
             }
         }
-        
     }
     
 }

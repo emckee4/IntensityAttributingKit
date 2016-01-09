@@ -24,6 +24,8 @@ class IAKitOptions:NSObject, NSCoding {
     }()
         ///setter/getter for retrieving from storage
     
+    static let bundle:NSBundle = { return NSBundle(forClass: IAKitOptions.singleton.dynamicType) }()
+    
     //MARK:- Keyboard and accessory caching
     private var vcCache:NSCache
 

@@ -205,8 +205,8 @@ public class IATextEditor: IATextView, IAAccessoryDelegate {
     
     func imageChosen(image: UIImage!) {
         if let image = image {
-            let attString = NSMutableAttributedString( attributedString: NSAttributedString(image: image, intensityAttributes: currentAttributes, displayMaxSize: preferedImageDisplaySize, scaleToMaxSize: IAKitOptions.singleton.maxSavedImageDimensions) )
-            attString.applyStoredImageConstraints(maxDisplayedSize: preferedImageDisplaySize)
+            let attString = NSMutableAttributedString( attributedString: NSAttributedString(image: image, intensityAttributes: currentAttributes, thumbSize:thumbSizesForAttachments, scaleToMaxSize: IAKitOptions.singleton.maxSavedImageDimensions) )
+            //attString.applyStoredImageConstraints(maxDisplayedSize: preferedImageDisplaySize)
             insertAttributedStringAtCursor(attString.transformWithRenderScheme(currentAttributes!.currentScheme))
         }
         self.becomeFirstResponder()
@@ -310,13 +310,13 @@ public class IATextEditor: IATextView, IAAccessoryDelegate {
         }
         if pasteText == nil {
             if let image = pb.image {
-                let attString = NSMutableAttributedString( attributedString: NSAttributedString(image: image, intensityAttributes: currentAttributes, displayMaxSize: preferedImageDisplaySize, scaleToMaxSize: IAKitOptions.singleton.maxSavedImageDimensions) )
+                let attString = NSMutableAttributedString( attributedString: NSAttributedString(image: image, intensityAttributes: currentAttributes, thumbSize: thumbSizesForAttachments, scaleToMaxSize: IAKitOptions.singleton.maxSavedImageDimensions) )
                 pasteText = attString
             }
             
         }
         if pasteText != nil {
-            pasteText.applyStoredImageConstraints(maxDisplayedSize: preferedImageDisplaySize)
+            //pasteText.applyStoredImageConstraints(maxDisplayedSize: preferedImageDisplaySize)
             insertAttributedStringAtCursor(pasteText.transformWithRenderScheme(currentAttributes!.currentScheme))
         }
     }

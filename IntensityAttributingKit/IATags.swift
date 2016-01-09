@@ -23,10 +23,10 @@ public struct IATags {
     }
     
     
-    public static func partitionAttributeDict(attrs:[String:AnyObject])->(iaDict:[String:AnyObject],nonIADict:[String:AnyObject],attachment:NSTextAttachment?, anyLink:AnyObject?){
+    public static func partitionAttributeDict(attrs:[String:AnyObject])->(iaDict:[String:AnyObject],nonIADict:[String:AnyObject],attachment:IATextAttachment?, anyLink:AnyObject?){
         var nonIADict:[String:AnyObject] = attrs
         
-        let attachment = nonIADict.removeValueForKey(NSAttachmentAttributeName) as? NSTextAttachment
+        let attachment = nonIADict.removeValueForKey(NSAttachmentAttributeName) as? IATextAttachment
         let anyLink = nonIADict.removeValueForKey(NSLinkAttributeName)
         let iaDict:[String:AnyObject] = (nonIADict.removeValueForKey(IATags.IAKeys) as? [String:AnyObject]) ?? [:]
         
