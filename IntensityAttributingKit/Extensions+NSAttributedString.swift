@@ -146,24 +146,20 @@ public extension NSAttributedString {
             self.init(string: "\u{FFFC}", attributes: attributes)
     }
     
-    
+    ///Converts the NSAttributedString to an HTML approximation using the internal TextKit methods. Attachments are removed/ignored by the converter but their attachment characters (uFFFC) are replaced with substitution characters (uFFFD) so that attachment links can eventually be embedded in the HTML in their places. This second replacement is defered since a permanent URL for the resource may not yet exist. If the existing attributed string contains any substitution characters in its original form then all attachments will be discarded/ignored.
     func convertToHTMLApproximation()->String?{
-        //let temp = NSMutableAttributedString(attributedString: self)
-        /*issues:
-            Need to drop in placeholder before conversion
-            replace them after conversion with placeholders giving index (hopefully compatible with the indexing format used in suffixes of the image filenames
-            maintain attributes associated with placeholder?-- only need a prefered display size really
-            Send should replace placeholders with desired image URLs
-            
-        
-        */
-//        while let attachRange = (temp.string as NSString).rangeOfString("\u{FFFC}") as NSRange? where attachRange.location != NSNotFound{
-//            let placeholder = NSAttributedString(
-//            temp.replaceCharactersInRange(attachRange, withAttributedString: placeholder)
-//        }
-//        
-        guard let rawHTMLData = try? self.dataFromRange(NSMakeRange(0, self.length), documentAttributes: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType]) else {return nil}
-            return String(data: rawHTMLData, encoding: NSUTF8StringEncoding)
+        let temp = NSMutableAttributedString(attributedString: self)
+        //We need to replace the existing attachment characters (uFFFC, which are discarded by by the Cocoa html generator) with the substitute character (uFFFD) which will remain and can be replaced with links to resources later in the process.
+        let attachChar = "\u{FFFC}"
+        let substituteChar = "\u{FFFD}"
+        //we don't bother replacing chars if there are no attachment characters to replace or if there are substitute characters present for some reason.
+        if temp.string.rangeOfString(substituteChar) == nil {
+            while let attachCharRange = (temp.string as NSString).rangeOfString(attachChar) as NSRange? where attachCharRange.location != NSNotFound{
+                temp.replaceCharactersInRange(attachCharRange, withString: substituteChar)
+            }
+        }
+        guard let rawHTMLData = try? temp.dataFromRange(NSMakeRange(0, temp.length), documentAttributes: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType]) else {return nil}
+        return String(data: rawHTMLData, encoding: NSUTF8StringEncoding)
     }
     
 //    func setMaxSizeForAllAttachments(maxSize:CGSize){
