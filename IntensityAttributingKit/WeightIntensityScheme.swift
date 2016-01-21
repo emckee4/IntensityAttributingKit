@@ -15,6 +15,18 @@ public class WeightIntensityScheme:IntensityTransforming {
     required public init(){}
     
     let weightArray = [
+    UIFontWeightUltraLight,
+    UIFontWeightThin,
+    UIFontWeightLight,
+    UIFontWeightRegular,
+    UIFontWeightMedium,
+    UIFontWeightSemibold,
+    UIFontWeightBold,
+    UIFontWeightHeavy,
+    UIFontWeightBlack
+    ]
+    
+    static let weightArray = [
         UIFontWeightUltraLight,
         UIFontWeightThin,
         UIFontWeightLight,
@@ -28,6 +40,14 @@ public class WeightIntensityScheme:IntensityTransforming {
     
     ///This is the mapping of intensity to weight which is the central element of the transformer
     private func weightForIntensity(intensity:Float, isBold:Bool?)->CGFloat{
+        var weightIndex = bound(Int(intensity * Float(weightArray.count)), min: 0, max: weightArray.count - 1)
+        if isBold  == true {
+            weightIndex = min(weightIndex + 1, weightArray.count - 1)
+        }
+        return weightArray[weightIndex]
+    }
+    
+    private class func weightForIntensity(intensity:Float, isBold:Bool?)->CGFloat{
         var weightIndex = bound(Int(intensity * Float(weightArray.count)), min: 0, max: weightArray.count - 1)
         if isBold  == true {
             weightIndex = min(weightIndex + 1, weightArray.count - 1)
@@ -86,4 +106,85 @@ public class WeightIntensityScheme:IntensityTransforming {
         newIA.intensity = intensity
         return newIA
     }
+    
+//    ///change perword to withOptions, but first implement per character and per word options
+//    public func renderIAString(iaString:IAIntermediate, perWord:Bool)->NSAttributedString!{
+//        /*
+//        let weight = weightForIntensity(iaAttributes[IATags.IAIntensity] as! Float, isBold: iaAttributes[IATags.IABold] as? Bool)
+//        let size = iaAttributes[IATags.IASize] as! CGFloat
+//        var baseFont = UIFont.systemFontOfSize(size, weight: weight)
+//        if iaAttributes[IATags.IAItalic] as? Bool == true {
+//            let newSymbolicTraits =  baseFont.fontDescriptor().symbolicTraits.union(.TraitItalic)
+//            let newDescriptor = baseFont.fontDescriptor().fontDescriptorWithSymbolicTraits(newSymbolicTraits)
+//            baseFont = UIFont(descriptor: newDescriptor, size: size)
+//        }
+//        
+//        var nsAttributes:[String:AnyObject] = [NSFontAttributeName:baseFont]
+//        
+//        if iaAttributes[IATags.IAStrikethrough] as? Bool == true {
+//            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
+//        }
+//        if iaAttributes[IATags.IAUnderline] as? Bool == true {
+//            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
+//        }
+//        
+//        //colors should return to default black and clear
+//        
+//        return nsAttributes
+//        */
+//        //create an array of weight steps, 0-8.
+//        
+//        //intensities will smoothed to the center of the bin level required for this rendered
+//        
+//        let smoothLevel:(Float)->(Float) = {(intensity) -> (Float) in
+//            let oneNinth:Float = 1.0 / 9.0
+//            
+//            switch intensity {
+//            case 0.0..<oneNinth: return 0.5
+//            case oneNinth..<(2*oneNinth):  return oneNinth + 0.05
+//            case (2*oneNinth)..<(3*oneNinth): return 2*oneNinth + 0.05
+//            case (3*oneNinth)..<(4*oneNinth): return 3*oneNinth + 0.05
+//            case (4*oneNinth)..<(5*oneNinth): return 4*oneNinth + 0.05
+//            case (5*oneNinth)..<(6*oneNinth): return 5*oneNinth + 0.05
+//            case (6*oneNinth)..<(7*oneNinth): return 6*oneNinth + 0.05
+//            case (7*oneNinth)..<(8*oneNinth): return 7*oneNinth + 0.05
+//            default: return 8*oneNinth + 0.05
+//            }
+//        }
+//
+//        var weightLevelArray:[Float] = perWord == true ? iaString.perWordIntensityArray().map(smoothLevel) : iaString.intensities.map(smoothLevel)
+//        
+//        //now with smoothed levels we can generate IntensityAttribute objects covering a range, then generate nsattributes directly from this, then just drop those into a new NSAttributedText object
+//        
+//        //instead of converting to IntensityAttribute we could just convert straight to the end result: this would let us work directly with levels
+//        
+//        //make sure to handle insertion of links and attachments: consider generating the base NSMutableAttributedString with those already inserted in IAIntermediate so the transformer only needs to worry about fonts
+//    }
+    
+    class func nsAttributesForIntensityAttributes(attributes:IntensityAttributes)->[String:AnyObject]{
+        //use existing code predominantly for this
+        let weight = weightForIntensity(attributes.intensity, isBold: attributes.isBold)
+        var font = UIFont.systemFontOfSize(attributes.size, weight: weight)
+        if attributes.isItalic {
+            let newSymbolicTraits = font.fontDescriptor().symbolicTraits.union(.TraitItalic)
+            let newDescriptor = font.fontDescriptor().fontDescriptorWithSymbolicTraits(newSymbolicTraits)
+            font = UIFont(descriptor: newDescriptor, size: attributes.size)
+        }
+        
+        var nsAttributes:[String:AnyObject] = [NSFontAttributeName:font]
+        //
+        if attributes.isStrikethrough {
+            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
+        }
+        if attributes.isUnderlined {
+            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
+        }
+    
+        return nsAttributes
+    
+        
+    }
+    
+    
+    
 }
