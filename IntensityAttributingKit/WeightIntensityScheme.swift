@@ -10,21 +10,9 @@ import UIKit
 
 
 public class WeightIntensityScheme:IntensityTransforming {
+    
     public static let schemeName = "WeightScheme"
-    
-    required public init(){}
-    
-    let weightArray = [
-    UIFontWeightUltraLight,
-    UIFontWeightThin,
-    UIFontWeightLight,
-    UIFontWeightRegular,
-    UIFontWeightMedium,
-    UIFontWeightSemibold,
-    UIFontWeightBold,
-    UIFontWeightHeavy,
-    UIFontWeightBlack
-    ]
+    public static let stepCount = 9
     
     static let weightArray = [
         UIFontWeightUltraLight,
@@ -38,74 +26,66 @@ public class WeightIntensityScheme:IntensityTransforming {
         UIFontWeightBlack
     ]
     
-    ///This is the mapping of intensity to weight which is the central element of the transformer
-    private func weightForIntensity(intensity:Float, isBold:Bool?)->CGFloat{
-        var weightIndex = bound(Int(intensity * Float(weightArray.count)), min: 0, max: weightArray.count - 1)
-        if isBold  == true {
-            weightIndex = min(weightIndex + 1, weightArray.count - 1)
-        }
-        return weightArray[weightIndex]
-    }
+//    ///This is the mapping of intensity to weight which is the central element of the transformer
+//    private class func weightForIntensity(intensity:Float, isBold:Bool?)->CGFloat{
+//        var weightIndex = bound(Int(intensity * Float(weightArray.count)), min: 0, max: weightArray.count - 1)
+//        if isBold  == true {
+//            weightIndex = min(weightIndex + 1, weightArray.count - 1)
+//        }
+//        return weightArray[weightIndex]
+//    }
     
-    private class func weightForIntensity(intensity:Float, isBold:Bool?)->CGFloat{
-        var weightIndex = bound(Int(intensity * Float(weightArray.count)), min: 0, max: weightArray.count - 1)
-        if isBold  == true {
-            weightIndex = min(weightIndex + 1, weightArray.count - 1)
-        }
-        return weightArray[weightIndex]
-    }
+//    public func nsAttributesForIAAttributes(iaAttributes:[String:AnyObject])->[String:AnyObject]{
+//        let weight = weightForIntensity(iaAttributes[IATags.IAIntensity] as! Float, isBold: iaAttributes[IATags.IABold] as? Bool)
+//        let size = iaAttributes[IATags.IASize] as! CGFloat
+//        var baseFont = UIFont.systemFontOfSize(size, weight: weight)
+//        if iaAttributes[IATags.IAItalic] as? Bool == true {
+//            let newSymbolicTraits =  baseFont.fontDescriptor().symbolicTraits.union(.TraitItalic)
+//            let newDescriptor = baseFont.fontDescriptor().fontDescriptorWithSymbolicTraits(newSymbolicTraits)
+//            baseFont = UIFont(descriptor: newDescriptor, size: size)
+//        }
+//        
+//        var nsAttributes:[String:AnyObject] = [NSFontAttributeName:baseFont]
+//        
+//        if iaAttributes[IATags.IAStrikethrough] as? Bool == true {
+//            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
+//        }
+//        if iaAttributes[IATags.IAUnderline] as? Bool == true {
+//            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
+//        }
+//        
+//        //colors should return to default black and clear
+//        
+//        return nsAttributes
+//    }
     
-    public func nsAttributesForIAAttributes(iaAttributes:[String:AnyObject])->[String:AnyObject]{
-        let weight = weightForIntensity(iaAttributes[IATags.IAIntensity] as! Float, isBold: iaAttributes[IATags.IABold] as? Bool)
-        let size = iaAttributes[IATags.IASize] as! CGFloat
-        var baseFont = UIFont.systemFontOfSize(size, weight: weight)
-        if iaAttributes[IATags.IAItalic] as? Bool == true {
-            let newSymbolicTraits =  baseFont.fontDescriptor().symbolicTraits.union(.TraitItalic)
-            let newDescriptor = baseFont.fontDescriptor().fontDescriptorWithSymbolicTraits(newSymbolicTraits)
-            baseFont = UIFont(descriptor: newDescriptor, size: size)
-        }
-        
-        var nsAttributes:[String:AnyObject] = [NSFontAttributeName:baseFont]
-        
-        if iaAttributes[IATags.IAStrikethrough] as? Bool == true {
-            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
-        }
-        if iaAttributes[IATags.IAUnderline] as? Bool == true {
-            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
-        }
-        
-        //colors should return to default black and clear
-        
-        return nsAttributes
-    }
-    
-    
-    public func updateIntensityAttributesInScheme(lastIntensityAttributes lastIA:IntensityAttributes, providedAttributes:[String:AnyObject], intensity:Float)->IntensityAttributes{
-        
-        let sym = (providedAttributes[NSFontAttributeName] as! UIFont).fontDescriptor().symbolicTraits
-        let providedIsBold = sym.contains(.TraitBold)
-        let providedIsItalic = sym.contains(.TraitItalic)
-        let providedIsUnderlined = providedAttributes[NSUnderlineStyleAttributeName] as? Int > 0
-        let providedIsStrikethrough = providedAttributes[NSStrikethroughStyleAttributeName] as? Int > 0
-        
-        let lastShouldBeBold = weightForIntensity(lastIA.intensity, isBold: lastIA.isBold) >= UIFontWeightSemibold
-        
-        var newIA = lastIA
-        if providedIsBold != lastShouldBeBold {
-            newIA.isBold = !newIA.isBold
-        }
-        if providedIsItalic != lastIA.isItalic {
-            newIA.isItalic = !newIA.isItalic
-        }
-        if providedIsUnderlined != lastIA.isUnderlined {
-            newIA.isUnderlined = !newIA.isUnderlined
-        }
-        if providedIsStrikethrough != lastIA.isStrikethrough {
-            newIA.isStrikethrough = !newIA.isStrikethrough
-        }
-        newIA.intensity = intensity
-        return newIA
-    }
+//    
+//    public func updateIntensityAttributesInScheme(lastIntensityAttributes lastIA:IntensityAttributes, providedAttributes:[String:AnyObject], intensity:Float)->IntensityAttributes{
+//        
+//        let sym = (providedAttributes[NSFontAttributeName] as! UIFont).fontDescriptor().symbolicTraits
+//        let providedIsBold = sym.contains(.TraitBold)
+//        let providedIsItalic = sym.contains(.TraitItalic)
+//        let providedIsUnderlined = providedAttributes[NSUnderlineStyleAttributeName] as? Int > 0
+//        let providedIsStrikethrough = providedAttributes[NSStrikethroughStyleAttributeName] as? Int > 0
+//        
+//        let lastShouldBeBold = weightForIntensity(lastIA.intensity, isBold: lastIA.isBold) >= UIFontWeightSemibold
+//        
+//        var newIA = lastIA
+//        if providedIsBold != lastShouldBeBold {
+//            newIA.isBold = !newIA.isBold
+//        }
+//        if providedIsItalic != lastIA.isItalic {
+//            newIA.isItalic = !newIA.isItalic
+//        }
+//        if providedIsUnderlined != lastIA.isUnderlined {
+//            newIA.isUnderlined = !newIA.isUnderlined
+//        }
+//        if providedIsStrikethrough != lastIA.isStrikethrough {
+//            newIA.isStrikethrough = !newIA.isStrikethrough
+//        }
+//        newIA.intensity = intensity
+//        return newIA
+//    }
     
 //    ///change perword to withOptions, but first implement per character and per word options
 //    public func renderIAString(iaString:IAIntermediate, perWord:Bool)->NSAttributedString!{
@@ -161,9 +141,10 @@ public class WeightIntensityScheme:IntensityTransforming {
 //        //make sure to handle insertion of links and attachments: consider generating the base NSMutableAttributedString with those already inserted in IAIntermediate so the transformer only needs to worry about fonts
 //    }
     
-    class func nsAttributesForIntensityAttributes(attributes:IntensityAttributes)->[String:AnyObject]{
+    public class func nsAttributesForIntensityAttributes(attributes:IntensityAttributes)->[String:AnyObject]{
         //use existing code predominantly for this
-        let weight = weightForIntensity(attributes.intensity, isBold: attributes.isBold)
+        let weightBin = min((attributes.binNumberForSteps(stepCount) + (attributes.isBold ? 1 : 0)), stepCount)
+        let weight = weightArray[weightBin]
         var font = UIFont.systemFontOfSize(attributes.size, weight: weight)
         if attributes.isItalic {
             let newSymbolicTraits = font.fontDescriptor().symbolicTraits.union(.TraitItalic)
@@ -181,8 +162,6 @@ public class WeightIntensityScheme:IntensityTransforming {
         }
     
         return nsAttributes
-    
-        
     }
     
     

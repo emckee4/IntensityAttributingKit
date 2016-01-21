@@ -110,6 +110,12 @@ public struct IntensityAttributes:CustomStringConvertible, Hashable {
         self.isStrikethrough = (attributesByte & 0b1000) != 0
     }
     
+    ///Returns which bin the IntensityAttributes belongs in given its own intensity and a provided number of equal width divisions (steps)
+    public func binNumberForSteps(steps:Int)->Int{
+        return bound(Int(intensity * Float(steps)), min: 0, max: steps - 1)
+    }
+    
+    
 }
 
 @warn_unused_result public func ==(lhs: IntensityAttributes, rhs: IntensityAttributes) -> Bool{

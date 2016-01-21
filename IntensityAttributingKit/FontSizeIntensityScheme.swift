@@ -10,18 +10,19 @@ import UIKit
 
 /// Varies font size relative to the base IASize as a function of intensity
 public class FontSizeIntensityScheme:IntensityTransforming {
-    required public init(){}
+
     public static let schemeName = "FontSizeScheme"
+    public static let stepCount = 10
     
-    private var fontCache:[CGFloat:UIFont] = [:]
+    private static let binWidth:Float = 0.1
     
-    ///This tweakable mapping provides the font size which varies in response to intensity
-    private func fontSizeForIntensity(baseSize:CGFloat,intensity:Float)->CGFloat{
-        let size = CGFloat(round(intensity * 10) - 5.0) + baseSize
-        return size
-    }
+//    ///This tweakable mapping provides the font size which varies in response to intensity
+//    private static func fontSizeForIntensity(baseSize:CGFloat,intensity:Float)->CGFloat{
+//        let sizeAdd = min(9.0,(floor(intensity / binWidth)))
+//        return CGFloat(sizeAdd) + baseSize
+//    }
     
-    
+/*
     public func nsAttributesForIAAttributes(iaAttributes: [String : AnyObject]) -> [String : AnyObject] {
         let baseSize = iaAttributes[IATags.IASize] as! CGFloat
         let size = fontSizeForIntensity(baseSize, intensity: iaAttributes[IATags.IAIntensity] as! Float)
@@ -79,7 +80,36 @@ public class FontSizeIntensityScheme:IntensityTransforming {
         newIA.intensity = intensity
         return newIA
     }
-    
-    
+*/
+    public class func nsAttributesForIntensityAttributes(attributes:IntensityAttributes)->[String:AnyObject]{
+
+        let size = attributes.size - 5.0 + CGFloat(attributes.binNumberForSteps(10))
+        var baseFont:UIFont = UIFont.systemFontOfSize(size)
+
+        if attributes.isBold || attributes.isItalic {
+            var symbolicsToMerge = UIFontDescriptorSymbolicTraits()
+            if attributes.isBold {
+                symbolicsToMerge.unionInPlace(.TraitBold)
+            }
+            if attributes.isItalic {
+                symbolicsToMerge.unionInPlace(.TraitItalic)
+            }
+            let newSymbolicTraits =  baseFont.fontDescriptor().symbolicTraits.union(symbolicsToMerge)
+            let newDescriptor = baseFont.fontDescriptor().fontDescriptorWithSymbolicTraits(newSymbolicTraits)
+            baseFont = UIFont(descriptor: newDescriptor, size: size)
+        }
+        var nsAttributes:[String:AnyObject] = [NSFontAttributeName:baseFont]
+        
+        if attributes.isStrikethrough {
+            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
+        }
+        if attributes.isUnderlined {
+            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
+        }
+        //TODO:- this should adjust kerning (using NSKernAttributeName) to lessen the variations in space requried due to a transform
+        
+        
+        return nsAttributes
+    }
 }
 

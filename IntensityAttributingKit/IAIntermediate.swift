@@ -478,7 +478,7 @@ extension IAIntermediate {
     }
     
     
-    func convertToNSAttributedStringWithOptions(options:[String:AnyObject]){
+    func convertToNSAttributedStringWithOptions(options:[String:AnyObject])->NSAttributedString{
         let attString = NSMutableAttributedString(string: self.text as String)
 
         for linkVWR in links {
@@ -504,6 +504,7 @@ extension IAIntermediate {
         if let overrideScheme = options["renderWithScheme"] as? String where IntensityTransformers(rawValue: overrideScheme) != nil{
             renderWithScheme = IntensityTransformers(rawValue: overrideScheme)
         }
+        let transformer = renderWithScheme.transformer
         
         var preferedSmoothing:NSStringEnumerationOptions!
         if let smoothing = options["smoothingSeparator"] as? NSStringEnumerationOptions {
@@ -516,12 +517,14 @@ extension IAIntermediate {
         
         //other options should be implemented here...
         
-
-
-        //next need to restructure the IntensityTransformers enum to return the class so we can call the class funcs
         
+        //render steps needs to come from renderScheme
         
-
+        for (range, ia) in generateIntensityAttributesArray(renderSteps: transformer.stepCount, separateOn: preferedSmoothing) {
+            let attDict = transformer.nsAttributesForIntensityAttributes(ia)
+            attString.addAttributes(attDict, range: range)
+        }
+        return attString
     }
     
     
