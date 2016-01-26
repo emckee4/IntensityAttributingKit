@@ -14,6 +14,10 @@ extension NSRange {
     }
 }
 
+public func binNumberForSteps(intensity:Int, steps:Int)->Int{
+    return bound((intensity * 10 / steps * 10), min: 0, max: steps - 1)
+}
+
 //let ReplacementChar:String = "\u{FFFC}"
 //let ReplacementCodeUnit:UInt16 = "\u{FFFC}".utf16.first!
 

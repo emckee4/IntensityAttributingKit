@@ -14,7 +14,6 @@
 		C031CBD11BDB094800521393 /* IntensityAttributingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C031CBC61BDB094800521393 /* IntensityAttributingKit.framework */; };
 		C031CBD61BDB094800521393 /* IntensityAttributingKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBD51BDB094800521393 /* IntensityAttributingKitTests.swift */; };
 		C031CBE61BDB097600521393 /* Extensions+NSAttributedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBE01BDB097600521393 /* Extensions+NSAttributedString.swift */; };
-		C031CBE71BDB097600521393 /* IATags.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBE11BDB097600521393 /* IATags.swift */; };
 		C031CBE81BDB097600521393 /* IntensityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBE21BDB097600521393 /* IntensityAttributes.swift */; };
 		C031CBE91BDB097600521393 /* IntensityTransformers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBE31BDB097600521393 /* IntensityTransformers.swift */; };
 		C031CBEA1BDB097600521393 /* IntensityTransformingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBE41BDB097600521393 /* IntensityTransformingProtocol.swift */; };
@@ -39,6 +38,7 @@
 		C08253B11BE571910017AC14 /* LockingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08253B01BE571910017AC14 /* LockingKey.swift */; };
 		C08253B61BE572AE0017AC14 /* ExpandingPressureKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08253B51BE572AE0017AC14 /* ExpandingPressureKey.swift */; };
 		C095747E1C5822E300724F02 /* IAString.swift in Sources */ = {isa = PBXBuildFile; fileRef = C095747D1C5822E300724F02 /* IAString.swift */; };
+		C09574801C58259C00724F02 /* IAStringKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C095747F1C58259C00724F02 /* IAStringKeys.swift */; };
 		C0BCB6C41BFA60BE00654E0A /* ValueWithRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BCB6C31BFA60BE00654E0A /* ValueWithRange.swift */; };
 		C0D4474A1BE6BC16003204E7 /* RawIntensity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D447491BE6BC16003204E7 /* RawIntensity.swift */; };
 		C0D4474C1BE82381003204E7 /* ImageAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0D4474B1BE82381003204E7 /* ImageAssets.xcassets */; };
@@ -71,7 +71,6 @@
 		C031CBD51BDB094800521393 /* IntensityAttributingKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntensityAttributingKitTests.swift; sourceTree = "<group>"; };
 		C031CBD71BDB094800521393 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C031CBE01BDB097600521393 /* Extensions+NSAttributedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extensions+NSAttributedString.swift"; sourceTree = "<group>"; };
-		C031CBE11BDB097600521393 /* IATags.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATags.swift; sourceTree = "<group>"; };
 		C031CBE21BDB097600521393 /* IntensityAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntensityAttributes.swift; sourceTree = "<group>"; };
 		C031CBE31BDB097600521393 /* IntensityTransformers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntensityTransformers.swift; sourceTree = "<group>"; };
 		C031CBE41BDB097600521393 /* IntensityTransformingProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntensityTransformingProtocol.swift; sourceTree = "<group>"; };
@@ -96,6 +95,7 @@
 		C08253B01BE571910017AC14 /* LockingKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LockingKey.swift; sourceTree = "<group>"; };
 		C08253B51BE572AE0017AC14 /* ExpandingPressureKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ExpandingPressureKey.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		C095747D1C5822E300724F02 /* IAString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAString.swift; sourceTree = "<group>"; };
+		C095747F1C58259C00724F02 /* IAStringKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringKeys.swift; sourceTree = "<group>"; };
 		C0BCB6C31BFA60BE00654E0A /* ValueWithRange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueWithRange.swift; sourceTree = "<group>"; };
 		C0D447491BE6BC16003204E7 /* RawIntensity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawIntensity.swift; sourceTree = "<group>"; };
 		C0D4474B1BE82381003204E7 /* ImageAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ImageAssets.xcassets; sourceTree = "<group>"; };
@@ -185,12 +185,12 @@
 			isa = PBXGroup;
 			children = (
 				C031CBE01BDB097600521393 /* Extensions+NSAttributedString.swift */,
-				C031CBE11BDB097600521393 /* IATags.swift */,
 				C031CBE21BDB097600521393 /* IntensityAttributes.swift */,
 				C01BDAA11C57F170004CF045 /* IABaseAttributes.swift */,
 				C06B1D571BF15AB5009F427A /* Transformers */,
 				C06BAFD21BF2AECE004CECA9 /* IAIntermediate.swift */,
 				C095747D1C5822E300724F02 /* IAString.swift */,
+				C095747F1C58259C00724F02 /* IAStringKeys.swift */,
 				C0BCB6C31BFA60BE00654E0A /* ValueWithRange.swift */,
 				C01BDA9E1C57193D004CF045 /* CollapsingArray */,
 			);
@@ -403,7 +403,6 @@
 				C0E5D7C51BDEA4E400A0A814 /* UIImage+Extension.swift in Sources */,
 				C01BDAA21C57F170004CF045 /* IABaseAttributes.swift in Sources */,
 				C06B1D501BEE8B61009F427A /* Keysets.swift in Sources */,
-				C031CBE71BDB097600521393 /* IATags.swift in Sources */,
 				C031CBEB1BDB097600521393 /* MiscGlobals.swift in Sources */,
 				C06B1D591BF15AD9009F427A /* WeightIntensityScheme.swift in Sources */,
 				C031CBE61BDB097600521393 /* Extensions+NSAttributedString.swift in Sources */,
@@ -412,6 +411,7 @@
 				C031CBE91BDB097600521393 /* IntensityTransformers.swift in Sources */,
 				C0D4474E1BE97578003204E7 /* IntensityAdjuster.swift in Sources */,
 				C06B1D5B1BF15C18009F427A /* HueGYRIntensityScheme.swift in Sources */,
+				C09574801C58259C00724F02 /* IAStringKeys.swift in Sources */,
 				C06B1D271BEC5FCC009F427A /* KeysetComponents.swift in Sources */,
 				C040C5041C0CE857007C1685 /* IATextEditor.swift in Sources */,
 				C0E5D7C81BDEA52C00A0A814 /* OtherExtensions.swift in Sources */,

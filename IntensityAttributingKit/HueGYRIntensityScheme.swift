@@ -82,33 +82,34 @@ public class HueGYRIntensityScheme:IntensityTransforming {
 //    }
 //    
     
-    public class func nsAttributesForIntensityAttributes(attributes:IntensityAttributes)->[String:AnyObject]{
+    public class func nsAttributesForIntensityAttributes(intensity:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
 
-        var baseFont:UIFont = UIFont.systemFontOfSize(attributes.size)
+        var baseFont:UIFont = UIFont.systemFontOfSize(baseAttributes.cSize)
 
-        if attributes.isBold || attributes.isItalic {
+        if baseAttributes.bold || baseAttributes.italic {
             var symbolicsToMerge = UIFontDescriptorSymbolicTraits()
-            if attributes.isBold {
+            if baseAttributes.bold {
                 symbolicsToMerge.unionInPlace(.TraitBold)
             }
-            if attributes.isItalic {
+            if baseAttributes.italic {
                 symbolicsToMerge.unionInPlace(.TraitItalic)
             }
             let newSymbolicTraits =  baseFont.fontDescriptor().symbolicTraits.union(symbolicsToMerge)
             let newDescriptor = baseFont.fontDescriptor().fontDescriptorWithSymbolicTraits(newSymbolicTraits)
-            baseFont = UIFont(descriptor: newDescriptor, size: attributes.size)
+            baseFont = UIFont(descriptor: newDescriptor, size: baseAttributes.cSize)
         }
         var nsAttributes:[String:AnyObject] = [NSFontAttributeName:baseFont]
         
-        if attributes.isStrikethrough {
+        if baseAttributes.strikethrough {
             nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
         }
-        if attributes.isUnderlined {
+        if baseAttributes.underline {
             nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
         }
     
         ///Do color text stuff here
-        nsAttributes[NSForegroundColorAttributeName] = colorForIntensityBin(attributes.binNumberForSteps(stepCount))
+        
+        nsAttributes[NSForegroundColorAttributeName] = colorForIntensityBin(binNumberForSteps(intensity, steps: stepCount))
         
         return nsAttributes
     }
