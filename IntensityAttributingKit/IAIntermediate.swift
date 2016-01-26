@@ -5,7 +5,7 @@
 //  Created by Evan Mckee on 11/10/15.
 //  Copyright © 2015 McKeeMaKer. All rights reserved.
 //
-
+/*
 import Foundation
 
 
@@ -643,4 +643,4 @@ private extension MutableCollectionType where Generator.Element: ValueWithRangeP
     //replace range == deleteVWRs in range, insertVWRs at index
     
 }
-
+*/

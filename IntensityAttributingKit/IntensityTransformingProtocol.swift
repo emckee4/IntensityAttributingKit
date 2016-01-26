@@ -10,7 +10,7 @@ public protocol IntensityTransforming {
     //func typingAttributesForScheme(intensityAttributes:IntensityAttributes, retainedKeys:[String:AnyObject]?)->[String:AnyObject]
     static func generateSampleFromText(text:String, size:CGFloat)->NSAttributedString
 
-    static func nsAttributesForIntensityAttributes(attributes:IntensityAttributes)->[String:AnyObject]
+    static func nsAttributesForIntensityAttributes(intensity:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]
     
 }
 
@@ -78,17 +78,18 @@ public extension IntensityTransforming {
     ///transforms provided using the transformer while varying the intensity linearly over the length of the sample
     public static func generateSampleFromText(text:String, size:CGFloat)->NSAttributedString{
         let charCount:Int = text.characters.count
-        guard charCount > 1 else {return NSAttributedString(string: text, defaultAttributes: IntensityAttributes(intensity: 1.0, size: size))}
+        let baseAttributes = IABaseAttributes(size:Int(size),options: [])
+        guard charCount > 0 else {return NSAttributedString()}
         let mutableAS:NSMutableAttributedString = NSMutableAttributedString(string: text)
         for i in 0..<charCount {
-            let ia = IntensityAttributes(intensity: Float(i) / Float(charCount) + 0.001, size: size)
-            mutableAS.setAttributes(self.nsAttributesForIntensityAttributes(ia), range: NSRange(location: i, length: 1))
+            let thisIntensity:Int = Int((Float(i) / Float(charCount) + 0.001) * 100)
+            let nsAttributes = self.nsAttributesForIntensityAttributes(thisIntensity, baseAttributes: baseAttributes)
+            mutableAS.setAttributes(nsAttributes, range: NSRange(location: i, length: 1))
         }
         return mutableAS
     }
     
 
-    
     
 }
 

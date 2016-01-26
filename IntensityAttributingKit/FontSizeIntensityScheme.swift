@@ -81,17 +81,17 @@ public class FontSizeIntensityScheme:IntensityTransforming {
         return newIA
     }
 */
-    public class func nsAttributesForIntensityAttributes(attributes:IntensityAttributes)->[String:AnyObject]{
+    public class func nsAttributesForIntensityAttributes(intensity:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
 
-        let size = attributes.size - 5.0 + CGFloat(attributes.binNumberForSteps(10))
+        let size = CGFloat(baseAttributes.size - 5 + binNumberForSteps(intensity, steps:10))
         var baseFont:UIFont = UIFont.systemFontOfSize(size)
 
-        if attributes.isBold || attributes.isItalic {
+        if baseAttributes.bold || baseAttributes.italic {
             var symbolicsToMerge = UIFontDescriptorSymbolicTraits()
-            if attributes.isBold {
+            if baseAttributes.bold {
                 symbolicsToMerge.unionInPlace(.TraitBold)
             }
-            if attributes.isItalic {
+            if baseAttributes.italic {
                 symbolicsToMerge.unionInPlace(.TraitItalic)
             }
             let newSymbolicTraits =  baseFont.fontDescriptor().symbolicTraits.union(symbolicsToMerge)
@@ -100,10 +100,10 @@ public class FontSizeIntensityScheme:IntensityTransforming {
         }
         var nsAttributes:[String:AnyObject] = [NSFontAttributeName:baseFont]
         
-        if attributes.isStrikethrough {
+        if baseAttributes.strikethrough {
             nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
         }
-        if attributes.isUnderlined {
+        if baseAttributes.underline {
             nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
         }
         //TODO:- this should adjust kerning (using NSKernAttributeName) to lessen the variations in space requried due to a transform
