@@ -10,7 +10,7 @@ import Foundation
 
 
 ///Functions similarly to an NSRange except this struct also contains a value(Any type) associated with the range. This also includes functions to convert to or from JSON ready arrays
-struct ValueWithRange: CustomStringConvertible {
+struct ValueWithRange: CustomStringConvertible, ValueWithRangeProtocol {
     var value:Any
     var location:Int
     var length:Int
@@ -42,4 +42,19 @@ struct ValueWithRange: CustomStringConvertible {
         self.location = location
         self.length = length
     }
+    
+//    ///returns a new ValueWithRange object with the value copied (into a new object) if it's an NSObject class.
+//    func copy() -> ValueWithRange {
+//        if let copy = (self.value as? NSObject)?.copy() {
+//            return ValueWithRange(value: copy, location: self.location, length: self.length)
+//        }
+//        return ValueWithRange(value: self.value, location: self.location, length: self.length)
+//    }
+}
+
+protocol ValueWithRangeProtocol{
+    var value:Any {get set}
+    var location:Int {get set}
+    var length:Int {get set}
+
 }

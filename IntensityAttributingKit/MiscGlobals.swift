@@ -8,6 +8,12 @@ import UIKit
 }
 
 
+extension NSRange {
+    var intRange:Range<Int> {
+        return self.location..<(self.location + self.length)
+    }
+}
+
 //let ReplacementChar:String = "\u{FFFC}"
 //let ReplacementCodeUnit:UInt16 = "\u{FFFC}".utf16.first!
 

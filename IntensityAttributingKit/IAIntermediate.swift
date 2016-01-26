@@ -35,6 +35,9 @@ public class IAIntermediate {
     
     var renderScheme:IntensityTransformers!
     var renderOptions:[String:AnyObject] = [:]
+    
+    var thumbSize:ThumbSize = .Medium
+    
 //    
 //    public init!(iaString:NSAttributedString){
 //        guard iaString.length > 0 else {text = "";return nil}
@@ -270,6 +273,14 @@ public class IAIntermediate {
         }
         
     }
+    
+    ///This is intended for initialization of IAIntermediate within the module. It provides only minimal sanity checks.
+    private init!(text:NSString, intensities:[Float], size:CGFloat){
+        self.text = text
+        guard intensities.count == text.length else {return nil}
+        self.intensities = intensities
+        self.textSizes = [ValueWithRange(value: size, location: 0, length: text.length)]
+    }
 
 }
 
@@ -370,7 +381,7 @@ extension IAIntermediate {
 //        return perWord
 //    }
     
-    func unitRanges(separationOptions:NSStringEnumerationOptions)->[NSRange]{
+    private func unitRanges(separationOptions:NSStringEnumerationOptions)->[NSRange]{
         guard self.text.length > 0 else {return []}
         var rangeArray:[NSRange] = []
         self.text.enumerateSubstringsInRange(NSRange(location: 0, length: self.text.length), options: separationOptions) { (subString, strictSSRange, enclosingRange, stop) -> Void in
@@ -384,7 +395,7 @@ extension IAIntermediate {
     }
     
     
-    public func perUnitSmoothedIntensities(separationOptions:NSStringEnumerationOptions)->[Float]{
+    private func perUnitSmoothedIntensities(separationOptions:NSStringEnumerationOptions)->[Float]{
         guard separationOptions != .SubstringNotRequired else {return self.intensities}
         var perWord:[Float] = Array<Float>()
         perWord.reserveCapacity(self.text.length)
@@ -401,7 +412,7 @@ extension IAIntermediate {
     }
     
     
-    func generateIntensityAttributesArray(renderSteps steps:Int, separateOn separator:NSStringEnumerationOptions)->[(range:NSRange, ia:IntensityAttributes)]{
+    private func generateIntensityAttributesArray(renderSteps steps:Int, separateOn separator:NSStringEnumerationOptions)->[(range:NSRange, ia:IntensityAttributes)]{
         //centers the intensity in its bin
         let binWidth = 1 / Float(steps)
         let smoother:(Float)->(Float) = { (intensity)->(Float) in
@@ -477,8 +488,8 @@ extension IAIntermediate {
         return intensityAttributes
     }
     
-    
-    func convertToNSAttributedStringWithOptions(options:[String:AnyObject])->NSAttributedString{
+    ///Should more clearly define options (maybe with a struct of keys). Need to add option for rendering size and style of thumbnails for attachments.
+    public func convertToNSAttributedString(withOptions options:[String:AnyObject]? = nil)->NSAttributedString{
         let attString = NSMutableAttributedString(string: self.text as String)
 
         for linkVWR in links {
@@ -501,13 +512,13 @@ extension IAIntermediate {
         
         //options have two levels: prefered (internal) and override passed in by the user. Override trumps internal
         var renderWithScheme = self.renderScheme
-        if let overrideScheme = options["renderWithScheme"] as? String where IntensityTransformers(rawValue: overrideScheme) != nil{
+        if let overrideScheme = options?["renderWithScheme"] as? String where IntensityTransformers(rawValue: overrideScheme) != nil{
             renderWithScheme = IntensityTransformers(rawValue: overrideScheme)
         }
         let transformer = renderWithScheme.transformer
         
         var preferedSmoothing:NSStringEnumerationOptions!
-        if let smoothing = options["smoothingSeparator"] as? NSStringEnumerationOptions {
+        if let smoothing = options?["smoothingSeparator"] as? NSStringEnumerationOptions {
             preferedSmoothing = smoothing
         } else if let smoothing = self.renderOptions["smoothingSeparator"] as? NSStringEnumerationOptions {
             preferedSmoothing = smoothing
@@ -532,5 +543,104 @@ extension IAIntermediate {
 }
 
 
+///Extension providing subrange from range
+extension IAIntermediate {
+    
 
+    
+    ///This provides a new IAString comprised of copies of the contents in the given range. This inherits its parent's options
+    public func iaSubstringFromRange(range:NSRange)->IAIntermediate {
+        let textSS = self.text.substringWithRange(range).copy() as! NSString
+        let intRange = range.intRange
+        let intenseSS = Array(self.intensities[intRange])
+
+        
+        
+        let newIA = IAIntermediate(text: textSS, intensities: intenseSS, size: 10.0)
+        
+        
+        
+        
+        return newIA
+    }
+    
+    
+    //need attributes at index
+    
+    //need attributes for range
+    
+    
+    
+    
+    
+    
+    
+    
+    
+}
+
+//add array extension specifically for arrays of VWRs: should extract, insert, and repair arrays of VWRs and NSRanges
+
+
+
+private extension MutableCollectionType where Generator.Element: ValueWithRangeProtocol {
+    //TODO: manage copying of non structs
+    ///provides the VWRs for a given range, with locations zeroed to the new sub array's origin
+    func vwrsForRange(range:Range<Int>)->Array<ValueWithRangeProtocol>{
+        var newArray:[ValueWithRangeProtocol] = []
+        
+        
+        //cases: vwr starts in range, vwr starts before but ends in range, vwr contains range
+        for vwr in self {
+            if (vwr.location >= range.startIndex && vwr.location < range.endIndex){
+                //copy, adjust location, clip end if necessary
+                let valCopy = ((vwr.value as? NSObject)?.copy()) ?? vwr.value
+                let adjLoc = vwr.location - range.startIndex
+                let adjLen = ((vwr.location + vwr.length) <= range.endIndex) ? vwr.length : (range.endIndex - vwr.location)  //check this
+                
+                newArray.append(ValueWithRange(value: valCopy, location: adjLoc, length: adjLen))
+                
+            } else if (vwr.location < range.startIndex && (vwr.location + vwr.length) > range.startIndex) {
+                //copy, adjust location, clip end if necessary
+                let valCopy = ((vwr.value as? NSObject)?.copy()) ?? vwr.value
+                let adjLoc = 0
+                let offset = range.startIndex - vwr.location
+                let adjLen = vwr.location + vwr.length < range.endIndex ? vwr.length - offset : (range.endIndex - range.startIndex)  //check this
+                
+                newArray.append(ValueWithRange(value: valCopy, location: adjLoc, length: adjLen))
+            }
+        }
+        
+        return newArray
+    }
+    
+    ///inserts array of ValueWithRanges (zero indexed relative to the insertion point) at the given index. If severOverlapping is true (the default), then VWRs with ranges overlapping the index will be severed in two (objects will not be specially copied, ie the same reference will be used for both halves values if values are passed by ref). If severOverlapping is false then overlapping VWRs will only have their lengths extended.
+    mutating func insertVWRsatIndex(vwrs:[ValueWithRange],index:Int, severOverlapping:Bool = true) {
+        //items before are untouched, items overlapping are handled depending on sever, items after only have their locations extended
+        
+        
+        if severOverlapping {
+            
+            
+            
+        } else {
+            
+            
+            
+            
+        }
+        
+    }
+    
+    mutating func deleteVWRsInRange(range:Range<Int>){
+        
+        
+    }
+    
+    
+    //func insertVWRsForRange  : how to handle inserts into the middle of existing VWRs? We should usually sever them since there should typically only be one active VWR for a given range. We should have an option to allow extending instead for the rare cases where that may be desired
+    
+    //replace range == deleteVWRs in range, insertVWRs at index
+    
+}
 
