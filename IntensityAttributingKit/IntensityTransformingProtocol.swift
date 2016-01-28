@@ -10,7 +10,8 @@ public protocol IntensityTransforming {
     //func typingAttributesForScheme(intensityAttributes:IntensityAttributes, retainedKeys:[String:AnyObject]?)->[String:AnyObject]
     static func generateSampleFromText(text:String, size:CGFloat)->NSAttributedString
 
-    static func nsAttributesForIntensityAttributes(intensity:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]
+    static func nsAttributesForIntensityAttributes(intensity intensity:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]
+    static func nsAttributesForBinsAndBaseAttributes(bin bin:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]
     
 }
 
@@ -83,13 +84,17 @@ public extension IntensityTransforming {
         let mutableAS:NSMutableAttributedString = NSMutableAttributedString(string: text)
         for i in 0..<charCount {
             let thisIntensity:Int = Int((Float(i) / Float(charCount) + 0.001) * 100)
-            let nsAttributes = self.nsAttributesForIntensityAttributes(thisIntensity, baseAttributes: baseAttributes)
+            let nsAttributes = self.nsAttributesForIntensityAttributes(intensity:thisIntensity, baseAttributes: baseAttributes)
             mutableAS.setAttributes(nsAttributes, range: NSRange(location: i, length: 1))
         }
         return mutableAS
     }
     
-
+    public static func nsAttributesForIntensityAttributes(intensity intensity:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
+        //use existing code predominantly for this
+        let weightBin = min((binNumberForSteps(intensity, steps:stepCount) + (baseAttributes.bold ? 1 : 0)), stepCount)
+        return self.nsAttributesForBinsAndBaseAttributes(bin: weightBin, baseAttributes: baseAttributes)
+    }
     
 }
 

@@ -141,10 +141,14 @@ public class WeightIntensityScheme:IntensityTransforming {
 //        //make sure to handle insertion of links and attachments: consider generating the base NSMutableAttributedString with those already inserted in IAIntermediate so the transformer only needs to worry about fonts
 //    }
     
-    public class func nsAttributesForIntensityAttributes(intensity:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
-        //use existing code predominantly for this
-        let weightBin = min((binNumberForSteps(intensity, steps:stepCount) + (baseAttributes.bold ? 1 : 0)), stepCount)
-        let weight = weightArray[weightBin]
+//    public class func nsAttributesForIntensityAttributes(intensity intensity:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
+//        //use existing code predominantly for this
+//        let weightBin = min((binNumberForSteps(intensity, steps:stepCount) + (baseAttributes.bold ? 1 : 0)), stepCount)
+//        return self.nsAttributesForBinsAndBaseAttributes(bin: weightBin, baseAttributes: baseAttributes)
+//    }
+    
+    public static func nsAttributesForBinsAndBaseAttributes(bin bin:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
+        let weight = weightArray[bin]
         var font = UIFont.systemFontOfSize(baseAttributes.cSize, weight: weight)
         if baseAttributes.italic {
             let newSymbolicTraits = font.fontDescriptor().symbolicTraits.union(.TraitItalic)
@@ -153,17 +157,16 @@ public class WeightIntensityScheme:IntensityTransforming {
         }
         
         var nsAttributes:[String:AnyObject] = [NSFontAttributeName:font]
-
+        
         if baseAttributes.strikethrough {
             nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
         }
         if baseAttributes.underline {
             nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
         }
-    
+        
         return nsAttributes
+        
     }
-    
-    
     
 }

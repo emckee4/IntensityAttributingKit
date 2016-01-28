@@ -227,7 +227,15 @@ struct CollapsingArray<Element:Equatable>: ExclusiveRangeMappingProtocol, ArrayL
             condenseIndexWithFollowing(lastDi)
         }
     }
+ ////////////////////////////
     
+    mutating func appendRepeatedValue(value:Element, count:Int){
+        let rvp = RangeValuePair(value: value, range:NSRange(location:self.endIndex, length: count))
+        data.append(rvp)
+        if data.count > 1 {
+            condenseIndexWithFollowing(data.count - 2)
+        }
+    }
     
     mutating func setValueForRange(value:Element, range:Range<Int>){
         guard range.startIndex <= self.endIndex else {
@@ -247,9 +255,39 @@ struct CollapsingArray<Element:Equatable>: ExclusiveRangeMappingProtocol, ArrayL
                 data.append(newRVP)
             }
         }
-        
+        if data.count > 1 {
+            condenseIndexWithFollowing(data.count - 2)
+        }
     }
     
+    func rvp(dataIndex:Int)->(range:Range<Int>,value:Element){
+        return (range:data[dataIndex].range, value:data[dataIndex].value)
+    }
+    
+    ///Returns a copy of a slice with its indeces zeroed
+    func subRange(subRange:Range<Int>)->CollapsingArray<Element>{
+        guard subRange.startIndex >= 0 && subRange.endIndex <= self.endIndex  else {fatalError("removeRange: out of bounds: \(subRange), from \(self.startIndex..<self.endIndex)")}
+        var newSub = CollapsingArray<Element>()
+        guard subRange.startIndex != subRange.endIndex else {return newSub}
+        
+        ///get a copy of the raw slice
+        let startingDi = dataIndexForIndex(subRange.startIndex)!
+        let endingDi =  dataIndexForIndex(subRange.endIndex - 1)!
+        newSub.data.appendContentsOf(self.data[startingDi...endingDi])
+        
+        //clean up the ends which may go out of the subrange
+        newSub.splitRangeAtIndex(subRange.startIndex)
+        newSub.splitRangeAtIndex(subRange.endIndex)
+        if newSub.data.last!.startIndex == subRange.endIndex {newSub.data.removeAtIndex(newSub.count - 1)}
+        if newSub.data.first!.endIndex == subRange.startIndex {newSub.data.removeFirst()}
+        
+        //reindex
+        for i in 0..<newSub.data.count {
+            newSub.data[i].reindex(-subRange.startIndex)
+        }
+        
+        return newSub
+    }
     
     /////////////////////////////////
     /// Internal helpers
@@ -327,8 +365,8 @@ struct CollapsingArray<Element:Equatable>: ExclusiveRangeMappingProtocol, ArrayL
         
     }
     
-    ///Internal validator.
-    private func validate()->Bool{
+    ///Internal validator. This isn't intended for use in production.
+    func validate()->Bool{
         guard self.data.count > 0 else {return true}
         guard self.data[0].startIndex == 0 else {print("validate failed: nonZero start: \(data[0])"); return false}
         for i in 1..<data.count {
@@ -350,14 +388,79 @@ extension CollapsingArray where Element:OptionSetTypeWithIntegerRawValue {
     
     var asRVPArray:[[Int]] {return data.map({return [$0.startIndex,$0.endIndex,$0.value.rawValue]})}
     
-    init!(rvpArray:[[Int]]){
-        guard rvpArray.first?.startIndex == 0 else {return nil}
-        for item in rvpArray {
-            guard item.count == 3 else {print("init!(rvpArray:[[Int]]):  bad data"); return nil}
-            data.append(RangeValuePair(value: Element(rawValue: item[2]), startIndex: item[0], endIndex: item[1]))
-        }
-        guard validate() else {return nil}
-    }
+//    init!<OptionSetTypeWithIntegerRawValue>(rvpArray:[[Int]]){
+//        guard rvpArray.first?.startIndex == 0 else {return nil}
+//        for item in rvpArray {
+//            guard item.count == 3 else {print("init!(rvpArray:[[Int]]):  bad data"); return nil}
+//            data.append(RangeValuePair(value: Element(rawValue: item[2]), startIndex: item[0], endIndex: item[1]))
+//        }
+//        guard validate() else {return nil}
+//    }
+    
 }
 
+//extension CollapsingArray {
+//    
+//    static func iaBaseAttsArrayFromIntArrays(rvpArray:[[Int]])->CollapsingArray<IABaseAttributes>{
+//        var ca = CollapsingArray<IABaseAttributes>()
+//        //guard rvpArray.first?.startIndex == 0 else {return nil}
+//        for item in rvpArray {
+//            //guard item.count == 3 else {print("init!(rvpArray:[[Int]]):  bad data"); return nil}
+//            ca.data.append(RangeValuePair(value: IABaseAttributes(rawValue:item[2]), startIndex: item[0], endIndex: item[1]))
+//        }
+//        //guard ca.validate() else {return nil}
+//        return ca
+//    }
+//    
+//
+//}
+
+//extension CollapsingArray {
+//    static func binAttZip(bins bins:CollapsingArray<Int>,atts:CollapsingArray<IABaseAttributes>)->CollapsingArray<BinAttPair>{
+//        let totalLength = bins.count
+//        guard totalLength == atts.count else {fatalError("binAttZip: bins.count != atts.count ")}
+//        guard totalLength > 0 else {return CollapsingArray<BinAttPair>()}
+//        var baps = CollapsingArray<BinAttPair>()
+//        var currentIndex = 0
+//        var binDi = 0
+//        var attsDi = 0
+//        while currentIndex < totalLength {
+//            let binAttPair = BinAttPair(bin: bins.data[binDi].value, atts: atts.data[attsDi].value)
+//            let binEnd = bins.data[binDi].endIndex
+//            let attsEnd = atts.data[attsDi].endIndex
+//            var endIndex:Int!
+//            if binEnd < attsEnd {
+//                endIndex = binEnd
+//                binDi++
+//            } else if attsEnd < binEnd {
+//                endIndex = attsEnd
+//                attsDi++
+//            } else {
+//                endIndex == attsEnd
+//                binDi++
+//                attsDi++
+//            }
+//            let rvp = RangeValuePair(value: binAttPair, startIndex: currentIndex, endIndex: endIndex)
+//            currentIndex = endIndex
+//            baps.data.append(rvp)
+//        }
+//        return baps
+//    }
+//}
+//
+//struct BinAttPair:Hashable {
+//    let bin:Int
+//    let atts:IABaseAttributes
+//    
+//    init(bin:Int, atts:IABaseAttributes){
+//        self.bin = bin
+//        self.atts = atts
+//    }
+//    
+//    var hashValue:Int {return bin.hashValue * 0x1000 + atts.hashValue}
+//}
+//
+//func ==(lhs:BinAttPair, rhs:BinAttPair)->Bool{
+//    return lhs.hashValue == rhs.hashValue
+//}
 

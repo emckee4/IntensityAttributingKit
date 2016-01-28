@@ -12,7 +12,7 @@ import UIKit
 public struct IABaseAttributes:OptionSetTypeWithIntegerRawValue{
     public var rawValue:Int
     public init(rawValue:Int){self.rawValue = rawValue}
-    public init!(size:Int, options:IABaseAttributes) {
+    public init!(size:Int, options:IABaseAttributes = []) {
         guard size > 0 && size < 256 else {return nil}
         self.rawValue = size + options.rawValue
     }

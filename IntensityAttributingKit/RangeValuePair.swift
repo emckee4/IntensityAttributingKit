@@ -11,7 +11,7 @@ import Foundation
 
 
 ///Functions similarly to an NSRange except this struct also contains a value(Any type) associated with the range. This also includes functions to convert to or from JSON ready arrays
-struct RangeValuePair<Element:Equatable>: CustomStringConvertible {
+struct RangeValuePair<Element:Equatable>: CustomStringConvertible, RVPProtocol {
     var value:Element
     var startIndex:Int
     var endIndex:Int
@@ -50,12 +50,34 @@ struct RangeValuePair<Element:Equatable>: CustomStringConvertible {
     }
     
     ///yields [startIndex, endIndex, value]. Used as an intermediate step to JSON
-    var asArray:[Any] {return [startIndex,endIndex,value]}
+    //var asArray:[Any] {return [startIndex,endIndex,value]}
+    
+//    func hasEqualValue(other: RVPProtocol) -> Bool {
+//        if let other = other as? RangeValuePair<Element> {
+//            return other.value == self.value
+//        } else {
+//            return false
+//        }
+//    }
 }
 
 
 extension RangeValuePair where Element:AnyObject {
     ///yields [startIndex, endIndex, value]. Used as an intermediate step to JSON
     var asArray:[AnyObject] {return [startIndex,endIndex,value]}
+}
+
+protocol RVPProtocol {
+    var startIndex:Int {get set}
+    var endIndex:Int {get set}
+    
+    ///If both the container type and contained values are equal (and equatable) then this returns true, else false
+    //func hasEqualValue(other:RVPProtocol)->Bool
+}
+extension RVPProtocol {
+    mutating func reindex(by:Int){
+        self.startIndex += by
+        self.endIndex += by
+    }
 }
 

@@ -81,11 +81,41 @@ public class FontSizeIntensityScheme:IntensityTransforming {
         return newIA
     }
 */
-    public class func nsAttributesForIntensityAttributes(intensity:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
+//    public class func nsAttributesForIntensityAttributes(intensity intensity:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
+//
+//        let size = CGFloat(baseAttributes.size - 5 + binNumberForSteps(intensity, steps:10))
+//        var baseFont:UIFont = UIFont.systemFontOfSize(size)
+//
+//        if baseAttributes.bold || baseAttributes.italic {
+//            var symbolicsToMerge = UIFontDescriptorSymbolicTraits()
+//            if baseAttributes.bold {
+//                symbolicsToMerge.unionInPlace(.TraitBold)
+//            }
+//            if baseAttributes.italic {
+//                symbolicsToMerge.unionInPlace(.TraitItalic)
+//            }
+//            let newSymbolicTraits =  baseFont.fontDescriptor().symbolicTraits.union(symbolicsToMerge)
+//            let newDescriptor = baseFont.fontDescriptor().fontDescriptorWithSymbolicTraits(newSymbolicTraits)
+//            baseFont = UIFont(descriptor: newDescriptor, size: size)
+//        }
+//        var nsAttributes:[String:AnyObject] = [NSFontAttributeName:baseFont]
+//        
+//        if baseAttributes.strikethrough {
+//            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
+//        }
+//        if baseAttributes.underline {
+//            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
+//        }
+//        //TODO:- this should adjust kerning (using NSKernAttributeName) to lessen the variations in space requried due to a transform
+//        
+//        
+//        return nsAttributes
+//    }
 
-        let size = CGFloat(baseAttributes.size - 5 + binNumberForSteps(intensity, steps:10))
+    public static func nsAttributesForBinsAndBaseAttributes(bin bin:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
+        let size = CGFloat(baseAttributes.size - 5 + bin)
         var baseFont:UIFont = UIFont.systemFontOfSize(size)
-
+        
         if baseAttributes.bold || baseAttributes.italic {
             var symbolicsToMerge = UIFontDescriptorSymbolicTraits()
             if baseAttributes.bold {
@@ -111,5 +141,8 @@ public class FontSizeIntensityScheme:IntensityTransforming {
         
         return nsAttributes
     }
+
+    
+    
 }
 

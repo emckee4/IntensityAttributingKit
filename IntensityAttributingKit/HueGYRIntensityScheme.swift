@@ -81,11 +81,42 @@ public class HueGYRIntensityScheme:IntensityTransforming {
 //        return newIA
 //    }
 //    
+//    
+//    public class func nsAttributesForIntensityAttributes(intensity:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
+//
+//        var baseFont:UIFont = UIFont.systemFontOfSize(baseAttributes.cSize)
+//
+//        if baseAttributes.bold || baseAttributes.italic {
+//            var symbolicsToMerge = UIFontDescriptorSymbolicTraits()
+//            if baseAttributes.bold {
+//                symbolicsToMerge.unionInPlace(.TraitBold)
+//            }
+//            if baseAttributes.italic {
+//                symbolicsToMerge.unionInPlace(.TraitItalic)
+//            }
+//            let newSymbolicTraits =  baseFont.fontDescriptor().symbolicTraits.union(symbolicsToMerge)
+//            let newDescriptor = baseFont.fontDescriptor().fontDescriptorWithSymbolicTraits(newSymbolicTraits)
+//            baseFont = UIFont(descriptor: newDescriptor, size: baseAttributes.cSize)
+//        }
+//        var nsAttributes:[String:AnyObject] = [NSFontAttributeName:baseFont]
+//        
+//        if baseAttributes.strikethrough {
+//            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
+//        }
+//        if baseAttributes.underline {
+//            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
+//        }
+//    
+//        ///Do color text stuff here
+//        
+//        nsAttributes[NSForegroundColorAttributeName] = colorForIntensityBin(binNumberForSteps(intensity, steps: stepCount))
+//        
+//        return nsAttributes
+//    }
     
-    public class func nsAttributesForIntensityAttributes(intensity:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
-
+    public static func nsAttributesForBinsAndBaseAttributes(bin bin:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
         var baseFont:UIFont = UIFont.systemFontOfSize(baseAttributes.cSize)
-
+        
         if baseAttributes.bold || baseAttributes.italic {
             var symbolicsToMerge = UIFontDescriptorSymbolicTraits()
             if baseAttributes.bold {
@@ -106,14 +137,14 @@ public class HueGYRIntensityScheme:IntensityTransforming {
         if baseAttributes.underline {
             nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
         }
-    
+        
         ///Do color text stuff here
         
-        nsAttributes[NSForegroundColorAttributeName] = colorForIntensityBin(binNumberForSteps(intensity, steps: stepCount))
+        nsAttributes[NSForegroundColorAttributeName] = colorForIntensityBin(bin)
         
         return nsAttributes
     }
-    
+
 
 }
 
