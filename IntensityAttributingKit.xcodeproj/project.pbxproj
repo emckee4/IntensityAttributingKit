@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C00E94791C5BF94000551D39 /* AttachmentArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00E94781C5BF94000551D39 /* AttachmentArray.swift */; };
 		C01BDA9D1C571926004CF045 /* CollapsingArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01BDA9C1C571926004CF045 /* CollapsingArray.swift */; };
 		C01BDAA01C571954004CF045 /* RangeValuePair.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01BDA9F1C571954004CF045 /* RangeValuePair.swift */; };
 		C01BDAA21C57F170004CF045 /* IABaseAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01BDAA11C57F170004CF045 /* IABaseAttributes.swift */; };
@@ -62,6 +63,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C00E94781C5BF94000551D39 /* AttachmentArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentArray.swift; sourceTree = "<group>"; };
 		C01BDA9C1C571926004CF045 /* CollapsingArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollapsingArray.swift; sourceTree = "<group>"; };
 		C01BDA9F1C571954004CF045 /* RangeValuePair.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RangeValuePair.swift; sourceTree = "<group>"; };
 		C01BDAA11C57F170004CF045 /* IABaseAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IABaseAttributes.swift; sourceTree = "<group>"; };
@@ -128,13 +130,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		C01BDA9E1C57193D004CF045 /* CollapsingArray */ = {
+		C00E947A1C5BF9A500551D39 /* IAStringDataStructures */ = {
 			isa = PBXGroup;
 			children = (
+				C01BDAA11C57F170004CF045 /* IABaseAttributes.swift */,
+				C00E94781C5BF94000551D39 /* AttachmentArray.swift */,
 				C01BDA9C1C571926004CF045 /* CollapsingArray.swift */,
 				C01BDA9F1C571954004CF045 /* RangeValuePair.swift */,
 			);
-			name = CollapsingArray;
+			name = IAStringDataStructures;
+			sourceTree = "<group>";
+		};
+		C00E947B1C5BF9D400551D39 /* Obsolete */ = {
+			isa = PBXGroup;
+			children = (
+				C031CBE01BDB097600521393 /* Extensions+NSAttributedString.swift */,
+				C031CBE21BDB097600521393 /* IntensityAttributes.swift */,
+				C06BAFD21BF2AECE004CECA9 /* IAIntermediate.swift */,
+				C0BCB6C31BFA60BE00654E0A /* ValueWithRange.swift */,
+			);
+			name = Obsolete;
 			sourceTree = "<group>";
 		};
 		C031CBBC1BDB094800521393 = {
@@ -186,16 +201,12 @@
 		C031CBEC1BDB097E00521393 /* IAString And Transformers */ = {
 			isa = PBXGroup;
 			children = (
-				C031CBE01BDB097600521393 /* Extensions+NSAttributedString.swift */,
-				C031CBE21BDB097600521393 /* IntensityAttributes.swift */,
-				C01BDAA11C57F170004CF045 /* IABaseAttributes.swift */,
+				C00E947B1C5BF9D400551D39 /* Obsolete */,
 				C06B1D571BF15AB5009F427A /* Transformers */,
-				C06BAFD21BF2AECE004CECA9 /* IAIntermediate.swift */,
 				C095747D1C5822E300724F02 /* IAString.swift */,
 				C09574811C59442300724F02 /* IAStringConversion.swift */,
 				C095747F1C58259C00724F02 /* IAStringKeys.swift */,
-				C0BCB6C31BFA60BE00654E0A /* ValueWithRange.swift */,
-				C01BDA9E1C57193D004CF045 /* CollapsingArray */,
+				C00E947A1C5BF9A500551D39 /* IAStringDataStructures */,
 			);
 			name = "IAString And Transformers";
 			sourceTree = "<group>";
@@ -399,6 +410,7 @@
 				C08253B61BE572AE0017AC14 /* ExpandingPressureKey.swift in Sources */,
 				C0E68E6F1C10C1D5005162F7 /* EPKey.swift in Sources */,
 				C031CC001BDD902000521393 /* IATextView.swift in Sources */,
+				C00E94791C5BF94000551D39 /* AttachmentArray.swift in Sources */,
 				C06B1D531BEE8C4F009F427A /* PressureKeyProtocols.swift in Sources */,
 				C031CBEA1BDB097600521393 /* IntensityTransformingProtocol.swift in Sources */,
 				C054D99E1C3DAB9100D852DE /* IATextAttachment.swift in Sources */,

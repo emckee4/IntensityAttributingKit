@@ -19,7 +19,7 @@ public class IAString {
     
     var links:[RangeValuePair<NSURL>] = []
 
-    var attachments: [(loc:Int,attach:IATextAttachment)] = []
+    var attachments: IAAttachmentArray = IAAttachmentArray()
     public var attachmentCount:Int {
         return attachments.count
     }
@@ -31,6 +31,8 @@ public class IAString {
     
     var preferedSmoothing: NSStringEnumerationOptions = .ByComposedCharacterSequences
 
+    var length:Int {return text.length}
+    
     //////////////////////////////////////
     
     
@@ -96,7 +98,7 @@ public class IAString {
         if let newAttachments = dict[IAStringKeys.attachments] as? [[AnyObject]]{
             for rawAttachItems in newAttachments {
                 if let loc = rawAttachItems[0] as? Int, attach = rawAttachItems[1] as? IATextAttachment {
-                    self.attachments.append((loc:loc,attach:attach))
+                    self.attachments[loc] = attach
                 }
             }
         }
