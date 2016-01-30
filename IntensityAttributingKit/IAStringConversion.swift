@@ -15,9 +15,9 @@ extension IAString {
     
     ///Gets an array of ranges or Character/word/sentance/etc units, as determined by the separation option
     private func unitRanges(separationOptions:NSStringEnumerationOptions)->[Range<Int>]{
-        guard self.text.length > 0 else {return []}
+        guard self.length > 0 else {return []}
         var rangeArray:[Range<Int>] = []
-        self.text.enumerateSubstringsInRange(NSRange(location: 0, length: self.text.length), options: separationOptions) { (subString, strictSSRange, enclosingRange, stop) -> Void in
+        (self.text as NSString).enumerateSubstringsInRange(NSRange(location: 0, length: self.length), options: separationOptions) { (subString, strictSSRange, enclosingRange, stop) -> Void in
             if subString != nil {
                 rangeArray.append(enclosingRange.intRange)
             } else {
@@ -140,7 +140,7 @@ extension IAString {
         
         ///attachment and attachSize should always exist together
         for attachTupple in attachments {
-            assert(self.text.substringWithRange(NSRange(location: attachTupple.loc, length: 1)) == "\u{FFFC}")
+            assert(self.text.subStringFromRange(attachTupple.loc..<attachTupple.loc.successor()) == "\u{FFFC}")
             attString.addAttribute(NSAttachmentAttributeName, value: attachTupple.attach, range: NSRange(location:attachTupple.loc, length: 1))
         }
         
@@ -165,7 +165,7 @@ extension IAString {
         
         
         let smoothedBinned:CollapsingArray<Int> = binnedSmoothedIntensities(transformer.stepCount, separationOptions: useSmoothing)
-        assert(smoothedBinned.count == text.length && text.length == self.baseAttributes.count)
+        assert(smoothedBinned.count == text.utf16.count && text.utf16.count == self.baseAttributes.count)
         applyAttributes(attString, transformer: transformer, smoothedBinned: smoothedBinned)
         
         return attString
@@ -206,28 +206,18 @@ extension IAString {
 ///Extension providing subrange from range
 extension IAString {
     
-    convenience init!(text:NSString, intensities:[Int], baseAtts:CollapsingArray<IABaseAttributes>, attachments:IAAttachmentArray? = nil){
-        self.init()
-        let length = text.length
-        guard length == baseAtts.count && length == intensities.count && (attachments?.lastLoc ?? 0) <= length else {return nil}
-        self.text = text
-        self.intensities = intensities
-        self.baseAttributes = baseAtts
-        if let attaches = attachments {
-            self.attachments = attaches
-        }
-    }
+
     
     
     
     ///This provides a new IAString comprised of copies of the contents in the given range. This inherits its parent's options. It will reindex its attributes and it will discard links.
     public func iaSubstringFromRange(range:Range<Int>)->IAString {
-        let substring = self.text.substringWithRange(range.nsRange)
+        let substring = self.text.subStringFromRange(range)
         let intensities = Array(self.intensities[range])
         let baseAttsSub = self.baseAttributes.subRange(range)
         //links are ignored
         let attachSubs = self.attachments.reindexedSubrange(range)
-        let newIA = IAString(text: substring, intensities: intensities,baseAtts: baseAttsSub, attachments: attachSubs)
+        let newIA = IAString(withText: substring, intensities: intensities,baseAtts: baseAttsSub, attachments: attachSubs)
 
         newIA.renderScheme = self.renderScheme
         newIA.renderOptions = self.renderOptions
@@ -240,9 +230,9 @@ extension IAString {
     
     ///Append a 0 based IAString
     public func appendIAString(iaString:IAString){
-        let appendingFromIndex = self.text.length
+        let appendingFromIndex = self.length
         //let startingLength = self.text.length
-        let appendLength = iaString.text.length
+        let appendLength = iaString.length
         self.text = self.text.stringByAppendingString(iaString.text as String)
         self.baseAttributes.appendContentsOf(iaString.baseAttributes) //should automatically rebase
         self.intensities.appendContentsOf(iaString.intensities)
@@ -254,9 +244,12 @@ extension IAString {
     
     
     public func insertIAString(iaString:IAString, atIndex:Int){
-        let mutableString = self.text.mutableCopy() as! NSMutableString
-        mutableString.insertString(iaString.text as String, atIndex: atIndex)
-        self.text = mutableString
+//        let mutableString = self.text.mutableCopy() as! NSMutableString
+//        mutableString.insertString(iaString.text as String, atIndex: atIndex)
+//        self.text = mutableString
+//        let utf16Index = self.text.utf16.startIndex.advancedBy(atIndex)
+//        let stringIndex = String.Index
+        text.insertContentsOf(iaString.text.characters, at: self.text.indexFromInt(atIndex)!)
         self.intensities.insertContentsOf(iaString.intensities, at: atIndex)
         self.baseAttributes.insertContentsOf(iaString.baseAttributes, at: atIndex)
         self.attachments.insertAttachments(iaString.attachments, ofLength: iaString.length, atIndex: atIndex)
@@ -264,14 +257,15 @@ extension IAString {
     }
     
     public func removeRange(range:Range<Int>){
-        self.text = self.text.stringByReplacingCharactersInRange(range.nsRange, withString: "")
+        do {try self.text.removeIntRange(range)} catch {fatalError("IAString.removeRange: indexing error")}
         self.intensities.removeRange(range)
         self.baseAttributes.removeRange(range)
         self.attachments.removeSubrange(range)
     }
     
     public func replaceRange(replacement:IAString, range:Range<Int>){
-        self.text = self.text.stringByReplacingCharactersInRange(range.nsRange, withString: replacement.text as String)
+        try! self.text.removeIntRange(range)
+        self.text.insertContentsOf(replacement.text.characters, at: self.text.indexFromInt(range.startIndex)!)
         self.intensities.replaceRange(range, with: replacement.intensities)
         self.baseAttributes.replaceRange(range, with: replacement.baseAttributes)
         self.attachments.replaceRange(replacement.attachments, ofLength: replacement.length, replacedRange: range)
@@ -281,9 +275,7 @@ extension IAString {
     
     //convenience editor
     public func insertAtPosition(text:String, position:Int, intensity:Int, attributes:IABaseAttributes){
-        let mutableString = self.text.mutableCopy() as! NSMutableString
-        mutableString.insertString(text, atIndex: position)
-        self.text = mutableString
+        self.text.insertContentsOf(text.characters, at: self.text.indexFromInt(position)!)
         let insertLength = (text as String).utf16.count
         self.intensities.insertContentsOf(Array<Int>(count: insertLength, repeatedValue: intensity), at: position)
         self.baseAttributes.insertContentsOf(Array<IABaseAttributes>(count: insertLength, repeatedValue: attributes), at: position)
@@ -291,9 +283,10 @@ extension IAString {
     }
     
     public func insertAttachmentAtPosition(attachment:IATextAttachment, position:Int, intensity:Int ,attributes:IABaseAttributes){
-        let mutableString = self.text.mutableCopy() as! NSMutableString
-        mutableString.insertString("\u{FFFC}", atIndex: position)
-        self.text = mutableString
+//        let mutableString = self.text.mutableCopy() as! NSMutableString
+//        mutableString.insertString("\u{FFFC}", atIndex: position)
+//        self.text = mutableString
+        self.text.insert(Character("\u{FFFC}"), atIndex: self.text.indexFromInt(position)!)
         self.intensities.insert(intensity, atIndex: position)
         self.baseAttributes.insert(attributes, atIndex: position)
         attachments.insertAttachment(attachment, atLoc: position)
@@ -302,69 +295,69 @@ extension IAString {
 }
 
 
-private typealias IALocAttachTupple = (loc:Int,attach:IATextAttachment)
+//private typealias IALocAttachTupple = (loc:Int,attach:IATextAttachment)
 
 //private func ==(lhs:IALocAttachTupple, rhs:IALocAttachTupple){
 //    return rhs.loc == lhs.loc &&
 //}
 
-private extension MutableCollectionType where Generator.Element == IALocAttachTupple {
-    
-    mutating func reindexLocRange(locRange:Range<Int>! = nil, reindexBy by:Int){
-        for i in self.startIndex..<self.endIndex {
-            if locRange == nil || (self[i].loc >= locRange.startIndex && self[i].loc < locRange.endIndex) {
-                self[i] = IALocAttachTupple(loc:self[i].loc + by,attach:self[i].attach)
-            }
-        }
-    }
-    
-    func subrangeWithLocsInRange(locRange:Range<Int>)->Array<IALocAttachTupple>{
-        var sub = Array<IALocAttachTupple>()
-        for item in self {
-            if item.loc >= locRange.startIndex && item.loc < locRange.endIndex {
-                sub.append(item)
-            }
-        }
-        return sub
-    }
-    
-    ///Returns a copy of the subrange with textAttachment locs adjusted to maintain relative position
-    func zeroIndexedSubrange(locRange:Range<Int>)->Array<IALocAttachTupple>{
-        var sub = self.subrangeWithLocsInRange(locRange)
-        sub.reindexLocRange(reindexBy: -locRange.startIndex)
-        return sub
-    }
-    
-    //Returns a copy of self with the locRange removed and loc indeces adjusted to reflect that
-    func rangeRemovedWithLocAdjustment(locRange:Range<Int>)->Array<IALocAttachTupple>{
-        var newSelf = self as! Array<IALocAttachTupple>
-        var shouldRepeat = false
-        repeat {
-            shouldRepeat = false
-            for i in newSelf.startIndex..<newSelf.endIndex{
-                if newSelf[i].loc >= locRange.startIndex && newSelf[i].loc < locRange.endIndex {
-                    newSelf.removeAtIndex(i)
-                    shouldRepeat = true
-                    break
-                }
-            }
-        } while shouldRepeat
-        if let lastLoc = newSelf.last?.loc {
-            newSelf.reindexLocRange(locRange.startIndex...lastLoc, reindexBy: -locRange.count)
-        }
-        return newSelf
-    }
-    
-    //need insert
-    func insertZeroedSubrange(subRange:Array<IALocAttachTupple>, atPosition:Int ,locLength:Int) {
-        
-    }
-    
-    
-    //need replace range
-    
-    
-}
+//private extension MutableCollectionType where Generator.Element == IALocAttachTupple {
+//    
+//    mutating func reindexLocRange(locRange:Range<Int>! = nil, reindexBy by:Int){
+//        for i in self.startIndex..<self.endIndex {
+//            if locRange == nil || (self[i].loc >= locRange.startIndex && self[i].loc < locRange.endIndex) {
+//                self[i] = IALocAttachTupple(loc:self[i].loc + by,attach:self[i].attach)
+//            }
+//        }
+//    }
+//    
+//    func subrangeWithLocsInRange(locRange:Range<Int>)->Array<IALocAttachTupple>{
+//        var sub = Array<IALocAttachTupple>()
+//        for item in self {
+//            if item.loc >= locRange.startIndex && item.loc < locRange.endIndex {
+//                sub.append(item)
+//            }
+//        }
+//        return sub
+//    }
+//    
+//    ///Returns a copy of the subrange with textAttachment locs adjusted to maintain relative position
+//    func zeroIndexedSubrange(locRange:Range<Int>)->Array<IALocAttachTupple>{
+//        var sub = self.subrangeWithLocsInRange(locRange)
+//        sub.reindexLocRange(reindexBy: -locRange.startIndex)
+//        return sub
+//    }
+//    
+//    //Returns a copy of self with the locRange removed and loc indeces adjusted to reflect that
+//    func rangeRemovedWithLocAdjustment(locRange:Range<Int>)->Array<IALocAttachTupple>{
+//        var newSelf = self as! Array<IALocAttachTupple>
+//        var shouldRepeat = false
+//        repeat {
+//            shouldRepeat = false
+//            for i in newSelf.startIndex..<newSelf.endIndex{
+//                if newSelf[i].loc >= locRange.startIndex && newSelf[i].loc < locRange.endIndex {
+//                    newSelf.removeAtIndex(i)
+//                    shouldRepeat = true
+//                    break
+//                }
+//            }
+//        } while shouldRepeat
+//        if let lastLoc = newSelf.last?.loc {
+//            newSelf.reindexLocRange(locRange.startIndex...lastLoc, reindexBy: -locRange.count)
+//        }
+//        return newSelf
+//    }
+//    
+//    //need insert
+//    func insertZeroedSubrange(subRange:Array<IALocAttachTupple>, atPosition:Int ,locLength:Int) {
+//        
+//    }
+//    
+//    
+//    //need replace range
+//    
+//    
+//}
 //
 //
 //private extension Array where Element:RVPProtocol {

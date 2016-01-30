@@ -11,15 +11,17 @@ import UIKit
 
 public class IAString {
     
-    var text:NSString
-    var intensities:[Int] = []
+    internal(set) var text:String {
+        didSet{self.length = self.text.utf16.count}
+    }
+    internal(set) var intensities:[Int] = []
     
-    var baseAttributes:CollapsingArray<IABaseAttributes>
+    internal(set) var baseAttributes:CollapsingArray<IABaseAttributes>
     
     
-    var links:[RangeValuePair<NSURL>] = []
+    internal(set) var links:[RangeValuePair<NSURL>] = []
 
-    var attachments: IAAttachmentArray = IAAttachmentArray()
+    internal(set) var attachments: IAAttachmentArray = IAAttachmentArray()
     public var attachmentCount:Int {
         return attachments.count
     }
@@ -31,7 +33,8 @@ public class IAString {
     
     var preferedSmoothing: NSStringEnumerationOptions = .ByComposedCharacterSequences
 
-    var length:Int {return text.length}
+    ///Based on UTF16 count of text. All other counts should stay in sync with this.
+    private(set) var length:Int
     
     //////////////////////////////////////
     
@@ -72,10 +75,11 @@ public class IAString {
     ///inverse of convertToJSONReadyDictWithData with the exception of attachment data: IATextAttachments are added at the proper indexes but left empty
     public init!(dict:[String:AnyObject]){
         guard let newText = dict[IAStringKeys.text] as? String, newIntensities = dict[IAStringKeys.intensities] as? [Int], rawBaseAtts = dict[IAStringKeys.baseAttributes] as? [[Int]] else {
-            print("IAIntermediate received incomplete data"); self.text = ""; self.baseAttributes = []; return nil
+            print("IAIntermediate received incomplete data"); self.text = ""; self.length = 0; self.baseAttributes = []; return nil
         }
         //string
         self.text = newText
+        self.length = self.text.utf16.count
         //array
         self.intensities = newIntensities
         
@@ -121,16 +125,18 @@ public class IAString {
     }
     
     ///This is intended for initialization of IAIntermediate within the module. It provides only minimal sanity checks.
-    private init!(text:NSString, intensities:[Int], attributes:IABaseAttributes){
+    private init!(text:String, intensities:[Int], attributes:IABaseAttributes){
         self.text = text
-        guard intensities.count == text.length else {baseAttributes = [];return nil}
+        self.length = self.text.utf16.count
+        guard intensities.count == self.length else {baseAttributes = [];return nil}
         self.intensities = intensities
-        self.baseAttributes = CollapsingArray.init(repeatedValue: attributes, count: text.length)
+        self.baseAttributes = CollapsingArray.init(repeatedValue: attributes, count: self.length)
     }
     
     ///Initializes an empty IAString with default options
     init(){
         self.text = ""
+        self.length = 0
         self.baseAttributes = CollapsingArray<IABaseAttributes>()
         self.renderScheme = IAKitOptions.singleton.defaultScheme
     }
@@ -145,7 +151,17 @@ public class IAString {
     func invalidateLinks(){
         self.links = []
     }
-    
+ 
+    init!(withText:String, intensities:[Int], baseAtts:CollapsingArray<IABaseAttributes>, attachments:IAAttachmentArray? = nil){
+        self.text = withText
+        self.length = withText.utf16.count
+        self.intensities = intensities
+        self.baseAttributes = baseAtts
+        if let attaches = attachments {
+            self.attachments = attaches
+        }
+        guard length == self.baseAttributes.count && length == self.intensities.count && self.attachments.lastLoc <= length else {return nil}
+    }
 }
 //
 //

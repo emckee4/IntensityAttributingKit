@@ -38,6 +38,34 @@ extension CGSize {
     }
 }
 
+
+extension String {
+    ///This takes a Range<Int> and returns a substring corresponding to this. If the start or end indeces bisect a grapheme cluster then the start or end will show as substitution characters. To check for this, use subStringFromRangeValidated instead.
+    func subStringFromRange(range:Range<Int>)->String{
+        let nsRange = NSRange(location: range.startIndex, length: range.endIndex - range.startIndex)
+        return (self as NSString).substringWithRange(nsRange)
+    }
+    ///This takes a Range<Int> and returns a substring corresponding to this. If the start or end indeces bisect a grapheme cluster then this may return nil.
+    func subStringFromRangeValidated(range:Range<Int>)->String?{
+        let nsRange = NSRange(location: range.startIndex, length: range.endIndex - range.startIndex)
+        let sub = (self as NSString).substringWithRange(nsRange)
+        if sub.unicodeScalars.first?.value == 0xfffd || sub.unicodeScalars.last?.value == 0xFFFD {return nil}
+        return sub
+    }
+    
+    ///Attempts to convert an Int valued index into a CharacterView Index
+    func indexFromInt(intIndex:Int)->String.Index?{
+        let utf16Start = self.utf16.startIndex.advancedBy(intIndex)
+        return String.Index.init(utf16Start, within: self)
+    }
+    
+    
+    mutating func removeIntRange(range:Range<Int>) throws{
+        guard let start = indexFromInt(range.startIndex), end = indexFromInt(range.endIndex) else {throw NSError(domain: "String.removeIntRange", code: -2, userInfo: [NSLocalizedDescriptionKey: "Bad indeces"])}
+        self.removeRange(Range<Index>(start:start,end:end))
+    }
+}
+
 //extension String {
 //    func rangeFromNSRange(nsRange : NSRange) -> Range<String.Index>? {
 //        let from16 = utf16.startIndex.advancedBy(nsRange.location, limit: utf16.endIndex)
