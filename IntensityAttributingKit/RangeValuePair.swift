@@ -18,7 +18,7 @@ struct RangeValuePair<Element:Equatable>: CustomStringConvertible, RVPProtocol {
     
     
     var description:String {
-        return "{(startIndex:\(self.startIndex), endIndex:\(self.endIndex)): value:\(self.value)}"
+        return "{\(self.startIndex)..<\(self.endIndex): value:\(self.value)}"
     }
     
     var nsRange:NSRange {

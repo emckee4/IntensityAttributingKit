@@ -3,8 +3,8 @@
 import UIKit
 
 
-@warn_unused_result public func bound<T : Comparable>(value: T, min minimum: T, max maximum: T) -> T{
-    return min(max(value, minimum),maximum)
+@warn_unused_result public func bound<T : Comparable>(value: T, lowerBound lower: T, upperBound upper: T) -> T{
+    return min(max(value, lower),upper)
 }
 
 
@@ -22,8 +22,8 @@ extension Range where Element:SignedIntegerType {
     }
 }
 
-public func binNumberForSteps(intensity:Int, steps:Int)->Int{
-    return bound((intensity * 10 / steps * 10), min: 0, max: steps - 1)
+func binNumberForSteps(intensity:Int, steps:Int)->Int{
+    return bound((steps * intensity) / 100, lowerBound: 0, upperBound: steps - 1)
 }
 
 

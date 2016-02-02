@@ -223,7 +223,7 @@ struct CollapsingArray<Element:Equatable>: ExclusiveRangeMappingProtocol, ArrayL
         let ca = CollapsingArray(array: Array(newElements), startingIndex: self.endIndex)
         let lastDi = self.data.count - 1
         data.appendContentsOf(ca.data)
-        if lastDi > 0 && self.data.count > 1{
+        if self.data.count > 1{
             condenseIndexWithFollowing(lastDi)
         }
     }
@@ -260,9 +260,36 @@ struct CollapsingArray<Element:Equatable>: ExclusiveRangeMappingProtocol, ArrayL
         }
     }
     
+    ///Returns a tupple representing the RangeValuePair at the data index. If the data index is out of bounds then this crashes.
     func rvp(dataIndex:Int)->(range:Range<Int>,value:Element){
         return (range:data[dataIndex].range, value:data[dataIndex].value)
     }
+    
+    func rvpsCoveringRange(range:Range<Int>)->[(range:Range<Int>,value:Element)]{
+        guard range.count != 0 else {return []}
+        var results:[(range:Range<Int>,value:Element)] = []
+        for rvp in self.data {
+            if range.contains(rvp.startIndex) || range.contains(rvp.endIndex - 1) || rvp.range.contains(range.startIndex) {
+                results.append((range:rvp.range,value:rvp.value))
+            }
+        }
+        return results  
+    }
+    
+//    func dataIndexRangeForIndexRange(range:Range<Int>,includePartials:Bool = true)->Range<Int>{
+//        var diStart:Int!
+//        var diEnd:Int!
+//        for (di,rvp) in self.data.enumerate(){
+//            if includePartials {
+//                if range.contains(rvp.startIndex) || range.contains(rvp.endIndex - 1) || rvp.range.contains(range.startIndex) {
+//                    
+//                }
+//            } else {
+//
+//            }
+//        }
+//        return 0..<1
+//    }
     
     ///Returns a copy of a slice with its indeces zeroed
     func subRange(subRange:Range<Int>)->CollapsingArray<Element>{

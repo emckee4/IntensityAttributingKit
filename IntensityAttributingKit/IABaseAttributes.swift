@@ -45,7 +45,16 @@ public struct IABaseAttributes:OptionSetTypeWithIntegerRawValue{
         get{return self.contains(.Strikethrough)}
         set{self.insert(.Strikethrough)}}
     
-    
+    subscript(attribute:IAAttributeName)->AnyObject!{
+        switch attribute {
+        case .Size: return self.size
+        case .Bold: return self.bold
+        case .Italic: return self.italic
+        case .Underline: return self.underline
+        case .Strikethrough: return self.strikethrough
+        default: return nil
+        }
+    }
 }
 
 
@@ -57,4 +66,21 @@ public protocol OptionSetTypeWithIntegerRawValue:OptionSetType, Hashable {
 }
 extension OptionSetTypeWithIntegerRawValue {
     public var hashValue:Int {return rawValue}
+}
+
+
+extension IABaseAttributes:CustomStringConvertible {
+    public var description:String {
+        return "<\(rawValue):\(self.size)\(self.bold ? ",b" : "")\(self.italic ? ",i" : "")\(self.underline ? ",u" : "")\(self.strikethrough ? ",s" : "")>"
+    }
+}
+
+
+enum IAAttributeName:String {
+    case Size = "Size",
+    Intensity = "Intensity",
+    Bold = "Bold",
+    Italic = "Italic",
+    Underline = "Underline",
+    Strikethrough = "Strikethrough"
 }

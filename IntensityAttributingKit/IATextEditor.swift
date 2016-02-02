@@ -5,40 +5,45 @@
 //  Created by Evan Mckee on 11/30/15.
 //  Copyright © 2015 McKeeMaKer. All rights reserved.
 //
-
+/*
 import UIKit
 
 
 
 public class IATextEditor: IATextView, IAAccessoryDelegate {
     
-    var currentAttributes:IntensityAttributes! {
-        didSet{if let schemeName = currentAttributes?.currentScheme where IntensityTransformers(rawValue: schemeName) != nil {
-            iaAccessory.setTransformKeyForScheme(withName: schemeName)
-            }
-            defaultIntensity = currentAttributes.intensity
-        }
-    }
+//    var currentAttributes:IntensityAttributes! {
+//        didSet{if let schemeName = currentAttributes?.currentScheme where IntensityTransformers(rawValue: schemeName) != nil {
+//            iaAccessory.setTransformKeyForScheme(withName: schemeName)
+//            }
+//            defaultIntensity = currentAttributes.intensity
+//        }
+//    }
+//    
+//    override var currentTransformer:IntensityTransformers! {
+//        get {
+//            guard let schemeName = currentAttributes?.currentScheme else {return nil}
+//            return IntensityTransformers(rawValue: schemeName)
+//        }
+//        set {
+//            currentAttributes?.currentScheme = newValue.rawValue
+//        }
+//    }
+//    
+//    var defaultIntensity:Float {
+//        get {return iaAccessory.intensityAdjuster.defaultIntensity }
+//        set {
+//            if !iaAccessory.intensityAdjuster.defaultLocked {
+//                iaAccessory.intensityAdjuster.defaultIntensity = newValue
+//            }
+//        }
+//    }
     
-    override var currentTransformer:IntensityTransformers! {
-        get {
-            guard let schemeName = currentAttributes?.currentScheme else {return nil}
-            return IntensityTransformers(rawValue: schemeName)
-        }
-        set {
-            currentAttributes?.currentScheme = newValue.rawValue
-        }
-    }
+    var currentAttributes:IABaseAttributes = IABaseAttributes() //should load default base attributes
     
-    var defaultIntensity:Float {
-        get {return iaAccessory.intensityAdjuster.defaultIntensity }
-        set {
-            if !iaAccessory.intensityAdjuster.defaultLocked {
-                iaAccessory.intensityAdjuster.defaultIntensity = newValue
-            }
-        }
-    }
+    var currentTransformer:IntensityTransformers = IntensityTransformers.WeightScheme //should load default transformer
     
+    var defaultIntensity:Int = 40//should load default intensity
     
     //Mark:- Input view controllers (keyboard and accessory)
     
@@ -141,7 +146,7 @@ public class IATextEditor: IATextView, IAAccessoryDelegate {
         self.textContainerInset = UIEdgeInsetsMake(7.0, 2.0, 7.0, 2.0)
         self.currentAttributes = IntensityAttributes(intensity: defaultIntensity, size: IAKitOptions.singleton.defaultTextSize)
         currentTransformer = IAKitOptions.singleton.defaultScheme
-        typingAttributes = currentTransformer.transformer.typingAttributesForScheme(currentAttributes)
+        typingAttributes = currentTransformer.transformer
         self.allowsEditingTextAttributes = true
     }
     
@@ -349,3 +354,4 @@ public class IATextEditor: IATextView, IAAccessoryDelegate {
     }
 
 }
+*/

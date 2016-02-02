@@ -133,6 +133,7 @@ extension IAString {
     
     ///Should more clearly define options (maybe with a struct of keys). Need to add option for rendering size and style of thumbnails for attachments.
     public func convertToNSAttributedString(withOptions options:[String:AnyObject]? = nil)->NSAttributedString{
+        guard self.length > 0 else {return NSAttributedString()}
         let attString = NSMutableAttributedString(string: self.text as String)
         for linkRVP in links {
             attString.addAttribute(NSLinkAttributeName, value: linkRVP.value, range: linkRVP.nsRange)
@@ -172,6 +173,7 @@ extension IAString {
     }
     
     private func applyAttributes(attString:NSMutableAttributedString, transformer:IntensityTransforming.Type,smoothedBinned:CollapsingArray<Int>){
+        //guard let self.length > 0 else {return} //This is left to the public function calling it to check
         let textLength = attString.length
         var currentIndex = 0
         var binDi = 0
@@ -182,7 +184,7 @@ extension IAString {
             let nsAttributes = transformer.nsAttributesForBinsAndBaseAttributes(bin: currentBin.value, baseAttributes: currentAtts.value)
             let binEnd = currentBin.range.endIndex
             let attsEnd = currentAtts.range.endIndex
-            var endIndex:Int!
+            var endIndex:Int = 0
             if binEnd < attsEnd {
                 endIndex = binEnd
                 currentBin = smoothedBinned.rvp(++binDi)
@@ -190,7 +192,7 @@ extension IAString {
                 endIndex = attsEnd
                 currentAtts =  baseAttributes.rvp(++attsDi)
             } else {
-                endIndex == attsEnd
+                endIndex = attsEnd
                 if endIndex < textLength {
                     currentBin = smoothedBinned.rvp(++binDi)
                     currentAtts =  baseAttributes.rvp(++attsDi)
@@ -202,97 +204,6 @@ extension IAString {
     }
 }
 
-
-///Extension providing subrange from range
-extension IAString {
-    
-
-    
-    
-    
-    ///This provides a new IAString comprised of copies of the contents in the given range. This inherits its parent's options. It will reindex its attributes and it will discard links.
-    public func iaSubstringFromRange(range:Range<Int>)->IAString {
-        let substring = self.text.subStringFromRange(range)
-        let intensities = Array(self.intensities[range])
-        let baseAttsSub = self.baseAttributes.subRange(range)
-        //links are ignored
-        let attachSubs = self.attachments.reindexedSubrange(range)
-        let newIA = IAString(withText: substring, intensities: intensities,baseAtts: baseAttsSub, attachments: attachSubs)
-
-        newIA.renderScheme = self.renderScheme
-        newIA.renderOptions = self.renderOptions
-        newIA.preferedSmoothing = self.preferedSmoothing
-        return newIA
-    }
-    
-    
-
-    
-    ///Append a 0 based IAString
-    public func appendIAString(iaString:IAString){
-        let appendingFromIndex = self.length
-        //let startingLength = self.text.length
-        let appendLength = iaString.length
-        self.text = self.text.stringByAppendingString(iaString.text as String)
-        self.baseAttributes.appendContentsOf(iaString.baseAttributes) //should automatically rebase
-        self.intensities.appendContentsOf(iaString.intensities)
-        //adding links and attachments requires rebasing those arrays manually
-        //self.links.appendWithReindexing(iaString.links, reindexBy: startingLength)
-        self.attachments.replaceRange(iaString.attachments, ofLength: appendLength, replacedRange: appendingFromIndex..<appendingFromIndex)
-        
-    }
-    
-    
-    public func insertIAString(iaString:IAString, atIndex:Int){
-//        let mutableString = self.text.mutableCopy() as! NSMutableString
-//        mutableString.insertString(iaString.text as String, atIndex: atIndex)
-//        self.text = mutableString
-//        let utf16Index = self.text.utf16.startIndex.advancedBy(atIndex)
-//        let stringIndex = String.Index
-        text.insertContentsOf(iaString.text.characters, at: self.text.indexFromInt(atIndex)!)
-        self.intensities.insertContentsOf(iaString.intensities, at: atIndex)
-        self.baseAttributes.insertContentsOf(iaString.baseAttributes, at: atIndex)
-        self.attachments.insertAttachments(iaString.attachments, ofLength: iaString.length, atIndex: atIndex)
-        
-    }
-    
-    public func removeRange(range:Range<Int>){
-        do {try self.text.removeIntRange(range)} catch {fatalError("IAString.removeRange: indexing error")}
-        self.intensities.removeRange(range)
-        self.baseAttributes.removeRange(range)
-        self.attachments.removeSubrange(range)
-    }
-    
-    public func replaceRange(replacement:IAString, range:Range<Int>){
-        try! self.text.removeIntRange(range)
-        self.text.insertContentsOf(replacement.text.characters, at: self.text.indexFromInt(range.startIndex)!)
-        self.intensities.replaceRange(range, with: replacement.intensities)
-        self.baseAttributes.replaceRange(range, with: replacement.baseAttributes)
-        self.attachments.replaceRange(replacement.attachments, ofLength: replacement.length, replacedRange: range)
-        
-    }
-    
-    
-    //convenience editor
-    public func insertAtPosition(text:String, position:Int, intensity:Int, attributes:IABaseAttributes){
-        self.text.insertContentsOf(text.characters, at: self.text.indexFromInt(position)!)
-        let insertLength = (text as String).utf16.count
-        self.intensities.insertContentsOf(Array<Int>(count: insertLength, repeatedValue: intensity), at: position)
-        self.baseAttributes.insertContentsOf(Array<IABaseAttributes>(count: insertLength, repeatedValue: attributes), at: position)
-        self.attachments.insertAttachment(nil, atLoc: position)
-    }
-    
-    public func insertAttachmentAtPosition(attachment:IATextAttachment, position:Int, intensity:Int ,attributes:IABaseAttributes){
-//        let mutableString = self.text.mutableCopy() as! NSMutableString
-//        mutableString.insertString("\u{FFFC}", atIndex: position)
-//        self.text = mutableString
-        self.text.insert(Character("\u{FFFC}"), atIndex: self.text.indexFromInt(position)!)
-        self.intensities.insert(intensity, atIndex: position)
-        self.baseAttributes.insert(attributes, atIndex: position)
-        attachments.insertAttachment(attachment, atLoc: position)
-    }
-    
-}
 
 
 //private typealias IALocAttachTupple = (loc:Int,attach:IATextAttachment)

@@ -133,6 +133,13 @@ public class IAString {
         self.baseAttributes = CollapsingArray.init(repeatedValue: attributes, count: self.length)
     }
     
+    init(text:String, intensity:Int, attributes:IABaseAttributes){
+        self.text = text
+        self.length = self.text.utf16.count
+        self.intensities = Array<Int>(count:self.length,repeatedValue:intensity)
+        self.baseAttributes = CollapsingArray.init(repeatedValue: attributes, count: self.length)
+    }
+    
     ///Initializes an empty IAString with default options
     init(){
         self.text = ""
@@ -144,8 +151,17 @@ public class IAString {
     
     func scanLinks(){
         invalidateLinks()
-        fatalError("need to implement scan for links")
-        
+        let detector = try! NSDataDetector(types: 8191)
+        detector.enumerateMatchesInString(self.text, options: .WithTransparentBounds, range: NSRange(location: 0, length: self.length)) { (result, flags, stop) -> Void in
+            if let result = result {
+                print("result: \(result.resultType)")
+                if let url = result.URL {
+                    print("url result: \(result.URL!)")
+                    self.links.append(RangeValuePair(value: url, range: result.range))
+                    //TODO: might want to check if there's already a url in any of the given range.
+                }
+            }
+        }
     }
     
     func invalidateLinks(){
@@ -215,4 +231,59 @@ public class IAString {
 //    return vwr
 //}
 
+/*
+//    let types:NSTextCheckingType = [
+//        .Orthography,   //1
+//        .Spelling,      //2
+//        .Grammar,       //4
+//        .Date,          //8
+//        .Address,       //16
+//        .Link,          //32
+//        .Quote,         //64
+//        .Dash,          //128
+//        .Replacement,   //256
+//        .Correction,    //512
+//        .RegularExpression, //1024
+//        .PhoneNumber,       //2048
+//        .TransitInformation //4096
+//    ]  // sum = 8191
+    let detector = try! NSDataDetector(types: 8191)
+    
+    func checkText(){
+        let modified = NSMutableAttributedString(attributedString: self.attributedText)
+        var changes = false
+        detector.enumerateMatchesInString(self.text, options: .WithTransparentBounds, range: NSRange(location: 0, length: (self.text as NSString).length)) { (result, flags, stop) -> Void in
+            if let result = result {
+                changes = true
+                print("result: \(result.resultType)")
+                if result.URL != nil {
+                    print("url result: \(result.URL!)")
+                    
+                    modified.addAttribute(NSLinkAttributeName, value: result.URL!, range: result.range)
+                }
+            } else {
+                print("Nil result")
+            }
+        }
+        
+        if changes {
+            self.attributedText = modified
+        }
+    }
 
+    let detector = try! NSDataDetector(types: 8191)
+    detector.enumerateMatchesInString(self.text, options: .WithTransparentBounds, range: NSRange(location: 0, length: (self.text as NSString).length)) { (result, flags, stop) -> Void in
+        if let result = result {
+            changes = true
+            print("result: \(result.resultType)")
+            if result.URL != nil {
+                print("url result: \(result.URL!)")
+                
+                modified.addAttribute(NSLinkAttributeName, value: result.URL!, range: result.range)
+            }
+        } else {
+            print("Nil result")
+        }
+    }
+
+*/

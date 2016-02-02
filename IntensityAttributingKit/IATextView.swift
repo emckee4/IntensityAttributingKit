@@ -14,7 +14,12 @@ public class IATextView: UITextView, UITextViewDelegate {
 
     public var thumbSizesForAttachments: ThumbSize = .Medium
     
-    private(set) public var iaString:IAIntermediate?
+    private var _renderOptions:[String:AnyObject]?
+    private var _iaString:IAString?
+    public var iaString:IAString? {
+        set{_iaString = newValue; self.attributedText = _iaString!.convertToNSAttributedString(withOptions:_renderOptions)}
+        get{return _iaString}
+    }
     
     //MARK:-inits and setup
     
@@ -39,8 +44,9 @@ public class IATextView: UITextView, UITextViewDelegate {
     
     
     ///Prefered method for setting stored IAText for display. By default this assumes text has been prerendered and only needs bounds set on its images. If needsRendering is set as true then this will render according to whatever its included schemeName is.
-    public func setIAString(iaString:IAIntermediate, overrideRenderOptions renderOptions:[String:AnyObject]? = nil){
-        self.iaString = iaString
+    public func setIAString(iaString:IAString, overrideRenderOptions renderOptions:[String:AnyObject]? = nil){
+        self._iaString = iaString
+        self._renderOptions = renderOptions
         self.attributedText = iaString.convertToNSAttributedString(withOptions: renderOptions)
     }
     

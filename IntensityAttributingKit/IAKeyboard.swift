@@ -11,8 +11,9 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
     
     
     ///Intensity of last keypress. IATextView will retrieve this value and set it to nil after the textDocumentProxy informs it of text insertion by the keyboard
-    var intensity:Float!
+    //var intensity:Float!
     
+    weak var delegate:IAKeyboardDelegate!
     
     var currentKeyset = AvailableIAKeysets.BasicEnglish {
         didSet{currentKeyPageNumber = 0}
@@ -361,7 +362,8 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
     //MARK:- Key actions
     
     func backspaceKeyPressed(){
-        textDocumentProxy.deleteBackward()
+        //textDocumentProxy.deleteBackward()
+        self.delegate?.iaKeyboardDeleteBackwards?()
     }
     ///cycles the pages of the current keyset
     func swapKeyset(){
@@ -372,12 +374,14 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
     ///All control elements adopting the KeyControl protocol deliver their user interaction events through this function
     func pressureKeyPressed(sender: PressureControl, actionName: String, actionType: PressureKeyActionType, intensity: Float) {
         if actionType == .CharInsert {
-            self.intensity = intensity
+            //self.intensity = intensity
             if shiftKey.selected {
                 shiftKey.deselect(overrideSelectedLock: false)
-                self.textDocumentProxy.insertText(actionName.uppercaseString)
+                //self.textDocumentProxy.insertText(actionName.uppercaseString)
+                self.delegate?.iaKeyboard?(insertTextAtCursor: actionName, intensity: Int(intensity * 100.0))
             } else {
-                self.textDocumentProxy.insertText(actionName)
+                //self.textDocumentProxy.insertText(actionName)
+                self.delegate?.iaKeyboard?(insertTextAtCursor: actionName, intensity: Int(intensity * 100.0))
             }
         } else if actionType == .TriggerFunction {
             //handle function calling...
@@ -393,5 +397,13 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
 
 
 
+@objc protocol IAKeyboardDelegate {
+    optional func iaKeyboard(insertTextAtCursor text:String, intensity:Int)
+    optional func iaKeyboardDeleteBackwards()
+    
+    ///This should be further implemented to allow autocapitalization, periods, etc
+    optional func iaKeyboardContextAroundCursor()
+    
+}
 
 
