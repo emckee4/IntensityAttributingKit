@@ -39,8 +39,8 @@ public class IAString {
     //////////////////////////////////////
     
     
-    ///converts the IAIntermediate to a tupple containing a JSON ready dictionary and an array of NSData for the text attachments in sequential order. We use the locations of the attachSizeVWRanges as the locations for our attachments when reconstructing
-    public func convertToJSONReadyDictWithData()->([String:AnyObject],[Int:NSData]){
+    ///Converts the iaString to a dictionary which is ready for direct coversion to JSON except for containing an iaTextAttachments key which needs to be stripped out and handled separately when uploading.
+    public func convertToAlmostJSONReadyDict()->[String:AnyObject]{
         var dict:[String:AnyObject] = [:]
         dict[IAStringKeys.text] = self.text
         dict[IAStringKeys.intensities] = self.intensities
@@ -52,27 +52,30 @@ public class IAString {
         dict[IAStringKeys.renderScheme] = renderScheme?.rawValue ?? IAKitOptions.singleton.defaultScheme.rawValue
         dict[IAStringKeys.preferedSmoothing] = self.preferedSmoothing.rawValue
         dict[IAStringKeys.options] = self.renderOptions
+    
+    
         
         //TODO: Choosing of source of data/ conversion should occur in IATextAttachment
-        var dataDict:[Int:NSData] = [:]
+        var attachDict:[Int:IATextAttachment] = [:]
         for (loc,attach) in self.attachments {
-            //let nsTA = attachVWR.value as! IATextAttachment
-            if let data = attach.contents {
-                dataDict[loc] = data
-            } else if let wrapper = attach.fileWrapper where wrapper.regularFileContents != nil {
-                dataDict[loc] = wrapper.regularFileContents!
-            } else if let image = attach.image {
-                dataDict[loc] = UIImageJPEGRepresentation(image, 0.8)!
-            } else {
-                print("error converting text attachment to NSData. Appending empty placeholder instead")
-                dataDict[loc] = NSData()
-            }
+//            //let nsTA = attachVWR.value as! IATextAttachment
+//            if let data = attach.contents {
+//                dataDict[loc] = data
+//            } else if let wrapper = attach.fileWrapper where wrapper.regularFileContents != nil {
+//                dataDict[loc] = wrapper.regularFileContents!
+//            } else if let image = attach.image {
+//                dataDict[loc] = UIImageJPEGRepresentation(image, 0.8)!
+//            } else {
+//                print("error converting text attachment to NSData. Appending empty placeholder instead")
+//                dataDict[loc] = NSData()
+//            }
+            attachDict[loc] = attach
         }
-        
-        return (dict, dataDict)
+        dict[IAStringKeys.iaTextAttachments] = attachDict
+        return dict
     }
     
-    ///inverse of convertToJSONReadyDictWithData with the exception of attachment data: IATextAttachments are added at the proper indexes but left empty
+    ///This functions as an inverse of convertToAlmostJSONReadyDict but it can accept attachments in IAStringKeys.attachments format (for which it will insert placeholders) or in .iaTextAttachments format.
     public init!(dict:[String:AnyObject]){
         guard let newText = dict[IAStringKeys.text] as? String, newIntensities = dict[IAStringKeys.intensities] as? [Int], rawBaseAtts = dict[IAStringKeys.baseAttributes] as? [[Int]] else {
             print("IAIntermediate received incomplete data"); self.text = ""; self.length = 0; self.baseAttributes = []; return nil
@@ -104,6 +107,10 @@ public class IAString {
                 if let loc = rawAttachItems[0] as? Int, attach = rawAttachItems[1] as? IATextAttachment {
                     self.attachments[loc] = attach
                 }
+            }
+        } else if let iaAttachments = dict[IAStringKeys.iaTextAttachments] as? [Int:AnyObject] {
+            for (key, attach) in iaAttachments.sort({$0.0 < $1.0}) {
+                self.attachments[key] = (attach as? IATextAttachment) ?? IATextAttachment()
             }
         }
         

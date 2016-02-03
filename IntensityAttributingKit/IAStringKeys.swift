@@ -18,4 +18,7 @@ public struct IAStringKeys {
     public static let renderScheme = "renderScheme"
     public static let preferedSmoothing = "preferedSmoothing"
     public static let options = "options"
+    
+    ///Used for transfering iaTextAttachments within the app. The data objects contained within this key shouldnt be transfered externally
+    public static let iaTextAttachments = "iaTextAttachments"
 }

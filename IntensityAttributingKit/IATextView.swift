@@ -65,17 +65,28 @@ public class IATextView: UITextView, UITextViewDelegate {
     //MARK:- Copy
     
     override public func copy(sender: AnyObject?){
-        super.copy()
         let pb = UIPasteboard.generalPasteboard()
-        let copiedText = attributedText.attributedSubstringFromRange(selectedRange)
-        let archive = NSKeyedArchiver.archivedDataWithRootObject(copiedText)
-        let pbDict = pb.items.first as? NSMutableDictionary ?? NSMutableDictionary()
-        pbDict.setValue(archive, forKey: UTITypes.IntensityArchive)
-        if pb.items.count > 0 {
-            pb.items[0] = pbDict
-        } else {
-            pb.items.append(pbDict)
-        }
+//        let copiedText = attributedText.attributedSubstringFromRange(selectedRange)
+//        let archive = NSKeyedArchiver.archivedDataWithRootObject(copiedText)
+//        let pbDict = pb.items.first as? NSMutableDictionary ?? NSMutableDictionary()
+//        pbDict.setValue(archive, forKey: UTITypes.IntensityArchive)
+//        if pb.items.count > 0 {
+//            pb.items[0] = pbDict
+//        } else {
+//            pb.items.append(pbDict)
+//        }
+
+
+        
+        let range = self.selectedRange.toRange()!
+        let copiedIA = self.iaString!.iaSubstringFromRange(range)
+        let copiedText = copiedIA.text
+        let iaArchive = IAStringArchive.archive(copiedIA)
+        
+        var pbItem:[String:AnyObject] = [:]
+        pbItem[UTITypes.PlainText] = copiedText
+        pbItem[UTITypes.IAStringArchive] = iaArchive
+        pb.addItems([pbItem])
     }
 
      
@@ -83,7 +94,7 @@ public class IATextView: UITextView, UITextViewDelegate {
     struct UTITypes {
         static let PlainText = "public.utf8-plain-text"
         static let RTFD = "com.apple.flat-rtfd"
-        static let IntensityArchive = "com.mckeemaker.IntensityAttributedTextArchive"
+        static let IAStringArchive = "com.mckeemaker.IAStringArchive"
     }
     
 }

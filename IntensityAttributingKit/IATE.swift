@@ -383,7 +383,17 @@ extension IATE {
     
     
     public override func paste(sender: AnyObject?) {
-        print("attempted paste")
+        /*
+        let range = self.selectedRange.toRange()!
+        let copiedIA = self.iaString!.iaSubstringFromRange(range)
+        let copiedText = copiedIA.text
+        let iaArchive = IAStringArchive.archive(copiedIA)
+        
+        var pbItem:[String:AnyObject] = [:]
+        pbItem[UTITypes.PlainText] = copiedText
+        pbItem[UTITypes.IAStringArchive] = iaArchive
+        pb.addItems([pbItem])
+        */
     }
     
     
