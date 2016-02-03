@@ -1,5 +1,5 @@
 //
-//  IATEPhotoPicking.swift
+//  IATextEditorPhotoPicking.swift
 //  IntensityAttributingKit
 //
 //  Created by Evan Mckee on 2/1/16.
@@ -10,7 +10,7 @@ import UIKit
 
 
 ///Image picker extension
-extension IATE:UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+extension IATextEditor:UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     public func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         picker.dismissViewControllerAnimated(true, completion: nil)
@@ -28,11 +28,10 @@ extension IATE:UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     }
     
     func launchPicker(){
-
         if UIImagePickerController.isCameraDeviceAvailable(.Rear) {
             let alert = UIAlertController(title: "Insert Photo", message: "Choose source", preferredStyle: .ActionSheet)
             alert.addAction(UIAlertAction(title: "Photo Library", style: .Default, handler: { (action) -> Void in
-                let threadisMain = NSThread.isMainThread()
+                guard  NSThread.isMainThread() else {fatalError()}
                 let imagePicker = UIImagePickerController()
                 imagePicker.allowsEditing = true
                 imagePicker.delegate = self
@@ -40,7 +39,7 @@ extension IATE:UIImagePickerControllerDelegate, UINavigationControllerDelegate {
                 self.editorDelegate?.iaTextEditorRequestsPresentation(self, shouldPresentVC: imagePicker)
             }))
             alert.addAction(UIAlertAction(title: "Camera", style: .Default, handler: { (action) -> Void in
-                let threadisMain = NSThread.isMainThread()
+                guard  NSThread.isMainThread() else {fatalError()}
                 let imagePicker = UIImagePickerController()
                 imagePicker.allowsEditing = true
                 imagePicker.delegate = self
@@ -51,7 +50,7 @@ extension IATE:UIImagePickerControllerDelegate, UINavigationControllerDelegate {
             //self.delegate?.presentingVC?.presentViewController(alert, animated: true, completion: nil)
             self.editorDelegate?.iaTextEditorRequestsPresentation(self, shouldPresentVC: alert)
         } else {
-            let threadisMain = NSThread.isMainThread()
+            guard  NSThread.isMainThread() else {fatalError()}
             let imagePicker = UIImagePickerController()
             imagePicker.allowsEditing = true
             imagePicker.delegate = self

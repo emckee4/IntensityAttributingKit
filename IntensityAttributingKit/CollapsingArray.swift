@@ -305,7 +305,7 @@ struct CollapsingArray<Element:Equatable>: ExclusiveRangeMappingProtocol, ArrayL
         //clean up the ends which may go out of the subrange
         newSub.splitRangeAtIndex(subRange.startIndex)
         newSub.splitRangeAtIndex(subRange.endIndex)
-        if newSub.data.last!.startIndex == subRange.endIndex {newSub.data.removeAtIndex(newSub.count - 1)}
+        if newSub.data.last!.startIndex == subRange.endIndex {newSub.data.removeLast()}
         if newSub.data.first!.endIndex == subRange.startIndex {newSub.data.removeFirst()}
         
         //reindex

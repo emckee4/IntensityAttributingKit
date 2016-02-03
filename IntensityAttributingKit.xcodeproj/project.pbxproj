@@ -26,10 +26,12 @@
 		C031CC001BDD902000521393 /* IATextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBFF1BDD902000521393 /* IATextView.swift */; };
 		C031CC041BDD921100521393 /* PressureButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CC031BDD921100521393 /* PressureButton.swift */; };
 		C031CC061BDD948700521393 /* IAKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CC051BDD948700521393 /* IAKeyboard.swift */; };
-		C040C5041C0CE857007C1685 /* IATextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C040C5031C0CE857007C1685 /* IATextEditor.swift */; };
+		C040C5041C0CE857007C1685 /* IATextEditOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = C040C5031C0CE857007C1685 /* IATextEditOld.swift */; };
 		C040C5081C0E4283007C1685 /* IAKitOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C040C5071C0E4283007C1685 /* IAKitOptions.swift */; };
 		C054D99E1C3DAB9100D852DE /* IATextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */; };
 		C069B2BA1C627DB1008834D3 /* IAStringArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = C069B2B91C627DB1008834D3 /* IAStringArchive.swift */; };
+		C069B2BC1C628D87008834D3 /* IATEDelegateConformance.swift in Sources */ = {isa = PBXBuildFile; fileRef = C069B2BB1C628D87008834D3 /* IATEDelegateConformance.swift */; };
+		C069B2BE1C628DE9008834D3 /* IATextEditorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C069B2BD1C628DE9008834D3 /* IATextEditorDelegate.swift */; };
 		C06B1D271BEC5FCC009F427A /* KeysetComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D261BEC5FCC009F427A /* KeysetComponents.swift */; };
 		C06B1D4E1BED2DCC009F427A /* PressureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D4D1BED2DCC009F427A /* PressureView.swift */; };
 		C06B1D501BEE8B61009F427A /* Keysets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D4F1BEE8B61009F427A /* Keysets.swift */; };
@@ -45,10 +47,9 @@
 		C09574801C58259C00724F02 /* IAStringKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C095747F1C58259C00724F02 /* IAStringKeys.swift */; };
 		C09574821C59442300724F02 /* IAStringConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09574811C59442300724F02 /* IAStringConversion.swift */; };
 		C0BCB6C41BFA60BE00654E0A /* ValueWithRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BCB6C31BFA60BE00654E0A /* ValueWithRange.swift */; };
-		C0CDB1291C5D6C3F00F6D548 /* IAStringViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CDB1281C5D6C3F00F6D548 /* IAStringViewer.swift */; };
 		C0CDB12E1C5D7AC300F6D548 /* TVInputTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CDB12D1C5D7AC300F6D548 /* TVInputTest.swift */; };
 		C0CDB1371C5EBEA300F6D548 /* IATextStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CDB1361C5EBEA300F6D548 /* IATextStorage.swift */; };
-		C0CDB1391C5EC30500F6D548 /* IATE.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CDB1381C5EC30500F6D548 /* IATE.swift */; };
+		C0CDB1391C5EC30500F6D548 /* IATextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CDB1381C5EC30500F6D548 /* IATextEditor.swift */; };
 		C0D4474A1BE6BC16003204E7 /* RawIntensity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D447491BE6BC16003204E7 /* RawIntensity.swift */; };
 		C0D4474C1BE82381003204E7 /* ImageAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0D4474B1BE82381003204E7 /* ImageAssets.xcassets */; };
 		C0D4474E1BE97578003204E7 /* IntensityAdjuster.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D4474D1BE97578003204E7 /* IntensityAdjuster.swift */; };
@@ -93,10 +94,12 @@
 		C031CBFF1BDD902000521393 /* IATextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextView.swift; sourceTree = "<group>"; };
 		C031CC031BDD921100521393 /* PressureButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PressureButton.swift; sourceTree = "<group>"; };
 		C031CC051BDD948700521393 /* IAKeyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAKeyboard.swift; sourceTree = "<group>"; };
-		C040C5031C0CE857007C1685 /* IATextEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextEditor.swift; sourceTree = "<group>"; };
+		C040C5031C0CE857007C1685 /* IATextEditOld.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextEditOld.swift; sourceTree = "<group>"; };
 		C040C5071C0E4283007C1685 /* IAKitOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAKitOptions.swift; sourceTree = "<group>"; };
 		C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextAttachment.swift; sourceTree = "<group>"; };
 		C069B2B91C627DB1008834D3 /* IAStringArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringArchive.swift; sourceTree = "<group>"; };
+		C069B2BB1C628D87008834D3 /* IATEDelegateConformance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATEDelegateConformance.swift; sourceTree = "<group>"; };
+		C069B2BD1C628DE9008834D3 /* IATextEditorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextEditorDelegate.swift; sourceTree = "<group>"; };
 		C06B1D261BEC5FCC009F427A /* KeysetComponents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeysetComponents.swift; sourceTree = "<group>"; };
 		C06B1D4D1BED2DCC009F427A /* PressureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PressureView.swift; sourceTree = "<group>"; };
 		C06B1D4F1BEE8B61009F427A /* Keysets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keysets.swift; sourceTree = "<group>"; };
@@ -112,10 +115,9 @@
 		C095747F1C58259C00724F02 /* IAStringKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringKeys.swift; sourceTree = "<group>"; };
 		C09574811C59442300724F02 /* IAStringConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringConversion.swift; sourceTree = "<group>"; };
 		C0BCB6C31BFA60BE00654E0A /* ValueWithRange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueWithRange.swift; sourceTree = "<group>"; };
-		C0CDB1281C5D6C3F00F6D548 /* IAStringViewer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringViewer.swift; sourceTree = "<group>"; };
 		C0CDB12D1C5D7AC300F6D548 /* TVInputTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TVInputTest.swift; sourceTree = "<group>"; };
 		C0CDB1361C5EBEA300F6D548 /* IATextStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextStorage.swift; sourceTree = "<group>"; };
-		C0CDB1381C5EC30500F6D548 /* IATE.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATE.swift; sourceTree = "<group>"; };
+		C0CDB1381C5EC30500F6D548 /* IATextEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextEditor.swift; sourceTree = "<group>"; };
 		C0D447491BE6BC16003204E7 /* RawIntensity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawIntensity.swift; sourceTree = "<group>"; };
 		C0D4474B1BE82381003204E7 /* ImageAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ImageAssets.xcassets; sourceTree = "<group>"; };
 		C0D4474D1BE97578003204E7 /* IntensityAdjuster.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntensityAdjuster.swift; sourceTree = "<group>"; };
@@ -205,9 +207,9 @@
 			children = (
 				C031CBFF1BDD902000521393 /* IATextView.swift */,
 				C040C5071C0E4283007C1685 /* IAKitOptions.swift */,
-				C040C5031C0CE857007C1685 /* IATextEditor.swift */,
-				C0CDB12C1C5D7AA700F6D548 /* Experimental Views */,
 				C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */,
+				C0F42CF91C5FE10F00FA7BB0 /* IATextEditor */,
+				C0CDB12C1C5D7AA700F6D548 /* Experimental Views */,
 				C06B1D541BEE9BDA009F427A /* ForceIntensityMapping */,
 				C08253B21BE571C70017AC14 /* CustomControls */,
 				C08253B31BE571E00017AC14 /* KB+Accessory */,
@@ -306,8 +308,6 @@
 			isa = PBXGroup;
 			children = (
 				C0CDB1361C5EBEA300F6D548 /* IATextStorage.swift */,
-				C0CDB1281C5D6C3F00F6D548 /* IAStringViewer.swift */,
-				C0F42CF91C5FE10F00FA7BB0 /* IATextEditor */,
 				C0CDB12D1C5D7AC300F6D548 /* TVInputTest.swift */,
 			);
 			name = "Experimental Views";
@@ -336,7 +336,10 @@
 		C0F42CF91C5FE10F00FA7BB0 /* IATextEditor */ = {
 			isa = PBXGroup;
 			children = (
-				C0CDB1381C5EC30500F6D548 /* IATE.swift */,
+				C040C5031C0CE857007C1685 /* IATextEditOld.swift */,
+				C0CDB1381C5EC30500F6D548 /* IATextEditor.swift */,
+				C069B2BB1C628D87008834D3 /* IATEDelegateConformance.swift */,
+				C069B2BD1C628DE9008834D3 /* IATextEditorDelegate.swift */,
 				C0F42CFA1C5FE13700FA7BB0 /* IATEPhotoPicking.swift */,
 			);
 			name = IATextEditor;
@@ -467,7 +470,7 @@
 				C0E5D7C51BDEA4E400A0A814 /* UIImage+Extension.swift in Sources */,
 				C01BDAA21C57F170004CF045 /* IABaseAttributes.swift in Sources */,
 				C0F42CFB1C5FE13700FA7BB0 /* IATEPhotoPicking.swift in Sources */,
-				C0CDB1391C5EC30500F6D548 /* IATE.swift in Sources */,
+				C0CDB1391C5EC30500F6D548 /* IATextEditor.swift in Sources */,
 				C06B1D501BEE8B61009F427A /* Keysets.swift in Sources */,
 				C031CBEB1BDB097600521393 /* MiscGlobals.swift in Sources */,
 				C06B1D591BF15AD9009F427A /* WeightIntensityScheme.swift in Sources */,
@@ -481,18 +484,19 @@
 				C06B1D5B1BF15C18009F427A /* HueGYRIntensityScheme.swift in Sources */,
 				C09574801C58259C00724F02 /* IAStringKeys.swift in Sources */,
 				C06B1D271BEC5FCC009F427A /* KeysetComponents.swift in Sources */,
-				C040C5041C0CE857007C1685 /* IATextEditor.swift in Sources */,
+				C040C5041C0CE857007C1685 /* IATextEditOld.swift in Sources */,
 				C01839F41C614B270009316E /* IAStringPrinting.swift in Sources */,
 				C0CDB1371C5EBEA300F6D548 /* IATextStorage.swift in Sources */,
 				C0E5D7C81BDEA52C00A0A814 /* OtherExtensions.swift in Sources */,
 				C0D4474A1BE6BC16003204E7 /* RawIntensity.swift in Sources */,
 				C06B1D4E1BED2DCC009F427A /* PressureView.swift in Sources */,
 				C0E5D7C31BDEA47E00A0A814 /* IAAccessoryVC.swift in Sources */,
-				C0CDB1291C5D6C3F00F6D548 /* IAStringViewer.swift in Sources */,
 				C031CC041BDD921100521393 /* PressureButton.swift in Sources */,
 				C01BDA9D1C571926004CF045 /* CollapsingArray.swift in Sources */,
+				C069B2BE1C628DE9008834D3 /* IATextEditorDelegate.swift in Sources */,
 				C06B1D5D1BF15CDC009F427A /* FontSizeIntensityScheme.swift in Sources */,
 				C06B1D561BEE9C40009F427A /* ForceIntensityMappingFunctions.swift in Sources */,
+				C069B2BC1C628D87008834D3 /* IATEDelegateConformance.swift in Sources */,
 				C0BCB6C41BFA60BE00654E0A /* ValueWithRange.swift in Sources */,
 				C0E68E6D1C10C1AF005162F7 /* PKExpansionDirection.swift in Sources */,
 				C0CDB12E1C5D7AC300F6D548 /* TVInputTest.swift in Sources */,
