@@ -344,6 +344,10 @@ extension IATextEditor {
 //        }
 //        return super.canPerformAction(action, withSender: sender)
 //    }
+    public func setPerUnitSmoothing(smoothing:NSStringEnumerationOptions){
+        self.iaString!.preferedSmoothing = smoothing
+        renderIAString()
+    }
 }
 /*
 override public func cut(sender: AnyObject?) {
