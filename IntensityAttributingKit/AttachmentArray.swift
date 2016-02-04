@@ -161,4 +161,8 @@ struct IAAttachmentArray:CustomStringConvertible, SequenceType {
         return descript + "]"
     }
     
+    func deepCopy()->IAAttachmentArray{
+        let newData:[LocAttach] = self.data.map({return LocAttach($0.loc, $0.attach.copy() as! IATextAttachment)})
+        return IAAttachmentArray(data: newData)
+    }
 }

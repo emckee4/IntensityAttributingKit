@@ -99,6 +99,27 @@ extension IAString {
         attachments.insertAttachment(attachment, atLoc: position)
     }
     
+    ///Returns an empty IAString with the same general parameters as the receiver
+    public func emptyCopy()->IAString {
+        let newIA = IAString()
+        newIA.renderScheme = self.renderScheme
+        newIA.renderOptions = self.renderOptions
+        newIA.thumbSize = self.thumbSize
+        newIA.preferedSmoothing = self.preferedSmoothing
+        return newIA
+    }
+    ///Note: does not create new instances of IATextAttachment unless deepCopy option is true
+    public func copy(deepCopy:Bool = false)->IAString{
+        let newIA = self.emptyCopy()
+        newIA.text = self.text
+        assert(newIA.length == self.length)
+        newIA.baseAttributes = self.baseAttributes
+        newIA.intensities = self.intensities
+        newIA.links = self.links
+        newIA.attachments = deepCopy ? self.attachments.deepCopy() : self.attachments
+        return newIA
+    }
+    
 }
 
 
