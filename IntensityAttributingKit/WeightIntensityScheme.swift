@@ -148,7 +148,10 @@ public class WeightIntensityScheme:IntensityTransforming {
 //    }
     
     public static func nsAttributesForBinsAndBaseAttributes(bin bin:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
-        let weight = weightArray[bin]
+        var weight = weightArray[bin]
+        if baseAttributes.bold && bin < stepCount - 1 {
+            weight++
+        }
         var font = UIFont.systemFontOfSize(baseAttributes.cSize, weight: weight)
         if baseAttributes.italic {
             let newSymbolicTraits = font.fontDescriptor().symbolicTraits.union(.TraitItalic)

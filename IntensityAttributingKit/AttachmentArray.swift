@@ -124,7 +124,7 @@ struct IAAttachmentArray:CustomStringConvertible, SequenceType {
     
     mutating func replaceRange(replacement:IAAttachmentArray, ofLength:Int ,replacedRange: Range<Int>){
         removeSubrange(replacedRange)
-        modifyIndecesAtOrPastLoc(replacedRange.startIndex, modBy: ofLength - replacedRange.count)
+        modifyIndecesAtOrPastLoc(replacedRange.startIndex, modBy: ofLength)
         for item in replacement.data {
             self[item.loc + replacedRange.startIndex] = item.attach
         }

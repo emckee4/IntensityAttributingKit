@@ -19,8 +19,8 @@ public struct IABaseAttributes:OptionSetTypeWithIntegerRawValue{
     
     public static let Bold = IABaseAttributes(rawValue: 0x100)
     public static let Italic = IABaseAttributes(rawValue: 0x200)
-    public static let Underline = IABaseAttributes(rawValue: 0x300)
-    public static let Strikethrough = IABaseAttributes(rawValue: 0x400)
+    public static let Underline = IABaseAttributes(rawValue: 0x400)
+    public static let Strikethrough = IABaseAttributes(rawValue: 0x800)
     
     public var size:Int {
         get{return rawValue & 0xFF}
@@ -34,16 +34,16 @@ public struct IABaseAttributes:OptionSetTypeWithIntegerRawValue{
     
     public var bold:Bool {
         get{return self.contains(.Bold)}
-        set{self.insert(.Bold)}}
+        set{if newValue { self.insert(.Bold)} else {self.remove(.Bold)} }}
     public var italic:Bool {
         get{return self.contains(.Italic)}
-        set{self.insert(.Italic)}}
+        set{if newValue { self.insert(.Italic)} else {self.remove(.Italic)} }}
     public var underline:Bool {
         get{return self.contains(.Underline)}
-        set{self.insert(.Underline)}}
+        set{if newValue { self.insert(.Underline)} else {self.remove(.Underline)} }}
     public var strikethrough:Bool {
         get{return self.contains(.Strikethrough)}
-        set{self.insert(.Strikethrough)}}
+        set{if newValue { self.insert(.Strikethrough)} else {self.remove(.Strikethrough)} }}
     
     subscript(attribute:IAAttributeName)->AnyObject!{
         switch attribute {

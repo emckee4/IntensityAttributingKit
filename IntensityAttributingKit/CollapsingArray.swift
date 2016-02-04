@@ -223,7 +223,7 @@ struct CollapsingArray<Element:Equatable>: ExclusiveRangeMappingProtocol, ArrayL
         let ca = CollapsingArray(array: Array(newElements), startingIndex: self.endIndex)
         let lastDi = self.data.count - 1
         data.appendContentsOf(ca.data)
-        if self.data.count > 1{
+        if lastDi >= 0 && self.data.count > 1{
             condenseIndexWithFollowing(lastDi)
         }
     }

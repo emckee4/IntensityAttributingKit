@@ -19,13 +19,13 @@ extension IAString {
     
     ///This provides a new IAString comprised of copies of the contents in the given range. This inherits its parent's options. It will reindex its attributes and it will discard links.
     public func iaSubstringFromRange(range:Range<Int>)->IAString {
-        let substring = self.text.subStringFromRange(range)
-        let intensities = Array(self.intensities[range])
-        let baseAttsSub = self.baseAttributes.subRange(range)
-        //links are ignored
-        let attachSubs = self.attachments.reindexedSubrange(range)
-        let newIA = IAString(withText: substring, intensities: intensities,baseAtts: baseAttsSub, attachments: attachSubs)
+        let newIA = self.emptyCopy()
         
+        newIA.text = self.text.subStringFromRange(range)
+        newIA.intensities = Array(self.intensities[range])
+        newIA.baseAttributes = self.baseAttributes.subRange(range)
+        //links are ignored
+        newIA.attachments = self.attachments.reindexedSubrange(range)
         newIA.renderScheme = self.renderScheme
         newIA.renderOptions = self.renderOptions
         newIA.preferedSmoothing = self.preferedSmoothing
