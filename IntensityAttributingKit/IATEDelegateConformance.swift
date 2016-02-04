@@ -16,32 +16,29 @@ extension IATextEditor:IAKeyboardDelegate {
     func iaKeyboard(insertTextAtCursor text: String, intensity: Int) {
         let cursorLoc = self.selectedRange.location + text.utf16.count
         updateBaseAttributes()
-        let baseAtts = self.baseAttributes
-        if self.selectedRange.length == 0 {
-            //insert
-            self.iaString!.insertAtPosition(text, position: self.selectedRange.location, intensity: intensity, attributes: baseAtts)
-        } else {
-            //replaceRange
-            let rep = IAString(text: text, intensity: intensity, attributes: baseAtts)
-            self.iaString!.replaceRange(rep, range: self.selectedRange.toRange()!)
-        }
-        //rerender, update cursor position
-        renderIAString()
+        let replacementIA = self.iaString!.emptyCopy()
+        replacementIA.insertAtPosition(text, position: 0, intensity: intensity, attributes: self.baseAttributes)
+        self.iaString!.replaceRange(replacementIA, range: self.selectedRange.toRange()!)
+        self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: replacementIA.convertToNSAttributedString())
+        
         self.selectedRange = NSRange(location: cursorLoc, length: 0)
+
     }
     
     func iaKeyboardDeleteBackwards() {
-        let nextLoc = self.selectedRange.location > 0 ? self.selectedRange.location - 1 : 0
-        if self.selectedRange.length == 0 && self.selectedRange.location > 0{
-            //insert
-            self.iaString!.removeRange((self.selectedRange.location - 1)..<self.selectedRange.location)
-        } else if self.selectedRange.length > 0 {
-            self.iaString!.removeRange(self.selectedRange.intRange)
+        if selectedRange.length > 0 {
+            let nextCursor = NSMakeRange(self.selectedRange.location,0)
+            self.iaString!.removeRange(selectedRange.intRange)
+            self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: NSAttributedString())
+            self.selectedRange = nextCursor
+        } else if selectedRange.location > 0 {
+            let remRange = (self.selectedRange.location - 1)..<self.selectedRange.location
+            self.iaString!.removeRange(remRange)
+            self.textStorage.replaceCharactersInRange(remRange.nsRange, withAttributedString: NSAttributedString())
+            self.selectedRange = NSMakeRange(remRange.startIndex, 0)
         } else {
             return
         }
-        renderIAString()
-        self.selectedRange = NSMakeRange(nextLoc, 0)
     }
     
 }

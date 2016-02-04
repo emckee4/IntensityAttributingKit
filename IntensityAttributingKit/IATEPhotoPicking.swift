@@ -70,11 +70,16 @@ extension IATextEditor:UIImagePickerControllerDelegate, UINavigationControllerDe
         let ta = IATextAttachment()
         ta.image = image
         let insertionLoc = self.selectedRange.location
-        if self.selectedRange.length > 0 {
-            self.iaString!.removeRange(self.selectedRange.intRange)
-        }
-        self.iaString!.insertAttachmentAtPosition(ta, position: insertionLoc, intensity:defaultIntensity , attributes: baseAttributes)
-        self.renderIAString()
+        let newIA = self.iaString!.emptyCopy()
+        newIA.insertAttachmentAtPosition(ta, position: 0, intensity: self.defaultIntensity, attributes: baseAttributes)
+        
+//        if self.selectedRange.length > 0 {
+//            self.iaString!.removeRange(self.selectedRange.intRange)
+//        }
+        
+        self.iaString!.replaceRange(newIA, range: self.selectedRange.toRange()!)
+        //self.renderIAString()
+        self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: newIA.convertToNSAttributedString())
         self.selectedRange = NSMakeRange(insertionLoc + 1, 0)
         self.becomeFirstResponder()
     }

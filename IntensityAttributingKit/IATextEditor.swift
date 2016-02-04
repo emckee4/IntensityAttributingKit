@@ -146,16 +146,23 @@ public class IATextEditor: IATextView {
             lastSystemTextChange = (range:range,text:text)
         }
         let selectedLoc = self.selectedRange.location + text.utf16.count
+        let newIA:IAString = self.iaString!.emptyCopy()
+//        if text.utf16.count == 0 {
+//            self.iaString!.removeRange(range.intRange)
+//        } else if range.length == 0 {
+//            self.iaString!.insertAtPosition(text, position: range.location, intensity: defaultIntensity, attributes: baseAttributes)
+//            newIA = IAString(text: text, intensity: defaultIntensity, attributes: baseAttributes)
+//        } else {
+//            newIA = IAString(text: text, intensity: defaultIntensity, attributes: baseAttributes)
+//            self.iaString!.replaceRange(newIA, range: range.intRange)
+//        }
+        newIA.insertAtPosition(text, position: 0, intensity: defaultIntensity, attributes: baseAttributes)
+        self.iaString!.replaceRange(newIA, range: range.intRange)
+        let nsAttSub = newIA.convertToNSAttributedString()
+        self.textStorage.replaceCharactersInRange(range, withAttributedString: nsAttSub)
+
         
-        if text.utf16.count == 0 {
-            self.iaString!.removeRange(range.intRange)
-        } else if range.length == 0 {
-            self.iaString!.insertAtPosition(text, position: range.location, intensity: defaultIntensity, attributes: baseAttributes)
-        } else {
-            let repIA = IAString(text: text, intensity: defaultIntensity, attributes: baseAttributes)
-            self.iaString!.replaceRange(repIA, range: range.intRange)
-        }
-        renderIAString()
+        //renderIAString()
         //set selected range?
         self.selectedRange = NSRange(location: selectedLoc, length: 0)
         return false
@@ -169,6 +176,7 @@ public class IATextEditor: IATextView {
             let changes = self.compareTypingAtts()
             self.setFlatAtts()
             //effect changes on selected range
+            print("changes: \(changes)")
             guard changes.b || changes.i || changes.u || changes.s else {return}
                 //toggle currentAttributes
             if changes.b {self.baseAttributes.bold = !self.baseAttributes.bold}
@@ -176,26 +184,27 @@ public class IATextEditor: IATextView {
             if changes.u {self.baseAttributes.underline = !self.baseAttributes.underline}
             if changes.s {self.baseAttributes.strikethrough = !self.baseAttributes.strikethrough}
             if selectedRange.length > 0 {
-                let range = self.selectedRange.intRange
+                let iaSub = self.iaString!.iaSubstringFromRange(self.selectedRange.intRange)
+                let fullRange = 0..<iaSub.length
                 //if in selected range are one thing, toggle it, else set all to whatever true
                 if changes.b {
-                    let currentVal = (self.iaString!.getAttributeValueForRange(.Bold, range: range) as? Bool) ?? false
-                    self.iaString!.setAttributeValueForRange(!currentVal, attrName: .Bold, range: range)
+                    let currentVal = (iaSub.getAttributeValueForRange(.Bold, range: fullRange) as? Bool) ?? false
+                    iaSub.setAttributeValueForRange(!currentVal, attrName: .Bold, range: fullRange)
                 }
                 if changes.i {
-                    let currentVal = (self.iaString!.getAttributeValueForRange(.Italic, range: range) as? Bool) ?? false
-                    self.iaString!.setAttributeValueForRange(!currentVal, attrName: .Italic, range: range)
+                    let currentVal = (iaSub.getAttributeValueForRange(.Italic, range: fullRange) as? Bool) ?? false
+                    iaSub.setAttributeValueForRange(!currentVal, attrName: .Italic, range: fullRange)
                 }
                 if changes.u {
-                    let currentVal = (self.iaString!.getAttributeValueForRange(.Underline, range: range) as? Bool) ?? false
-                    self.iaString!.setAttributeValueForRange(!currentVal, attrName: .Underline, range: range)
+                    let currentVal = (iaSub.getAttributeValueForRange(.Underline, range: fullRange) as? Bool) ?? false
+                    iaSub.setAttributeValueForRange(!currentVal, attrName: .Underline, range: fullRange)
                 }
                 if changes.s {
-                    let currentVal = (self.iaString!.getAttributeValueForRange(.Strikethrough, range: range) as? Bool) ?? false
-                    self.iaString!.setAttributeValueForRange(!currentVal, attrName: .Strikethrough, range: range)
+                    let currentVal = (iaSub.getAttributeValueForRange(.Strikethrough, range: fullRange) as? Bool) ?? false
+                    iaSub.setAttributeValueForRange(!currentVal, attrName: .Strikethrough, range: fullRange)
                 }
-                
-                self.renderIAString()
+                self.iaString!.replaceRange(iaSub, range: self.selectedRange.intRange)
+                self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: iaSub.convertToNSAttributedString())
             }
             print("typing atts after rerender: \(self.typingAttributes)")
         }
@@ -269,7 +278,7 @@ extension IATextEditor {
     
     ///Sets the typing attributes to a base value so that changes can be compared
     func setFlatAtts(){
-        self.typingAttributes = [NSFontAttributeName:UIFont.systemFontOfSize(20.0)]
+        self.typingAttributes = [NSFontAttributeName:UIFont.systemFontOfSize(14.0)]
     }
     
     ///returns a tupple indicating which values have changes relative to the flatAtts
@@ -290,17 +299,6 @@ extension IATextEditor {
     
     
     public override func paste(sender: AnyObject?) {
-        /*
-        let range = self.selectedRange.toRange()!
-        let copiedIA = self.iaString!.iaSubstringFromRange(range)
-        let copiedText = copiedIA.text
-        let iaArchive = IAStringArchive.archive(copiedIA)
-        
-        var pbItem:[String:AnyObject] = [:]
-        pbItem[UTITypes.PlainText] = copiedText
-        pbItem[UTITypes.IAStringArchive] = iaArchive
-        pb.addItems([pbItem])
-        */
         let pb = UIPasteboard.generalPasteboard()
         var newIA:IAString?
         guard let lastItem = pb.items.last as? [String:AnyObject] else {return}
@@ -338,12 +336,13 @@ extension IATextEditor {
         self.delete(sender)
     }
     
-//    override public func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
-//        if sender is UIMenuController && action == Selector("delete:") {
-//            return false
-//        }
-//        return super.canPerformAction(action, withSender: sender)
-//    }
+    override public func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
+        if sender is UIMenuController && action == Selector("delete:") {
+            return false
+        }
+        return super.canPerformAction(action, withSender: sender)
+    }
+    
     public func setPerUnitSmoothing(smoothing:NSStringEnumerationOptions){
         self.iaString!.preferedSmoothing = smoothing
         renderIAString()
