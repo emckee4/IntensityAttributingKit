@@ -97,6 +97,13 @@ extension IATextEditor: IAAccessoryDelegate {
     
     func defaultIntensityUpdated(withValue value:Int){
         self.defaultIntensity = value
+        ///modify the intensities in the selected range
+        if self.selectedRange.length > 0 {
+            self.iaString!.intensities.replaceRange(self.selectedRange.intRange, with: Array(count: self.selectedRange.length, repeatedValue: value))
+            let nsReplacement = self.iaString!.iaSubstringFromRange(self.selectedRange.intRange).convertToNSAttributedString()
+            self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: nsReplacement)
+        }
+        
     }
     
     ///The user has pressed the iaAccessory lock intensity button. Return true if the change in states should be accepted and reflected by the indicator.
