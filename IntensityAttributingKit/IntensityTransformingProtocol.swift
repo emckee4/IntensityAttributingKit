@@ -79,13 +79,17 @@ public extension IntensityTransforming {
     ///transforms provided using the transformer while varying the intensity linearly over the length of the sample
     public static func generateSampleFromText(text:String, size:CGFloat)->NSAttributedString{
         let charCount:Int = text.characters.count
-        let baseAttributes = IABaseAttributes(size:Int(size),options: [])
         guard charCount > 0 else {return NSAttributedString()}
-        let mutableAS:NSMutableAttributedString = NSMutableAttributedString(string: text)
-        for i in 0..<charCount {
-            let thisIntensity:Int = Int((Float(i) / Float(charCount) + 0.001) * 100)
+        let baseAttributes = IABaseAttributes(size:Int(size),options: [])
+        guard charCount > 1 else {
+            let atts = self.nsAttributesForIntensityAttributes(intensity:100, baseAttributes: baseAttributes)
+            return NSAttributedString(string: text, attributes: atts)
+        }
+        let mutableAS = NSMutableAttributedString()
+        for (i,char) in text.characters.enumerate() {
+            let thisIntensity:Int = Int((Float(i) / Float(charCount - 1) + 0.001) * 100)
             let nsAttributes = self.nsAttributesForIntensityAttributes(intensity:thisIntensity, baseAttributes: baseAttributes)
-            mutableAS.setAttributes(nsAttributes, range: NSRange(location: i, length: 1))
+            mutableAS.appendAttributedString(NSAttributedString(string: String(char), attributes: nsAttributes))
         }
         return mutableAS
     }

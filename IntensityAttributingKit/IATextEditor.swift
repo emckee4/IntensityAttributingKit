@@ -106,7 +106,6 @@ public class IATextEditor: IATextView {
     
     override public var selectedRange:NSRange {
         didSet{
-            print("didSet selectedRange: \(selectedRange)")
             if selectedRange != oldValue {
                 var attsLoc:Int!
                 if selectedRange.length > 0 { //gets atts from the last element in the range
