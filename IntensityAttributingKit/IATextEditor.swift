@@ -88,12 +88,12 @@ public class IATextEditor: IATextView {
     }
     //////////////
     
-    func updateBaseAttributes(){
-        ///check the typingAttributes, and if they've changed, update the baseAtts accordingly
-        //TODO:Implement updateBaseAttributes
-        print("Need to:Implement updateBaseAttributes")
-        
-    }
+//    func updateBaseAttributes(){
+//        ///check the typingAttributes, and if they've changed, update the baseAtts accordingly
+//        //TODO:Implement updateBaseAttributes
+//        print("Need to:Implement updateBaseAttributes")
+//        
+//    }
     
 
     deinit{
@@ -111,7 +111,6 @@ public class IATextEditor: IATextView {
     
     ///We adopt the UIViewDelegate ourselves to implement this one function internally
     public func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-        print("shouldChangeTextInRange: \(text), \(range)")
 //        guard text != "" else {return true}
 //        var thisIntensity:Float!
 //        var retainedAttributes:[String:AnyObject]!
@@ -139,7 +138,6 @@ public class IATextEditor: IATextView {
         if let last = lastSystemTextChange {
             lastSystemTextChange = (range:range,text:text)
             if last.range.location == range.location && last.range.length == range.length && last.text == text {
-                print("repeated found")
                 return false
             }
         } else {
@@ -171,12 +169,10 @@ public class IATextEditor: IATextView {
 
     
     public func textViewDidChange(textView: UITextView) {
-        print("textViewDidChange: \(self.typingAttributes)")
         if self.isFirstResponder() && UIMenuController.sharedMenuController().menuVisible {
             let changes = self.compareTypingAtts()
             self.setFlatAtts()
             //effect changes on selected range
-            print("changes: \(changes)")
             guard changes.b || changes.i || changes.u || changes.s else {return}
                 //toggle currentAttributes
             if changes.b {self.baseAttributes.bold = !self.baseAttributes.bold}
@@ -206,7 +202,6 @@ public class IATextEditor: IATextView {
                 self.iaString!.replaceRange(iaSub, range: self.selectedRange.intRange)
                 self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: iaSub.convertToNSAttributedString())
             }
-            print("typing atts after rerender: \(self.typingAttributes)")
         }
         
         

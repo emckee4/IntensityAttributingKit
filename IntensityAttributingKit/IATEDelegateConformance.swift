@@ -15,7 +15,6 @@ extension IATextEditor:IAKeyboardDelegate {
     
     func iaKeyboard(insertTextAtCursor text: String, intensity: Int) {
         let cursorLoc = self.selectedRange.location + text.utf16.count
-        updateBaseAttributes()
         let replacementIA = self.iaString!.emptyCopy()
         replacementIA.insertAtPosition(text, position: 0, intensity: intensity, attributes: self.baseAttributes)
         self.iaString!.replaceRange(replacementIA, range: self.selectedRange.toRange()!)
