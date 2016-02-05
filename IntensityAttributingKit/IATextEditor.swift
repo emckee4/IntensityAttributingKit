@@ -15,7 +15,9 @@ public class IATextEditor: IATextView {
     
     internal(set) var currentTransformer:IntensityTransformers = IAKitOptions.singleton.defaultScheme
     
-    internal(set) var defaultIntensity:Int = IAKitOptions.singleton.defaultIntensity
+    internal(set) var defaultIntensity:Int = IAKitOptions.singleton.defaultIntensity {
+        didSet {iaAccessory.updateDisplayedIntensity(defaultIntensity)}
+    }
     
     
     var intensityChangesDynamically = true
@@ -103,7 +105,23 @@ public class IATextEditor: IATextView {
     //////////////
     
     override public var selectedRange:NSRange {
-        didSet{print("didSet selectedRange: \(selectedRange)")}
+        didSet{
+            print("didSet selectedRange: \(selectedRange)")
+            if selectedRange != oldValue {
+                var attsLoc:Int!
+                if selectedRange.length > 0 { //gets atts from the last element in the range
+                    attsLoc = selectedRange.location + selectedRange.length - 1
+                } else if selectedRange.location > 0 { //gets atts from the preceeding element
+                    attsLoc = selectedRange.location - 1
+                } else {
+                    return
+                }
+                if attsLoc != nil {
+                    self.baseAttributes = self.iaString!.baseAttributes[attsLoc]
+                    if intensityChangesDynamically {self.defaultIntensity = self.iaString!.intensities[attsLoc]}
+                }
+            }
+        }
     }
     
     
@@ -145,16 +163,20 @@ public class IATextEditor: IATextView {
         }
         let selectedLoc = self.selectedRange.location + text.utf16.count
         let newIA:IAString = self.iaString!.emptyCopy()
-//        if text.utf16.count == 0 {
-//            self.iaString!.removeRange(range.intRange)
-//        } else if range.length == 0 {
-//            self.iaString!.insertAtPosition(text, position: range.location, intensity: defaultIntensity, attributes: baseAttributes)
-//            newIA = IAString(text: text, intensity: defaultIntensity, attributes: baseAttributes)
-//        } else {
-//            newIA = IAString(text: text, intensity: defaultIntensity, attributes: baseAttributes)
-//            self.iaString!.replaceRange(newIA, range: range.intRange)
-//        }
-        newIA.insertAtPosition(text, position: 0, intensity: defaultIntensity, attributes: baseAttributes)
+        
+        ///Handling replacement:
+        let replacementAtts = range.length > 0 ? extractBaseAttsForRange(range) : baseAttributes
+        var repIntensity:Int!
+        if range.length > 0 && self.intensityChangesDynamically && text.utf16.count > 0 {
+            ///we replace with averages of the replaced range
+            repIntensity = self.iaString!.intensities[range.intRange].reduce(0, combine: +) / range.length
+            
+        } else {
+            repIntensity = defaultIntensity
+        }
+        
+        newIA.insertAtPosition(text, position: 0, intensity: repIntensity, attributes: replacementAtts)
+        
         self.iaString!.replaceRange(newIA, range: range.intRange)
         let nsAttSub = newIA.convertToNSAttributedString()
         self.textStorage.replaceCharactersInRange(range, withAttributedString: nsAttSub)
@@ -342,91 +364,20 @@ extension IATextEditor {
         self.iaString!.preferedSmoothing = smoothing
         renderIAString()
     }
+    
+    
+    ///extracts the common atts for a specified range, defaulting to false or last when atts vary
+    private func extractBaseAttsForRange(nsrange:NSRange)->IABaseAttributes{
+        let range = nsrange.intRange
+        let size = (self.iaString!.getAttributeValueForRange(.Size, range: nsrange.intRange) as? Int) ?? self.baseAttributes.size
+        var newBase = IABaseAttributes(size: size )
+        newBase.bold = (self.iaString!.getAttributeValueForRange(.Bold, range: range) as? Bool) ?? self.baseAttributes.bold
+        newBase.italic = (self.iaString!.getAttributeValueForRange(.Italic, range: range) as? Bool) ?? self.baseAttributes.italic
+        newBase.underline = (self.iaString!.getAttributeValueForRange(.Underline, range: range) as? Bool) ?? self.baseAttributes.underline
+        newBase.strikethrough = (self.iaString!.getAttributeValueForRange(.Strikethrough, range: range) as? Bool) ?? self.baseAttributes.strikethrough
+        return newBase
+    }
 }
-/*
-override public func cut(sender: AnyObject?) {
-        let copiedText = attributedText.attributedSubstringFromRange(selectedRange)
-        let archive = NSKeyedArchiver.archivedDataWithRootObject(copiedText)
-        super.cut(sender)
-        
-        let pb = UIPasteboard.generalPasteboard()
-        let pbDict = pb.items.first as! NSMutableDictionary
-        pbDict.setValue(archive, forKey: UTITypes.IntensityArchive)
-        pb.items[0] = pbDict
-    }
-    
-    override public func delete(sender: AnyObject?) {
-        deleteBackward()
-    
-    }
-    
-    
-    ///Pasting of RTFD isn't supported at the moment.
-    public override func paste(sender: AnyObject?) {
-        let pb = UIPasteboard.generalPasteboard()
-        var pasteText:NSMutableAttributedString!
-        if let intensityData = pb.items[0][UTITypes.IntensityArchive] as? NSData {
-            let raw = NSKeyedUnarchiver.unarchiveObjectWithData(intensityData) as! NSAttributedString
-            pasteText = NSMutableAttributedString(attributedString: raw)
-            
-        }
-        //  For RTF paste to work: need to go through all of RTFD and apply IA image size attributes and perform risizing like NSAttributedString(image...) does
-        //        else if let rtfdData = pb.items[0][UTITypes.RTFD] as? NSData {
-        //            let rawAttString = try? NSMutableAttributedString(data: rtfdData, options: [NSDocumentTypeDocumentAttribute:NSRTFDTextDocumentType], documentAttributes: nil)
-        //            if rawAttString != nil {
-        //                //strip existing attributes except attachment atts, apply typing attributes
-        //                rawAttString!.applyIntensityAttributes(currentAttributes)
-        //
-        //            }
-        //        }
-        if pasteText == nil {
-            if let pbString = pb.string where pbString.utf16.count > 0 {
-                let attString = NSMutableAttributedString(string: pbString)
-                attString.applyIntensityAttributes(currentAttributes)
-                pasteText = attString
-            }
-        }
-        if pasteText == nil {
-            if let image = pb.image {
-                let attString = NSMutableAttributedString( attributedString: NSAttributedString(image: image, intensityAttributes: currentAttributes, thumbSize: thumbSizesForAttachments, scaleToMaxSize: IAKitOptions.singleton.maxSavedImageDimensions) )
-                pasteText = attString
-            }
-            
-        }
-        if pasteText != nil {
-            //pasteText.applyStoredImageConstraints(maxDisplayedSize: preferedImageDisplaySize)
-            insertAttributedStringAtCursor(pasteText.transformWithRenderScheme(currentAttributes!.currentScheme))
-        }
-    }
-    /// utility broken out of the paste function
-    private func insertAttributedStringAtCursor(attString:NSAttributedString){
-        let originalSelectedRange = selectedRange
-        let currentText = NSMutableAttributedString(attributedString: attributedText)
-        currentText.replaceCharactersInRange(selectedRange, withAttributedString: attString)
-        attributedText = currentText
-        selectedRange.length = 0
-        selectedRange.location = originalSelectedRange.location + attString.length
-    }
-    
-    
-    ///With the current construction of the copy&paste functions I haven't found any cases where this is necessary again
-    override public func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
-        //        if sender is UIMenuController && action == Selector("paste:") {
-        //            let pb = UIPasteboard.generalPasteboard()
-        //            if pb.image != nil {
-        //                return true
-        //            }
-        //            if pb.pasteboardTypes().contains(UTITypes.IntensityArchive){
-        //                return true
-        //            }
-        //        }
-        if sender is UIMenuController && action == Selector("delete:") {
-            return false
-        }
-        return super.canPerformAction(action, withSender: sender)
-    }
-
-*/
 
 
 

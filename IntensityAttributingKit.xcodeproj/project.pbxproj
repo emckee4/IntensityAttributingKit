@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C0095D921C65328A00D37A75 /* IAAccessoryInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0095D911C65328A00D37A75 /* IAAccessoryInterface.swift */; };
 		C00E94791C5BF94000551D39 /* AttachmentArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00E94781C5BF94000551D39 /* AttachmentArray.swift */; };
 		C01839F41C614B270009316E /* IAStringPrinting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01839F31C614B270009316E /* IAStringPrinting.swift */; };
 		C01839F61C615FDE0009316E /* IAStringEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01839F51C615FDE0009316E /* IAStringEditing.swift */; };
@@ -72,6 +73,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C0095D911C65328A00D37A75 /* IAAccessoryInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAAccessoryInterface.swift; sourceTree = "<group>"; };
 		C00E94781C5BF94000551D39 /* AttachmentArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentArray.swift; sourceTree = "<group>"; };
 		C01839F31C614B270009316E /* IAStringPrinting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringPrinting.swift; sourceTree = "<group>"; };
 		C01839F51C615FDE0009316E /* IAStringEditing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringEditing.swift; sourceTree = "<group>"; };
@@ -148,6 +150,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C0095D901C65326400D37A75 /* IAAccessory */ = {
+			isa = PBXGroup;
+			children = (
+				C0E5D7C21BDEA47E00A0A814 /* IAAccessoryVC.swift */,
+				C0095D911C65328A00D37A75 /* IAAccessoryInterface.swift */,
+			);
+			name = IAAccessory;
+			sourceTree = "<group>";
+		};
 		C00E947A1C5BF9A500551D39 /* IAStringDataStructures */ = {
 			isa = PBXGroup;
 			children = (
@@ -289,7 +300,7 @@
 			isa = PBXGroup;
 			children = (
 				C031CC051BDD948700521393 /* IAKeyboard.swift */,
-				C0E5D7C21BDEA47E00A0A814 /* IAAccessoryVC.swift */,
+				C0095D901C65326400D37A75 /* IAAccessory */,
 			);
 			name = "KB+Accessory";
 			sourceTree = "<group>";
@@ -485,6 +496,7 @@
 				C09574801C58259C00724F02 /* IAStringKeys.swift in Sources */,
 				C06B1D271BEC5FCC009F427A /* KeysetComponents.swift in Sources */,
 				C040C5041C0CE857007C1685 /* IATextEditOld.swift in Sources */,
+				C0095D921C65328A00D37A75 /* IAAccessoryInterface.swift in Sources */,
 				C01839F41C614B270009316E /* IAStringPrinting.swift in Sources */,
 				C0CDB1371C5EBEA300F6D548 /* IATextStorage.swift in Sources */,
 				C0E5D7C81BDEA52C00A0A814 /* OtherExtensions.swift in Sources */,

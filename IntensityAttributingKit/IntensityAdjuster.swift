@@ -14,6 +14,8 @@ class IntensityAdjuster: UIView {
         return self.traitCollection.forceTouchCapability == UIForceTouchCapability.Available
     }()
     
+    weak var delegate:IntensityAdjusterDelegate?
+    
     var intensityDisplay:UIButton!
     var stackView:UIStackView!
     var pressurePad:PressureButton!
@@ -26,10 +28,17 @@ class IntensityAdjuster: UIView {
     }
     
     ///This default intensity is what we expect the IATextView to use for attributing actions when direct pressure input is unavailable (because of pasteing unattributed text/objects, typing on the system keyboard, or if 3d touch is unavailable on the device
-    var defaultIntensity:Float = 0.40 {
+    var defaultIntensity:Int = 40 {
         didSet {
-            let intensityPercent = Int(100 * defaultIntensity)
-            intensityDisplay?.setTitle(String(intensityPercent), forState: .Normal)}
+            if let titleText = intensityDisplay.titleLabel?.text {
+                if Int(titleText)! != defaultIntensity {
+                    intensityDisplay!.titleLabel!.text = String(defaultIntensity)
+                }
+            } else {
+                intensityDisplay!.setTitle(String(defaultIntensity), forState: .Normal)
+            }
+            if slider != nil && slider.hidden == false && Int(slider.value) != self.defaultIntensity {slider.value = Float(defaultIntensity)}
+        }
     }
     
     var showPressurePad = true {
@@ -89,7 +98,7 @@ class IntensityAdjuster: UIView {
     func setupView(){
         self.translatesAutoresizingMaskIntoConstraints = false
         intensityDisplay = UIButton(type: .System)
-        defaultIntensity = 0.40
+        defaultIntensity = 40
         intensityDisplay.addTarget(self, action: "intensityDisplayButtonPressed:", forControlEvents: .TouchUpInside)
         intensityDisplay.setTitleColor(UIColor.greenColor(), forState: .Selected)
         intensityDisplay.translatesAutoresizingMaskIntoConstraints = false
@@ -103,7 +112,7 @@ class IntensityAdjuster: UIView {
         
         slider = UISlider()
         slider.minimumValue = 0.0
-        slider.maximumValue = 1.0
+        slider.maximumValue = 100.0
         slider.addTarget(self, action: "sliderUpdated:", forControlEvents: .ValueChanged)
         slider.translatesAutoresizingMaskIntoConstraints = false
         slider.hidden = !showPressureSlider
@@ -130,25 +139,32 @@ class IntensityAdjuster: UIView {
     }
     
     func intensityDisplayButtonPressed(sender:UIButton!){
-        sender.selected = !sender.selected
+        let newVal = !sender.selected
+        self.delegate?.intensityLockButtonPressed(newVal)
+        sender.selected = newVal
     }
     
     
     func ppUpdated(sender:PressureButton){
-        defaultIntensity = sender.lastIntensity
-        slider.value = sender.lastIntensity
+        defaultIntensity = Int(sender.lastIntensity * 100)
+        slider.value = Float(sender.lastIntensity)
+        self.delegate?.intensityAdjusted(defaultIntensity)
     }
     
     
     func sliderUpdated(sender:UISlider){
-        defaultIntensity = sender.value
+        defaultIntensity = Int(sender.value)
+        self.delegate?.intensityAdjusted(defaultIntensity)
     }
     
     
     
 }
 
-
+protocol IntensityAdjusterDelegate:class {
+    func intensityLockButtonPressed(newValue:Bool)
+    func intensityAdjusted(toValue:Int)
+}
 
 
 

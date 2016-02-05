@@ -27,10 +27,17 @@ func binNumberForSteps(intensity:Int, steps:Int)->Int{
 }
 
 
-func == <T:Equatable> (tuple1:(T,T),tuple2:(T,T)) -> Bool
-{
+func ==<T:Equatable>(tuple1:(T,T),tuple2:(T,T))->Bool{
     return (tuple1.0 == tuple2.0) && (tuple1.1 == tuple2.1)
 }
+
+func ==(lhs:NSRange,rhs:NSRange)->Bool {
+    return NSEqualRanges(lhs, rhs)
+}
+func !=(lhs:NSRange,rhs:NSRange)->Bool {
+    return !NSEqualRanges(lhs, rhs)
+}
+
 
 //let ReplacementChar:String = "\u{FFFC}"
 //let ReplacementCodeUnit:UInt16 = "\u{FFFC}".utf16.first!

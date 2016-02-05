@@ -87,10 +87,47 @@ It may be possible to retain most of the performance benefits of deep attributes
 
 
 
+let cursorLoc = self.selectedRange.location + text.utf16.count
+updateBaseAttributes()
+let baseAtts = self.baseAttributes
+let replacementIA = self.iaString!.emptyCopy()
+replacementIA.insertAtPosition(text, position: 0, intensity: intensity, attributes: baseAtts)
+
+//        if self.selectedRange.length == 0 {
+//            //insert
+//            self.iaString!.insertAtPosition(text, position: self.selectedRange.location, intensity: intensity, attributes: baseAtts)
+//        } else {
+//            //replaceRange
+//            let rep = IAString(text: text, intensity: intensity, attributes: baseAtts)
+//            self.iaString!.replaceRange(rep, range: self.selectedRange.toRange()!)
+//        }
+self.iaString!.replaceRange(replacementIA, range: self.selectedRange.toRange()!)
+//rerender, update cursor position
+//renderIAString()
+
+self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: replacementIA.convertToNSAttributedString())
+
+self.selectedRange = NSRange(location: cursorLoc, length: 0)
 
 
+let cursorLoc = self.selectedRange.location + text.utf16.count
+updateBaseAttributes()
+let baseAtts = self.baseAttributes
+if self.selectedRange.length == 0 {
+//insert
+self.iaString!.insertAtPosition(text, position: self.selectedRange.location, intensity: intensity, attributes: baseAtts)
+} else {
+//replaceRange
+let rep = IAString(text: text, intensity: intensity, attributes: baseAtts)
+self.iaString!.replaceRange(rep, range: self.selectedRange.toRange()!)
+}
+//rerender, update cursor position
+renderIAString()
+//
+//        let nsAttSub = self.iaString!.emptyCopy()
+//        self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: nsAttSub)
 
-
+self.selectedRange = NSRange(location: cursorLoc, length: 0)
 
 
 

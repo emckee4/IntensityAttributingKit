@@ -95,5 +95,15 @@ extension IATextEditor: IAAccessoryDelegate {
         launchPicker()
     }
     
+    func defaultIntensityUpdated(withValue value:Int){
+        self.defaultIntensity = value
+    }
+    
+    ///The user has pressed the iaAccessory lock intensity button. Return true if the change in states should be accepted and reflected by the indicator.
+    func iaAccessoryDidSetIntensityLock(toValue: Bool) {
+        self.intensityChangesDynamically = toValue
+    }
+
+    
     
 }

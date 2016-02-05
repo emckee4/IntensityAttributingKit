@@ -87,6 +87,7 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction, UIImagePickerCont
         intensityAdjuster.heightAnchor.constraintEqualToConstant(kAccessoryHeight).active = true
         //intensityAdjuster.showPressureSlider = true
         intensityAdjuster.clipsToBounds = true
+        intensityAdjuster.delegate = self
 
         
         optionButton = UIButton(type: .Custom)
@@ -190,83 +191,4 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction, UIImagePickerCont
         }
     }
 
-    //MARK:- user interface actions
-    
-    func kbSwitchButtonPressed(sender:UIButton!){
-        delegate?.keyboardChangeButtonPressed()
-    }
-    
-    func cameraButtonPressed(sender:UIButton){
-        self.delegate?.requestPickerLaunch()
-    }
-    
-//    func cameraButtonPressed(sender:UIButton!){
-//        if imagePicker == nil {
-//            imagePicker = UIImagePickerController()
-//            imagePicker.allowsEditing = true
-//            imagePicker.delegate = self
-//        }
-//        
-//        let launchPicker:()->() = {
-//            self.delegate?.presentingVC?.presentViewController(self.imagePicker, animated: true, completion: nil)
-//        }
-//        
-//        if UIImagePickerController.isCameraDeviceAvailable(.Rear) {
-//            let alert = UIAlertController(title: "Insert Photo", message: "Choose source", preferredStyle: .ActionSheet)
-//            alert.addAction(UIAlertAction(title: "Photo Library", style: .Default, handler: { (action) -> Void in
-//                self.imagePicker.sourceType = .SavedPhotosAlbum
-//                launchPicker()
-//            }))
-//            alert.addAction(UIAlertAction(title: "Camera", style: .Default, handler: { (action) -> Void in
-//                self.imagePicker.sourceType = .Camera
-//                launchPicker()
-//            }))
-//            alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
-//            self.delegate?.presentingVC?.presentViewController(alert, animated: true, completion: nil)
-//        } else {
-//            imagePicker.sourceType = .SavedPhotosAlbum
-//            launchPicker()
-//        }
-//    }
-
-    func optionButtonPressed(){
-        delegate?.optionButtonPressed()
-    }
-    
-    func pressureKeyPressed(sender: PressureControl, actionName: String, actionType: PressureKeyActionType, intensity: Float) {
-        if IntensityTransformers(rawValue: actionName) != nil {
-            self.delegate?.requestTransformerChange(toTransformerWithName: actionName)
-        }
-    }
-
-    func setTransformKeyForScheme(withName schemeName:String){
-        self.transformButton.centerKeyWithActionName(schemeName)
-    }
-    
-//    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-//        picker.dismissViewControllerAnimated(true, completion: nil)
-//        
-//        if let image = info[UIImagePickerControllerEditedImage] as? UIImage{
-//            self.delegate?.imageChosen(image)
-//        } else if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-//            self.delegate?.imageChosen(image)
-//        } else {
-//            self.delegate?.imageChosen(nil)
-//        }
-//    }
-//    
-//    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-//        self.delegate?.imageChosen(nil)
-//    }
-}
-
-///IAAccessoryDelegate delivers actions from the IAAccessory to the IATextView
-protocol IAAccessoryDelegate:class {
-    func keyboardChangeButtonPressed()
-    //func imageChosen(image:UIImage!)
-    //func defaultIntensityUpdated(withValue value:Float)
-    func optionButtonPressed()
-    func requestTransformerChange(toTransformerWithName name:String)
-    //weak var presentingVC:UIViewController? {get}
-    func requestPickerLaunch()
 }
