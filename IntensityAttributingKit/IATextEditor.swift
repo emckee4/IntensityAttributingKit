@@ -13,7 +13,12 @@ public class IATextEditor: IATextView {
     
     internal(set) var baseAttributes:IABaseAttributes = IABaseAttributes(size: IAKitOptions.singleton.defaultTextSize)
     
-    internal(set) var currentTransformer:IntensityTransformers = IAKitOptions.singleton.defaultScheme
+    internal(set) var currentTransformer:IntensityTransformers = IAKitOptions.singleton.defaultScheme {
+        didSet {if currentTransformer != oldValue && self.inputAccessoryViewController != nil {
+            self.iaAccessory.setTransformKeyForScheme(withName: currentTransformer.transformer.schemeName)
+            }
+        }
+    }
     
     internal(set) var defaultIntensity:Int = IAKitOptions.singleton.defaultIntensity {
         didSet {iaAccessory.updateDisplayedIntensity(defaultIntensity)}
@@ -60,6 +65,7 @@ public class IATextEditor: IATextView {
             iaAccessory.delegate = self
             //iaKeyboardVC = IAKitOptions.singleton.keyboard
             _inputVC = iaKeyboardVC
+            self.iaAccessory.setTransformKeyForScheme(withName: currentTransformer.transformer.schemeName)
             iaKeyboardVC.delegate = self
             return true
         }
