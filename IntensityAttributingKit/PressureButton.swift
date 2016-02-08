@@ -17,7 +17,7 @@ class PressureButton: UIButton {
     lazy var rawIntensity:RawIntensity = RawIntensity()
     
     ///this value is made available for the receiving class after it receives the action message from a touch
-    var lastIntensity:Float {
+    var lastIntensity:Int {
         return rawIntensity.intensity
     }
     
@@ -36,7 +36,7 @@ class PressureButton: UIButton {
         guard baseBackgroundColor != nil else {return}
         guard forceTouchAvailable else {super.backgroundColor = nonTouchSelectionBGColor; return}
         let intensity = rawIntensity.intensity
-        guard intensity > 0.0 else {super.backgroundColor = baseBackgroundColor; return}
+        guard intensity > 0 else {super.backgroundColor = baseBackgroundColor; return}
         var white:CGFloat = -1.0
         var alpha:CGFloat = 1.0
         baseBackgroundColor!.getWhite(&white, alpha: &alpha)

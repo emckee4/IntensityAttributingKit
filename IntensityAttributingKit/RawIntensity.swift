@@ -16,8 +16,8 @@ public struct RawIntensity {
     var maximumPossibleForce:Float
     
     ///returns the intensity value for this RawIntensity object as determined using the global static var forceIntensityMapping(RawIntensity)
-    var intensity:Float {
-        return RawIntensity.forceIntensityMapping(raw: self)
+    var intensity:Int {
+        return Int(RawIntensity.forceIntensityMapping(raw: self) * 100)
     }
     var startTime:NSDate!
     

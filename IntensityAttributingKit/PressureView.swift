@@ -22,11 +22,11 @@ class PressureView:UIView, PressureControl {
 //    var lastIntensity:Float {
 //        return rawIntensity.intensity
 //    }
-    weak var delegate:PressureKeyAction?
+    weak var delegate:PressureKeyActionDelegate?
     
     private var contentView:UIView!
     var actionName:String!
-    var actionType:PressureKeyActionType!
+
     
     
 //    private var baseBackgroundColor:UIColor? {
@@ -47,7 +47,7 @@ class PressureView:UIView, PressureControl {
         guard self.backgroundColor != nil else {return}
         guard forceTouchAvailable else {contentView?.backgroundColor = nonTouchSelectionBGColor; return}
         let intensity = rawIntensity.intensity
-        guard intensity > 0.0 else {contentView.backgroundColor = self.backgroundColor; return}
+        guard intensity > 0 else {contentView.backgroundColor = self.backgroundColor; return}
         var white:CGFloat = -1.0
         var alpha:CGFloat = 1.0
         self.backgroundColor!.getWhite(&white, alpha: &alpha)
@@ -98,10 +98,9 @@ class PressureView:UIView, PressureControl {
         
         contentView.backgroundColor = self.backgroundColor
         self.actionName = charToInsert
-        self.actionType = .CharInsert
     }
     
-    func setAsSpecialKey(contentView:UIView, actionName:String, actionType:PressureKeyActionType){
+    func setAsSpecialKey(contentView:UIView, actionName:String){
         self.contentView = contentView
         contentView.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(contentView)
@@ -113,7 +112,6 @@ class PressureView:UIView, PressureControl {
         contentView.backgroundColor = self.backgroundColor
         
         self.actionName = actionName
-        self.actionType = actionType
         
     }
     
@@ -148,8 +146,8 @@ class PressureView:UIView, PressureControl {
         if let touch = touches.first {
             if pointInside(touch.locationInView(self), withEvent: event){
                 rawIntensity.append(touch.force)
-                if actionName != nil && actionType != nil {
-                    self.delegate?.pressureKeyPressed(self, actionName: self.actionName, actionType: self.actionType, intensity: rawIntensity.intensity)
+                if actionName != nil {
+                    self.delegate?.pressureKeyPressed(self, actionName: self.actionName, intensity: rawIntensity.intensity)
                     if self.delegate == nil {
                         print("delegate not set for PressureView with action \(actionName)")
                     }

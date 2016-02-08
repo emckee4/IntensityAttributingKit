@@ -9,13 +9,10 @@
 import Foundation
 
 
-///Provides the grouping of the view and actionName/selector for the ExpandingKey classes while also providing a handful of convenience functions
+///Provides the grouping of the view and actionName for the ExpandingKey classes. 
 class EPKey {
     var view:UIView
     var actionName:String
-    var actionType:PressureKeyActionType
-    weak var target:AnyObject?
-    var selector:String?
     
     var hidden:Bool {
         set {view.hidden = newValue}
@@ -23,18 +20,17 @@ class EPKey {
     }
     
     ///Init for delegate style actions
-    init(view:UIView,actionName:String, actionType:PressureKeyActionType){
+    init(view:UIView,actionName:String){
         self.view = view
         self.actionName = actionName
-        self.actionType = actionType
     }
     
-    ///Init for selector style actions
-    init(view:UIView, actionName:String, target:AnyObject, selector:String){
-        self.view = view
-        self.actionName = actionName
-        self.actionType = PressureKeyActionType.TriggerFunction
-        self.target = target
-        self.selector = selector
-    }
+}
+
+func ==(lhs:EPKey, rhs:EPKey)->Bool{
+    return lhs.view == rhs.view && lhs.actionName == rhs.actionName
+}
+
+func !=(lhs:EPKey, rhs:EPKey)->Bool{
+    return !(lhs == rhs)
 }

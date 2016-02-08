@@ -7,7 +7,7 @@
 //
 import UIKit
 
-class IAKeyboard: UIInputViewController, PressureKeyAction {
+class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
     
     
     ///Intensity of last keypress. IATextView will retrieve this value and set it to nil after the textDocumentProxy informs it of text insertion by the keyboard
@@ -194,10 +194,14 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
         expandingPuncKey.delegate = self
         expandingPuncKey.backgroundColor = kKeyBackgroundColor
 
-        expandingPuncKey.addCharKey(charToInsert: ".")
-        expandingPuncKey.addCharKey(charToInsert: ",")
-        expandingPuncKey.addCharKey(charToInsert: "?")
-        expandingPuncKey.addCharKey(charToInsert: "!")
+        expandingPuncKey.addKey(withTextLabel: ".", actionName: ".")
+        expandingPuncKey.addKey(withTextLabel: ",", actionName: ",")
+        expandingPuncKey.addKey(withTextLabel: "?", actionName: "?")
+        expandingPuncKey.addKey(withTextLabel: "!", actionName: "!")
+//        expandingPuncKey.addCharKey(charToInsert: ".")
+//        expandingPuncKey.addCharKey(charToInsert: ",")
+//        expandingPuncKey.addCharKey(charToInsert: "?")
+//        expandingPuncKey.addCharKey(charToInsert: "!")
         
         expandingPuncKey.cornerRadius = kKeyCornerRadius
         bottomStackView.addArrangedSubview(expandingPuncKey)
@@ -208,7 +212,7 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
         let returnKeyView = UILabel()
         returnKeyView.text = "Return"
         returnKeyView.textAlignment = .Center
-        returnKey.setAsSpecialKey(returnKeyView, actionName: "\n", actionType: .CharInsert)
+        returnKey.setAsSpecialKey(returnKeyView, actionName: "\n")
         returnKey.backgroundColor = kKeyBackgroundColor
         returnKey.layer.cornerRadius = kKeyCornerRadius
         bottomStackView.addArrangedSubview(returnKey)
@@ -372,19 +376,15 @@ class IAKeyboard: UIInputViewController, PressureKeyAction {
     }
     
     ///All control elements adopting the KeyControl protocol deliver their user interaction events through this function
-    func pressureKeyPressed(sender: PressureControl, actionName: String, actionType: PressureKeyActionType, intensity: Float) {
-        if actionType == .CharInsert {
-            //self.intensity = intensity
-            if shiftKey.selected {
-                shiftKey.deselect(overrideSelectedLock: false)
-                //self.textDocumentProxy.insertText(actionName.uppercaseString)
-                self.delegate?.iaKeyboard?(insertTextAtCursor: actionName, intensity: Int(intensity * 100.0))
-            } else {
-                //self.textDocumentProxy.insertText(actionName)
-                self.delegate?.iaKeyboard?(insertTextAtCursor: actionName, intensity: Int(intensity * 100.0))
-            }
-        } else if actionType == .TriggerFunction {
-            //handle function calling...
+    func pressureKeyPressed(sender: PressureControl, actionName: String, intensity: Int) {
+        //self.intensity = intensity
+        if shiftKey.selected {
+            shiftKey.deselect(overrideSelectedLock: false)
+            //self.textDocumentProxy.insertText(actionName.uppercaseString)
+            self.delegate?.iaKeyboard?(insertTextAtCursor: actionName, intensity: intensity)
+        } else {
+            //self.textDocumentProxy.insertText(actionName)
+            self.delegate?.iaKeyboard?(insertTextAtCursor: actionName, intensity: intensity)
         }
     }
 

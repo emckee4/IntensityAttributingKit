@@ -27,6 +27,8 @@
 		C031CC001BDD902000521393 /* IATextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBFF1BDD902000521393 /* IATextView.swift */; };
 		C031CC041BDD921100521393 /* PressureButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CC031BDD921100521393 /* PressureButton.swift */; };
 		C031CC061BDD948700521393 /* IAKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CC051BDD948700521393 /* IAKeyboard.swift */; };
+		C038B3EA1C69310400069F9C /* ExpandingKeyControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C038B3E91C69310400069F9C /* ExpandingKeyControl.swift */; };
+		C038B3EC1C69311200069F9C /* ExpandingKeyBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C038B3EB1C69311200069F9C /* ExpandingKeyBase.swift */; };
 		C040C5041C0CE857007C1685 /* IATextEditOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = C040C5031C0CE857007C1685 /* IATextEditOld.swift */; };
 		C040C5081C0E4283007C1685 /* IAKitOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C040C5071C0E4283007C1685 /* IAKitOptions.swift */; };
 		C054D99E1C3DAB9100D852DE /* IATextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */; };
@@ -96,6 +98,8 @@
 		C031CBFF1BDD902000521393 /* IATextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextView.swift; sourceTree = "<group>"; };
 		C031CC031BDD921100521393 /* PressureButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PressureButton.swift; sourceTree = "<group>"; };
 		C031CC051BDD948700521393 /* IAKeyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAKeyboard.swift; sourceTree = "<group>"; };
+		C038B3E91C69310400069F9C /* ExpandingKeyControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandingKeyControl.swift; sourceTree = "<group>"; };
+		C038B3EB1C69311200069F9C /* ExpandingKeyBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandingKeyBase.swift; sourceTree = "<group>"; };
 		C040C5031C0CE857007C1685 /* IATextEditOld.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextEditOld.swift; sourceTree = "<group>"; };
 		C040C5071C0E4283007C1685 /* IAKitOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAKitOptions.swift; sourceTree = "<group>"; };
 		C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextAttachment.swift; sourceTree = "<group>"; };
@@ -338,6 +342,8 @@
 			isa = PBXGroup;
 			children = (
 				C08253B51BE572AE0017AC14 /* ExpandingPressureKey.swift */,
+				C038B3E91C69310400069F9C /* ExpandingKeyControl.swift */,
+				C038B3EB1C69311200069F9C /* ExpandingKeyBase.swift */,
 				C0E68E6C1C10C1AF005162F7 /* PKExpansionDirection.swift */,
 				C0E68E6E1C10C1D5005162F7 /* EPKey.swift */,
 			);
@@ -500,6 +506,7 @@
 				C01839F41C614B270009316E /* IAStringPrinting.swift in Sources */,
 				C0CDB1371C5EBEA300F6D548 /* IATextStorage.swift in Sources */,
 				C0E5D7C81BDEA52C00A0A814 /* OtherExtensions.swift in Sources */,
+				C038B3EC1C69311200069F9C /* ExpandingKeyBase.swift in Sources */,
 				C0D4474A1BE6BC16003204E7 /* RawIntensity.swift in Sources */,
 				C06B1D4E1BED2DCC009F427A /* PressureView.swift in Sources */,
 				C0E5D7C31BDEA47E00A0A814 /* IAAccessoryVC.swift in Sources */,
@@ -510,6 +517,7 @@
 				C06B1D561BEE9C40009F427A /* ForceIntensityMappingFunctions.swift in Sources */,
 				C069B2BC1C628D87008834D3 /* IATEDelegateConformance.swift in Sources */,
 				C0BCB6C41BFA60BE00654E0A /* ValueWithRange.swift in Sources */,
+				C038B3EA1C69310400069F9C /* ExpandingKeyControl.swift in Sources */,
 				C0E68E6D1C10C1AF005162F7 /* PKExpansionDirection.swift in Sources */,
 				C0CDB12E1C5D7AC300F6D548 /* TVInputTest.swift in Sources */,
 				C01BDAA01C571954004CF045 /* RangeValuePair.swift in Sources */,

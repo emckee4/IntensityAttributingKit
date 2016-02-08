@@ -8,14 +8,14 @@
 
 import UIKit
 
-class IAAccessoryVC: UIInputViewController, PressureKeyAction, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     
     var kbSwitchButton:UIButton!
     var cameraButton:UIButton!
     var intensityAdjuster:IntensityAdjuster!
     var optionButton:UIButton!
-    var transformButton:ExpandingPressureKey!
+    var transformButton:ExpandingKeyControl!
     var stackView:UIStackView!
     var imagePicker:UIImagePickerController!
     
@@ -102,15 +102,14 @@ class IAAccessoryVC: UIInputViewController, PressureKeyAction, UIImagePickerCont
         optionButton.widthAnchor.constraintEqualToAnchor(optionButton.heightAnchor).activateWithPriority(500)
  
 
-        transformButton = ExpandingPressureKey(expansionDirection: .Up)
-        transformButton.delegate = self
-        transformButton.intensityTrackingDisabled = true
+        transformButton = ExpandingKeyControl(expansionDirection: .Up)
+        transformButton.setSelector(self, selector: "transformButtonPressed:")
         let weightSample = IntensityTransformers.WeightScheme.transformer.generateSampleFromText("abc", size: 20.0)
         let hueGYRSample = IntensityTransformers.HueGYRScheme.transformer.generateSampleFromText("abc", size: 20.0)
         let fontSizeSample = IntensityTransformers.FontSizeScheme.transformer.generateSampleFromText("abc", size: 20.0)
-        transformButton.addKey(withAttributedText: weightSample, actionName: IntensityTransformers.WeightScheme.rawValue, actionType: .TriggerFunction)
-        transformButton.addKey(withAttributedText: hueGYRSample, actionName: IntensityTransformers.HueGYRScheme.rawValue, actionType: .TriggerFunction)
-        transformButton.addKey(withAttributedText: fontSizeSample, actionName: IntensityTransformers.FontSizeScheme.rawValue, actionType: .TriggerFunction)
+        transformButton.addKey(withAttributedText: weightSample, actionName: IntensityTransformers.WeightScheme.rawValue)
+        transformButton.addKey(withAttributedText: hueGYRSample, actionName: IntensityTransformers.HueGYRScheme.rawValue)
+        transformButton.addKey(withAttributedText: fontSizeSample, actionName: IntensityTransformers.FontSizeScheme.rawValue)
         
         transformButton.backgroundColor = kButtonBackgroundColor
         transformButton.cornerRadius = kButtonCornerRadius
