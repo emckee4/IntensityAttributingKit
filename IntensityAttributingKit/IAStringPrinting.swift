@@ -20,7 +20,7 @@ extension IAString:CustomStringConvertible, CustomDebugStringConvertible {
         return self.description + "\nIntensities: \(self.intensities)\nBaseAtts:\(self.baseAttributes)\nLinks:\(self.links)\nAttachments:\(self.attachments)\nisValid?: \(self.validate())"
     }
     
-    
+    ///Performs basic validation of IAString, returning true if passing checks
     public func validate()->Bool{
         guard self.length == self.text.utf16.count else {print("invalid IAString: self.length != self.text.utf16.count"); return false}
         guard self.length == baseAttributes.count else {print("invalid IAString: self.length != baseAttributes.count"); return false}

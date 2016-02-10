@@ -29,7 +29,6 @@
 		C031CC061BDD948700521393 /* IAKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CC051BDD948700521393 /* IAKeyboard.swift */; };
 		C038B3EA1C69310400069F9C /* ExpandingKeyControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C038B3E91C69310400069F9C /* ExpandingKeyControl.swift */; };
 		C038B3EC1C69311200069F9C /* ExpandingKeyBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C038B3EB1C69311200069F9C /* ExpandingKeyBase.swift */; };
-		C040C5041C0CE857007C1685 /* IATextEditOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = C040C5031C0CE857007C1685 /* IATextEditOld.swift */; };
 		C040C5081C0E4283007C1685 /* IAKitOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C040C5071C0E4283007C1685 /* IAKitOptions.swift */; };
 		C054D99E1C3DAB9100D852DE /* IATextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */; };
 		C069B2BA1C627DB1008834D3 /* IAStringArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = C069B2B91C627DB1008834D3 /* IAStringArchive.swift */; };
@@ -50,8 +49,6 @@
 		C09574801C58259C00724F02 /* IAStringKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C095747F1C58259C00724F02 /* IAStringKeys.swift */; };
 		C09574821C59442300724F02 /* IAStringConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09574811C59442300724F02 /* IAStringConversion.swift */; };
 		C0BCB6C41BFA60BE00654E0A /* ValueWithRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BCB6C31BFA60BE00654E0A /* ValueWithRange.swift */; };
-		C0CDB12E1C5D7AC300F6D548 /* TVInputTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CDB12D1C5D7AC300F6D548 /* TVInputTest.swift */; };
-		C0CDB1371C5EBEA300F6D548 /* IATextStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CDB1361C5EBEA300F6D548 /* IATextStorage.swift */; };
 		C0CDB1391C5EC30500F6D548 /* IATextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CDB1381C5EC30500F6D548 /* IATextEditor.swift */; };
 		C0D4474A1BE6BC16003204E7 /* RawIntensity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D447491BE6BC16003204E7 /* RawIntensity.swift */; };
 		C0D4474C1BE82381003204E7 /* ImageAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0D4474B1BE82381003204E7 /* ImageAssets.xcassets */; };
@@ -100,7 +97,6 @@
 		C031CC051BDD948700521393 /* IAKeyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAKeyboard.swift; sourceTree = "<group>"; };
 		C038B3E91C69310400069F9C /* ExpandingKeyControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandingKeyControl.swift; sourceTree = "<group>"; };
 		C038B3EB1C69311200069F9C /* ExpandingKeyBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandingKeyBase.swift; sourceTree = "<group>"; };
-		C040C5031C0CE857007C1685 /* IATextEditOld.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextEditOld.swift; sourceTree = "<group>"; };
 		C040C5071C0E4283007C1685 /* IAKitOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAKitOptions.swift; sourceTree = "<group>"; };
 		C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextAttachment.swift; sourceTree = "<group>"; };
 		C069B2B91C627DB1008834D3 /* IAStringArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringArchive.swift; sourceTree = "<group>"; };
@@ -121,8 +117,6 @@
 		C095747F1C58259C00724F02 /* IAStringKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringKeys.swift; sourceTree = "<group>"; };
 		C09574811C59442300724F02 /* IAStringConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringConversion.swift; sourceTree = "<group>"; };
 		C0BCB6C31BFA60BE00654E0A /* ValueWithRange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueWithRange.swift; sourceTree = "<group>"; };
-		C0CDB12D1C5D7AC300F6D548 /* TVInputTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TVInputTest.swift; sourceTree = "<group>"; };
-		C0CDB1361C5EBEA300F6D548 /* IATextStorage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextStorage.swift; sourceTree = "<group>"; };
 		C0CDB1381C5EC30500F6D548 /* IATextEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextEditor.swift; sourceTree = "<group>"; };
 		C0D447491BE6BC16003204E7 /* RawIntensity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawIntensity.swift; sourceTree = "<group>"; };
 		C0D4474B1BE82381003204E7 /* ImageAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ImageAssets.xcassets; sourceTree = "<group>"; };
@@ -224,7 +218,6 @@
 				C040C5071C0E4283007C1685 /* IAKitOptions.swift */,
 				C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */,
 				C0F42CF91C5FE10F00FA7BB0 /* IATextEditor */,
-				C0CDB12C1C5D7AA700F6D548 /* Experimental Views */,
 				C06B1D541BEE9BDA009F427A /* ForceIntensityMapping */,
 				C08253B21BE571C70017AC14 /* CustomControls */,
 				C08253B31BE571E00017AC14 /* KB+Accessory */,
@@ -319,15 +312,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		C0CDB12C1C5D7AA700F6D548 /* Experimental Views */ = {
-			isa = PBXGroup;
-			children = (
-				C0CDB1361C5EBEA300F6D548 /* IATextStorage.swift */,
-				C0CDB12D1C5D7AC300F6D548 /* TVInputTest.swift */,
-			);
-			name = "Experimental Views";
-			sourceTree = "<group>";
-		};
 		C0E5D7C61BDEA50400A0A814 /* General Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -353,7 +337,6 @@
 		C0F42CF91C5FE10F00FA7BB0 /* IATextEditor */ = {
 			isa = PBXGroup;
 			children = (
-				C040C5031C0CE857007C1685 /* IATextEditOld.swift */,
 				C0CDB1381C5EC30500F6D548 /* IATextEditor.swift */,
 				C069B2BB1C628D87008834D3 /* IATEDelegateConformance.swift */,
 				C069B2BD1C628DE9008834D3 /* IATextEditorDelegate.swift */,
@@ -501,10 +484,8 @@
 				C06B1D5B1BF15C18009F427A /* HueGYRIntensityScheme.swift in Sources */,
 				C09574801C58259C00724F02 /* IAStringKeys.swift in Sources */,
 				C06B1D271BEC5FCC009F427A /* KeysetComponents.swift in Sources */,
-				C040C5041C0CE857007C1685 /* IATextEditOld.swift in Sources */,
 				C0095D921C65328A00D37A75 /* IAAccessoryInterface.swift in Sources */,
 				C01839F41C614B270009316E /* IAStringPrinting.swift in Sources */,
-				C0CDB1371C5EBEA300F6D548 /* IATextStorage.swift in Sources */,
 				C0E5D7C81BDEA52C00A0A814 /* OtherExtensions.swift in Sources */,
 				C038B3EC1C69311200069F9C /* ExpandingKeyBase.swift in Sources */,
 				C0D4474A1BE6BC16003204E7 /* RawIntensity.swift in Sources */,
@@ -519,7 +500,6 @@
 				C0BCB6C41BFA60BE00654E0A /* ValueWithRange.swift in Sources */,
 				C038B3EA1C69310400069F9C /* ExpandingKeyControl.swift in Sources */,
 				C0E68E6D1C10C1AF005162F7 /* PKExpansionDirection.swift in Sources */,
-				C0CDB12E1C5D7AC300F6D548 /* TVInputTest.swift in Sources */,
 				C01BDAA01C571954004CF045 /* RangeValuePair.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

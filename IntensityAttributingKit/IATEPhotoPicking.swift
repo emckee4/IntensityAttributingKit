@@ -62,20 +62,11 @@ extension IATextEditor:UIImagePickerControllerDelegate, UINavigationControllerDe
     
     func imageChosen(image:UIImage!){
         guard let image = image else {return}
-        //        if let image = image {
-        //            let attString = NSMutableAttributedString( attributedString: NSAttributedString(image: image, intensityAttributes: currentAttributes, thumbSize:thumbSizesForAttachments, scaleToMaxSize: IAKitOptions.singleton.maxSavedImageDimensions) )
-        //            //attString.applyStoredImageConstraints(maxDisplayedSize: preferedImageDisplaySize)
-        //            insertAttributedStringAtCursor(attString.transformWithRenderScheme(currentAttributes!.currentScheme))
-        //        }
         let ta = IATextAttachment()
-        ta.image = image
+        ta.image = image.resizeImageToFit(maxSize: IAKitOptions.singleton.maxSavedImageDimensions)
         let insertionLoc = self.selectedRange.location
         let newIA = self.iaString!.emptyCopy()
         newIA.insertAttachmentAtPosition(ta, position: 0, intensity: self.defaultIntensity, attributes: baseAttributes)
-        
-//        if self.selectedRange.length > 0 {
-//            self.iaString!.removeRange(self.selectedRange.intRange)
-//        }
         
         self.iaString!.replaceRange(newIA, range: self.selectedRange.toRange()!)
         //self.renderIAString()

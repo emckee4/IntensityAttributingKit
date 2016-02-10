@@ -9,14 +9,10 @@
 import UIKit
 
 
-/** Configurable dropdown-like button which can provide intensity and forceTouch data when available.
-Supports both delegate based actions (required if intensity data is desired) and selector based actions.
+/** Configurable dropdown-like button which provides intensity for touch selections using RawIntensity.
+Uses PressureKeyActionDelegate to pass conforming class the actionName and intensity values for a touchUpInside.
+This is now a subclass of ExpandingKeyBase.
  
-Future changes: 
-Add animation by animating frame expansion prior to expanding constraints to match.
-Consider giving leway on out of bounds presses
--Expand in two directions: L shaped expansion like multi keys on the ios system keyboard.
-
 */
 @IBDesignable public class ExpandingPressureKey: ExpandingKeyBase, PressureControl {
     

@@ -40,12 +40,12 @@ class PressureView:UIView, PressureControl {
         didSet{contentView?.backgroundColor = self.backgroundColor}
     }
     
-    ///Color for background of selected cell if 3dTouch (and so our dynamic selection background color) are not available
-    var nonTouchSelectionBGColor = UIColor.darkGrayColor()
+    ///Color for background of selected cell if 3dTouch (and so our dynamic selection background color) are not available.
+    var selectionColor = UIColor.darkGrayColor()
     
     private func setBackgroundColorForIntensity(){
         guard self.backgroundColor != nil else {return}
-        guard forceTouchAvailable else {contentView?.backgroundColor = nonTouchSelectionBGColor; return}
+        //guard forceTouchAvailable else {contentView?.backgroundColor = selectionColor; return}
         let intensity = rawIntensity.intensity
         guard intensity > 0 else {contentView.backgroundColor = self.backgroundColor; return}
         var white:CGFloat = -1.0

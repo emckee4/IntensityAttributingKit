@@ -66,18 +66,6 @@ public class IATextView: UITextView, UITextViewDelegate {
     
     override public func copy(sender: AnyObject?){
         let pb = UIPasteboard.generalPasteboard()
-//        let copiedText = attributedText.attributedSubstringFromRange(selectedRange)
-//        let archive = NSKeyedArchiver.archivedDataWithRootObject(copiedText)
-//        let pbDict = pb.items.first as? NSMutableDictionary ?? NSMutableDictionary()
-//        pbDict.setValue(archive, forKey: UTITypes.IntensityArchive)
-//        if pb.items.count > 0 {
-//            pb.items[0] = pbDict
-//        } else {
-//            pb.items.append(pbDict)
-//        }
-
-
-        
         let range = self.selectedRange.toRange()!
         let copiedIA = self.iaString!.iaSubstringFromRange(range)
         let copiedText = copiedIA.text

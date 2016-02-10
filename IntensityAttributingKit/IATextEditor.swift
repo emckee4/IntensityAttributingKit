@@ -134,30 +134,6 @@ public class IATextEditor: IATextView {
     
     ///We adopt the UIViewDelegate ourselves to implement this one function internally
     public func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
-//        guard text != "" else {return true}
-//        var thisIntensity:Float!
-//        var retainedAttributes:[String:AnyObject]!
-//        if let paragraphStyle = typingAttributes[NSParagraphStyleAttributeName] {
-//            retainedAttributes = [NSParagraphStyleAttributeName:paragraphStyle]
-//        }
-//        if let iaKB = inputViewController as? IAKeyboard where iaKB.intensity != nil && iaKB.intensity > 0 {
-//            thisIntensity = iaKB.intensity
-//            iaKB.intensity = nil
-//        } else if text.utf16.count > 0 && range.length > 0 { //range replacement uses average of text being replaced if not already attributed
-//            thisIntensity = attributedText.averageIntensityForRange(range)
-//        } else {
-//            thisIntensity = self.defaultIntensity
-//        }
-//        
-//        currentAttributes = currentTransformer.transformer.updateIntensityAttributesInScheme(lastIntensityAttributes: currentAttributes, providedAttributes: typingAttributes, intensity: thisIntensity)
-//        
-//        typingAttributes = currentTransformer.transformer.typingAttributesForScheme(currentAttributes,retainedKeys: retainedAttributes)
-//        
-//        //range replaces may be from autocorrect, potentially leaving unattributed text afterwards. By setting attributeDictForRangeReplace, this will be checked and fixed if necessary.
-//        if text.utf16.count > 0 && range.length > 0 {
-//            attributeDictForRangeReplace = typingAttributes
-//        }
-//
         if let last = lastSystemTextChange {
             lastSystemTextChange = (range:range,text:text)
             if last.range.location == range.location && last.range.length == range.length && last.text == text {
@@ -230,22 +206,6 @@ public class IATextEditor: IATextView {
                 self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: iaSub.convertToNSAttributedString())
             }
         }
-        
-        
-        //lastAtts = self.typingAttributes
-        
-//        if attributeDictForRangeReplace != nil {
-//            let modRanges = attributedText.getNonIARanges()
-//            if  modRanges.count > 0 {
-//                let newAttString = NSMutableAttributedString(attributedString: attributedText)
-//                for modRange in  modRanges{
-//                    newAttString.setAttributes(attributeDictForRangeReplace, range: modRange)
-//                }
-//                self.attributedText = newAttString
-//            }
-//            attributeDictForRangeReplace = nil
-//        }
-//        checkText()
     }
     
     

@@ -198,10 +198,6 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
         expandingPuncKey.addKey(withTextLabel: ",", actionName: ",")
         expandingPuncKey.addKey(withTextLabel: "?", actionName: "?")
         expandingPuncKey.addKey(withTextLabel: "!", actionName: "!")
-//        expandingPuncKey.addCharKey(charToInsert: ".")
-//        expandingPuncKey.addCharKey(charToInsert: ",")
-//        expandingPuncKey.addCharKey(charToInsert: "?")
-//        expandingPuncKey.addCharKey(charToInsert: "!")
         
         expandingPuncKey.cornerRadius = kKeyCornerRadius
         bottomStackView.addArrangedSubview(expandingPuncKey)

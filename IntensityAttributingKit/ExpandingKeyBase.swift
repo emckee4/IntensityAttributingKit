@@ -8,7 +8,15 @@
 
 import UIKit
 
+/**
+Abstract base class for ExpandingKeyControl and ExpandingPressureControl which provides all the common elements for the two but leaves the notifications/delegate calls/selector calls to its subclasses.
+ 
+ Future changes:
+ Add animation by animating frame expansion prior to expanding constraints to match.
+ Consider giving leway on out of bounds presses
+ -Expand in two directions: L shaped expansion like multi keys on the ios system keyboard.
 
+*/
 public class ExpandingKeyBase: UIView {
     
     private(set) public var isExpanded = false

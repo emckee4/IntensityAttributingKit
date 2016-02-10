@@ -42,24 +42,9 @@ func !=(lhs:NSRange,rhs:NSRange)->Bool {
 //let ReplacementChar:String = "\u{FFFC}"
 //let ReplacementCodeUnit:UInt16 = "\u{FFFC}".utf16.first!
 
-
-//public let fontWeightArray = [
-//    UIFontWeightUltraLight,
-//    UIFontWeightThin,
-//    UIFontWeightLight,
-//    UIFontWeightRegular,
-//    UIFontWeightMedium,
-//    UIFontWeightSemibold,
-//    UIFontWeightBold,
-//    UIFontWeightHeavy,
-//    UIFontWeightBlack
-//]
-
-
-//func
-
-
-
+//internal extension String {
+//    static var ReplacementChar:String {return "\u{FFFC}"}
+//}
 
 
 

@@ -8,7 +8,7 @@
 
 import Foundation
 
-
+/*
 ///Functions similarly to an NSRange except this struct also contains a value(Any type) associated with the range. This also includes functions to convert to or from JSON ready arrays
 struct ValueWithRange: CustomStringConvertible, ValueWithRangeProtocol {
     var value:Any
@@ -58,3 +58,4 @@ protocol ValueWithRangeProtocol{
     var length:Int {get set}
 
 }
+*/

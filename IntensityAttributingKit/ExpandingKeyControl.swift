@@ -9,7 +9,7 @@
 import UIKit
 
 
-///Non pressure sensitive ExpandingKey which will trigger a given target/action pair on touchupinside
+///Non pressure sensitive ExpandingKey which will trigger a given target/action pair on touchupinside. This object only supports a single target for touchUpInside in order to keep the interface simple.
 @IBDesignable public class ExpandingKeyControl: ExpandingKeyBase {
     
     private(set) weak var target:AnyObject?
