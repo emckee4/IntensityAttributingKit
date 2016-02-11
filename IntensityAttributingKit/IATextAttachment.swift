@@ -16,6 +16,9 @@ public class IATextAttachment:NSTextAttachment {
     private static let thumbCache = NSCache()
     public static let placeholderImage = UIImage(named: "imagePlaceholder", inBundle: IAKitOptions.bundle, compatibleWithTraitCollection: nil)!
     
+    ///Random alpha string (by default) used for identifying attachments and images before they have filenames
+    public var localID:String = {return String.randomAlphaString(8)}()
+    
     public private(set) var isPlaceholder = false
     
     var filewrapper:NSFileWrapper? {
@@ -80,6 +83,19 @@ public class IATextAttachment:NSTextAttachment {
     public func usePlaceholderImage() {
         isPlaceholder = true
     }
+    ///Yields the attachment data by trying first the filewrapper, then the contents, and finally the image property
+    public var underlyingData:NSData? {
+        if let wrappedData = self.filewrapper?.regularFileContents {
+            return wrappedData
+        } else if let imageData = self.contents {
+            return imageData
+        } else if image != nil {
+            return UIImageJPEGRepresentation(image!, 1.0)
+        }
+        return nil
+    }
+    
+    
     
     override public func imageForBounds(imageBounds: CGRect, textContainer: NSTextContainer?, characterIndex charIndex: Int) -> UIImage? {
         guard !isPlaceholder else {return IATextAttachment.placeholderImage}

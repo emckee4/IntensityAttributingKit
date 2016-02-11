@@ -26,15 +26,15 @@ public class IAString {
         return attachments.count
     }
     
-    var renderScheme:IntensityTransformers!
-    var renderOptions:[String:AnyObject] = [:]
+    public var renderScheme:IntensityTransformers!
+    public var renderOptions:[String:AnyObject] = [:]
     
-    var thumbSize:ThumbSize = .Medium
+    public var thumbSize:ThumbSize = .Medium
     
-    var preferedSmoothing: NSStringEnumerationOptions = .ByComposedCharacterSequences
+    public var preferedSmoothing: NSStringEnumerationOptions = .ByComposedCharacterSequences
 
     ///Based on UTF16 count of text. All other counts should stay in sync with this.
-    private(set) var length:Int
+    private(set) public var length:Int
     
     //////////////////////////////////////
     

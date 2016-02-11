@@ -64,6 +64,18 @@ extension String {
         guard let start = indexFromInt(range.startIndex), end = indexFromInt(range.endIndex) else {throw NSError(domain: "String.removeIntRange", code: -2, userInfo: [NSLocalizedDescriptionKey: "Bad indeces"])}
         self.removeRange(Range<Index>(start:start,end:end))
     }
+    
+    ///Random upper/lowercase letters with length
+    static func randomAlphaString(length:Int)->String{
+        let baseString:NSString = "abcdefghijklmnopqrstuvwxyz" + "abcdefghijklmnopqrstuvwxyz".uppercaseString
+        var outputString = ""
+        
+        for _ in 0..<length {
+            let rand = Int(arc4random_uniform(UInt32(baseString.length)))
+            outputString += baseString.substringWithRange(NSMakeRange(rand, 1))
+        }
+        return outputString
+    }
 }
 
 //extension String {
