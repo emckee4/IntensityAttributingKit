@@ -44,7 +44,7 @@ public class IATextView: UITextView, UITextViewDelegate {
     
     
     ///Prefered method for setting stored IAText for display. By default this assumes text has been prerendered and only needs bounds set on its images. If needsRendering is set as true then this will render according to whatever its included schemeName is.
-    public func setIAString(iaString:IAString, overrideRenderOptions renderOptions:[String:AnyObject]? = nil){
+    public func setIAString(iaString:IAString, withCacheIdentifier:String? = nil,overrideRenderOptions renderOptions:[String:AnyObject]? = nil){
         self._iaString = iaString
         self._renderOptions = renderOptions
         self.attributedText = iaString.convertToNSAttributedString(withOptions: renderOptions)

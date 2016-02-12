@@ -12,16 +12,16 @@ import UIKit
 ///Non pressure sensitive ExpandingKey which will trigger a given target/action pair on touchupinside. This object only supports a single target for touchUpInside in order to keep the interface simple.
 @IBDesignable public class ExpandingKeyControl: ExpandingKeyBase {
     
-    private(set) weak var target:AnyObject?
-    private(set) var selector:String?
+    private(set) public weak var target:AnyObject?
+    private(set) public var selector:String?
     
-    func setSelector(target:AnyObject,selector:String){
+    public func setSelector(target:AnyObject,selector:String){
         guard target.respondsToSelector(Selector(selector)) else {fatalError("ExpandingKeyControl.setSelector given target that does not respond to the provided selector")}
         self.target = target
         self.selector = selector
     }
     
-    func removeSelector(){
+    public func removeSelector(){
         target = nil
         selector = nil
     }

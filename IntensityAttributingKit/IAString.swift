@@ -11,7 +11,7 @@ import UIKit
 
 public class IAString {
     
-    internal(set) var text:String {
+    internal(set) public var text:String {
         didSet{self.length = self.text.utf16.count}
     }
     internal(set) var intensities:[Int] = []
@@ -38,6 +38,7 @@ public class IAString {
     
     //////////////////////////////////////
     
+    public var avgIntensity:Int {return intensities.reduce(0, combine: +) / intensities.count}
     
     ///Converts the iaString to a dictionary which is ready for direct coversion to JSON except for containing an iaTextAttachments key which needs to be stripped out and handled separately when uploading.
     public func convertToAlmostJSONReadyDict()->[String:AnyObject]{
@@ -48,11 +49,11 @@ public class IAString {
         dict[IAStringKeys.baseAttributes] = self.baseAttributes.asRVPArray
         dict[IAStringKeys.linkRVPs] = self.links.map({$0.asArray})
         
-        
-        dict[IAStringKeys.renderScheme] = renderScheme?.rawValue ?? IAKitOptions.singleton.defaultScheme.rawValue
-        dict[IAStringKeys.preferedSmoothing] = self.preferedSmoothing.rawValue
-        dict[IAStringKeys.options] = self.renderOptions
-    
+        var combinedOpts = self.renderOptions
+        combinedOpts[IAStringKeys.renderScheme] = renderScheme?.rawValue ?? IAKitOptions.singleton.defaultScheme.rawValue
+        combinedOpts[IAStringKeys.preferedSmoothing] = self.preferedSmoothing.rawValue
+
+        dict[IAStringKeys.options] = combinedOpts
     
         
         //TODO: Choosing of source of data/ conversion should occur in IATextAttachment
@@ -75,7 +76,7 @@ public class IAString {
         return dict
     }
     
-    ///This functions as an inverse of convertToAlmostJSONReadyDict but it can accept attachments in IAStringKeys.attachments format (for which it will insert placeholders) or in .iaTextAttachments format.
+    ///This functions as an inverse of convertToAlmostJSONReadyDict but it can accept attachments in IAStringKeys.attachments format (for which it will insert placeholders) or in .iaTextAttachments format. If preferedSmoothing and/or renderScheme are embeded in the renderOptions dictionary then this will pull them out automatically.
     public init!(dict:[String:AnyObject]){
         guard let newText = dict[IAStringKeys.text] as? String, newIntensities = dict[IAStringKeys.intensities] as? [Int], rawBaseAtts = dict[IAStringKeys.baseAttributes] as? [[Int]] else {
             print("IAIntermediate received incomplete data"); self.text = ""; self.length = 0; self.baseAttributes = []; return nil
@@ -101,21 +102,30 @@ public class IAString {
                 }
             }
         }
-        
-        if let newAttachments = dict[IAStringKeys.attachments] as? [[AnyObject]]{
-            for rawAttachItems in newAttachments {
-                if let loc = rawAttachItems[0] as? Int, attach = rawAttachItems[1] as? IATextAttachment {
-                    self.attachments[loc] = attach
-                }
-            }
-        } else if let iaAttachments = dict[IAStringKeys.iaTextAttachments] as? [Int:AnyObject] {
+        if let iaAttachments = dict[IAStringKeys.iaTextAttachments] as? [Int:AnyObject] {
             for (key, attach) in iaAttachments.sort({$0.0 < $1.0}) {
                 self.attachments[key] = (attach as? IATextAttachment) ?? IATextAttachment()
             }
-        }
+        } else if let newAttachments = dict[IAStringKeys.attachments] as? [Int:AnyObject]{
+            for (loc, attachInfo) in newAttachments {
+                let newAttach = IATextAttachment()
+                if let filename = attachInfo["name"] as? String where filename.utf16.count > 0{
+                    newAttach.proposedFilename = filename
+                }
+                self.attachments[loc] = newAttach
+            }
+        } 
         
         //single value
+        
+        if let opts = dict[IAStringKeys.options] as? [String:AnyObject]{
+            self.renderOptions = opts
+        }
+        
         if let scheme = dict[IAStringKeys.renderScheme] as? String {
+            self.renderScheme = IntensityTransformers(rawValue: scheme)
+            self.renderOptions.removeValueForKey(IAStringKeys.renderScheme)
+        } else if let scheme = self.renderOptions.removeValueForKey(IAStringKeys.renderScheme) as? String where IntensityTransformers(rawValue: scheme) != nil{
             self.renderScheme = IntensityTransformers(rawValue: scheme)
         } else {
             self.renderScheme = IAKitOptions.singleton.defaultScheme
@@ -123,11 +133,11 @@ public class IAString {
         
         if let ps = dict[IAStringKeys.preferedSmoothing] as? UInt{
             self.preferedSmoothing = NSStringEnumerationOptions(rawValue: ps)
+            self.renderOptions.removeValueForKey(IAStringKeys.preferedSmoothing)
+        } else if let ps = self.renderOptions.removeValueForKey(IAStringKeys.preferedSmoothing) as? UInt{
+            self.preferedSmoothing = NSStringEnumerationOptions(rawValue: ps)
         }
-        
-        if let opts = dict[IAStringKeys.options] as? [String:AnyObject]{
-            self.renderOptions = opts
-        }
+
         
     }
     

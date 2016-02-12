@@ -18,6 +18,7 @@ public class IATextAttachment:NSTextAttachment {
     
     ///Random alpha string (by default) used for identifying attachments and images before they have filenames
     public var localID:String = {return String.randomAlphaString(8)}()
+    public var proposedFilename:String?
     
     public private(set) var isPlaceholder = false
     
@@ -25,6 +26,7 @@ public class IATextAttachment:NSTextAttachment {
         didSet{
             ///could load image in background and generate thumbs
             _storedImageSize = nil
+            if let newFN = filewrapper?.preferredFilename {proposedFilename = newFN}
         }
     }
     
