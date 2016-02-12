@@ -8,10 +8,12 @@
 
 import Foundation
 
-
+/**
+Provides an NSCoding complient wrapper for iaString, allowing IAString itself to remain non-objective C
+ */
 public class IAStringArchive:NSObject, NSCoding {
     
-    let iaString:IAString
+    public let iaString:IAString
     
     
     required public init?(coder aDecoder: NSCoder) {
