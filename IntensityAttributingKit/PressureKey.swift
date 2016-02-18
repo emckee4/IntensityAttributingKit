@@ -1,17 +1,15 @@
 //
-//  PressureView.swift
+//  PressureKey.swift
 //  IntensityAttributingKit
 //
-//  Created by Evan Mckee on 11/6/15.
-//  Copyright © 2015 McKeeMaKer. All rights reserved.
+//  Created by Evan Mckee on 2/12/16.
+//  Copyright © 2016 McKeeMaKer. All rights reserved.
 //
 
 import UIKit
 
 
-///Delegate based equivilent of PressureButton.
-class PressureView:UIView, PressureControl {
-    
+class PressureKey:UILabel, PressureControl {
     
     lazy var forceTouchAvailable:Bool = {
         return self.traitCollection.forceTouchCapability == UIForceTouchCapability.Available
@@ -19,41 +17,35 @@ class PressureView:UIView, PressureControl {
     
     lazy var rawIntensity:RawIntensity = RawIntensity()
     
-    //    ///this value is made available for the receiving class after it receives the action message from a touch
-    //    var lastIntensity:Float {
-    //        return rawIntensity.intensity
-    //    }
+    
     weak var delegate:PressureKeyActionDelegate?
     
-    var contentView:UIView!
     var actionName:String!
-    
-    
-    override var backgroundColor:UIColor? {
-        didSet{contentView?.backgroundColor = self.backgroundColor}
-    }
-    
-    private var contentConstraints:[NSLayoutConstraint] = []
-    
     
     ///Color for background of selected cell if 3dTouch (and so our dynamic selection background color) are not available.
     var selectionColor = UIColor.darkGrayColor()
+    private var _baseBackgroundColor:UIColor? = UIColor.lightGrayColor()
+    
+    override var backgroundColor:UIColor? {
+        set {_baseBackgroundColor = newValue; setBackgroundColorForIntensity()}
+        get {return _baseBackgroundColor}
+    }
     
     private func setBackgroundColorForIntensity(){
-        guard self.backgroundColor != nil else {return}
+        if self._baseBackgroundColor == nil {self._baseBackgroundColor = UIColor.clearColor()}
         //guard forceTouchAvailable else {contentView?.backgroundColor = selectionColor; return}
         let intensity = rawIntensity.intensity
-        guard intensity > 0 else {contentView.backgroundColor = self.backgroundColor; return}
+        guard intensity > 0 else {super.backgroundColor = _baseBackgroundColor; return}
         var white:CGFloat = -1.0
         var alpha:CGFloat = 1.0
-        self.backgroundColor!.getWhite(&white, alpha: &alpha)
+        self._baseBackgroundColor!.getWhite(&white, alpha: &alpha)
         let newAlpha:CGFloat = max(alpha * CGFloat(1 + intensity), 1.0)
         let newWhite:CGFloat = white * CGFloat(1 - intensity)
-        contentView?.backgroundColor = UIColor(white: newWhite, alpha: newAlpha)
+        super.backgroundColor = UIColor(white: newWhite, alpha: newAlpha)
     }
     ///When the touch ends this sets the background color to normal
     private func resetBackground(){
-        contentView.backgroundColor = self.backgroundColor
+        super.backgroundColor = self._baseBackgroundColor
     }
     
     init() {
@@ -66,35 +58,33 @@ class PressureView:UIView, PressureControl {
         setupKey()
     }
     
-    func setupKey(){
+    
+    func setupKey() {
         self.translatesAutoresizingMaskIntoConstraints = false
-        //set default background
-        self.backgroundColor = UIColor.lightGrayColor()
         self.multipleTouchEnabled = false
-        self.clipsToBounds = true
+        self.textAlignment = .Center
+        self.userInteractionEnabled = true
     }
     
-    func setAsSpecialKey(contentView:UIView, actionName:String){
-        _ = contentConstraints.map({$0.active = false})
-        contentConstraints = []
-        self.contentView = contentView
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(contentView)
-        
-        contentConstraints.append(contentView.topAnchor.constraintEqualToAnchor(self.topAnchor))
-        contentConstraints.append(contentView.bottomAnchor.constraintEqualToAnchor(self.bottomAnchor))
-        contentConstraints.append(contentView.leftAnchor.constraintEqualToAnchor(self.leftAnchor))
-        contentConstraints.append(contentView.rightAnchor.constraintEqualToAnchor(self.rightAnchor))
-        _ = contentConstraints.map({$0.active = true})
-        contentView.backgroundColor = self.backgroundColor
-        
+    ///Sets up the key with the same actionName as text in the key
+    func setCharKey(charToInsert:String, font:UIFont = UIFont.systemFontOfSize(20)){
+        guard charToInsert.utf16.count > 0 else {fatalError("can't use setCharKey with empty text")}
+        setKey(charToInsert, actionName: charToInsert)
+    }
+    
+    func setKey(text:String, actionName:String){
+        self.text = text
+        self.actionName = actionName
+    }
+    
+    func setKey(attributedString attString:NSAttributedString, actionName:String){
+        self.attributedText = attString
         self.actionName = actionName
     }
     
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         super.touchesBegan(touches, withEvent: event)
-        guard contentView != nil else {return}
         //there should be one and only one touch in the touches set in touchesBegan since we have multitouch disabled
         if let touch = touches.first {
             rawIntensity = RawIntensity(withValue: touch.force,maximumPossibleForce: touch.maximumPossibleForce)
@@ -104,7 +94,6 @@ class PressureView:UIView, PressureControl {
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         super.touchesMoved(touches, withEvent: event)
-        guard contentView != nil  else {return}
         if let touch = touches.first {
             if pointInside(touch.locationInView(self), withEvent: event){
                 rawIntensity.append(touch.force)
@@ -118,7 +107,6 @@ class PressureView:UIView, PressureControl {
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         super.touchesEnded(touches, withEvent: event)
-        guard contentView != nil else {return}
         if let touch = touches.first {
             if pointInside(touch.locationInView(self), withEvent: event){
                 rawIntensity.append(touch.force)
@@ -139,17 +127,6 @@ class PressureView:UIView, PressureControl {
         self.resetBackground()
         rawIntensity.reset()
     }
+
+    
 }
-
-
-    
-    
-    
-
-    
-    
-
-
-
-
-

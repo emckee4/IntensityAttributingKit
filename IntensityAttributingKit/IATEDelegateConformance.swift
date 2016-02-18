@@ -13,7 +13,7 @@ import UIKit
 ///IAKeyboardDelegate implementation
 extension IATextEditor:IAKeyboardDelegate {
     
-    func iaKeyboard(insertTextAtCursor text: String, intensity: Int) {
+    func iaKeyboard(iaKeyboard:IAKeyboard, insertTextAtCursor text: String, intensity: Int) {
         let cursorLoc = self.selectedRange.location + text.utf16.count
         let replacementIA = self.iaString!.emptyCopy()
         replacementIA.insertAtPosition(text, position: 0, intensity: intensity, attributes: self.baseAttributes)
@@ -21,10 +21,10 @@ extension IATextEditor:IAKeyboardDelegate {
         self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: replacementIA.convertToNSAttributedString())
         
         self.selectedRange = NSRange(location: cursorLoc, length: 0)
-
+        iaKeyboard.autoCapsIfNeeded()
     }
     
-    func iaKeyboardDeleteBackwards() {
+    func iaKeyboardDeleteBackwards(iaKeyboard:IAKeyboard) {
         if selectedRange.length > 0 {
             let nextCursor = NSMakeRange(self.selectedRange.location,0)
             self.iaString!.removeRange(selectedRange.intRange)
@@ -38,6 +38,7 @@ extension IATextEditor:IAKeyboardDelegate {
         } else {
             return
         }
+        iaKeyboard.autoCapsIfNeeded()
     }
     
 }
@@ -106,11 +107,32 @@ extension IATextEditor: IAAccessoryDelegate {
         
     }
     
-    ///The user has pressed the iaAccessory lock intensity button. Return true if the change in states should be accepted and reflected by the indicator.
-    func iaAccessoryDidSetIntensityLock(toValue: Bool) {
-        self.intensityChangesDynamically = toValue
+    public func requestTokenizerChange(toValue: IAStringTokenizing) {
+        self.setIATokenizer(toValue)
     }
+    
+    func iaKeyboardIsShowing() -> Bool {
+        return self.keyboardIsIAKeyboard ?? false
+    }
+//    ///The user has pressed the iaAccessory lock intensity button. Return true if the change in states should be accepted and reflected by the indicator.
+//    func iaAccessoryDidSetIntensityLock(toValue: Bool) {
+//        self.intensityChangesDynamically = toValue
+//    }
 
+    /*
+    //func keyboardChangeButtonPressed()
+    
+    //func optionButtonPressed()
+    //func requestTransformerChange(toTransformerWithName name:String)
+    
+    //func requestPickerLaunch()
+    
+    //func defaultIntensityUpdated(withValue value:Int)
+    
+    func requestTokenizerChange(toValue:IAStringTokenizing)
+    
+    func iaKeyboardIsShowing()->Bool
+    */
     
     
 }

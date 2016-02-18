@@ -59,6 +59,7 @@ class IAKitOptions:NSObject, NSCoding {
     var defaultIntensity:Int = 40
     var defaultTextSize:Int = 20
     var defaultScheme:IntensityTransformers = IntensityTransformers.WeightScheme
+    var defaultSmoothing:IAStringTokenizing = IAStringTokenizing.Char   
     
     var maxSavedImageDimensions:CGSize = CGSize(width: 640, height: 640)
     

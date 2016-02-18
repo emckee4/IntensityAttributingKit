@@ -25,7 +25,7 @@ public class IATextEditor: IATextView {
     }
     
     
-    var intensityChangesDynamically = true
+    //var intensityChangesDynamically = true
     
     
     weak public var editorDelegate:IATextEditorDelegate?
@@ -55,7 +55,12 @@ public class IATextEditor: IATextView {
     override public var inputAccessoryViewController:UIInputViewController? {
         get {return self.iaAccessory}
     }
-
+    
+    ///returns true if IAKeyboard is presented by this, false if system keyboard, and nil if this is not first responder
+    var keyboardIsIAKeyboard:Bool?{
+        guard self.isFirstResponder() else {return nil}
+        return inputViewController == iaKeyboardVC
+    }
     
     //////////
     
@@ -66,6 +71,7 @@ public class IATextEditor: IATextView {
             //iaKeyboardVC = IAKitOptions.singleton.keyboard
             _inputVC = iaKeyboardVC
             self.iaAccessory.setTransformKeyForScheme(withName: currentTransformer.transformer.schemeName)
+            self.iaAccessory.setTokenizerKeyValue(self.iaString!.preferedSmoothing)
             iaKeyboardVC.delegate = self
             return true
         }
@@ -83,6 +89,7 @@ public class IATextEditor: IATextView {
     
     internal override func setupPressureTextView(){
         self.editable = true
+        self.keyboardDismissMode = .Interactive
         //iaAccessory?.delegate = self
         self.inputViewController = iaKeyboardVC
         self.delegate = self
@@ -91,6 +98,7 @@ public class IATextEditor: IATextView {
         currentTransformer = IAKitOptions.singleton.defaultScheme
         self.allowsEditingTextAttributes = true
         self.setIAString(IAString())
+        self.setFlatAtts()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "menuNotificationReceived:", name: UIMenuControllerDidShowMenuNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "menuNotificationReceived:", name: UIMenuControllerDidHideMenuNotification, object: nil)
     }
@@ -123,7 +131,7 @@ public class IATextEditor: IATextView {
                 }
                 if attsLoc != nil {
                     self.baseAttributes = self.iaString!.baseAttributes[attsLoc]
-                    if intensityChangesDynamically {self.defaultIntensity = self.iaString!.intensities[attsLoc]}
+                    self.defaultIntensity = self.iaString!.intensities[attsLoc]
                 }
             }
         }
@@ -148,7 +156,7 @@ public class IATextEditor: IATextView {
         ///Handling replacement:
         let replacementAtts = range.length > 0 ? extractBaseAttsForRange(range) : baseAttributes
         var repIntensity:Int!
-        if range.length > 0 && self.intensityChangesDynamically && text.utf16.count > 0 {
+        if range.length > 0 && text.utf16.count > 0 { //&& self.intensityChangesDynamically
             ///we replace with averages of the replaced range
             repIntensity = self.iaString!.intensities[range.intRange].reduce(0, combine: +) / range.length
             
@@ -216,13 +224,21 @@ public class IATextEditor: IATextView {
     func swapKB(){
         if self.inputViewController == nil {
             self.inputViewController = iaKeyboardVC
+            iaKeyboardVC.prepareKeyboardForAppearance()
         } else {
             self.inputViewController = nil
         }
+        self.iaAccessory.layoutForBounds()
         self.reloadInputViews()
     }
     
-    
+    ///Sets the IATextEditor to an empty IAString and resets properties to the IAKitOptions defaults
+    public func resetEditor(){
+        self.setIAString(IAString())
+        defaultIntensity = IAKitOptions.singleton.defaultIntensity
+        baseAttributes = IABaseAttributes(size: IAKitOptions.singleton.defaultTextSize)
+        self.setFlatAtts()
+    }
     
     ///
     func renderIAString(){
@@ -236,6 +252,21 @@ public class IATextEditor: IATextView {
         return self.iaString!
     }
     
+    func setIATokenizer(tokenizer:IAStringTokenizing){
+        if self.iaString?.preferedSmoothing != tokenizer {
+            self.iaString?.preferedSmoothing = tokenizer
+            if self.iaAccessory == self.inputAccessoryViewController {
+                self.iaAccessory.setTokenizerKeyValue(tokenizer)
+            }
+            self.renderIAString()
+        }
+    }
+    
+//    public func textViewDidChangeSelection(textView: UITextView) {
+//        if self.iaKeyboardVC == self.inputViewController && self.isFirstResponder() {
+//            iaKeyboardVC.selectionDidChange(self)
+//        }
+//    }
 }
 
 
@@ -260,7 +291,7 @@ extension IATextEditor {
     
     ///Sets the typing attributes to a base value so that changes can be compared
     func setFlatAtts(){
-        self.typingAttributes = [NSFontAttributeName:UIFont.systemFontOfSize(14.0)]
+        self.typingAttributes = [NSFontAttributeName:UIFont.systemFontOfSize(20.0)]
     }
     
     ///returns a tupple indicating which values have changes relative to the flatAtts
@@ -302,6 +333,7 @@ extension IATextEditor {
         guard newIA != nil else {return}
         let newLoc = NSMakeRange(self.selectedRange.location + newIA!.length, 0)
         self.iaString!.replaceRange(newIA!, range: self.selectedRange.toRange()!)
+        self.iaString!.thumbSize = self.thumbSizesForAttachments
         self.renderIAString()
         self.selectedRange = newLoc
     }
@@ -325,10 +357,10 @@ extension IATextEditor {
         return super.canPerformAction(action, withSender: sender)
     }
     
-    public func setPerUnitSmoothing(smoothing:NSStringEnumerationOptions){
-        self.iaString!.preferedSmoothing = smoothing
-        renderIAString()
-    }
+//    public func setPerUnitSmoothing(smoothing:NSStringEnumerationOptions){
+//        self.iaString!.preferedSmoothing = smoothing
+//        renderIAString()
+//    }
     
     
     ///extracts the common atts for a specified range, defaulting to false or last when atts vary

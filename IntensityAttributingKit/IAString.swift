@@ -21,7 +21,7 @@ public class IAString {
     
     internal(set) var links:[RangeValuePair<NSURL>] = []
 
-    internal(set) var attachments: IAAttachmentArray = IAAttachmentArray()
+    public internal(set) var attachments: IAAttachmentArray = IAAttachmentArray()
     public var attachmentCount:Int {
         return attachments.count
     }
@@ -29,9 +29,11 @@ public class IAString {
     public var renderScheme:IntensityTransformers!
     public var renderOptions:[String:AnyObject] = [:]
     
-    public var thumbSize:ThumbSize = .Medium
+    public var thumbSize:ThumbSize = .Medium {
+        didSet{self.attachments.setThumbSizes(self.thumbSize)}
+    }
     
-    public var preferedSmoothing: NSStringEnumerationOptions = .ByComposedCharacterSequences
+    public var preferedSmoothing: IAStringTokenizing = .Char
 
     ///Based on UTF16 count of text. All other counts should stay in sync with this.
     private(set) public var length:Int
@@ -39,6 +41,13 @@ public class IAString {
     //////////////////////////////////////
     
     public var avgIntensity:Int {return intensities.reduce(0, combine: +) / intensities.count}
+    
+    public var hasAttachmentsWithPlaceholders:Bool {
+        for (_,attach) in self.attachments {
+            guard !attach.isPlaceholder else {return true}
+        }
+        return false
+    }
     
     ///Converts the iaString to a dictionary which is ready for direct coversion to JSON except for containing an iaTextAttachments key which needs to be stripped out and handled separately when uploading.
     public func convertToAlmostJSONReadyDict()->[String:AnyObject]{
@@ -51,7 +60,7 @@ public class IAString {
         
         var combinedOpts = self.renderOptions
         combinedOpts[IAStringKeys.renderScheme] = renderScheme?.rawValue ?? IAKitOptions.singleton.defaultScheme.rawValue
-        combinedOpts[IAStringKeys.preferedSmoothing] = self.preferedSmoothing.rawValue
+        combinedOpts[IAStringKeys.preferedSmoothing] = self.preferedSmoothing.shortLabel
 
         dict[IAStringKeys.options] = combinedOpts
     
@@ -102,16 +111,15 @@ public class IAString {
                 }
             }
         }
-        if let iaAttachments = dict[IAStringKeys.iaTextAttachments] as? [Int:AnyObject] {
+        if let iaAttachments = dict[IAStringKeys.iaTextAttachments] as? [Int:IATextAttachment] {
             for (key, attach) in iaAttachments.sort({$0.0 < $1.0}) {
-                self.attachments[key] = (attach as? IATextAttachment) ?? IATextAttachment()
+                self.attachments[key] = attach
             }
         } else if let newAttachments = dict[IAStringKeys.attachments] as? [Int:AnyObject]{
             for (loc, attachInfo) in newAttachments {
-                let newAttach = IATextAttachment()
-                if let filename = attachInfo["name"] as? String where filename.utf16.count > 0{
-                    newAttach.proposedFilename = filename
-                }
+                guard let filename = attachInfo["name"] as? String, remoteURLString = attachInfo["url"] as? String else {continue}
+                guard let remoteURL = NSURL(string: remoteURLString) else {continue}
+                let newAttach = IATextAttachment(filename: filename, remoteURL: remoteURL, localURL: nil)
                 self.attachments[loc] = newAttach
             }
         } 
@@ -131,13 +139,12 @@ public class IAString {
             self.renderScheme = IAKitOptions.singleton.defaultScheme
         }
         
-        if let ps = dict[IAStringKeys.preferedSmoothing] as? UInt{
-            self.preferedSmoothing = NSStringEnumerationOptions(rawValue: ps)
+        if let ps = dict[IAStringKeys.preferedSmoothing] as? String where IAStringTokenizing(shortLabel: ps) != nil{
+            self.preferedSmoothing = IAStringTokenizing(shortLabel: ps)
             self.renderOptions.removeValueForKey(IAStringKeys.preferedSmoothing)
-        } else if let ps = self.renderOptions.removeValueForKey(IAStringKeys.preferedSmoothing) as? UInt{
-            self.preferedSmoothing = NSStringEnumerationOptions(rawValue: ps)
+        } else if let ps = self.renderOptions.removeValueForKey(IAStringKeys.preferedSmoothing) as? String where IAStringTokenizing(shortLabel: ps) != nil{
+            self.preferedSmoothing = IAStringTokenizing(shortLabel: ps)
         }
-
         
     }
     

@@ -13,7 +13,7 @@ import UIKit
 
 
 
-extension IAAccessoryVC: IntensityAdjusterDelegate {
+extension IAAccessoryVC: PressureKeyActionDelegate {
     
     
     //MARK:- user interface actions
@@ -31,6 +31,11 @@ extension IAAccessoryVC: IntensityAdjusterDelegate {
         delegate?.optionButtonPressed()
     }
     
+    func tokenizerButtonPressed(actionName:String!){
+        guard let tokenizer = IAStringTokenizing(shortLabel: actionName) else {return}
+        self.delegate?.requestTokenizerChange(tokenizer)
+    }
+    
     func transformButtonPressed(actionName:String!){
         if IntensityTransformers(rawValue: actionName) != nil {
             self.delegate?.requestTransformerChange(toTransformerWithName: actionName)
@@ -45,17 +50,36 @@ extension IAAccessoryVC: IntensityAdjusterDelegate {
         self.transformButton.centerKeyWithActionName(schemeName)
     }
     
-    
-    func intensityLockButtonPressed(newValue:Bool){
-        self.delegate?.iaAccessoryDidSetIntensityLock(newValue)
+    func setTokenizerKeyValue(value:IAStringTokenizing){
+        tokenizerButton.centerKeyWithActionName(value.shortLabel)
     }
-    func intensityAdjusted(toValue:Int){
-        self.delegate?.defaultIntensityUpdated(withValue: toValue)
+    
+//    func intensityLockButtonPressed(newValue:Bool){
+//        self.delegate?.iaAccessoryDidSetIntensityLock(newValue)
+//    }
+    func sliderValueChanged(slider:UISlider!){
+        self.delegate?.defaultIntensityUpdated(withValue: Int(slider.value))
     }
     
     func updateDisplayedIntensity(toValue:Int){
-        self.intensityAdjuster.defaultIntensity = toValue
+        self.intensityButton.text = "\(toValue)"
+        self.intensitySlider.value = Float(toValue)
     }
+    
+    func pressureKeyPressed(sender: PressureControl, actionName: String, intensity: Int) {
+        guard actionName == "intensityButtonPressed" else {assertionFailure(); return}
+        self.delegate?.defaultIntensityUpdated(withValue: intensity)
+    }
+    
+    /*
+    NSStringEnumerationByLines = 0,
+    NSStringEnumerationByParagraphs = 1,
+    NSStringEnumerationByComposedCharacterSequences = 2,
+    NSStringEnumerationByWords = 3,
+    NSStringEnumerationBySentences = 4,
+    
+    */
+    
 }
 
 ///IAAccessoryDelegate delivers actions from the IAAccessory to the IATextView
@@ -69,9 +93,12 @@ protocol IAAccessoryDelegate:class {
     
     func defaultIntensityUpdated(withValue value:Int)
     
+    func requestTokenizerChange(toValue:IAStringTokenizing)
+    
+    func iaKeyboardIsShowing()->Bool
     
     ///The user has pressed the iaAccessory lock intensity button.
-    func iaAccessoryDidSetIntensityLock(toValue:Bool)
+//    func iaAccessoryDidSetIntensityLock(toValue:Bool)
 }
     
 

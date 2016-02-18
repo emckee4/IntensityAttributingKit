@@ -13,11 +13,16 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
     
     var kbSwitchButton:UIButton!
     var cameraButton:UIButton!
-    var intensityAdjuster:IntensityAdjuster!
+    //var intensityAdjuster:IntensityAdjuster!
+    var intensityButton:PressureKey!
+    var intensityLabel:UILabel!
+    var intensitySlider:UISlider!
+    
+    var tokenizerButton:ExpandingKeyControl!
     var optionButton:UIButton!
     var transformButton:ExpandingKeyControl!
     var stackView:UIStackView!
-    var imagePicker:UIImagePickerController!
+    //var imagePicker:UIImagePickerController!
     
     var delegate:IAAccessoryDelegate?
     
@@ -77,30 +82,66 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         cameraButton.clipsToBounds = true
         cameraButton.widthAnchor.constraintEqualToAnchor(cameraButton.heightAnchor).activateWithPriority(800)
         
-        intensityAdjuster = IntensityAdjuster()
-        intensityAdjuster.translatesAutoresizingMaskIntoConstraints = false
-        intensityAdjuster.componentBackgroundColor = kButtonBackgroundColor
-        intensityAdjuster.componentBorderColor = kButtonBorderColor
-        intensityAdjuster.componentBorderWidth = kButtonBorderThickness
-        intensityAdjuster.componentCornerRadius = kButtonCornerRadius
-        intensityAdjuster.stackViewSpacing = 2.0
-        intensityAdjuster.heightAnchor.constraintEqualToConstant(kAccessoryHeight).active = true
-        //intensityAdjuster.showPressureSlider = true
-        intensityAdjuster.clipsToBounds = true
-        intensityAdjuster.delegate = self
+//        intensityAdjuster = IntensityAdjuster()
+//        intensityAdjuster.translatesAutoresizingMaskIntoConstraints = false
+//        intensityAdjuster.componentBackgroundColor = kButtonBackgroundColor
+//        intensityAdjuster.componentBorderColor = kButtonBorderColor
+//        intensityAdjuster.componentBorderWidth = kButtonBorderThickness
+//        intensityAdjuster.componentCornerRadius = kButtonCornerRadius
+//        intensityAdjuster.stackViewSpacing = 2.0
+//        intensityAdjuster.heightAnchor.constraintEqualToConstant(kAccessoryHeight).active = true
+//        //intensityAdjuster.showPressureSlider = true
+//        intensityAdjuster.clipsToBounds = true
+//        intensityAdjuster.delegate = self
 
         
-        optionButton = UIButton(type: .Custom)
-        optionButton.backgroundColor = kButtonBackgroundColor
-        optionButton.setTitle("Opts", forState: .Normal)
-        optionButton.addTarget(self, action: "optionButtonPressed", forControlEvents: .TouchUpInside)
-        optionButton.layer.cornerRadius = kButtonCornerRadius
-        optionButton.layer.borderColor = kButtonBorderColor
-        optionButton.layer.borderWidth = kButtonBorderThickness
-        optionButton.translatesAutoresizingMaskIntoConstraints = false
-        optionButton.setContentCompressionResistancePriority(400, forAxis: .Horizontal)
-        optionButton.widthAnchor.constraintEqualToAnchor(optionButton.heightAnchor).activateWithPriority(500)
- 
+        intensityLabel = UILabel()
+        intensityLabel.translatesAutoresizingMaskIntoConstraints = false
+        intensityLabel.backgroundColor = kButtonBackgroundColor
+        
+        
+        intensityButton = PressureKey()
+        intensityButton.translatesAutoresizingMaskIntoConstraints = false
+        intensityButton.backgroundColor = kButtonBackgroundColor
+        intensityButton.layer.borderColor = kButtonBorderColor
+        intensityButton.layer.borderWidth = kButtonBorderThickness
+        intensityButton.layer.cornerRadius = kButtonCornerRadius
+        intensityButton.widthAnchor.constraintGreaterThanOrEqualToAnchor(intensityButton.heightAnchor, multiplier: 1.0).activateWithPriority(999, identifier: "iaAccessory.intensityButton: W >= H")
+        intensityButton.clipsToBounds = true
+        intensityButton.setKey("100", actionName: "intensityButtonPressed")
+        intensityButton.delegate = self
+        
+        
+        
+        intensitySlider = UISlider()
+        intensitySlider.minimumValue = 0.0
+        intensitySlider.maximumValue = 100.0
+        intensitySlider.addTarget(self, action: "sliderValueChanged:", forControlEvents: .ValueChanged)
+        //fix this
+        intensitySlider.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        tokenizerButton = ExpandingKeyControl(expansionDirection: .Up)
+        tokenizerButton.setSelector(self, selector: "tokenizerButtonPressed:")
+        let ch = IAStringTokenizing.Char.shortLabel
+        tokenizerButton.addKey(withTextLabel: ch, actionName: ch)
+        let word = IAStringTokenizing.Word.shortLabel
+        tokenizerButton.addKey(withTextLabel: word, actionName: word)
+        let sentence = IAStringTokenizing.Sentence.shortLabel
+        tokenizerButton.addKey(withTextLabel: sentence, actionName: sentence)
+//        let line = IAStringTokenizing.Line.shortLabel
+//        tokenizerButton.addKey(withTextLabel: line, actionName: line)
+        let par = IAStringTokenizing.Paragraph.shortLabel
+        tokenizerButton.addKey(withTextLabel: par, actionName: par)
+        
+        tokenizerButton.backgroundColor = kButtonBackgroundColor
+        tokenizerButton.cornerRadius = kButtonCornerRadius
+        //tokenizerButton.widthAnchor.constraintGreaterThanOrEqualToConstant(transformButton.intrinsicContentSize().width + 10.0).active = true
+        tokenizerButton.widthAnchor.constraintGreaterThanOrEqualToAnchor(tokenizerButton.heightAnchor).activateWithPriority(999, identifier: "iaAccessory.tokenizerEK: W >= H")
+        tokenizerButton.layer.borderColor = kButtonBorderColor
+        tokenizerButton.layer.borderWidth = kButtonBorderThickness
+        tokenizerButton.translatesAutoresizingMaskIntoConstraints = false
+
 
         transformButton = ExpandingKeyControl(expansionDirection: .Up)
         transformButton.setSelector(self, selector: "transformButtonPressed:")
@@ -113,40 +154,43 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         
         transformButton.backgroundColor = kButtonBackgroundColor
         transformButton.cornerRadius = kButtonCornerRadius
-        transformButton.widthAnchor.constraintGreaterThanOrEqualToConstant(transformButton.intrinsicContentSize().width + 10.0).active = true
-        transformButton.widthAnchor.constraintGreaterThanOrEqualToAnchor(transformButton.heightAnchor).active = true
+        transformButton.widthAnchor.constraintGreaterThanOrEqualToConstant(transformButton.intrinsicContentSize().width + 10.0).activateWithPriority(999, identifier: "iaAccessory.transformEK: W >= self.intrinsicContentsSize.W + 10 (ie inset)")
+        transformButton.widthAnchor.constraintGreaterThanOrEqualToAnchor(transformButton.heightAnchor).activateWithPriority(999, identifier: "iaAccessory.transformEK: W >= H")
         transformButton.layer.borderColor = kButtonBorderColor
         transformButton.layer.borderWidth = kButtonBorderThickness
         //add config here
         
         
-        
+        optionButton = UIButton(type: .Custom)
+        optionButton.backgroundColor = kButtonBackgroundColor
+        optionButton.setTitle("Opts", forState: .Normal)
+        optionButton.addTarget(self, action: "optionButtonPressed", forControlEvents: .TouchUpInside)
+        optionButton.layer.cornerRadius = kButtonCornerRadius
+        optionButton.layer.borderColor = kButtonBorderColor
+        optionButton.layer.borderWidth = kButtonBorderThickness
+        optionButton.translatesAutoresizingMaskIntoConstraints = false
+        optionButton.setContentCompressionResistancePriority(400, forAxis: .Horizontal)
+        optionButton.widthAnchor.constraintEqualToAnchor(optionButton.heightAnchor).activateWithPriority(500, identifier: "iaAccessory.optionButton: W = H")
+         
         
 
-        stackView = UIStackView(arrangedSubviews: [kbSwitchButton, cameraButton, intensityAdjuster, transformButton ,optionButton])
+        stackView = UIStackView(arrangedSubviews: [kbSwitchButton, cameraButton, intensityButton, intensitySlider, tokenizerButton, transformButton,optionButton])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.alignment = .Fill
         stackView.axis = .Horizontal
         stackView.distribution = .Fill
         stackView.spacing = 2.0
+        stackView.heightAnchor.constraintEqualToConstant(kAccessoryHeight).activateWithPriority(1000)
         
         inputView!.addSubview(stackView)
         
         //setup constraints now that all views have been added
 
         
-        let topConstraint = stackView.topAnchor.constraintEqualToAnchor(view.topAnchor)
-            topConstraint.priority = 999
-            topConstraint.active = true
-        let bottomConstraint = stackView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor)
-            bottomConstraint.priority = 999
-            bottomConstraint.active = true
-        let leftConstraint = stackView.leftAnchor.constraintEqualToAnchor(view.leftAnchor)
-            leftConstraint.priority = 1000
-            leftConstraint.active = true
-        let rightConstraint = stackView.rightAnchor.constraintEqualToAnchor(view.rightAnchor)
-            rightConstraint.priority = 900
-            rightConstraint.active = true
+        stackView.topAnchor.constraintEqualToAnchor(view.topAnchor).activateWithPriority(999, identifier: "iaAccessory.stackView.top")
+        stackView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor).activateWithPriority(999, identifier: "iaAccessory.stackView.bottom")
+        stackView.leftAnchor.constraintEqualToAnchor(view.leftAnchor).activateWithPriority(1000, identifier: "iaAccessory.stackView.left")
+        stackView.rightAnchor.constraintEqualToAnchor(view.rightAnchor).activateWithPriority(900, identifier: "iaAccessory.stackView.right")
         
         self.inputView!.frame = CGRect(x: 0, y: 0, width: UIScreen.mainScreen().bounds.width, height: kAccessoryHeight)
         
@@ -168,7 +212,7 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        layoutForBounds(UIScreen.mainScreen().bounds.size)
+        layoutForBounds()
 
     }
     
@@ -177,16 +221,19 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
     }
 
-    func layoutForBounds(size:CGSize){
-        if !intensityAdjuster.forceTouchAvailable && size.width > 350{
-            intensityAdjuster.showPressureSlider = true
-            intensityAdjuster.showPressurePad = false
-        } else if size.width > size.height {
-            intensityAdjuster.showPressureSlider = true
-            intensityAdjuster.showPressurePad = true
-        } else {
-            intensityAdjuster.showPressurePad = true
-            intensityAdjuster.showPressureSlider = false
+    func layoutForBounds(size:CGSize? = nil){
+        let newSize = size ?? UIScreen.mainScreen().bounds.size
+        let isWideView = newSize.width >= 450
+        let iaShowing = self.delegate?.iaKeyboardIsShowing() ?? true
+        switch (isWideView, iaShowing) {
+        case (false,false): //portrait, system keyboard
+            intensitySlider.hidden = false; tokenizerButton.hidden = true; transformButton.hidden = true
+        case (true,false): //landscape, system keyboard
+            intensitySlider.hidden = false; tokenizerButton.hidden = false; transformButton.hidden = false
+        case (false,true): //portrait, iaKeyboard
+            intensitySlider.hidden = true; tokenizerButton.hidden = false; transformButton.hidden = false
+        case (true,true): //landscape, iaKeyboard
+            intensitySlider.hidden = false; tokenizerButton.hidden = false; transformButton.hidden = false
         }
     }
 

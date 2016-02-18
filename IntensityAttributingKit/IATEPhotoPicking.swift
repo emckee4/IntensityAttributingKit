@@ -69,6 +69,7 @@ extension IATextEditor:UIImagePickerControllerDelegate, UINavigationControllerDe
         newIA.insertAttachmentAtPosition(ta, position: 0, intensity: self.defaultIntensity, attributes: baseAttributes)
         
         self.iaString!.replaceRange(newIA, range: self.selectedRange.toRange()!)
+        self.iaString!.thumbSize = self.thumbSizesForAttachments
         //self.renderIAString()
         self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: newIA.convertToNSAttributedString())
         self.selectedRange = NSMakeRange(insertionLoc + 1, 0)

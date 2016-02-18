@@ -9,8 +9,8 @@
 import Foundation
 
 
-struct IAAttachmentArray:CustomStringConvertible, SequenceType {
-    typealias LocAttach = (loc:Int,attach:IATextAttachment)
+public struct IAAttachmentArray:CustomStringConvertible, SequenceType {
+    public typealias LocAttach = (loc:Int,attach:IATextAttachment)
     var data:[LocAttach] = []
     
     var lastLoc:Int? {return data.last?.loc}
@@ -25,9 +25,9 @@ struct IAAttachmentArray:CustomStringConvertible, SequenceType {
     
     init(){}
     
-    typealias Generator = Array<LocAttach>.Generator
+    public typealias Generator = Array<LocAttach>.Generator
     
-    func generate() -> Generator {
+    public func generate() -> Generator {
         return data.generate()
     }
     
@@ -40,7 +40,7 @@ struct IAAttachmentArray:CustomStringConvertible, SequenceType {
         return nil
     }
     
-    subscript(position:Int)->IATextAttachment? {
+    public internal(set) subscript(position:Int)->IATextAttachment? {
         get{
             for item in data{
                 if item.loc == position {
@@ -150,7 +150,7 @@ struct IAAttachmentArray:CustomStringConvertible, SequenceType {
         return true
     }
     
-    var description:String {
+    public var description:String {
         var descript = "IAAttachmentArray: "
         guard self.data.count > 0 else {return descript + "<empty>"}
         descript += "["
@@ -164,5 +164,11 @@ struct IAAttachmentArray:CustomStringConvertible, SequenceType {
     func deepCopy()->IAAttachmentArray{
         let newData:[LocAttach] = self.data.map({return LocAttach($0.loc, $0.attach.copy() as! IATextAttachment)})
         return IAAttachmentArray(data: newData)
+    }
+    
+    public func setThumbSizes(thumbSize:ThumbSize){
+        for (_,attach) in self.data {
+            attach.thumbSize = thumbSize
+        }
     }
 }

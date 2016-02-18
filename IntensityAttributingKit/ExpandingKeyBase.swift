@@ -23,7 +23,7 @@ public class ExpandingKeyBase: UIView {
     
     
     ///this is private set until means for reordering the subviews are added
-    @IBInspectable public var expansionDirection:PKExpansionDirection = .Up {
+    @IBInspectable public var expansionDirection:EKDirection = .Up {
         didSet{
             if oldValue.hasForwardLayoutDirection() != expansionDirection.hasForwardLayoutDirection() && !epKeys.isEmpty{
                 layoutKeysForExpansionDirection()
@@ -68,7 +68,7 @@ public class ExpandingKeyBase: UIView {
         postInitSetup()
     }
     
-    public init(expansionDirection:PKExpansionDirection){
+    public init(expansionDirection:EKDirection){
         super.init(frame:CGRectZero)
         self.expansionDirection = expansionDirection
         postInitSetup()
@@ -93,20 +93,10 @@ public class ExpandingKeyBase: UIView {
         self.addSubview(containedStackView)
         
         
-        topSVConstraint = containedStackView.topAnchor.constraintEqualToAnchor(self.topAnchor)
-        topSVConstraint.active = true
-        bottomSVConstraint = containedStackView.bottomAnchor.constraintEqualToAnchor(self.bottomAnchor)
-        bottomSVConstraint.active = true
-        leftSVConstraint = containedStackView.leftAnchor.constraintEqualToAnchor(self.leftAnchor)
-        leftSVConstraint.active = true
-        rightSVConstraint = containedStackView.rightAnchor.constraintEqualToAnchor(self.rightAnchor)
-        rightSVConstraint.active = true
-        
-        topSVConstraint.identifier = "ExpandingKey.topSVConstraint"
-        bottomSVConstraint.identifier = "ExpandingKey.bottomSVConstraint"
-        leftSVConstraint.identifier = "ExpandingKey.leftSVConstraint"
-        rightSVConstraint.identifier = "ExpandingKey.rightSVConstraint"
-        
+        topSVConstraint = containedStackView.topAnchor.constraintEqualToAnchor(self.topAnchor).activateWithPriority(999, identifier: "ExpandingKey.topSVConstraint")
+        bottomSVConstraint = containedStackView.bottomAnchor.constraintEqualToAnchor(self.bottomAnchor).activateWithPriority(999, identifier: "ExpandingKey.bottomSVConstraint")
+        leftSVConstraint = containedStackView.leftAnchor.constraintEqualToAnchor(self.leftAnchor).activateWithPriority(1000, identifier: "ExpandingKey.leftSVConstraint")
+        rightSVConstraint = containedStackView.rightAnchor.constraintEqualToAnchor(self.rightAnchor).activateWithPriority(1000, identifier: "ExpandingKey.rightSVConstraint")
         
         self.translatesAutoresizingMaskIntoConstraints = false
         self.multipleTouchEnabled = false
@@ -163,10 +153,16 @@ public class ExpandingKeyBase: UIView {
             }
         } else {
             for (i,epkey) in self.epKeys.reverse().enumerate() {
-                guard containedStackView.arrangedSubviews[i] === epkey.view else {
-                    _ = epKeys.map({self.containedStackView.removeArrangedSubview($0.view)})
-                    _ = epKeys.reverse().map({self.containedStackView.addArrangedSubview($0.view)})
-                    return
+//                guard containedStackView.arrangedSubviews[i] === epkey.view else {
+//                    //containedStackView.removeArrangedSubview(epkey.view)
+//                    //containedStackView.insertArrangedSubview(epkey.view, atIndex: i)
+//                    _ = epKeys.map({self.containedStackView.removeArrangedSubview($0.view)})
+//                    _ = epKeys.reverse().map({self.containedStackView.addArrangedSubview($0.view)})
+//                    return
+//                }
+                if epkey.view != containedStackView.arrangedSubviews[i] {
+                    containedStackView.removeArrangedSubview(epkey.view)
+                    containedStackView.insertArrangedSubview(epkey.view, atIndex: i)
                 }
             }
             
@@ -338,7 +334,7 @@ public class ExpandingKeyBase: UIView {
     func keySelectionWillUpdate(withTouch touch:UITouch!, previousSelection oldKey:EPKey?, nextSelection:EPKey?){
         
     }
-    ///Called immediately after selectedEPKey is updated to a non-nil value in touches ended
+    ///Called immediately after selectedEPKey is updated to a non-nil value in touches ended. Override to implement additional non standard actions during touchesEnded to handle key selection.
     func handleKeySelection(selectedKey:EPKey){
         
     }
@@ -385,7 +381,7 @@ public class ExpandingKeyBase: UIView {
             }
             guard selectedEPKey != nil else {selectedEPKey = nil; shrinkView(); return}
             
-            handleKeySelection(newSelectedKey!)
+            defer {handleKeySelection(newSelectedKey!)}
             if selectedBecomesFirst {
                 defer{
                     moveEPKeyToFirst(newSelectedKey!)

@@ -12,7 +12,9 @@ public class IATextView: UITextView, UITextViewDelegate {
     
     weak public var iaDelegate:IATextViewDelegate?
 
-    public var thumbSizesForAttachments: ThumbSize = .Medium
+    public var thumbSizesForAttachments: ThumbSize = .Medium {
+        didSet {self.iaString?.thumbSize = thumbSizesForAttachments}
+    }
     
     private var _renderOptions:[String:AnyObject]?
     private var _iaString:IAString?
@@ -47,7 +49,8 @@ public class IATextView: UITextView, UITextViewDelegate {
     public func setIAString(iaString:IAString, withCacheIdentifier:String? = nil,overrideRenderOptions renderOptions:[String:AnyObject]? = nil){
         self._iaString = iaString
         self._renderOptions = renderOptions
-        self.attributedText = iaString.convertToNSAttributedString(withOptions: renderOptions)
+        self.iaString?.thumbSize = self.thumbSizesForAttachments
+        self.attributedText = self._iaString?.convertToNSAttributedString(withOptions: renderOptions)
     }
     
     ///Allows iaDelegate to control interaction with textAttachment. Defaults to true

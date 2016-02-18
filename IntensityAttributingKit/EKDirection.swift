@@ -1,5 +1,5 @@
 //
-//  PKExpansionDirection.swift
+//  EKDirection.swift
 //  IntensityAttributingKit
 //
 //  Created by Evan Mckee on 12/3/15.
@@ -13,7 +13,7 @@ import Foundation
 
 
 ///The direction in which an ExpandingPressureKey grows on selection
-public enum PKExpansionDirection {
+public enum EKDirection {
     case Up,Down,Left,Right
     
     func hasForwardLayoutDirection()->Bool{

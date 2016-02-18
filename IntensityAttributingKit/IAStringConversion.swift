@@ -153,12 +153,13 @@ extension IAString {
         let transformer = renderWithScheme.transformer
         
         var useSmoothing:NSStringEnumerationOptions!
-        if let smoothing = options?["smoothingSeparator"] as? NSStringEnumerationOptions {
-            useSmoothing = smoothing
+        if let smoothing = options?["overrideSmoothing"] as? IAStringTokenizing {
+            useSmoothing = smoothing.enumerationOption
         } else {
-            useSmoothing = self.preferedSmoothing
+            useSmoothing = self.preferedSmoothing.enumerationOption
         }
         
+        self.attachments.setThumbSizes(self.thumbSize)
         //other options should be implemented here...
         
         

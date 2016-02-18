@@ -11,9 +11,12 @@ import UIKit
 
 
 extension NSLayoutConstraint {
-    func activateWithPriority(priority:Float)->NSLayoutConstraint{
+    func activateWithPriority(priority:Float, identifier:String? = nil)->NSLayoutConstraint{
         self.priority = priority
         self.active = true
+        if identifier != nil {
+            self.identifier = identifier
+        }
         return self
     }
 }
