@@ -12,6 +12,7 @@ import Foundation
 public struct IAStringKeys {
     public static let text = "text"
     public static let intensities = "intensities"
+    public static let nsurlRVPs = "nsurlRVPs"
     public static let linkRVPs = "linkRVPs"
     public static let attachments = "attachments"
     public static let baseAttributes = "iaBaseAttributes"

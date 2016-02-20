@@ -50,18 +50,31 @@ public class IAString {
     }
     
     ///Converts the iaString to a dictionary which is ready for direct coversion to JSON except for containing an iaTextAttachments key which needs to be stripped out and handled separately when uploading.
-    public func convertToAlmostJSONReadyDict()->[String:AnyObject]{
+    public func convertToAlmostJSONReadyDict(useStringURLs useStringURLs:Bool = false)->[String:AnyObject]{
         var dict:[String:AnyObject] = [:]
         dict[IAStringKeys.text] = self.text
         dict[IAStringKeys.intensities] = self.intensities
         
         dict[IAStringKeys.baseAttributes] = self.baseAttributes.asRVPArray
-        dict[IAStringKeys.linkRVPs] = self.links.map({$0.asArray})
+        let urlRVPs = self.links.map({$0.asArray})
+        if useStringURLs {
+            var stringRVPs:[[AnyObject]] = []
+            for rvp in urlRVPs {
+                guard rvp.count == 3 else {continue}
+                guard let urlString = (rvp[2] as? NSURL)?.absoluteString else {continue}
+                stringRVPs.append([rvp[0],rvp[1],urlString])
+            }
+            dict[IAStringKeys.linkRVPs] = stringRVPs
+        } else {
+            dict[IAStringKeys.nsurlRVPs] = urlRVPs
+        }
+        
+        
         
         var combinedOpts = self.renderOptions
         combinedOpts[IAStringKeys.renderScheme] = renderScheme?.rawValue ?? IAKitOptions.singleton.defaultScheme.rawValue
         combinedOpts[IAStringKeys.preferedSmoothing] = self.preferedSmoothing.shortLabel
-
+        
         dict[IAStringKeys.options] = combinedOpts
     
         
@@ -110,7 +123,17 @@ public class IAString {
                     }
                 }
             }
+        } else if let newURLs = dict[IAStringKeys.nsurlRVPs] as? [[AnyObject]] {
+            for urlRVP in newURLs {
+                if let url = (urlRVP[2] as? NSURL), start = urlRVP[0] as? Int, end = urlRVP[1] as? Int {
+                    self.links.append(RangeValuePair(value: url, startIndex: start, endIndex: end))
+                }
+            }
+        } else {
+            print("IAString(dict) received no link info")
+            return nil
         }
+        
         if let iaAttachments = dict[IAStringKeys.iaTextAttachments] as? [Int:IATextAttachment] {
             for (key, attach) in iaAttachments.sort({$0.0 < $1.0}) {
                 self.attachments[key] = attach

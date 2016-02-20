@@ -100,6 +100,7 @@ public class IATextEditor: IATextView {
         self.setIAString(IAString())
         self.setFlatAtts()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "menuNotificationReceived:", name: UIMenuControllerDidShowMenuNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "menuNotificationReceived:", name: UIMenuControllerWillShowMenuNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "menuNotificationReceived:", name: UIMenuControllerDidHideMenuNotification, object: nil)
     }
     //////////////
@@ -280,7 +281,8 @@ extension IATextEditor {
     func menuNotificationReceived(notification:NSNotification){
         print(notification.name)
         guard self.isFirstResponder() else {return}
-        if notification.name == UIMenuControllerDidShowMenuNotification {
+
+        if notification.name == UIMenuControllerWillShowMenuNotification && false { //UIMenuControllerDidShowMenuNotification
             //set flat attributes
             self.setFlatAtts()
         } else if notification.name == UIMenuControllerDidHideMenuNotification {
@@ -309,7 +311,10 @@ extension IATextEditor {
     }
     
     
-    
+    public override func toggleBoldface(sender: AnyObject?) {
+        print("toggleBoldface: \(sender)")
+        super.toggleBoldface(sender)
+    }
     
     public override func paste(sender: AnyObject?) {
         let pb = UIPasteboard.generalPasteboard()
@@ -354,6 +359,7 @@ extension IATextEditor {
         if sender is UIMenuController && action == Selector("delete:") {
             return false
         }
+        print("canPerform: \(action)")
         return super.canPerformAction(action, withSender: sender)
     }
     
