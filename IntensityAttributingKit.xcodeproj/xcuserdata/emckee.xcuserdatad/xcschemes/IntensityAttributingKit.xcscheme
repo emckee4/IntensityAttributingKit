@@ -79,15 +79,16 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C031CBC51BDB094800521393"
-            BuildableName = "IntensityAttributingKit.framework"
-            BlueprintName = "IntensityAttributingKit"
-            ReferencedContainer = "container:IntensityAttributingKit.xcodeproj">
+            BlueprintIdentifier = "C0B884E31BF3FC03000B66C8"
+            BuildableName = "IntensityMessaging.app"
+            BlueprintName = "IntensityMessaging"
+            ReferencedContainer = "container:../IntensityMessaging/IntensityMessaging.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
