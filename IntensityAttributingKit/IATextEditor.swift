@@ -25,15 +25,10 @@ public class IATextEditor: IATextView {
     }
     
     
-    //var intensityChangesDynamically = true
-    
-    
     weak public var editorDelegate:IATextEditorDelegate?
     
     //define IAKeyboardDelegate: directly modify the store, bypassing UITextView accessors
-    
     //IAAccessoryDelegate: allows accessory to access and modify attributes
-    
     //internal delegate can be used for tracking changes attempted by the system keyboard
     
     
@@ -98,23 +93,7 @@ public class IATextEditor: IATextView {
         currentTransformer = IAKitOptions.singleton.defaultScheme
         self.allowsEditingTextAttributes = true
         self.setIAString(IAString())
-        self.setFlatAtts()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "menuNotificationReceived:", name: UIMenuControllerDidShowMenuNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "menuNotificationReceived:", name: UIMenuControllerWillShowMenuNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "menuNotificationReceived:", name: UIMenuControllerDidHideMenuNotification, object: nil)
-    }
-    //////////////
-    
-//    func updateBaseAttributes(){
-//        ///check the typingAttributes, and if they've changed, update the baseAtts accordingly
-//        //TODO:Implement updateBaseAttributes
-//        print("Need to:Implement updateBaseAttributes")
-//        
-//    }
-    
-
-    deinit{
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        self.typingAttributes = [NSFontAttributeName:UIFont.systemFontOfSize(baseAttributes.cSize)]
     }
     
     //////////////
@@ -138,7 +117,7 @@ public class IATextEditor: IATextView {
         }
     }
     
-    
+
     private var lastSystemTextChange:(range:NSRange,text:String)?
     
     ///We adopt the UIViewDelegate ourselves to implement this one function internally
@@ -180,42 +159,9 @@ public class IATextEditor: IATextView {
     
 
     
-    public func textViewDidChange(textView: UITextView) {
-        if self.isFirstResponder() && UIMenuController.sharedMenuController().menuVisible {
-            let changes = self.compareTypingAtts()
-            self.setFlatAtts()
-            //effect changes on selected range
-            guard changes.b || changes.i || changes.u || changes.s else {return}
-                //toggle currentAttributes
-            if changes.b {self.baseAttributes.bold = !self.baseAttributes.bold}
-            if changes.i {self.baseAttributes.italic = !self.baseAttributes.italic}
-            if changes.u {self.baseAttributes.underline = !self.baseAttributes.underline}
-            if changes.s {self.baseAttributes.strikethrough = !self.baseAttributes.strikethrough}
-            if selectedRange.length > 0 {
-                let iaSub = self.iaString!.iaSubstringFromRange(self.selectedRange.intRange)
-                let fullRange = 0..<iaSub.length
-                //if in selected range are one thing, toggle it, else set all to whatever true
-                if changes.b {
-                    let currentVal = (iaSub.getAttributeValueForRange(.Bold, range: fullRange) as? Bool) ?? false
-                    iaSub.setAttributeValueForRange(!currentVal, attrName: .Bold, range: fullRange)
-                }
-                if changes.i {
-                    let currentVal = (iaSub.getAttributeValueForRange(.Italic, range: fullRange) as? Bool) ?? false
-                    iaSub.setAttributeValueForRange(!currentVal, attrName: .Italic, range: fullRange)
-                }
-                if changes.u {
-                    let currentVal = (iaSub.getAttributeValueForRange(.Underline, range: fullRange) as? Bool) ?? false
-                    iaSub.setAttributeValueForRange(!currentVal, attrName: .Underline, range: fullRange)
-                }
-                if changes.s {
-                    let currentVal = (iaSub.getAttributeValueForRange(.Strikethrough, range: fullRange) as? Bool) ?? false
-                    iaSub.setAttributeValueForRange(!currentVal, attrName: .Strikethrough, range: fullRange)
-                }
-                self.iaString!.replaceRange(iaSub, range: self.selectedRange.intRange)
-                self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: iaSub.convertToNSAttributedString())
-            }
-        }
-    }
+//    public func textViewDidChange(textView: UITextView) {
+//
+//    }
     
     
     ////////
@@ -238,7 +184,6 @@ public class IATextEditor: IATextView {
         self.setIAString(IAString())
         defaultIntensity = IAKitOptions.singleton.defaultIntensity
         baseAttributes = IABaseAttributes(size: IAKitOptions.singleton.defaultTextSize)
-        self.setFlatAtts()
     }
     
     ///
@@ -277,44 +222,37 @@ public class IATextEditor: IATextView {
 
 ///Enhanced copy/paste/UIMenu functionality
 extension IATextEditor {
-    //observe UIMenuControllerWillShow
-    func menuNotificationReceived(notification:NSNotification){
-        print(notification.name)
-        guard self.isFirstResponder() else {return}
 
-        if notification.name == UIMenuControllerWillShowMenuNotification && false { //UIMenuControllerDidShowMenuNotification
-            //set flat attributes
-            self.setFlatAtts()
-        } else if notification.name == UIMenuControllerDidHideMenuNotification {
-            
+    
+    public override func toggleBoldface(sender: AnyObject?) {
+        self.baseAttributes.bold = !self.baseAttributes.bold
+        if selectedRange.length > 0 {
+            let rangeIsBold = (self.iaString!.getAttributeValueForRange(.Bold, range: selectedRange.intRange) as? Bool) ?? false
+            self.iaString!.setAttributeValueForRange(!rangeIsBold, attrName: .Bold, range: selectedRange.intRange)
+            self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: self.iaString!.iaSubstringFromRange(selectedRange.intRange).convertToNSAttributedString())
         }
         
     }
     
-    ///Sets the typing attributes to a base value so that changes can be compared
-    func setFlatAtts(){
-        self.typingAttributes = [NSFontAttributeName:UIFont.systemFontOfSize(20.0)]
-    }
-    
-    ///returns a tupple indicating which values have changes relative to the flatAtts
-    func compareTypingAtts()->(b:Bool,i:Bool,u:Bool,s:Bool){
-        var results = (b:false,i:false,u:false,s:false)
-        let atts = self.typingAttributes
-        if let font = atts[NSFontAttributeName] as? UIFont {
-            let traits = font.fontDescriptor().symbolicTraits
-            if traits.contains(.TraitBold) {results.b = true}
-            if traits.contains(.TraitItalic) {results.i = true}
+    public override func toggleItalics(sender: AnyObject?) {
+        self.baseAttributes.italic = !self.baseAttributes.italic
+        if selectedRange.length > 0 {
+            let rangeIsBold = (self.iaString!.getAttributeValueForRange(.Italic, range: selectedRange.intRange) as? Bool) ?? false
+            self.iaString!.setAttributeValueForRange(!rangeIsBold, attrName: .Italic, range: selectedRange.intRange)
+            self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: self.iaString!.iaSubstringFromRange(selectedRange.intRange).convertToNSAttributedString())
         }
-        if let underline = (atts[NSUnderlineStyleAttributeName] as? Int) where underline != 0 {results.u = true}
-        if let strikethrough = (atts[NSStrikethroughStyleAttributeName] as? Int) where strikethrough != 0 {results.s = true}
-        return results
+    }
+    
+    public override func toggleUnderline(sender: AnyObject?) {
+        self.baseAttributes.underline = !self.baseAttributes.underline
+        if selectedRange.length > 0 {
+            let rangeIsBold = (self.iaString!.getAttributeValueForRange(.Underline, range: selectedRange.intRange) as? Bool) ?? false
+            self.iaString!.setAttributeValueForRange(!rangeIsBold, attrName: .Underline, range: selectedRange.intRange)
+            self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: self.iaString!.iaSubstringFromRange(selectedRange.intRange).convertToNSAttributedString())
+        }
     }
     
     
-    public override func toggleBoldface(sender: AnyObject?) {
-        print("toggleBoldface: \(sender)")
-        super.toggleBoldface(sender)
-    }
     
     public override func paste(sender: AnyObject?) {
         let pb = UIPasteboard.generalPasteboard()
