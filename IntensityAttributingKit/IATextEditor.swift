@@ -94,6 +94,7 @@ public class IATextEditor: IATextView {
         self.allowsEditingTextAttributes = true
         self.setIAString(IAString())
         self.typingAttributes = [NSFontAttributeName:UIFont.systemFontOfSize(baseAttributes.cSize)]
+        self.layoutManager.allowsNonContiguousLayout = false
     }
     
     //////////////
@@ -297,7 +298,6 @@ extension IATextEditor {
         if sender is UIMenuController && action == Selector("delete:") {
             return false
         }
-        print("canPerform: \(action)")
         return super.canPerformAction(action, withSender: sender)
     }
     

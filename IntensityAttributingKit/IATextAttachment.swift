@@ -145,8 +145,8 @@ public class IATextAttachment:NSTextAttachment {
         //let maxThumbSize = IAKitOptions.singleton.maxThumbnailSize
         let maxThumbSize = self.thumbSize.size
         
-        let thumbSize = storedContentSize?.sizeThatFitsMaintainingAspect(containerSize: maxThumbSize)
-        if let thumbSize = thumbSize {return CGRect(origin: CGPointZero, size: thumbSize)}
+        let newThumbSize = storedContentSize?.sizeThatFitsMaintainingAspect(containerSize: maxThumbSize)
+        if let newThumbSize = newThumbSize {return CGRect(origin: CGPointZero, size: newThumbSize)}
 //        if let newSize = thumbSize?.sizeThatFitsMaintainingAspect(containerSize: lineFrag.size) {
 //            return CGRect(origin: CGPointZero, size: newSize)
 //        }

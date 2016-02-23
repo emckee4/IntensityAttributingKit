@@ -42,6 +42,7 @@ public class IATextView: UITextView, UITextViewDelegate {
         self.layer.cornerRadius = 10.0
         self.textContainerInset = UIEdgeInsetsMake(7.0, 2.0, 7.0, 2.0)
         self.delegate = self
+        self.layoutManager.allowsNonContiguousLayout = false
     }
     
     

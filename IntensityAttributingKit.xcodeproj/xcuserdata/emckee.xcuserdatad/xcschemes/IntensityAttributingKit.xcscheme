@@ -78,17 +78,12 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
-      debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C0B884E31BF3FC03000B66C8"
-            BuildableName = "IntensityMessaging.app"
-            BlueprintName = "IntensityMessaging"
-            ReferencedContainer = "container:../IntensityMessaging/IntensityMessaging.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
+      debugDocumentVersioning = "YES"
+      launchAutomaticallySubstyle = "2">
+      <PathRunnable
+         runnableDebuggingMode = "0"
+         FilePath = "/Users/emckee/Documents/IntensityMessagingAll/DerivedData/Build/Products/IntensityAttributingKit">
+      </PathRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

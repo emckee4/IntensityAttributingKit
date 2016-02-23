@@ -19,7 +19,7 @@ extension UIImage {
             finalSize = self.size.sizeThatFitsMaintainingAspect(containerSize: maxSize)
         }
         let hasAlpha = false
-        let scale: CGFloat = 0.0 // Automatically use scale factor of main screen
+        let scale: CGFloat = 1.0 // Automatically use scale factor of main screen
         
         UIGraphicsBeginImageContextWithOptions(finalSize, !hasAlpha, scale)
         self.drawInRect(CGRect(origin: CGPointZero, size: finalSize))
