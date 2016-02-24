@@ -212,20 +212,27 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        layoutForBounds()
+        //layoutForBounds()
 
     }
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        layoutForBounds(size)
+        layoutForBoundsAndKeyboard(size)
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
     }
+    
+    private var currentLayoutIsForIAKeyboard:Bool = true
+    
+    func updateAccessoryLayout(usingIAKeyboard:Bool){
+        self.currentLayoutIsForIAKeyboard = usingIAKeyboard
+        layoutForBoundsAndKeyboard()
+    }
 
-    func layoutForBounds(size:CGSize? = nil){
+    func layoutForBoundsAndKeyboard(size:CGSize? = nil){
         let newSize = size ?? UIScreen.mainScreen().bounds.size
         let isWideView = newSize.width >= 450
-        let iaShowing = self.delegate?.iaKeyboardIsShowing() ?? true
-        switch (isWideView, iaShowing) {
+        //let iaShowing = self.delegate?.iaKeyboardIsShowing() ?? true
+        switch (isWideView, currentLayoutIsForIAKeyboard) {
         case (false,false): //portrait, system keyboard
             intensitySlider.hidden = false; tokenizerButton.hidden = true; transformButton.hidden = true
         case (true,false): //landscape, system keyboard

@@ -68,6 +68,7 @@ public class IATextEditor: IATextView {
             self.iaAccessory.setTransformKeyForScheme(withName: currentTransformer.transformer.schemeName)
             self.iaAccessory.setTokenizerKeyValue(self.iaString!.preferedSmoothing)
             iaKeyboardVC.delegate = self
+            iaAccessory.updateAccessoryLayout(true)
             return true
         }
         return false
@@ -173,10 +174,12 @@ public class IATextEditor: IATextView {
         if self.inputViewController == nil {
             self.inputViewController = iaKeyboardVC
             iaKeyboardVC.prepareKeyboardForAppearance()
+            iaAccessory.updateAccessoryLayout(true)
         } else {
             self.inputViewController = nil
+            iaAccessory.updateAccessoryLayout(false)
         }
-        self.iaAccessory.layoutForBounds()
+        
         self.reloadInputViews()
     }
     
