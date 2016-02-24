@@ -141,41 +141,25 @@ public class ExpandingKeyBase: UIView {
     }
     
     
-    ///Removes all key views from the stackview and inserts them in forward or reverse order of epKeys, depending on whether the expansionDirection has a forward or reverse layout
+    ///Reorders keys in the stackview to match the order in the epKeys array, subject to reversal if the expansion direction is not one with forward ordered layout.
     internal func layoutKeysForExpansionDirection(){
         if expansionDirection.hasForwardLayoutDirection() {
             for (i,epkey) in self.epKeys.enumerate() {
-                guard containedStackView.arrangedSubviews[i] === epkey.view else {
-                    _ = epKeys.map({self.containedStackView.removeArrangedSubview($0.view)})
-                    _ = epKeys.map({self.containedStackView.addArrangedSubview($0.view)})
-                    return
+                if epkey.view != containedStackView.arrangedSubviews[i] {
+                    containedStackView.insertArrangedSubview(epkey.view, atIndex: i)
+                    assert(containedStackView.arrangedSubviews.count == containedStackView.subviews.count   )
                 }
             }
         } else {
             for (i,epkey) in self.epKeys.reverse().enumerate() {
-//                guard containedStackView.arrangedSubviews[i] === epkey.view else {
-//                    //containedStackView.removeArrangedSubview(epkey.view)
-//                    //containedStackView.insertArrangedSubview(epkey.view, atIndex: i)
-//                    _ = epKeys.map({self.containedStackView.removeArrangedSubview($0.view)})
-//                    _ = epKeys.reverse().map({self.containedStackView.addArrangedSubview($0.view)})
-//                    return
-//                }
                 if epkey.view != containedStackView.arrangedSubviews[i] {
-                    containedStackView.removeArrangedSubview(epkey.view)
+                    //containedStackView.removeArrangedSubview(epkey.view)
                     containedStackView.insertArrangedSubview(epkey.view, atIndex: i)
+                    assert(containedStackView.arrangedSubviews.count == containedStackView.subviews.count   )
                 }
             }
             
         }
-        //        if expansionDirection.hasForwardLayoutDirection(){
-        //            for pk in epKeys{
-        //                containedStackView.addArrangedSubview(pk.view)
-        //            }
-        //        } else {
-        //            for pk in epKeys {
-        //                containedStackView.insertArrangedSubview(pk.view, atIndex: 0)
-        //            }
-        //        }
     }
     
     ///Moves the key with the actionName specified to the center most position
@@ -294,6 +278,7 @@ public class ExpandingKeyBase: UIView {
         } else {
             containedStackView.insertArrangedSubview(keyView, atIndex: 0)
         }
+        keyView.translatesAutoresizingMaskIntoConstraints = false
         keyView.clipsToBounds = true
         keyView.layer.cornerRadius = self.cornerRadius
         keyView.layer.borderWidth = 1.0
