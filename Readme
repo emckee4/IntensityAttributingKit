@@ -6,12 +6,9 @@ IntensityAttributingKit is a swift framework which provides a means of creating,
 
 
 Next steps:
-    Fix ExpandingKey issues with transformer button
     Add options view (change sensitivity constants, FIMF, smoothing/tokenizing)
 
     After completing a word or changing selection from a word, whole unit (chosen by smoothing method) should be rerendered if necessary to reflect smoothed unit value
-    Add autocapitalization, multistage text input support to IAKeyboard
-        This may require rewriting IATextEditor as a custom subclass of UIView
     Improve keyboard animation performance
     Improve rendering performance
 
