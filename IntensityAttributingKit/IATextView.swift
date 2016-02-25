@@ -43,7 +43,7 @@ public class IATextView: UITextView, UITextViewDelegate {
         self.textContainerInset = UIEdgeInsetsMake(7.0, 2.0, 7.0, 2.0)
         self.delegate = self
         self.layoutManager.allowsNonContiguousLayout = false
-        self.layer.drawsAsynchronously = true
+        self.layer.drawsAsynchronously = false
     }
     
     

@@ -277,7 +277,7 @@ public enum ThumbSize:String {
     Small = "Small",
     Medium = "Medium"
     
-    var size: CGSize {
+    public var size: CGSize {
         switch self {
         case .Tiny: return CGSizeMake(30, 30)
         case .Small: return CGSizeMake(70, 70)
