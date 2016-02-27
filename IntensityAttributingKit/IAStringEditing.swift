@@ -78,6 +78,22 @@ extension IAString {
         self.attachments.replaceRange(replacement.attachments, ofLength: replacement.length, replacedRange: range)
         
     }
+    ///Functions similarly to replaceRange except that it returns a tupple of a range and an NSAttributedString covering the range affected of the attributedString of the displaying view. This range may differ from the range of the changes passed in since tokenizers other than ComposedCharacters create a potential for changes to propograte more widely. The expectation is that the resulting tupple will be used in a replace range op on the IATextEditor's textStorage
+    
+    ///This function performs a range replace on the iaString and updates affected portions ofthe provided textStorage with the new values. This can be complicated because a replaceRange on an IAString with a multi-character length tokenizer (ie anything but character length) can affect a longer range of the textStorage than is replaced in the IAString. This function tries to avoid modifying longer stretches than is necessary.
+    public func replaceRangeUpdatingTextStorage(replacement:IAString, range:Range<Int>, textStorage:NSTextStorage){
+        self.replaceRange(replacement, range: range)
+        let modRange = range.startIndex ..< (range.startIndex + replacement.length)
+        
+        textStorage.beginEditing()
+        //first we do a replace to align our indices
+        textStorage.replaceCharactersInRange(range.nsRange, withString: replacement.text)
+        
+        let (renderedModRange, replacementAttString) = self.convertRangeToNSAttributedString(modRange, withOptions: nil)
+        
+        textStorage.replaceCharactersInRange(renderedModRange.nsRange, withAttributedString: replacementAttString)
+        textStorage.endEditing()
+    }
     
     
     //convenience editor

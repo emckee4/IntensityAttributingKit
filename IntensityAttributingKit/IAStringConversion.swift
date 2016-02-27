@@ -14,8 +14,9 @@ extension IAString {
     
     
     ///Gets an array of ranges or Character/word/sentance/etc units, as determined by the separation option
-    private func unitRanges(separationOptions:NSStringEnumerationOptions)->[Range<Int>]{
+    private func unitRanges(tokenizer:IAStringTokenizing)->[Range<Int>]{
         guard self.length > 0 else {return []}
+        guard let separationOptions = tokenizer.enumerationOption else {return [0..<((self.text as NSString).length)]  }//assume .Message
         var rangeArray:[Range<Int>] = []
         (self.text as NSString).enumerateSubstringsInRange(NSRange(location: 0, length: self.length), options: separationOptions) { (subString, strictSSRange, enclosingRange, stop) -> Void in
             if subString != nil {
@@ -24,33 +25,34 @@ extension IAString {
                 fatalError("IAIntermediate:unitRanges: found nil word in \(self.text) at \(strictSSRange) , \(enclosingRange)")
             }
         }
+        guard !rangeArray.isEmpty else {return [0..<((self.text as NSString).length)]} ///Tokenizers like .ByWords will yield nothing if the contents of the string are only seperator characters like spaces and newlines.
         return rangeArray
     }
     
     ///Returns a collapsing array filled with the unit-smoothed intensity values.
-    private func perUnitSmoothedIntensities(separationOptions:NSStringEnumerationOptions)->CollapsingArray<Int>{
-        guard separationOptions != .SubstringNotRequired else {return CollapsingArray(array: self.intensities)}
+    private func perUnitSmoothedIntensities(iaTokenizer:IAStringTokenizing)->CollapsingArray<Int>{
+        //guard separationOptions != .SubstringNotRequired else {return CollapsingArray(array: self.intensities)}
         var ca:CollapsingArray<Int> = []
-        for range in self.unitRanges(separationOptions) {
+        for range in self.unitRanges(iaTokenizer) {
             let rangeLength = range.endIndex - range.startIndex
             let avgForRange:Int = self.intensities[range].reduce(0, combine: +) / rangeLength
             ca.setValueForRange(avgForRange, range: range)
         }
-        guard ca.validate() && ca.count == self.intensities.count else {fatalError("(IAIntermediate perUnitSmoothedIntensities) perWord.count == self.intensities.count, with separationOptions: \(separationOptions)")}
+        guard ca.validate() && ca.count == self.intensities.count else {fatalError("(IAIntermediate perUnitSmoothedIntensities) perWord.count == self.intensities.count, with separationOptions: \(iaTokenizer)")}
         return ca
     }
     
     ///Smooths and bins intensities similar to perUnitSmoothedIntensities except that the collapsingArray is filled with bin numbers rather than averaged intensities
-    private func binnedSmoothedIntensities(bins:Int, separationOptions: NSStringEnumerationOptions)->CollapsingArray<Int>{
-        guard separationOptions != .SubstringNotRequired else {return CollapsingArray(array: self.intensities.map({return binNumberForSteps($0, steps: bins)}))}
+    private func binnedSmoothedIntensities(bins:Int, usingTokenizer: IAStringTokenizing)->CollapsingArray<Int>{
+        //guard separationOptions != .SubstringNotRequired else {return CollapsingArray(array: self.intensities.map({return binNumberForSteps($0, steps: bins)}))}
         var ca:CollapsingArray<Int> = []
-        for range in self.unitRanges(separationOptions) {
+        for range in self.unitRanges(usingTokenizer) {
             let rangeLength = range.endIndex - range.startIndex
             let avgForRange:Int = self.intensities[range].reduce(0, combine: +) / rangeLength
             let bin = binNumberForSteps(avgForRange, steps: bins)
             ca.setValueForRange(bin, range: range)
         }
-        guard ca.validate() && ca.count == self.intensities.count else {fatalError("(IAIntermediate perUnitSmoothedIntensities) perWord.count == self.intensities.count, with separationOptions: \(separationOptions)")}
+        guard ca.validate() && ca.count == self.intensities.count else {fatalError("(IAIntermediate perUnitSmoothedIntensities) perWord.count == self.intensities.count, with separationOptions: \(usingTokenizer)")}
         return ca
     }
     
@@ -130,6 +132,41 @@ extension IAString {
 //        }
 //        return intensityAttributes
 //    }
+    ///Renders a substring out to the boundaries of the tokenized text, which may extend further than the requested range.
+    internal func convertRangeToNSAttributedString(range:Range<Int>, withOptions options:[String:AnyObject]? = nil)->(rangeModified:Range<Int>,attString:NSAttributedString) {
+        
+        var renderWithScheme = self.renderScheme
+        if let overrideScheme = options?["renderWithScheme"] as? String where IntensityTransformers(rawValue: overrideScheme) != nil{
+            renderWithScheme = IntensityTransformers(rawValue: overrideScheme)
+        }
+        let transformer = renderWithScheme.transformer
+        
+        var subSmoother:IAStringTokenizing
+        if let smoothing = options?["overrideSmoothing"] as? IAStringTokenizing {
+            subSmoother = smoothing
+        } else {
+            subSmoother = self.preferedSmoothing
+        }
+        
+        let smoothedBinned:CollapsingArray<Int> = binnedSmoothedIntensities(transformer.stepCount, usingTokenizer: subSmoother)
+        assert(smoothedBinned.count == text.utf16.count && text.utf16.count == self.baseAttributes.count)
+        
+
+        let startBinDataIndex = smoothedBinned.data.indexOf({$0.range.intersects(range)})!
+        let endBinDataIndex = smoothedBinned.data[startBinDataIndex..<smoothedBinned.data.endIndex].indexOf({!($0.range.intersects(range))}) ?? smoothedBinned.data.endIndex
+
+        let modRange = smoothedBinned.data[startBinDataIndex].startIndex ..< smoothedBinned.data[endBinDataIndex - 1].endIndex
+        
+        let subIA = self.iaSubstringFromRange(modRange)
+        subIA.renderScheme = renderWithScheme
+        subIA.preferedSmoothing = subSmoother
+        let attString = subIA.convertToNSAttributedString(withOptions: nil)
+        
+
+        return (rangeModified:modRange, attString:attString)
+        
+        
+    }
     
     ///Should more clearly define options (maybe with a struct of keys). Need to add option for rendering size and style of thumbnails for attachments.
     public func convertToNSAttributedString(withOptions options:[String:AnyObject]? = nil)->NSAttributedString{
@@ -152,13 +189,12 @@ extension IAString {
         }
         let transformer = renderWithScheme.transformer
         
-        var useSmoothing:NSStringEnumerationOptions!
-        if let smoothing = options?["overrideSmoothing"] as? IAStringTokenizing {
-            useSmoothing = smoothing.enumerationOption
+        var smoother:IAStringTokenizing
+        if let overridingSmoother = options?["overrideSmoothing"] as? IAStringTokenizing {
+            smoother = overridingSmoother
         } else {
-            useSmoothing = self.preferedSmoothing.enumerationOption
+            smoother = self.preferedSmoothing
         }
-        
         self.attachments.setThumbSizes(self.thumbSize)
         //other options should be implemented here...
         
@@ -166,7 +202,7 @@ extension IAString {
         //render steps needs to come from renderScheme
         
         
-        let smoothedBinned:CollapsingArray<Int> = binnedSmoothedIntensities(transformer.stepCount, separationOptions: useSmoothing)
+        let smoothedBinned:CollapsingArray<Int> = binnedSmoothedIntensities(transformer.stepCount, usingTokenizer: smoother)
         assert(smoothedBinned.count == text.utf16.count && text.utf16.count == self.baseAttributes.count)
         applyAttributes(attString, transformer: transformer, smoothedBinned: smoothedBinned)
         

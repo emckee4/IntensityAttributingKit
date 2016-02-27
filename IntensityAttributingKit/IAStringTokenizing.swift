@@ -15,7 +15,8 @@ public enum IAStringTokenizing:CustomStringConvertible {
     Word,
     Sentence,
     Line,
-    Paragraph
+    Paragraph,
+    Message
     
     
     
@@ -26,16 +27,18 @@ public enum IAStringTokenizing:CustomStringConvertible {
         case .Sentence: return "Sentence"
         case .Line: return "Line"
         case .Paragraph: return "Paragraph"
+        case .Message: return "Message"
         }
     }
     
-    public var enumerationOption:NSStringEnumerationOptions{
+    public var enumerationOption:NSStringEnumerationOptions!{
         switch self {
         case .Char: return .ByComposedCharacterSequences
         case .Word: return .ByWords
         case .Sentence: return .BySentences
         case .Line: return .ByLines
         case .Paragraph: return .ByParagraphs
+        default:return nil
         }
         
     }
@@ -63,6 +66,7 @@ public enum IAStringTokenizing:CustomStringConvertible {
         case .Sentence: return "S"
         case .Line: return "L"
         case .Paragraph: return "P"
+        case .Message: return "M"
         }
     }
     
@@ -73,6 +77,7 @@ public enum IAStringTokenizing:CustomStringConvertible {
         case IAStringTokenizing.Sentence.shortLabel: self = .Sentence
         case IAStringTokenizing.Line.shortLabel: self = .Line
         case IAStringTokenizing.Paragraph.shortLabel: self = .Paragraph
+        case IAStringTokenizing.Message.shortLabel: self = .Message
         default: return nil
         }
     }

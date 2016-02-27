@@ -17,9 +17,9 @@ extension IATextEditor:IAKeyboardDelegate {
         let cursorLoc = self.selectedRange.location + text.utf16.count
         let replacementIA = self.iaString!.emptyCopy()
         replacementIA.insertAtPosition(text, position: 0, intensity: intensity, attributes: self.baseAttributes)
-        self.iaString!.replaceRange(replacementIA, range: self.selectedRange.toRange()!)
-        self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: replacementIA.convertToNSAttributedString())
-        
+        //self.iaString!.replaceRange(replacementIA, range: self.selectedRange.toRange()!)
+        //self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: replacementIA.convertToNSAttributedString())
+        self.iaString!.replaceRangeUpdatingTextStorage(replacementIA, range: self.selectedRange.toRange()!, textStorage: self.textStorage)
         self.selectedRange = NSRange(location: cursorLoc, length: 0)
         iaKeyboard.autoCapsIfNeeded()
     }
@@ -32,8 +32,9 @@ extension IATextEditor:IAKeyboardDelegate {
             self.selectedRange = nextCursor
         } else if selectedRange.location > 0 {
             let remRange = (self.selectedRange.location - 1)..<self.selectedRange.location
-            self.iaString!.removeRange(remRange)
-            self.textStorage.replaceCharactersInRange(remRange.nsRange, withAttributedString: NSAttributedString())
+            //self.iaString!.removeRange(remRange)
+            //self.textStorage.replaceCharactersInRange(remRange.nsRange, withAttributedString: NSAttributedString())
+            self.iaString!.replaceRangeUpdatingTextStorage(self.iaString!.emptyCopy(), range: remRange, textStorage: self.textStorage)
             self.selectedRange = NSMakeRange(remRange.startIndex, 0)
         } else {
             return

@@ -407,6 +407,7 @@ struct CollapsingArray<Element:Equatable>: ExclusiveRangeMappingProtocol, ArrayL
         }
         return true
     }
+
     
 }
 
@@ -425,6 +426,8 @@ extension CollapsingArray where Element:OptionSetTypeWithIntegerRawValue {
 //    }
     
 }
+
+
 
 //extension CollapsingArray {
 //    

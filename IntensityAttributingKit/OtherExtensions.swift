@@ -81,6 +81,27 @@ extension String {
     }
 }
 
+
+
+extension Range where Element:Comparable {
+    ///Returns true if there's any overlap between the two ranges, false otherwise.
+    func intersects(range:Range<Element>)->Bool {
+        //cases: contains, is contained in, bottom half overlaps, top half overlaps
+        if self.startIndex >= range.endIndex || self.endIndex <= range.startIndex {
+            return false
+        }
+        
+        return true
+    }
+    ///Returns true if this range wholly contains the provided range, false otherwise.
+    func contains(range:Range<Element>)->Bool {
+        return range.startIndex >= self.startIndex && range.endIndex <= self.endIndex
+    }
+    
+}
+
+
+
 //extension String {
 //    func rangeFromNSRange(nsRange : NSRange) -> Range<String.Index>? {
 //        let from16 = utf16.startIndex.advancedBy(nsRange.location, limit: utf16.endIndex)
