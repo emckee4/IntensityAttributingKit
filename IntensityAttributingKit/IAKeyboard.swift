@@ -15,6 +15,10 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
     
     weak var delegate:IAKeyboardDelegate!
     
+    var shiftKeyIsSelected:Bool {
+        return shiftKey?.selected ?? false
+    }
+    
     var currentKeyset = AvailableIAKeysets.BasicEnglish {
         didSet{currentKeyPageNumber = 0}
     }
@@ -136,6 +140,7 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
         shiftKey.layer.cornerRadius = kKeyCornerRadius
         shiftKey.backgroundColor = kKeyBackgroundColor
         shiftKey.setImage(UIImage(named: "caps2", inBundle: bundle, compatibleWithTraitCollection: nil), forState: .Selected)
+        shiftKey.addTarget(self, action: "shiftKeyPressed", forControlEvents: .TouchUpInside)
         
         zxcvStackView.addArrangedSubview(shiftKey)
         
@@ -177,6 +182,7 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
         swapKeysetButton = UIButton(type: .System)
         swapKeysetButton.tag = 4900
         swapKeysetButton.setTitle("12/*", forState: .Normal)
+        swapKeysetButton.titleLabel!.adjustsFontSizeToFitWidth = true
         swapKeysetButton.translatesAutoresizingMaskIntoConstraints = false
         swapKeysetButton.backgroundColor = kKeyBackgroundColor
         swapKeysetButton.layer.cornerRadius = kKeyCornerRadius
@@ -297,7 +303,8 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
     func setQRowWithMapping(mapping:[IAKeyType]){
         for i in 0..<10 {
             if let singleKey = mapping[i] as? IASingleCharKey {
-                (qwertyStackView.arrangedSubviews[i] as! PressureKey).setCharKey(singleKey.value)
+                let keyText = shiftKeyIsSelected ? singleKey.value.uppercaseString : singleKey.value
+                (qwertyStackView.arrangedSubviews[i] as! PressureKey).setCharKey(keyText)
             }
         }
     }
@@ -313,7 +320,8 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
         }
         for i in 0..<min(mapping.count,pressureKeys.count){
             if let singleKey = mapping[i] as? IASingleCharKey {
-                pressureKeys[i].setCharKey(singleKey.value)
+                let keyText = shiftKeyIsSelected ? singleKey.value.uppercaseString : singleKey.value
+                pressureKeys[i].setCharKey(keyText)
             }
         }
     }
@@ -330,7 +338,8 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
         }
         for i in 0..<min(mapping.count,pressureKeys.count){
             if let singleKey = mapping[i] as? IASingleCharKey {
-                pressureKeys[i].setCharKey(singleKey.value)
+                let keyText = shiftKeyIsSelected ? singleKey.value.uppercaseString : singleKey.value
+                pressureKeys[i].setCharKey(keyText)
             }
         }
         
@@ -384,6 +393,7 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
         //self.intensity = intensity
         if shiftKey.selected {
             shiftKey.deselect(overrideSelectedLock: false)
+            updateKeyMapping()
             //self.textDocumentProxy.insertText(actionName.uppercaseString)
             self.delegate?.iaKeyboard?(self, insertTextAtCursor: actionName.uppercaseString, intensity: intensity)
         } else {
@@ -401,12 +411,13 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
     
     func prepareKeyboardForAppearance(){
         self.shiftKey.deselect(overrideSelectedLock: true)
+        updateKeyMapping()
         autoCapsIfNeeded()
     }
     
     
     func autoCapsIfNeeded(){
-        guard textDocumentProxy.hasText() else {self.shiftKey.selected = true;return}
+        guard textDocumentProxy.hasText() else {self.shiftKey.selected = true; updateKeyMapping();return}
         guard let text = textDocumentProxy.documentContextBeforeInput else {return}
         let puncCharset = NSCharacterSet(charactersInString: ".?!")
         guard NSCharacterSet.whitespaceAndNewlineCharacterSet().characterIsMember(text.utf16.last!) else {return}
@@ -415,11 +426,16 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
                 continue
             } else if puncCharset.characterIsMember(rChar) {
                 self.shiftKey.selected = true
+                updateKeyMapping()
                 return
             } else {
                 return
             }
         }
+    }
+    
+    func shiftKeyPressed(){
+        updateKeyMapping()
     }
     
 //    private func shouldCaps(text:String)->Bool{
