@@ -25,3 +25,7 @@ Additional render schemes (if possible):
     animated colored shadows
 
 
+Current:
+
+when selected then backspace in system keyboard, selection gets out of sync. consider using observer on selectiondidchange instead???
+need to ensure iaKeyboardDeleteBackwards properly deletes full characters when backspacing on a composed character

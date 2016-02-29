@@ -68,6 +68,12 @@ extension String {
         self.removeRange(Range<Index>(start:start,end:end))
     }
     
+    mutating func removeNSRange(range:NSRange){
+        let nsm = (self as NSString).mutableCopy() as! NSMutableString
+        nsm.deleteCharactersInRange(range)
+        self = nsm as String
+    }
+    
     ///Random upper/lowercase letters with length
     static func randomAlphaString(length:Int)->String{
         let baseString:NSString = "abcdefghijklmnopqrstuvwxyz" + "abcdefghijklmnopqrstuvwxyz".uppercaseString

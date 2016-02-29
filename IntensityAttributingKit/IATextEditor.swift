@@ -132,6 +132,10 @@ public class IATextEditor: IATextView {
         } else {
             lastSystemTextChange = (range:range,text:text)
         }
+        guard text.characters.count > 0  else {
+            self.deleteBackward()
+            return false
+        }
         let selectedLoc = self.selectedRange.location + text.utf16.count
         let newIA:IAString = self.iaString!.emptyCopy()
         

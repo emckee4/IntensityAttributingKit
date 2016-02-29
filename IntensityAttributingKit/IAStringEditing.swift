@@ -21,7 +21,8 @@ extension IAString {
     public func iaSubstringFromRange(range:Range<Int>)->IAString {
         let newIA = self.emptyCopy()
         
-        newIA.text = self.text.subStringFromRange(range)
+        //newIA.text = self.text.subStringFromRange(range)
+        newIA.text = ((self.text as NSString).substringWithRange(range.nsRange)) as String
         newIA.intensities = Array(self.intensities[range])
         newIA.baseAttributes = self.baseAttributes.subRange(range)
         //links are ignored
@@ -51,12 +52,10 @@ extension IAString {
     
     
     public func insertIAString(iaString:IAString, atIndex:Int){
-        //        let mutableString = self.text.mutableCopy() as! NSMutableString
-        //        mutableString.insertString(iaString.text as String, atIndex: atIndex)
-        //        self.text = mutableString
-        //        let utf16Index = self.text.utf16.startIndex.advancedBy(atIndex)
-        //        let stringIndex = String.Index
-        text.insertContentsOf(iaString.text.characters, at: self.text.indexFromInt(atIndex)!)
+        let nsm = (self.text.mutableCopy()) as! NSMutableString
+        nsm.insertString(iaString.text, atIndex: atIndex)
+        self.text = nsm as String
+        //text.insertContentsOf(iaString.text.characters, at: self.text.indexFromInt(atIndex)!)
         self.intensities.insertContentsOf(iaString.intensities, at: atIndex)
         self.baseAttributes.insertContentsOf(iaString.baseAttributes, at: atIndex)
         self.attachments.insertAttachments(iaString.attachments, ofLength: iaString.length, atIndex: atIndex)
@@ -64,15 +63,18 @@ extension IAString {
     }
     
     public func removeRange(range:Range<Int>){
-        do {try self.text.removeIntRange(range)} catch {fatalError("IAString.removeRange: indexing error")}
+        //do {try self.text.removeIntRange(range)} catch {fatalError("IAString.removeRange: indexing error")}
+        self.text.removeNSRange(range.nsRange)
         self.intensities.removeRange(range)
         self.baseAttributes.removeRange(range)
         self.attachments.removeSubrange(range)
     }
     
     public func replaceRange(replacement:IAString, range:Range<Int>){
-        try! self.text.removeIntRange(range)
-        self.text.insertContentsOf(replacement.text.characters, at: self.text.indexFromInt(range.startIndex)!)
+        //try! self.text.removeIntRange(range)
+        let nsm = (self.text as NSString).mutableCopy() as! NSMutableString
+        nsm.replaceCharactersInRange(range.nsRange, withString: replacement.text)
+        self.text = nsm as String
         self.intensities.replaceRange(range, with: replacement.intensities)
         self.baseAttributes.replaceRange(range, with: replacement.baseAttributes)
         self.attachments.replaceRange(replacement.attachments, ofLength: replacement.length, replacedRange: range)
@@ -120,7 +122,11 @@ extension IAString {
     
     //convenience editor
     public func insertAtPosition(text:String, position:Int, intensity:Int, attributes:IABaseAttributes){
-        self.text.insertContentsOf(text.characters, at: self.text.indexFromInt(position)!)
+        //self.text.insertContentsOf(text.characters, at: self.text.indexFromInt(position)!)
+        let nsm = (self.text as NSString).mutableCopy() as! NSMutableString
+        nsm.insertString(text, atIndex: position)
+        self.text = nsm as String
+        
         let insertLength = (text as String).utf16.count
         self.intensities.insertContentsOf(Array<Int>(count: insertLength, repeatedValue: intensity), at: position)
         self.baseAttributes.insertContentsOf(Array<IABaseAttributes>(count: insertLength, repeatedValue: attributes), at: position)
@@ -128,10 +134,10 @@ extension IAString {
     }
     
     public func insertAttachmentAtPosition(attachment:IATextAttachment, position:Int, intensity:Int ,attributes:IABaseAttributes){
-        //        let mutableString = self.text.mutableCopy() as! NSMutableString
-        //        mutableString.insertString("\u{FFFC}", atIndex: position)
-        //        self.text = mutableString
-        self.text.insert(Character("\u{FFFC}"), atIndex: self.text.indexFromInt(position)!)
+        //self.text.insert(Character("\u{FFFC}"), atIndex: self.text.indexFromInt(position)!)
+        let nsm = (self.text as NSString).mutableCopy() as! NSMutableString
+        nsm.insertString("\u{FFFC}", atIndex: position)
+        self.text = nsm as String
         self.intensities.insert(intensity, atIndex: position)
         self.baseAttributes.insert(attributes, atIndex: position)
         attachments.insertAttachment(attachment, atLoc: position)
