@@ -379,8 +379,8 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
     //MARK:- Key actions
     
     func backspaceKeyPressed(){
-        //textDocumentProxy.deleteBackward()
-        self.delegate?.iaKeyboardDeleteBackwards?(self)
+        textDocumentProxy.deleteBackward()
+        //self.delegate?.iaKeyboardDeleteBackwards?(self)
     }
     ///cycles the pages of the current keyset
     func swapKeyset(){
@@ -464,7 +464,7 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
 
 @objc protocol IAKeyboardDelegate {
     optional func iaKeyboard(iaKeyboard:IAKeyboard, insertTextAtCursor text:String, intensity:Int)
-    optional func iaKeyboardDeleteBackwards(iaKeyboard:IAKeyboard)
+    //optional func iaKeyboardDeleteBackwards(iaKeyboard:IAKeyboard)
     
     ///This should be further implemented to allow autocapitalization, periods, etc
     //optional func iaKeyboardContextAroundCursor()

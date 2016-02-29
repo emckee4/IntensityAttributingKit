@@ -23,26 +23,26 @@ extension IATextEditor:IAKeyboardDelegate {
         self.selectedRange = NSRange(location: cursorLoc, length: 0)
         iaKeyboard.autoCapsIfNeeded()
     }
-    
-    func iaKeyboardDeleteBackwards(iaKeyboard:IAKeyboard) {
-        if selectedRange.length > 0 {
-            let nextCursor = NSMakeRange(self.selectedRange.location,0)
-            self.iaString!.removeRange(selectedRange.intRange)
-            self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: NSAttributedString())
-            self.selectedRange = nextCursor
-        } else if selectedRange.location > 0 {
-            
-            let remRange = (self.iaString!.text as NSString).rangeOfComposedCharacterSequencesForRange(NSMakeRange(selectedRange.location - 1, 0)).intRange
-            //let remRange = (self.selectedRange.location - 1)..<self.selectedRange.location
-            //self.iaString!.removeRange(remRange)
-            //self.textStorage.replaceCharactersInRange(remRange.nsRange, withAttributedString: NSAttributedString())
-            self.iaString!.replaceRangeUpdatingTextStorage(self.iaString!.emptyCopy(), range: remRange, textStorage: self.textStorage)
-            self.selectedRange = NSMakeRange(remRange.startIndex, 0)
-        } else {
-            return
-        }
-        iaKeyboard.autoCapsIfNeeded()
-    }
+//    
+//    func iaKeyboardDeleteBackwards(iaKeyboard:IAKeyboard) {
+//        if selectedRange.length > 0 {
+//            let nextCursor = NSMakeRange(self.selectedRange.location,0)
+//            self.iaString!.removeRange(selectedRange.intRange)
+//            self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: NSAttributedString())
+//            self.selectedRange = nextCursor
+//        } else if selectedRange.location > 0 {
+//            
+//            let remRange = (self.iaString!.text as NSString).rangeOfComposedCharacterSequencesForRange(NSMakeRange(selectedRange.location - 1, 0)).intRange
+//            //let remRange = (self.selectedRange.location - 1)..<self.selectedRange.location
+//            //self.iaString!.removeRange(remRange)
+//            //self.textStorage.replaceCharactersInRange(remRange.nsRange, withAttributedString: NSAttributedString())
+//            self.iaString!.replaceRangeUpdatingTextStorage(self.iaString!.emptyCopy(), range: remRange, textStorage: self.textStorage)
+//            self.selectedRange = NSMakeRange(remRange.startIndex, 0)
+//        } else {
+//            return
+//        }
+//        iaKeyboard.autoCapsIfNeeded()
+//    }
     
 
     override public func deleteBackward() {
