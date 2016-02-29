@@ -131,8 +131,10 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         tokenizerButton.addKey(withTextLabel: sentence, actionName: sentence)
 //        let line = IAStringTokenizing.Line.shortLabel
 //        tokenizerButton.addKey(withTextLabel: line, actionName: line)
-        let par = IAStringTokenizing.Paragraph.shortLabel
-        tokenizerButton.addKey(withTextLabel: par, actionName: par)
+        //let par = IAStringTokenizing.Paragraph.shortLabel
+        //tokenizerButton.addKey(withTextLabel: par, actionName: par)
+        let mes = IAStringTokenizing.Message.shortLabel
+        tokenizerButton.addKey(withTextLabel: mes, actionName: mes)
         
         tokenizerButton.backgroundColor = kButtonBackgroundColor
         tokenizerButton.cornerRadius = kButtonCornerRadius
