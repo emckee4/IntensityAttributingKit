@@ -1,78 +1,9 @@
-IntensityAttributingKit
+IntensityAttributingKit (v1 proof of concept)
 © 2015 by Evan McKee
+**** This version has been superseded by a rewritten version 2 with a cleaner interface, cleaner code in general, improved UI, better performance, and more features. Version 2 is currently private while I prepare to release the app for which it was written. If you're interested in seeing it in action or getting access to the new source, visit www.intensitymessaging.com or contact me.
+
 
 IntensityAttributingKit is a swift framework which provides a means of creating, displaying, and converting text with "intensity" attributes by the user on an iOS device. Ideally the user would have a 3dTouch capable phone so that intensity of a character can be derived from the pressure applied to the key, but intensity can also be applied using touch duration or a manual control.
-
-
-Main goals going forward:
-
-Features:
-Implement proper link handling
-Implement image viewing
-Enable more control over options
-Saving of options and defaults
-
-Performance Related:
-    Provide the means for caching rendered text/textContainers
-    Later:
-    Consider rebuilding IATextEditor and IATextView as subclasses of UIView to improve performance. Consider moving away from NSAttributedStrings as the medium of local storage
-        Building a custom subclass would allow more direct control over the text insertion process as well which among other things would free up the delegate
-
-Caching:
-    What and how?
-    KB instance?
-    Rendered Keyboard/Accessory?
-
-
-Visual:
-    Decide on color scheme
-    Fix lock button
-    Add icon for pressure button
-
-____________________________________________
-v0.2 goals:
-
-IAKit:
-    Globals: max embedded image size (total pictures), default rendering, store keyboard (or keyboard singleton), default keyboard, etc
-
-IATV:
-    -link insertion should be as pasted NSURL with NSLinkAttributeName, or link should be detected and inserted at send time (add finalize()->NSAttributedString)
-    -Enable pasting of RTFD, fix copying of images and mix content so that more than plain text can be pasted out
-    -add delegate which can inform app that image or link has been tapped for purposes of opening new modals to view them- alternatively these could be included directly in the kit with some customization options
-
-Accessory view:
-    lock default button should visually fixed, should update faster, should be capable of receiving values from IATextView's last values
-    OPTION MENU: want option menu of some sort on accessory view for: intensity scaling method and constant tuning, changing default intensity rendering, ?preference for IAAdjuster type (always slider vs always pressurepad or both), keyset chooser, ?max image size (it may be preferable to set a fixed size in code)
-
-
-
-
-
-
-
-____________________________________________
-eventually?:
-
-
-
-
-make all keys some derivative of expanding keys, include larger expansion style option as used in system keyboard popups
--give some sort of feedback on selection, like flash with duration before hiding or light haptic/ click if something suitable is available
-
-
---Performance:
-KB rendering options:
-    spritesheet for keys
-    single image with normally transparent keys overlaying
-    single image with single control, placing views over specific parts as needed
-
-
-
-IAString Performance
-Keeping "deep" IAattributes may significantly increase storage size
-It may be possible to retain most of the performance benefits of deep attributes through a combination of partition and removal by range in the transform function
-"shallow" IAAttributes would let us invalidate all in a transform, letting us skip the setter check, and possibly perform more actions by range
-
 
 
 
