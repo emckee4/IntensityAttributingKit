@@ -11,16 +11,16 @@ import UIKit
 public class IATextEditor: IATextView {
     
     
-    internal(set) var baseAttributes:IABaseAttributes = IABaseAttributes(size: IAKitOptions.singleton.defaultTextSize)
+    internal(set) var baseAttributes:IABaseAttributes = IABaseAttributes(size: IAKitOptions.defaultTextSize)
     
-    internal(set) var currentTransformer:IntensityTransformers = IAKitOptions.singleton.defaultScheme {
+    internal(set) var currentTransformer:IntensityTransformers = IAKitOptions.defaultTransformer {
         didSet {if currentTransformer != oldValue && self.inputAccessoryViewController != nil {
             self.iaAccessory.setTransformKeyForScheme(withName: currentTransformer.transformer.schemeName)
             }
         }
     }
     
-    internal(set) var defaultIntensity:Int = IAKitOptions.singleton.defaultIntensity {
+    internal(set) var defaultIntensity:Int = IAKitOptions.defaultIntensity {
         didSet {iaAccessory.updateDisplayedIntensity(defaultIntensity)}
     }
     
@@ -33,11 +33,11 @@ public class IATextEditor: IATextView {
     
     
     private var iaAccessory:IAAccessoryVC {
-        return IAKitOptions.singleton.accessory
+        return IAKitOptions.accessory
     }
     
     private var iaKeyboardVC:IAKeyboard {
-        return IAKitOptions.singleton.keyboard
+        return IAKitOptions.keyboard
     }
     
     
@@ -91,7 +91,7 @@ public class IATextEditor: IATextView {
         self.delegate = self
         self.layer.cornerRadius = 10.0
         self.textContainerInset = UIEdgeInsetsMake(7.0, 2.0, 7.0, 2.0)
-        currentTransformer = IAKitOptions.singleton.defaultScheme
+        currentTransformer = IAKitOptions.defaultTransformer
         self.allowsEditingTextAttributes = true
         self.setIAString(IAString())
         self.typingAttributes = [NSFontAttributeName:UIFont.systemFontOfSize(baseAttributes.cSize)]
@@ -190,8 +190,8 @@ public class IATextEditor: IATextView {
     ///Sets the IATextEditor to an empty IAString and resets properties to the IAKitOptions defaults
     public func resetEditor(){
         self.setIAString(IAString())
-        defaultIntensity = IAKitOptions.singleton.defaultIntensity
-        baseAttributes = IABaseAttributes(size: IAKitOptions.singleton.defaultTextSize)
+        defaultIntensity = IAKitOptions.defaultIntensity
+        baseAttributes = IABaseAttributes(size: IAKitOptions.defaultTextSize)
     }
     
     ///

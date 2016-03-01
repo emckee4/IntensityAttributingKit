@@ -87,8 +87,8 @@ extension IATextEditor: IAAccessoryDelegate {
             for fim in ForceIntensityMappingFunctions.AvailableFunctions.availableForceOnlyNames {
                 alert.addAction(UIAlertAction(title: fim, style: .Default, handler: { (action) -> Void in
                     let newMapping = ForceIntensityMappingFunctions.AvailableFunctions(rawValue: fim)
-                    IAKitOptions.singleton.forceIntensityMapping = newMapping
-                    IAKitOptions.singleton.saveOptions()
+                    IAKitOptions.forceIntensityMapping = newMapping
+//                    IAKitOptions.singleton.saveOptions()
                     RawIntensity.forceIntensityMapping = newMapping!.namedFunction
                 }))
             }
@@ -102,8 +102,8 @@ extension IATextEditor: IAAccessoryDelegate {
         for fim in ForceIntensityMappingFunctions.AvailableFunctions.availableDurationOnlyNames {
             alert.addAction(UIAlertAction(title: fim, style: .Default, handler: { (action) -> Void in
                 let newMapping = ForceIntensityMappingFunctions.AvailableFunctions(rawValue: fim)
-                IAKitOptions.singleton.forceIntensityMapping = newMapping
-                IAKitOptions.singleton.saveOptions()
+                IAKitOptions.forceIntensityMapping = newMapping
+//                IAKitOptions.singleton.saveOptions()
                 RawIntensity.forceIntensityMapping = newMapping!.namedFunction
             }))
         }

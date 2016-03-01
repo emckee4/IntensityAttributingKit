@@ -72,7 +72,7 @@ public class IAString {
         
         
         var combinedOpts = self.renderOptions
-        combinedOpts[IAStringKeys.renderScheme] = renderScheme?.rawValue ?? IAKitOptions.singleton.defaultScheme.rawValue
+        combinedOpts[IAStringKeys.renderScheme] = renderScheme?.rawValue ?? IAKitOptions.defaultTransformer.rawValue
         combinedOpts[IAStringKeys.preferedSmoothing] = self.preferedSmoothing.shortLabel
         
         dict[IAStringKeys.options] = combinedOpts
@@ -159,7 +159,7 @@ public class IAString {
         } else if let scheme = self.renderOptions.removeValueForKey(IAStringKeys.renderScheme) as? String where IntensityTransformers(rawValue: scheme) != nil{
             self.renderScheme = IntensityTransformers(rawValue: scheme)
         } else {
-            self.renderScheme = IAKitOptions.singleton.defaultScheme
+            self.renderScheme = IAKitOptions.defaultTransformer
         }
         
         if let ps = dict[IAStringKeys.preferedSmoothing] as? String where IAStringTokenizing(shortLabel: ps) != nil{
@@ -192,7 +192,7 @@ public class IAString {
         self.text = ""
         self.length = 0
         self.baseAttributes = CollapsingArray<IABaseAttributes>()
-        self.renderScheme = IAKitOptions.singleton.defaultScheme
+        self.renderScheme = IAKitOptions.defaultTransformer
     }
     
     
