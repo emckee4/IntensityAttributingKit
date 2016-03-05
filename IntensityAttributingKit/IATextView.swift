@@ -50,7 +50,20 @@ public class IATextView: UITextView, UITextViewDelegate {
     ///Prefered method for setting stored IAText for display. By default this assumes text has been prerendered and only needs bounds set on its images. If needsRendering is set as true then this will render according to whatever its included schemeName is.
     public func setIAString(iaString:IAString, withCacheIdentifier:String? = nil,overrideRenderOptions renderOptions:[String:AnyObject]? = nil){
         self._iaString = iaString
-        self._renderOptions = renderOptions
+        if renderOptions != nil {
+            self._renderOptions = renderOptions
+        } else {
+            if let overTrans = IAKitOptions.overridesTransformer {
+                self._renderOptions = ["overrideTransformer":overTrans.rawValue]
+            }
+            
+            if let overToke = IAKitOptions.overridesTokenizer {
+                if self._renderOptions == nil {self._renderOptions = [:]}
+                self._renderOptions!["overrideSmoothing"] = overToke.shortLabel
+            }
+            
+        }
+        
         self.iaString?.thumbSize = self.thumbSizesForAttachments
         self.attributedText = self._iaString?.convertToNSAttributedString(withOptions: renderOptions)
     }

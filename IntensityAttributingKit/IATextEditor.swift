@@ -96,6 +96,9 @@ public class IATextEditor: IATextView {
         currentTransformer = IAKitOptions.defaultTransformer
         self.allowsEditingTextAttributes = true
         self.setIAString(IAString())
+        self.iaString!.renderScheme = currentTransformer
+        self.iaString!.preferedSmoothing = IAKitOptions.defaultTokenizer
+        
         self.typingAttributes = [NSFontAttributeName:UIFont.systemFontOfSize(baseAttributes.cSize)]
         self.layoutManager.allowsNonContiguousLayout = false
     }
@@ -196,7 +199,11 @@ public class IATextEditor: IATextView {
         baseAttributes = IABaseAttributes(size: IAKitOptions.defaultTextSize)
     }
     
-    ///
+//    ///Ignores overrideRenderOptions
+    public override func setIAString(iaString: IAString, withCacheIdentifier: String? = nil, overrideRenderOptions renderOptions: [String : AnyObject]? = nil) {
+        self.iaString = iaString
+    }
+    
     func renderIAString(){
         //TODO: remimplement: should
         self.setIAString(self.iaString!)

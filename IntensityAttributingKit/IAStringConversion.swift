@@ -136,14 +136,14 @@ extension IAString {
     internal func convertRangeToNSAttributedString(range:Range<Int>, withOptions options:[String:AnyObject]? = nil)->(rangeModified:Range<Int>,attString:NSAttributedString) {
         
         var renderWithScheme = self.renderScheme
-        if let overrideScheme = options?["renderWithScheme"] as? String where IntensityTransformers(rawValue: overrideScheme) != nil{
+        if let overrideScheme = options?["overrideTransformer"] as? String where IntensityTransformers(rawValue: overrideScheme) != nil{
             renderWithScheme = IntensityTransformers(rawValue: overrideScheme)
         }
         let transformer = renderWithScheme.transformer
         
         var subSmoother:IAStringTokenizing
-        if let smoothing = options?["overrideSmoothing"] as? IAStringTokenizing {
-            subSmoother = smoothing
+        if let smoothingName = options?["overrideSmoothing"] as? String where IAStringTokenizing(shortLabel:smoothingName) != nil {
+            subSmoother = IAStringTokenizing(shortLabel:smoothingName)
         } else {
             subSmoother = self.preferedSmoothing
         }
@@ -184,14 +184,14 @@ extension IAString {
         
         //options have two levels: prefered (internal) and override passed in by the user. Override trumps internal
         var renderWithScheme = self.renderScheme
-        if let overrideScheme = options?["renderWithScheme"] as? String where IntensityTransformers(rawValue: overrideScheme) != nil{
+        if let overrideScheme = options?["overrideTransformer"] as? String where IntensityTransformers(rawValue: overrideScheme) != nil{
             renderWithScheme = IntensityTransformers(rawValue: overrideScheme)
         }
         let transformer = renderWithScheme.transformer
         
         var smoother:IAStringTokenizing
-        if let overridingSmoother = options?["overrideSmoothing"] as? IAStringTokenizing {
-            smoother = overridingSmoother
+        if let smoothingName = options?["overrideSmoothing"] as? String where IAStringTokenizing(shortLabel:smoothingName) != nil {
+            smoother = IAStringTokenizing(shortLabel:smoothingName)
         } else {
             smoother = self.preferedSmoothing
         }
