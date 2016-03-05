@@ -69,6 +69,7 @@ public class IATextEditor: IATextView {
             self.iaAccessory.setTokenizerKeyValue(self.iaString!.preferedSmoothing)
             iaKeyboardVC.delegate = self
             iaAccessory.updateAccessoryLayout(true)
+            iaKeyboardVC.rasterizeBeforeAnimation()
             return true
         }
         return false
@@ -78,6 +79,7 @@ public class IATextEditor: IATextView {
             //iaAccessory.delegate = nil
             //iaAccessory = nil
             //iaKeyboardVC = nil
+            iaKeyboardVC.rasterizeBeforeAnimation()
             return true
         }
         return false

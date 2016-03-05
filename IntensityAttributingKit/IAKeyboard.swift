@@ -62,6 +62,7 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.translatesAutoresizingMaskIntoConstraints = false
+        self.inputView?.layer.rasterizationScale = UIScreen.mainScreen().scale
         setupQwertyRow()
         setupAsdfRow()
         setupZxcvRow()
@@ -94,6 +95,13 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
             prepareForPortrait()
         }
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+    }
+    
+    func rasterizeBeforeAnimation(){
+        self.inputView?.layer.shouldRasterize = true
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(800) * Int64(NSEC_PER_MSEC)), dispatch_get_main_queue(), {
+            self.inputView?.layer.shouldRasterize = false
+        })
     }
     
     ///MARK:- Keyboard initial layout functions
