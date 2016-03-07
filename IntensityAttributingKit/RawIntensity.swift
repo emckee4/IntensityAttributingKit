@@ -19,7 +19,7 @@ public struct RawIntensity {
     var intensity:Int {
         return Int(RawIntensity.forceIntensityMapping(raw: self) * 100)
     }
-    var startTime:NSDate!
+    var startTime:CFTimeInterval!
     
     var avgPressure:Float {
         let count = forceHistory.count
@@ -38,7 +38,7 @@ public struct RawIntensity {
     
     mutating func reset(withValue:CGFloat = 0.0){
         forceHistory = [Float(withValue)]
-        startTime = NSDate()
+        startTime = CACurrentMediaTime()
     }
     
     mutating func append(value:CGFloat){
@@ -51,13 +51,13 @@ public struct RawIntensity {
     init(withValue:CGFloat, maximumPossibleForce:CGFloat = RawIntensity.maximumPossibleForceForDevice){
         forceHistory = [Float(withValue)]
         self.maximumPossibleForce = Float(maximumPossibleForce)
-        startTime = NSDate()
+        startTime = CACurrentMediaTime()
     }
     
     init(withFloatValue float:Float = 0.0, maximumPossibleForce:Float = Float(RawIntensity.maximumPossibleForceForDevice)){
         forceHistory = [float]
         self.maximumPossibleForce = maximumPossibleForce
-        startTime = NSDate()
+        startTime = CACurrentMediaTime()
     }
     
     ///As far as I can tell maximumPossibleForce is constant across the device

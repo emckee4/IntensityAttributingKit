@@ -64,7 +64,10 @@ public struct ForceIntensityMappingFunctions {
         
         public static func linearScaleToConstant(raw:RawIntensity)->Float{
             guard raw.startTime != nil && Duration.timeToFull != 0.0 else {return 0.0}
-            return min( Float(NSDate().timeIntervalSinceDate(raw.startTime) / Duration.timeToFull)  , 1.0)
+  
+            let dur:CFTimeInterval = CACurrentMediaTime() - raw.startTime
+            
+            return Float(min( dur / Duration.timeToFull , 1.0))
         }
         
         
