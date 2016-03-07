@@ -54,7 +54,8 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
     func setupVC(){
         self.inputView!.backgroundColor = UIColor(white: 0.8, alpha: 1.0)
         self.inputView!.translatesAutoresizingMaskIntoConstraints = false
-
+        self.inputView?.layer.rasterizationScale = UIScreen.mainScreen().scale
+        self.inputView?.layer.shouldRasterize = true
         
         kbSwitchButton = UIButton(type: .System)
         kbSwitchButton.setImage(UIImage(named: "Keyboard", inBundle: bundle, compatibleWithTraitCollection: nil), forState: .Normal )
