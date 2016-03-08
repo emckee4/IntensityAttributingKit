@@ -69,10 +69,13 @@ class IAKitOptions:NSObject {
         static let oTokenizerName = "IAKitOptions.overridingTokenizerName"
         static let oTransformerName = "IAKitOptions.overridingTransformerName"
         
-        static let fimName = "IAKitOptions.forceIntensityMappingName"
+        //static let fimName = "IAKitOptions.forceIntensityMappingName"
         //need constants
         //how to store constants for mapping in performant accessable way?
-        static let fimParametersDictName = "IAKitOptions.fimParametersDictName"
+        //static let fimParametersDictName = "IAKitOptions.fimParametersDictName"
+        
+        static let touchInterpreterName = "IAKitOptions.touchInterpreterName"
+        static let rawIntensityMapperDict = "IAKitOptions.rawIntensityMapperDict"
     }
     
     
@@ -117,7 +120,42 @@ class IAKitOptions:NSObject {
         set {NSUserDefaults.standardUserDefaults().setObject(newValue?.shortLabel, forKey: Keys.oTokenizerName)}
     }
 
-    static var forceIntensityMapping:ForceIntensityMappingFunctions.AvailableFunctions?
+    //static var forceIntensityMapping:ForceIntensityMappingFunctions.AvailableFunctions?
+    
+    static var touchInterpreter:IATouchInterpreter {
+        get {
+            if let tiName = NSUserDefaults.standardUserDefaults().objectForKey(Keys.touchInterpreterName) as? String {
+                if let interpreter = IATouchInterpreter(rawValue: tiName) {
+                    return interpreter
+                }
+            }
+            if UIScreen.mainScreen().traitCollection.forceTouchCapability == .Available {
+                let interpreter = IATouchInterpreter.Force
+                NSUserDefaults.standardUserDefaults().setObject(interpreter.rawValue, forKey: Keys.touchInterpreterName)
+                return interpreter
+            } else {
+                let interpreter = IATouchInterpreter.Duration
+                NSUserDefaults.standardUserDefaults().setObject(interpreter.rawValue, forKey: Keys.touchInterpreterName)
+                return interpreter
+            }
+        }
+        set {NSUserDefaults.standardUserDefaults().setObject(newValue.rawValue, forKey: Keys.touchInterpreterName)}
+    }
+    
+    static var rawIntensityMapper:RawIntensityMapping {
+        get{
+            if let rawDict = NSUserDefaults.standardUserDefaults().objectForKey(Keys.rawIntensityMapperDict) as? [String:AnyObject]{
+                if let rim = RawIntensityMapping(dictDescription: rawDict) {
+                    return rim
+                }
+            }
+            // no RIM exists so we set and return the default
+            let defaultRIM = RawIntensityMapping.Linear(threshold: 0, ceiling: 1.0)
+            NSUserDefaults.standardUserDefaults().setObject(defaultRIM.dictDescription, forKey: Keys.rawIntensityMapperDict)
+            return defaultRIM
+        }
+        set {NSUserDefaults.standardUserDefaults().setObject(newValue.dictDescription, forKey: Keys.rawIntensityMapperDict)}
+    }
     
     //static var fimParametersDict
     
