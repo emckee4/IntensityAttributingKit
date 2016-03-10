@@ -170,13 +170,13 @@ public class TempSettingVC: UIViewController, UITextFieldDelegate, PressureKeyAc
     }
     
     func rimChosen(actionName:String!){
-        let thresh = Double(rimThresh.value)
-        let ceil = Double(rimCeil.value)
+        let thresh = Float(rimThresh.value)
+        let ceil = Float(rimCeil.value)
         
         if actionName == "Linear" {
             currentRim = RawIntensityMapping.Linear(threshold: thresh, ceiling: ceil)
         } else if actionName == "LogAx" {
-            currentRim = RawIntensityMapping.LogAx(a: Double(rimA.value), threshold: thresh, ceiling: ceil)
+            currentRim = RawIntensityMapping.LogAx(a: Float(rimA.value), threshold: thresh, ceiling: ceil)
         }
         
         IAKitOptions.rawIntensityMapper = currentRim

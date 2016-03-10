@@ -176,3 +176,4 @@ class IAKitOptions:NSObject {
         }
     }
     
+}
