@@ -25,9 +25,10 @@ public class ExpandingKeyBase: UIView {
     ///this is private set until means for reordering the subviews are added
     @IBInspectable public var expansionDirection:EKDirection = .Up {
         didSet{
-            if oldValue.hasForwardLayoutDirection() != expansionDirection.hasForwardLayoutDirection() && !epKeys.isEmpty{
+            if oldValue.hasForwardLayoutDirection != expansionDirection.hasForwardLayoutDirection && !epKeys.isEmpty{
                 layoutKeysForExpansionDirection()
             }
+            self.containedStackView.axis = expansionDirection.axis
         }
     }
     
@@ -143,7 +144,7 @@ public class ExpandingKeyBase: UIView {
     
     ///Reorders keys in the stackview to match the order in the epKeys array, subject to reversal if the expansion direction is not one with forward ordered layout.
     internal func layoutKeysForExpansionDirection(){
-        if expansionDirection.hasForwardLayoutDirection() {
+        if expansionDirection.hasForwardLayoutDirection {
             for (i,epkey) in self.epKeys.enumerate() {
                 if epkey.view != containedStackView.arrangedSubviews[i] {
                     containedStackView.insertArrangedSubview(epkey.view, atIndex: i)
@@ -305,7 +306,14 @@ public class ExpandingKeyBase: UIView {
         self.addKey(label, actionName: actionName)
     }
     
-    
+    public func removeKey(withActionName actionName:String){
+        guard let keyIndex = epKeys.indexOf({$0.actionName == actionName}) else {return}
+        let keyToRemove = epKeys.removeAtIndex(keyIndex)
+        keyToRemove.view.removeFromSuperview()
+//        let svIndex = containedStackView.subviews.indexOf({$0 == keyToRemove.view})
+//        containedStackView.subviews.removeAtIndex(svIndex)
+        self.layoutKeysForExpansionDirection()
+    }
     
     
     ///Removes all keys, setting the pressureKey as empty

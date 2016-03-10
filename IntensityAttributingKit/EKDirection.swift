@@ -16,7 +16,11 @@ import Foundation
 public enum EKDirection {
     case Up,Down,Left,Right
     
-    func hasForwardLayoutDirection()->Bool{
-        return self == .Down || self == .Right
+    var hasForwardLayoutDirection:Bool
+        {return self == .Down || self == .Right}
+    
+    var axis:UILayoutConstraintAxis {
+        return (self == .Up || self == .Down) ? .Vertical : .Horizontal
     }
+    
 }
