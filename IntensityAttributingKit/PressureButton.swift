@@ -10,10 +10,6 @@ import UIKit
 
 class PressureButton: UIButton {
     
-    lazy var forceTouchAvailable:Bool = {
-        return UIScreen.mainScreen().traitCollection.forceTouchCapability == UIForceTouchCapability.Available
-    }()
-
     lazy var rawIntensity:RawIntensity = RawIntensity()
     
     ///this value is made available for the receiving class after it receives the action message from a touch
@@ -34,8 +30,9 @@ class PressureButton: UIButton {
     var nonTouchSelectionBGColor = UIColor.darkGrayColor()
     
     private func setBackgroundColorForIntensity(precomputedIntensity:Int? = nil){
+        guard !IAKitOptions.deviceResourcesLimited else {return}
         guard baseBackgroundColor != nil else {return}
-        guard forceTouchAvailable else {super.backgroundColor = nonTouchSelectionBGColor; return}
+        guard IAKitOptions.forceTouchAvailable else {super.backgroundColor = nonTouchSelectionBGColor; return}
         let intensity:Int = precomputedIntensity ?? rawIntensity.currentIntensity
         guard intensity > 0 else {super.backgroundColor = baseBackgroundColor; return}
         var white:CGFloat = -1.0

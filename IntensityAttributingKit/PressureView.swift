@@ -12,11 +12,6 @@ import UIKit
 ///Delegate based equivilent of PressureButton.
 class PressureView:UIView, PressureControl {
     
-    
-    lazy var forceTouchAvailable:Bool = {
-        return self.traitCollection.forceTouchCapability == UIForceTouchCapability.Available
-    }()
-    
     lazy var rawIntensity:RawIntensity = RawIntensity()
     
     //    ///this value is made available for the receiving class after it receives the action message from a touch
@@ -40,6 +35,7 @@ class PressureView:UIView, PressureControl {
     var selectionColor = UIColor.darkGrayColor()
     
     private func setBackgroundColorForIntensity(){
+        guard !IAKitOptions.deviceResourcesLimited else {return}
         guard self.backgroundColor != nil else {return}
         //guard forceTouchAvailable else {contentView?.backgroundColor = selectionColor; return}
         let intensity = rawIntensity.currentIntensity

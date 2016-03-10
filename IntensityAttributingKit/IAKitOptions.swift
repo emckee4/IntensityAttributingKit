@@ -14,19 +14,9 @@ IAKitOptions is the internal singleton for the text kit which caches keyboard an
 */
 class IAKitOptions:NSObject {
     
-    
-//    ///singleton for IAKitOptions. Attempts to recover a saved instance of itself from NSUserDefaults on init, initializing with default values otherwise.
-//    static let singleton:IAKitOptions = {
-//        if let existingValue = NSUserDefaults.standardUserDefaults().objectForKey("iaKitOptions") as? IAKitOptions {
-//            return IAKitOptions()
-//        }
-//        return IAKitOptions()
-//    }()
-        ///setter/getter for retrieving from storage
-    
-    //static let bundle:NSBundle = { return NSBundle(forClass: IAKitOptions.singleton.dynamicType) }()
-    
     static let bundle:NSBundle = NSBundle(forClass: IAKitOptions.self)
+    
+    static let forceTouchAvailable = UIScreen.mainScreen().traitCollection.forceTouchCapability == .Available
     
     //MARK:- Keyboard and accessory caching
     private static let vcCache = NSCache()
@@ -143,7 +133,7 @@ class IAKitOptions:NSObject {
                 return interpreter
             }
         }
-        if UIScreen.mainScreen().traitCollection.forceTouchCapability == .Available {
+        if IAKitOptions.forceTouchAvailable {
             return IATouchInterpreter.Force
         } else {
             return IATouchInterpreter.Duration
@@ -186,56 +176,3 @@ class IAKitOptions:NSObject {
         }
     }
     
-    //static var fimParametersDict
-    
-    ////
-    
-//    private override init(){
-//        vcCache = NSCache()
-//    }
-    
-    
-//    //add nscoding stuff
-//    
-//    required init?(coder aDecoder: NSCoder) {
-//        vcCache = NSCache()
-//        if let fim = aDecoder.decodeObjectForKey("forceIntensityMappingName") as? String {
-//            forceIntensityMapping = ForceIntensityMappingFunctions.AvailableFunctions(rawValue: fim)
-//        }
-//        
-//        if let overridesSmoothingShortName = aDecoder.decodeObjectForKey("overridesSmoothing") as? String {
-//            overridesSmoothing = IAStringTokenizing(shortLabel: overridesSmoothingShortName)
-//        }
-//        if let overridesSchemeRaw = aDecoder.decodeObjectForKey("overridesScheme") as? String {
-//            overridesScheme = IntensityTransformers(rawValue: overridesSchemeRaw)
-//        }
-//        
-//    }
-//    
-//    func encodeWithCoder(aCoder: NSCoder) {
-//        if let fim = forceIntensityMapping{
-//            aCoder.encodeObject(fim.rawValue, forKey: "forceIntensityMappingName")
-//        }
-//        
-//
-//        aCoder.encodeObject(overridesSmoothing?.shortLabel, forKey: "overridesSmoothing")
-//        aCoder.encodeObject(overridesScheme?.rawValue, forKey: "overridesScheme")
-//    }
-//    
-//    func saveOptions(){
-//        let saveBlock = {
-//            let data = NSKeyedArchiver.archivedDataWithRootObject(self)
-//            NSUserDefaults.standardUserDefaults().setObject(data, forKey: "iaKitOptions")
-//        }
-//        if NSThread.isMainThread() {
-//            saveBlock()
-//        } else {
-//            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-//                saveBlock()
-//            })
-//        }
-//    }
-    
-    
-    
-}

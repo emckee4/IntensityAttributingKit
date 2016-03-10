@@ -18,17 +18,13 @@ This is now a subclass of ExpandingKeyBase.
     
     public weak var delegate:PressureKeyActionDelegate?
     
-    lazy var forceTouchAvailable:Bool = {
-        return self.traitCollection.forceTouchCapability == UIForceTouchCapability.Available
-    }()
-    
     private var touchIntensity: RawIntensity = RawIntensity()
     
     
     //MARK:- Selection and highlighting effect helpers
     
     override func bgColorForSelection() -> UIColor {
-        guard backgroundColor != nil && forceTouchAvailable else {return selectionColor ?? UIColor.blackColor()}
+        guard backgroundColor != nil && IAKitOptions.forceTouchAvailable else {return selectionColor ?? UIColor.blackColor()}
         //TODO: add different blending methods for non-grayscale color options
         var white:CGFloat = 0.0
         var alpha:CGFloat = 1.0

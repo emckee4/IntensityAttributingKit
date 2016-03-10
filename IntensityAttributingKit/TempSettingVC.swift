@@ -138,7 +138,7 @@ public class TempSettingVC: UIViewController, UITextFieldDelegate, PressureKeyAc
         super.viewWillAppear(animated)
         updateDisplay()
         
-        if self.traitCollection.forceTouchCapability != .Available {
+        if !IAKitOptions.forceTouchAvailable {
             print("removed force")
             touchInterpreterEK.removeKey(withActionName: "Force")
         }

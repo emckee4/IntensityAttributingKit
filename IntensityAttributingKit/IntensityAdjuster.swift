@@ -10,10 +10,6 @@ import UIKit
 
 class IntensityAdjuster: UIView {
     
-    lazy var forceTouchAvailable:Bool = {
-        return self.traitCollection.forceTouchCapability == UIForceTouchCapability.Available
-    }()
-    
     weak var delegate:IntensityAdjusterDelegate?
     
     var intensityDisplay:UIButton!
