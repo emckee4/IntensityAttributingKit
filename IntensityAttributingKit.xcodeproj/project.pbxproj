@@ -50,6 +50,7 @@
 		C09574821C59442300724F02 /* IAStringConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09574811C59442300724F02 /* IAStringConversion.swift */; };
 		C09D38051C8F98AA00B0D9D1 /* TempSettingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09D38041C8F98AA00B0D9D1 /* TempSettingVC.swift */; };
 		C0A258CF1C9200EC003287AB /* TouchInterpreters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0A258CE1C9200EC003287AB /* TouchInterpreters.swift */; };
+		C0A258D11C922FC0003287AB /* NSHashTable+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0A258D01C922FC0003287AB /* NSHashTable+Extension.swift */; };
 		C0AE06141C6E64490096F042 /* PressureKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AE06131C6E64490096F042 /* PressureKey.swift */; };
 		C0AE06191C6E75750096F042 /* IAStringTokenizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AE06181C6E75750096F042 /* IAStringTokenizing.swift */; };
 		C0AE061D1C72773C0096F042 /* IATextAttachment-Obs.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AE061C1C72773C0096F042 /* IATextAttachment-Obs.swift */; };
@@ -123,6 +124,7 @@
 		C09574811C59442300724F02 /* IAStringConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringConversion.swift; sourceTree = "<group>"; };
 		C09D38041C8F98AA00B0D9D1 /* TempSettingVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TempSettingVC.swift; sourceTree = "<group>"; };
 		C0A258CE1C9200EC003287AB /* TouchInterpreters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TouchInterpreters.swift; sourceTree = "<group>"; };
+		C0A258D01C922FC0003287AB /* NSHashTable+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSHashTable+Extension.swift"; sourceTree = "<group>"; };
 		C0AE06131C6E64490096F042 /* PressureKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PressureKey.swift; sourceTree = "<group>"; };
 		C0AE06181C6E75750096F042 /* IAStringTokenizing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringTokenizing.swift; sourceTree = "<group>"; };
 		C0AE061C1C72773C0096F042 /* IATextAttachment-Obs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IATextAttachment-Obs.swift"; sourceTree = "<group>"; };
@@ -341,6 +343,7 @@
 				C031CBE51BDB097600521393 /* MiscGlobals.swift */,
 				C0E5D7C41BDEA4E400A0A814 /* UIImage+Extension.swift */,
 				C0E5D7C71BDEA52C00A0A814 /* OtherExtensions.swift */,
+				C0A258D01C922FC0003287AB /* NSHashTable+Extension.swift */,
 			);
 			name = "General Extensions";
 			sourceTree = "<group>";
@@ -506,6 +509,7 @@
 				C031CBE81BDB097600521393 /* IntensityAttributes.swift in Sources */,
 				C069B2BA1C627DB1008834D3 /* IAStringArchive.swift in Sources */,
 				C09574821C59442300724F02 /* IAStringConversion.swift in Sources */,
+				C0A258D11C922FC0003287AB /* NSHashTable+Extension.swift in Sources */,
 				C09D38051C8F98AA00B0D9D1 /* TempSettingVC.swift in Sources */,
 				C0A258CF1C9200EC003287AB /* TouchInterpreters.swift in Sources */,
 				C031CBE91BDB097600521393 /* IntensityTransformers.swift in Sources */,

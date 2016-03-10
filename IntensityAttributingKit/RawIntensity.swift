@@ -14,12 +14,16 @@ public class RawIntensity{
     public static var rawIntensityMapping:RawIntensityMapping = IAKitOptions.rawIntensityMapper {
         didSet{intensityMappingFunction = rawIntensityMapping.function}
     }
+    private(set)static var intensityMappingFunction:RawIntensityMappingFunction = IAKitOptions.rawIntensityMapper.function
     
-    static var intensityMappingFunction:RawIntensityMappingFunction = IAKitOptions.rawIntensityMapper.function
     
-    static var touchInterpreter:IATouchInterpreter = IAKitOptions.touchInterpreter
-    
-    private var currentInterpreter:IATouchInterpretingProtocol = RawIntensity.touchInterpreter.newInstance
+    static var touchInterpreter:IATouchInterpreter = IAKitOptions.touchInterpreter {
+        didSet{
+            _ = RawIntensity.rawIntensityInstances.map({($0 as? RawIntensity)?.currentInterpreter = touchInterpreter.newInstance})}
+    }
+    private var currentInterpreter:IATouchInterpretingProtocol = RawIntensity.touchInterpreter.newInstance {
+        didSet{print("updated currentInterpreter")}
+    }
     
     func updateIntensity(withTouch touch:UITouch){
         currentInterpreter.updateIntensityYieldingRawResult(withTouch: touch)
@@ -39,9 +43,19 @@ public class RawIntensity{
         return RawIntensity.intensityMappingFunction(raw: raw)
     }
     
+    
+    
+    
     init(){
-        
+        RawIntensity.rawIntensityInstances.addObject(self)
     }
+    
+    deinit{
+        RawIntensity.rawIntensityInstances.removeObject(self)
+    }
+    
+    
+    private static var rawIntensityInstances:NSHashTable = NSHashTable(options: NSPointerFunctionsOptions.WeakMemory, capacity: 40)
 }
 
 
