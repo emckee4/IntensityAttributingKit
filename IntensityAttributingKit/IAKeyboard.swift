@@ -9,10 +9,6 @@ import UIKit
 
 class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
     
-    
-    ///Intensity of last keypress. IATextView will retrieve this value and set it to nil after the textDocumentProxy informs it of text insertion by the keyboard
-    //var intensity:Float!
-    
     weak var delegate:IAKeyboardDelegate!
     
     var shiftKeyIsSelected:Bool {
@@ -98,12 +94,31 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
     }
     
-    func rasterizeBeforeAnimation(){
-//        self.inputView?.layer.shouldRasterize = true
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(800) * Int64(NSEC_PER_MSEC)), dispatch_get_main_queue(), {
+//    private var rasterizeUntil: NSTimeInterval = 0
+//    ///Sets
+//    func rasterizeWithDuration(duration:Double){
+//        let until = NSProcessInfo.processInfo().systemUptime + duration
+//        guard until > rasterizeUntil else {return}  //check if we don't need to do anything because we're already rasterizing for the duration
+//        let ms:Int64 = Int64(duration * 1000) + 10
+//        self.inputView!.layer.shouldRasterize = true
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, ms * Int64(NSEC_PER_MSEC)), dispatch_get_main_queue(), {
+//            guard NSProcessInfo.processInfo().systemUptime >= self.rasterizeUntil else {return}
 //            self.inputView?.layer.shouldRasterize = false
 //        })
+//    }
+    
+    private var disableRasterizationUntil: NSTimeInterval = 0
+    func preventRasterizationForDuration(duration:Double){
+        let until = NSProcessInfo.processInfo().systemUptime + duration
+        guard until > disableRasterizationUntil else {return}  //check if we don't need to do anything because we're already rasterizing for the duration
+        let ms:Int64 = Int64(duration * 1000) + 10
+        self.inputView!.layer.shouldRasterize = false
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, ms * Int64(NSEC_PER_MSEC)), dispatch_get_main_queue(), {
+            guard NSProcessInfo.processInfo().systemUptime >= self.disableRasterizationUntil else {return}
+            self.inputView?.layer.shouldRasterize = true
+        })
     }
+    
     
     ///MARK:- Keyboard initial layout functions
     private func setupQwertyRow(){
@@ -400,6 +415,8 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
     ///All control elements adopting the KeyControl protocol deliver their user interaction events through this function
     func pressureKeyPressed(sender: PressureControl, actionName: String, intensity: Int) {
         //self.intensity = intensity
+        preventRasterizationForDuration(5.0)
+        UIDevice.currentDevice().playInputClick()
         if shiftKey.selected {
             shiftKey.deselect(overrideSelectedLock: false)
             updateKeyMapping()
