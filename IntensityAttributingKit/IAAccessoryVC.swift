@@ -197,18 +197,18 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         
         self.inputView!.frame = CGRect(x: 0, y: 0, width: UIScreen.mainScreen().bounds.width, height: kAccessoryHeight)
         
-        if let mapping = IAKitOptions.forceIntensityMapping {
-            RawIntensity.forceIntensityMapping = mapping.namedFunction
-        } else {
-            if self.traitCollection.forceTouchCapability == UIForceTouchCapability.Available {
-                IAKitOptions.forceIntensityMapping = ForceIntensityMappingFunctions.AvailableFunctions.SmoothedAverageLastTen
-                RawIntensity.forceIntensityMapping = ForceIntensityMappingFunctions.AvailableFunctions.SmoothedAverageLastTen.namedFunction
-            } else {
-                IAKitOptions.forceIntensityMapping = ForceIntensityMappingFunctions.AvailableFunctions.DurationLinearScaleToConstant
-                RawIntensity.forceIntensityMapping = ForceIntensityMappingFunctions.AvailableFunctions.DurationLinearScaleToConstant.namedFunction
-            }
-//            IAKitOptions.singleton.saveOptions()
-        }
+//        if let mapping = IAKitOptions.forceIntensityMapping {
+//            RawIntensity.forceIntensityMapping = mapping.namedFunction
+//        } else {
+//            if self.traitCollection.forceTouchCapability == UIForceTouchCapability.Available {
+//                IAKitOptions.forceIntensityMapping = ForceIntensityMappingFunctions.AvailableFunctions.SmoothedAverageLastTen
+//                RawIntensity.forceIntensityMapping = ForceIntensityMappingFunctions.AvailableFunctions.SmoothedAverageLastTen.namedFunction
+//            } else {
+//                IAKitOptions.forceIntensityMapping = ForceIntensityMappingFunctions.AvailableFunctions.DurationLinearScaleToConstant
+//                RawIntensity.forceIntensityMapping = ForceIntensityMappingFunctions.AvailableFunctions.DurationLinearScaleToConstant.namedFunction
+//            }
+////            IAKitOptions.singleton.saveOptions()
+//        }
     }
     
     //MARK:- Lifecycle and resizing layout

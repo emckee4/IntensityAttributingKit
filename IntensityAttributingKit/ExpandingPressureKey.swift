@@ -33,7 +33,7 @@ This is now a subclass of ExpandingKeyBase.
         var white:CGFloat = 0.0
         var alpha:CGFloat = 1.0
         backgroundColor!.getWhite(&white, alpha: &alpha)
-        let intensity = touchIntensity.intensity
+        let intensity = touchIntensity.currentIntensity ?? 0
         let newAlpha:CGFloat = max(alpha * CGFloat(1 + intensity), 1.0)
         let newWhite:CGFloat = white * CGFloat(1 - intensity)
         return UIColor(white: newWhite, alpha: newAlpha)
@@ -42,19 +42,24 @@ This is now a subclass of ExpandingKeyBase.
     override func keySelectionWillUpdate(withTouch touch: UITouch!, previousSelection oldKey: EPKey?, nextSelection: EPKey?) {
         if oldKey == nil && nextSelection != nil{
             guard touch != nil else {return}
-            touchIntensity = RawIntensity(withFloatValue: Float(touch.force), maximumPossibleForce: Float(touch.maximumPossibleForce))
+            //touchIntensity = RawIntensity(withFloatValue: Float(touch.force), maximumPossibleForce: Float(touch.maximumPossibleForce))
+            touchIntensity.updateIntensity(withTouch: touch)
         } else if nextSelection == nil {
-            touchIntensity.reset()
+            //touchIntensity.reset()
+            touchIntensity.cancelInteraction()
         } else if nextSelection! != oldKey! {
             guard touch != nil else {return}
-            touchIntensity.reset(touch.force)
+            //touchIntensity.reset(touch.force)
+            touchIntensity.cancelInteraction()
+            touchIntensity.updateIntensity(withTouch: touch)
         } else {
-            touchIntensity.append(touch.force)
+            //touchIntensity.append(touch.force)
+            touchIntensity.updateIntensity(withTouch: touch)
         }
     }
     
     override func handleKeySelection(selectedKey: EPKey) {
-        self.delegate?.pressureKeyPressed(self, actionName: selectedKey.actionName, intensity: touchIntensity.intensity)
+        self.delegate?.pressureKeyPressed(self, actionName: selectedKey.actionName, intensity: touchIntensity.endInteraction(withTouch: nil))
     }
     
     

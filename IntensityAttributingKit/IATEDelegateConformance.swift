@@ -82,31 +82,32 @@ extension IATextEditor: IAAccessoryDelegate {
     func optionButtonPressed(){
         guard editorDelegate != nil else {return}
         //guard presentingVC != nil else {return}
-        let alert = UIAlertController(title: "Options", message: "Choose your intensity mapper:", preferredStyle: .ActionSheet)
-        if self.traitCollection.forceTouchCapability == UIForceTouchCapability.Available {
-            for fim in ForceIntensityMappingFunctions.AvailableFunctions.availableForceOnlyNames {
-                alert.addAction(UIAlertAction(title: fim, style: .Default, handler: { (action) -> Void in
-                    let newMapping = ForceIntensityMappingFunctions.AvailableFunctions(rawValue: fim)
-                    IAKitOptions.forceIntensityMapping = newMapping
-//                    IAKitOptions.singleton.saveOptions()
-                    RawIntensity.forceIntensityMapping = newMapping!.namedFunction
-                }))
-            }
-        } else {
-            for fim in ForceIntensityMappingFunctions.AvailableFunctions.availableForceOnlyNames {
-                let disabledAction = UIAlertAction(title: fim, style: .Default, handler: nil)
-                alert.addAction(disabledAction)
-                disabledAction.enabled = false
-            }
-        }
-        for fim in ForceIntensityMappingFunctions.AvailableFunctions.availableDurationOnlyNames {
-            alert.addAction(UIAlertAction(title: fim, style: .Default, handler: { (action) -> Void in
-                let newMapping = ForceIntensityMappingFunctions.AvailableFunctions(rawValue: fim)
-                IAKitOptions.forceIntensityMapping = newMapping
-//                IAKitOptions.singleton.saveOptions()
-                RawIntensity.forceIntensityMapping = newMapping!.namedFunction
-            }))
-        }
+//        let alert = UIAlertController(title: "Options", message: "Choose your intensity mapper:", preferredStyle: .ActionSheet)
+//        if self.traitCollection.forceTouchCapability == UIForceTouchCapability.Available {
+//            for fim in ForceIntensityMappingFunctions.AvailableFunctions.availableForceOnlyNames {
+//                alert.addAction(UIAlertAction(title: fim, style: .Default, handler: { (action) -> Void in
+//                    let newMapping = ForceIntensityMappingFunctions.AvailableFunctions(rawValue: fim)
+//                    IAKitOptions.forceIntensityMapping = newMapping
+////                    IAKitOptions.singleton.saveOptions()
+//                    RawIntensity.forceIntensityMapping = newMapping!.namedFunction
+//                }))
+//            }
+//        } else {
+//            for fim in ForceIntensityMappingFunctions.AvailableFunctions.availableForceOnlyNames {
+//                let disabledAction = UIAlertAction(title: fim, style: .Default, handler: nil)
+//                alert.addAction(disabledAction)
+//                disabledAction.enabled = false
+//            }
+//        }
+//        for fim in ForceIntensityMappingFunctions.AvailableFunctions.availableDurationOnlyNames {
+//            alert.addAction(UIAlertAction(title: fim, style: .Default, handler: { (action) -> Void in
+//                let newMapping = ForceIntensityMappingFunctions.AvailableFunctions(rawValue: fim)
+//                IAKitOptions.forceIntensityMapping = newMapping
+////                IAKitOptions.singleton.saveOptions()
+//                RawIntensity.forceIntensityMapping = newMapping!.namedFunction
+//            }))
+//        }
+        let alert = TempSettingVC()
         editorDelegate?.iaTextEditorRequestsPresentation(self, shouldPresentVC: alert)
         
     }

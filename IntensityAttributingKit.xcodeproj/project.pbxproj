@@ -38,7 +38,7 @@
 		C06B1D4E1BED2DCC009F427A /* PressureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D4D1BED2DCC009F427A /* PressureView.swift */; };
 		C06B1D501BEE8B61009F427A /* Keysets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D4F1BEE8B61009F427A /* Keysets.swift */; };
 		C06B1D531BEE8C4F009F427A /* PressureKeyProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D521BEE8C4F009F427A /* PressureKeyProtocols.swift */; };
-		C06B1D561BEE9C40009F427A /* ForceIntensityMappingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D551BEE9C40009F427A /* ForceIntensityMappingFunctions.swift */; };
+		C06B1D561BEE9C40009F427A /* RawIntensityMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D551BEE9C40009F427A /* RawIntensityMapping.swift */; };
 		C06B1D591BF15AD9009F427A /* WeightIntensityScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D581BF15AD8009F427A /* WeightIntensityScheme.swift */; };
 		C06B1D5B1BF15C18009F427A /* HueGYRIntensityScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D5A1BF15C18009F427A /* HueGYRIntensityScheme.swift */; };
 		C06B1D5D1BF15CDC009F427A /* FontSizeIntensityScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D5C1BF15CDC009F427A /* FontSizeIntensityScheme.swift */; };
@@ -48,6 +48,8 @@
 		C095747E1C5822E300724F02 /* IAString.swift in Sources */ = {isa = PBXBuildFile; fileRef = C095747D1C5822E300724F02 /* IAString.swift */; };
 		C09574801C58259C00724F02 /* IAStringKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C095747F1C58259C00724F02 /* IAStringKeys.swift */; };
 		C09574821C59442300724F02 /* IAStringConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09574811C59442300724F02 /* IAStringConversion.swift */; };
+		C09D38051C8F98AA00B0D9D1 /* TempSettingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09D38041C8F98AA00B0D9D1 /* TempSettingVC.swift */; };
+		C0A258CF1C9200EC003287AB /* TouchInterpreters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0A258CE1C9200EC003287AB /* TouchInterpreters.swift */; };
 		C0AE06141C6E64490096F042 /* PressureKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AE06131C6E64490096F042 /* PressureKey.swift */; };
 		C0AE06191C6E75750096F042 /* IAStringTokenizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AE06181C6E75750096F042 /* IAStringTokenizing.swift */; };
 		C0AE061D1C72773C0096F042 /* IATextAttachment-Obs.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AE061C1C72773C0096F042 /* IATextAttachment-Obs.swift */; };
@@ -109,7 +111,7 @@
 		C06B1D4D1BED2DCC009F427A /* PressureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PressureView.swift; sourceTree = "<group>"; };
 		C06B1D4F1BEE8B61009F427A /* Keysets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keysets.swift; sourceTree = "<group>"; };
 		C06B1D521BEE8C4F009F427A /* PressureKeyProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PressureKeyProtocols.swift; sourceTree = "<group>"; };
-		C06B1D551BEE9C40009F427A /* ForceIntensityMappingFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForceIntensityMappingFunctions.swift; sourceTree = "<group>"; };
+		C06B1D551BEE9C40009F427A /* RawIntensityMapping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawIntensityMapping.swift; sourceTree = "<group>"; };
 		C06B1D581BF15AD8009F427A /* WeightIntensityScheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeightIntensityScheme.swift; sourceTree = "<group>"; };
 		C06B1D5A1BF15C18009F427A /* HueGYRIntensityScheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HueGYRIntensityScheme.swift; sourceTree = "<group>"; };
 		C06B1D5C1BF15CDC009F427A /* FontSizeIntensityScheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontSizeIntensityScheme.swift; sourceTree = "<group>"; };
@@ -119,6 +121,8 @@
 		C095747D1C5822E300724F02 /* IAString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAString.swift; sourceTree = "<group>"; };
 		C095747F1C58259C00724F02 /* IAStringKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringKeys.swift; sourceTree = "<group>"; };
 		C09574811C59442300724F02 /* IAStringConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringConversion.swift; sourceTree = "<group>"; };
+		C09D38041C8F98AA00B0D9D1 /* TempSettingVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TempSettingVC.swift; sourceTree = "<group>"; };
+		C0A258CE1C9200EC003287AB /* TouchInterpreters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TouchInterpreters.swift; sourceTree = "<group>"; };
 		C0AE06131C6E64490096F042 /* PressureKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PressureKey.swift; sourceTree = "<group>"; };
 		C0AE06181C6E75750096F042 /* IAStringTokenizing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringTokenizing.swift; sourceTree = "<group>"; };
 		C0AE061C1C72773C0096F042 /* IATextAttachment-Obs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IATextAttachment-Obs.swift"; sourceTree = "<group>"; };
@@ -223,10 +227,11 @@
 			children = (
 				C031CBFF1BDD902000521393 /* IATextView.swift */,
 				C040C5071C0E4283007C1685 /* IAKitOptions.swift */,
+				C09D38041C8F98AA00B0D9D1 /* TempSettingVC.swift */,
 				C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */,
 				C0AE061C1C72773C0096F042 /* IATextAttachment-Obs.swift */,
 				C0F42CF91C5FE10F00FA7BB0 /* IATextEditor */,
-				C06B1D541BEE9BDA009F427A /* ForceIntensityMapping */,
+				C06B1D541BEE9BDA009F427A /* RawIntensity */,
 				C08253B21BE571C70017AC14 /* CustomControls */,
 				C08253B31BE571E00017AC14 /* KB+Accessory */,
 				C031CBEC1BDB097E00521393 /* IAString And Transformers */,
@@ -266,13 +271,14 @@
 			name = "Keyset Management";
 			sourceTree = "<group>";
 		};
-		C06B1D541BEE9BDA009F427A /* ForceIntensityMapping */ = {
+		C06B1D541BEE9BDA009F427A /* RawIntensity */ = {
 			isa = PBXGroup;
 			children = (
 				C0D447491BE6BC16003204E7 /* RawIntensity.swift */,
-				C06B1D551BEE9C40009F427A /* ForceIntensityMappingFunctions.swift */,
+				C0A258CE1C9200EC003287AB /* TouchInterpreters.swift */,
+				C06B1D551BEE9C40009F427A /* RawIntensityMapping.swift */,
 			);
-			name = ForceIntensityMapping;
+			name = RawIntensity;
 			sourceTree = "<group>";
 		};
 		C06B1D571BF15AB5009F427A /* Transformers */ = {
@@ -500,6 +506,8 @@
 				C031CBE81BDB097600521393 /* IntensityAttributes.swift in Sources */,
 				C069B2BA1C627DB1008834D3 /* IAStringArchive.swift in Sources */,
 				C09574821C59442300724F02 /* IAStringConversion.swift in Sources */,
+				C09D38051C8F98AA00B0D9D1 /* TempSettingVC.swift in Sources */,
+				C0A258CF1C9200EC003287AB /* TouchInterpreters.swift in Sources */,
 				C031CBE91BDB097600521393 /* IntensityTransformers.swift in Sources */,
 				C0D4474E1BE97578003204E7 /* IntensityAdjuster.swift in Sources */,
 				C06B1D5B1BF15C18009F427A /* HueGYRIntensityScheme.swift in Sources */,
@@ -516,7 +524,7 @@
 				C01BDA9D1C571926004CF045 /* CollapsingArray.swift in Sources */,
 				C069B2BE1C628DE9008834D3 /* IATextEditorDelegate.swift in Sources */,
 				C06B1D5D1BF15CDC009F427A /* FontSizeIntensityScheme.swift in Sources */,
-				C06B1D561BEE9C40009F427A /* ForceIntensityMappingFunctions.swift in Sources */,
+				C06B1D561BEE9C40009F427A /* RawIntensityMapping.swift in Sources */,
 				C069B2BC1C628D87008834D3 /* IATEDelegateConformance.swift in Sources */,
 				C0BCB6C41BFA60BE00654E0A /* ValueWithRange.swift in Sources */,
 				C038B3EA1C69310400069F9C /* ExpandingKeyControl.swift in Sources */,

@@ -11,15 +11,16 @@ import UIKit
 class PressureButton: UIButton {
     
     lazy var forceTouchAvailable:Bool = {
-        return self.traitCollection.forceTouchCapability == UIForceTouchCapability.Available
+        return UIScreen.mainScreen().traitCollection.forceTouchCapability == UIForceTouchCapability.Available
     }()
 
     lazy var rawIntensity:RawIntensity = RawIntensity()
     
     ///this value is made available for the receiving class after it receives the action message from a touch
-    var lastIntensity:Int {
-        return rawIntensity.intensity
-    }
+    var lastIntensity:Int = 0
+    // {
+    //    return rawIntensity.currentIntensity
+    //}
     
     private var baseBackgroundColor:UIColor? {
         didSet {super.backgroundColor = baseBackgroundColor}
@@ -32,10 +33,10 @@ class PressureButton: UIButton {
     ///Color for background of selected cell if 3dTouch (and so our dynamic selection background color) are not available
     var nonTouchSelectionBGColor = UIColor.darkGrayColor()
     
-    private func setBackgroundColorForIntensity(){
+    private func setBackgroundColorForIntensity(precomputedIntensity:Int? = nil){
         guard baseBackgroundColor != nil else {return}
         guard forceTouchAvailable else {super.backgroundColor = nonTouchSelectionBGColor; return}
-        let intensity = rawIntensity.intensity
+        let intensity:Int = precomputedIntensity ?? rawIntensity.currentIntensity
         guard intensity > 0 else {super.backgroundColor = baseBackgroundColor; return}
         var white:CGFloat = -1.0
         var alpha:CGFloat = 1.0
@@ -52,23 +53,28 @@ class PressureButton: UIButton {
     
     override func beginTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool {
         if touchInside {
-            forceTouchAvailable ? rawIntensity.reset(touch.force) : rawIntensity.reset(0.0)
-            setBackgroundColorForIntensity()
+            //forceTouchAvailable ? rawIntensity.reset(touch.force) : rawIntensity.reset(0.0)
+            rawIntensity.updateIntensity(withTouch: touch)
+            lastIntensity = rawIntensity.currentIntensity
+            setBackgroundColorForIntensity(lastIntensity)
             sendActionsForControlEvents(.ValueChanged)
         }
         return super.beginTrackingWithTouch(touch, withEvent: event)
     }
     override func continueTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool {
         if touchInside {
-            rawIntensity.append(touch.force)
-            setBackgroundColorForIntensity()
+            //rawIntensity.append(touch.force)
+            rawIntensity.updateIntensity(withTouch: touch)
+            lastIntensity = rawIntensity.currentIntensity
+            setBackgroundColorForIntensity(lastIntensity)
             sendActionsForControlEvents(.ValueChanged)
         }
         return super.continueTrackingWithTouch(touch, withEvent: event)
     }
     override func endTrackingWithTouch(touch: UITouch?, withEvent event: UIEvent?) {
+        lastIntensity = rawIntensity.endInteraction(withTouch: touch)
         if touchInside && touch != nil {
-            rawIntensity.append(touch!.force)
+            //rawIntensity.append(touch!.force)
             sendActionsForControlEvents(.ValueChanged)
         }
         resetBackground()
@@ -78,6 +84,7 @@ class PressureButton: UIButton {
     override func cancelTrackingWithEvent(event: UIEvent?) {
         super.cancelTrackingWithEvent(event)
         resetBackground()
+        lastIntensity = 0
     }
 
 }

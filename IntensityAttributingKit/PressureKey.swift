@@ -31,10 +31,10 @@ class PressureKey:UILabel, PressureControl {
         get {return _baseBackgroundColor}
     }
     
-    private func setBackgroundColorForIntensity(){
+    private func setBackgroundColorForIntensity(precomputedValue:Int? = nil){
         if self._baseBackgroundColor == nil {self._baseBackgroundColor = UIColor.clearColor()}
         //guard forceTouchAvailable else {contentView?.backgroundColor = selectionColor; return}
-        let intensity = rawIntensity.intensity
+        let intensity = precomputedValue ?? (rawIntensity.currentIntensity ?? 0)
         guard intensity > 0 else {super.backgroundColor = _baseBackgroundColor; return}
         var white:CGFloat = -1.0
         var alpha:CGFloat = 1.0
@@ -87,7 +87,8 @@ class PressureKey:UILabel, PressureControl {
         super.touchesBegan(touches, withEvent: event)
         //there should be one and only one touch in the touches set in touchesBegan since we have multitouch disabled
         if let touch = touches.first {
-            rawIntensity = RawIntensity(withValue: touch.force,maximumPossibleForce: touch.maximumPossibleForce)
+            //rawIntensity = RawIntensity(withValue: touch.force,maximumPossibleForce: touch.maximumPossibleForce)
+            rawIntensity.updateIntensity(withTouch: touch)
             setBackgroundColorForIntensity()
         }
     }
@@ -96,10 +97,10 @@ class PressureKey:UILabel, PressureControl {
         super.touchesMoved(touches, withEvent: event)
         if let touch = touches.first {
             if pointInside(touch.locationInView(self), withEvent: event){
-                rawIntensity.append(touch.force)
+                rawIntensity.updateIntensity(withTouch: touch)
                 setBackgroundColorForIntensity()
             } else {
-                rawIntensity.reset()
+                rawIntensity.cancelInteraction()
                 resetBackground()
             }
         }
@@ -107,11 +108,11 @@ class PressureKey:UILabel, PressureControl {
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         super.touchesEnded(touches, withEvent: event)
+        let lastVal = rawIntensity.endInteraction(withTouch: touches.first)
         if let touch = touches.first {
             if pointInside(touch.locationInView(self), withEvent: event){
-                rawIntensity.append(touch.force)
                 if actionName != nil {
-                    self.delegate?.pressureKeyPressed(self, actionName: self.actionName, intensity: rawIntensity.intensity)
+                    self.delegate?.pressureKeyPressed(self, actionName: self.actionName, intensity: lastVal)
                     if self.delegate == nil {
                         print("delegate not set for PressureView with action \(actionName)")
                     }
@@ -119,13 +120,13 @@ class PressureKey:UILabel, PressureControl {
             }
         }
         self.resetBackground()
-        rawIntensity.reset()
+        //rawIntensity.reset()
     }
     
     override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
         super.touchesCancelled(touches, withEvent: event)
         self.resetBackground()
-        rawIntensity.reset()
+        rawIntensity.cancelInteraction()
     }
 
     
