@@ -21,9 +21,10 @@ public class RawIntensity{
         didSet{
             _ = RawIntensity.rawIntensityInstances.map({($0 as? RawIntensity)?.currentInterpreter = touchInterpreter.newInstance})}
     }
-    private var currentInterpreter:IATouchInterpretingProtocol = RawIntensity.touchInterpreter.newInstance {
-        didSet{print("updated currentInterpreter")}
-    }
+    private var currentInterpreter:IATouchInterpretingProtocol = RawIntensity.touchInterpreter.newInstance
+//    {
+//        didSet{print("updated currentInterpreter")}
+//    }
     
     func updateIntensity(withTouch touch:UITouch){
         currentInterpreter.updateIntensityYieldingRawResult(withTouch: touch)

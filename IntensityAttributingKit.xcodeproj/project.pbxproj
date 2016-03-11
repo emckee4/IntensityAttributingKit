@@ -229,7 +229,7 @@
 			children = (
 				C031CBFF1BDD902000521393 /* IATextView.swift */,
 				C040C5071C0E4283007C1685 /* IAKitOptions.swift */,
-				C09D38041C8F98AA00B0D9D1 /* TempSettingVC.swift */,
+				C0A258D21C92363F003287AB /* IAKOptions-Views */,
 				C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */,
 				C0AE061C1C72773C0096F042 /* IATextAttachment-Obs.swift */,
 				C0F42CF91C5FE10F00FA7BB0 /* IATextEditor */,
@@ -326,6 +326,14 @@
 				C0D4474B1BE82381003204E7 /* ImageAssets.xcassets */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C0A258D21C92363F003287AB /* IAKOptions-Views */ = {
+			isa = PBXGroup;
+			children = (
+				C09D38041C8F98AA00B0D9D1 /* TempSettingVC.swift */,
+			);
+			name = "IAKOptions-Views";
 			sourceTree = "<group>";
 		};
 		C0AE06151C6E66490096F042 /* PressureKeys */ = {

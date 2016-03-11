@@ -46,9 +46,10 @@ public class TempSettingVC: UIViewController, UITextFieldDelegate, PressureKeyAc
         touchInterpreterEK.backgroundColor = UIColor.redColor()
         touchInterpreterEK.translatesAutoresizingMaskIntoConstraints = false
         touchInterpreterEK.expansionDirection = .Right
-
-        touchInterpreterEK.addKey(withTextLabel: "Force", actionName: "Force")
-
+        if IAKitOptions.forceTouchAvailable {
+            touchInterpreterEK.addKey(withTextLabel: "Force", actionName: "Force")
+        }
+        touchInterpreterEK.addKey(withTextLabel: "Radius", actionName: "Radius")
         touchInterpreterEK.addKey(withTextLabel: "Duration", actionName: "Duration")
         touchInterpreterEK.setSelector(self, selector: "tiChosen:")
         touchInterpreterEK.selectedBecomesFirst = true
@@ -137,11 +138,6 @@ public class TempSettingVC: UIViewController, UITextFieldDelegate, PressureKeyAc
     public override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         updateDisplay()
-        
-        if !IAKitOptions.forceTouchAvailable {
-            print("removed force")
-            touchInterpreterEK.removeKey(withActionName: "Force")
-        }
     }
     
     func updateDisplay(){

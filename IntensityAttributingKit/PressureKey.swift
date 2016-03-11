@@ -23,7 +23,7 @@ class PressureKey:UILabel, PressureControl {
     private var _baseBackgroundColor:UIColor? = UIColor.lightGrayColor()
     
     override var backgroundColor:UIColor? {
-        set {_baseBackgroundColor = newValue; setBackgroundColorForIntensity()}
+        set {_baseBackgroundColor = newValue; super.backgroundColor = newValue}//setBackgroundColorForIntensity()}
         get {return _baseBackgroundColor}
     }
     
@@ -118,6 +118,11 @@ class PressureKey:UILabel, PressureControl {
         }
         self.resetBackground()
         //rawIntensity.reset()
+    }
+    
+    override func touchesEstimatedPropertiesUpdated(touches: Set<NSObject>) {
+        super.touchesEstimatedPropertiesUpdated(touches)
+        
     }
     
     override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
