@@ -49,7 +49,8 @@ public class TempSettingVC: UIViewController, UITextFieldDelegate, PressureKeyAc
         if IAKitOptions.forceTouchAvailable {
             touchInterpreterEK.addKey(withTextLabel: "Force", actionName: "Force")
         }
-        touchInterpreterEK.addKey(withTextLabel: "Radius", actionName: "Radius")
+        //touchInterpreterEK.addKey(withTextLabel: "Radius", actionName: "Radius")
+        touchInterpreterEK.addKey(withTextLabel: "Impact", actionName: "ImpactDuration")
         touchInterpreterEK.addKey(withTextLabel: "Duration", actionName: "Duration")
         touchInterpreterEK.setSelector(self, selector: "tiChosen:")
         touchInterpreterEK.selectedBecomesFirst = true

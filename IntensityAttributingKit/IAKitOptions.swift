@@ -60,6 +60,8 @@ class IAKitOptions:NSObject {
         static let oTokenizerName = "IAKitOptions.overridingTokenizerName"
         static let oTransformerName = "IAKitOptions.overridingTransformerName"
         
+        static let deviceResourcesLimited = "IAKitOptions.deviceResourcesLimited"
+        
         //static let fimName = "IAKitOptions.forceIntensityMappingName"
         //need constants
         //how to store constants for mapping in performant accessable way?
@@ -68,7 +70,6 @@ class IAKitOptions:NSObject {
         static let touchInterpreterName = "IAKitOptions.touchInterpreterName"
         static let rawIntensityMapperDict = "IAKitOptions.rawIntensityMapperDict"
         
-        static let deviceResourcesLimited = "IAKitOptions.deviceResourcesLimited"
     }
     
     

@@ -12,7 +12,8 @@ import Foundation
 public enum IATouchInterpreter:String{
     case Duration = "Duration",
     Force = "Force",
-    Radius = "Radius"
+    Radius = "Radius",
+    ImpactDuration = "ImpactDuration"
     
     
     
@@ -21,7 +22,16 @@ public enum IATouchInterpreter:String{
         case .Duration: return DurationTouchInterpreter()
         case .Force: return ForceTouchInterpreter()
         case .Radius: return MajorRadiusTouchInterpreter()
+        case .ImpactDuration: return ImpactDurationTouchInterpreter()
         }
+    }
+    
+    
+    func activate(){
+        if self == .ImpactDuration {AccelHistory.singleton.startCollecting()}
+    }
+    func deactivate(){
+        if self == .ImpactDuration {AccelHistory.singleton.stopCollecting()}
     }
     
 }
@@ -159,9 +169,21 @@ extension TISmoothableHistory{
 }
 
 private struct ForceTouchInterpreter:TISmoothableHistory {
-    static var tiSmoothing:TISmoothingMethod = .AvgLastTen
+    private static var _tiSmoothing:TISmoothingMethod = {
+        if let tiSmoothingName = (NSUserDefaults.standardUserDefaults().objectForKey("FTI:TISmoothing") as? String) {
+            if let tism = TISmoothingMethod(rawValue: tiSmoothingName) {
+                return tism
+            }
+        }
+        return TISmoothingMethod.SmoothedLastTen
+    }()
+    static var tiSmoothing:TISmoothingMethod {
+        get{return _tiSmoothing}
+        set{_tiSmoothing = newValue; NSUserDefaults.standardUserDefaults().setObject(newValue.rawValue, forKey: "FTI:TISmoothing")}
+    }
+    
     //static var ftOption:FTOptions = .SmoothedLastTen
-    static var maximumPossibleForce:Float = 6.66667  //this should be determined by device type
+    //static var maximumPossibleForce:Float = 6.66667  //this should be determined by device type
     
     var history:[Float] = []
     var maxValue:Float = 0.0
@@ -285,9 +307,23 @@ private struct ForceTouchInterpreter:TISmoothableHistory {
 
 private struct MajorRadiusTouchInterpreter:TISmoothableHistory {
     
-    
-    static var tiSmoothing:TISmoothingMethod = .AvgLastTen
-    static var maxRadius:CGFloat = 50.0
+    private static var _tiSmoothing:TISmoothingMethod = {
+        if let tiSmoothingName = (NSUserDefaults.standardUserDefaults().objectForKey("MRTI:TISmoothing") as? String) {
+            if let tism = TISmoothingMethod(rawValue: tiSmoothingName) {
+                return tism
+            }
+        }
+        return TISmoothingMethod.AvgLastTen
+    }()
+    static var tiSmoothing:TISmoothingMethod {
+        get{return _tiSmoothing}
+        set{_tiSmoothing = newValue; NSUserDefaults.standardUserDefaults().setObject(newValue.rawValue, forKey: "MRTI:TISmoothing")}
+    }
+    private static var _maxRadius = {return (NSUserDefaults.standardUserDefaults().objectForKey("MRTI:maxRadius") as? CGFloat) ?? 50}()
+    static var maxRadius:CGFloat {
+        get{return _maxRadius}
+        set{_maxRadius = newValue; NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: "MRTI:maxRadius")}
+    }
     
     var history:[Float] = []
     var maxValue:Float = 0.0
@@ -299,31 +335,94 @@ private struct MajorRadiusTouchInterpreter:TISmoothableHistory {
 }
 
 private struct DurationTouchInterpreter:IATouchInterpretingProtocol{
-    static var fullTouchDuration:Float = 0.5
+    private static var _fullTouchDuration:Float = {return (NSUserDefaults.standardUserDefaults().objectForKey("DTI:fullTouchDur") as? Float) ?? 0.5}()
+    static var fullTouchDuration:Float {
+        get{return _fullTouchDuration}
+        set{_fullTouchDuration = newValue; NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: "DTI:fullTouchDur")}
+    }
     
-    var touchStartTime:CFTimeInterval!
+    
+    
+    var touchStartTime:NSTimeInterval!
     
     mutating func updateIntensityYieldingRawResult(withTouch touch:UITouch)->Float{
-        if touchStartTime == nil {
-            touchStartTime = CACurrentMediaTime()
+        if touch.phase == .Began {
+            touchStartTime = touch.timestamp
             return 0.0
         } else {
-            return max(Float(CACurrentMediaTime() - touchStartTime) / DurationTouchInterpreter.fullTouchDuration, 1.0)
+            return min(Float(touch.timestamp - touchStartTime) / DurationTouchInterpreter.fullTouchDuration, 1.0)
         }
     }
     mutating func endInteractionYieldingRawResult(withTouch touch:UITouch?)->Float{
-        let raw = self.currentRawValue ?? 0.0
+        guard let ts = touch?.timestamp else {touchStartTime = nil; return 0.0}
+        let result = min(Float(ts - touchStartTime) / DurationTouchInterpreter.fullTouchDuration, 1.0)
         touchStartTime = nil
-        return raw
+        return result
     }
     mutating func cancelInteraction(){
         touchStartTime = nil
     }
     var currentRawValue:Float! {
         guard touchStartTime != nil else {return nil}
-        return min(Float(CACurrentMediaTime() - touchStartTime) / DurationTouchInterpreter.fullTouchDuration, 1.0)
+        return min(Float(NSProcessInfo.processInfo().systemUptime - touchStartTime) / DurationTouchInterpreter.fullTouchDuration, 1.0)
     }
 }
+
+
+
+private class ImpactDurationTouchInterpreter:IATouchInterpretingProtocol{
+    private static var _durationMultiplier:Float = {return (NSUserDefaults.standardUserDefaults().objectForKey("IDTI:durationMultiplier") as? Float) ?? 2.4}()
+    static var durationMultiplier:Float {
+        get{return _durationMultiplier}
+        set{_durationMultiplier = newValue; NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: "IDTI:durationMultiplier")}
+    }
+    
+    private static var _impactMultiplier:Float = {return (NSUserDefaults.standardUserDefaults().objectForKey("IDTI:impactMultiplier") as? Float) ?? 0.9}()
+    ///Multiplier for max absolute user z force
+    static var impactMultiplier:Float {
+        get{return _impactMultiplier}
+        set{_impactMultiplier = newValue; NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: "IDTI:impactMultiplier")}
+    }
+    
+    static let coefficient:Float = -0.38
+    static let impactPower:Float = 0.5
+    
+    private static func calcRawResult(maxAbsZ:Float, elapsedTime:NSTimeInterval)->Float{
+        let raw = (self.durationMultiplier * Float(elapsedTime)) + (pow(maxAbsZ, self.impactPower) * self.impactMultiplier) + coefficient
+        return max(min(raw, 1.0),0.0)
+    }
+    
+    ///
+    
+    var touchStartTime:NSTimeInterval!
+    
+    func updateIntensityYieldingRawResult(withTouch touch:UITouch)->Float{
+        if touch.phase == .Began {
+            touchStartTime = touch.timestamp
+            AccelHistory.singleton.resetMaxAbsZ()
+            return 0.0
+        } else {
+            return ImpactDurationTouchInterpreter.calcRawResult(Float(AccelHistory.singleton.maxAbsZ), elapsedTime: touch.timestamp - touchStartTime)
+        }
+    }
+    func endInteractionYieldingRawResult(withTouch touch:UITouch?)->Float{
+        guard let ts = touch?.timestamp else {touchStartTime = nil;return 0.0}
+        let z = Float(AccelHistory.singleton.maxAbsZ)
+        let elapsed = ts - touchStartTime
+        touchStartTime = nil
+        return ImpactDurationTouchInterpreter.calcRawResult(z, elapsedTime: elapsed)
+    }
+    func cancelInteraction(){
+        touchStartTime = nil
+    }
+    var currentRawValue:Float! {
+        guard touchStartTime != nil else {return nil}
+        return ImpactDurationTouchInterpreter.calcRawResult(Float(AccelHistory.singleton.maxAbsZ), elapsedTime: NSProcessInfo.processInfo().systemUptime - touchStartTime)
+    }
+    
+
+}
+
 
 
 

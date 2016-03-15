@@ -19,6 +19,7 @@ public class RawIntensity{
     
     static var touchInterpreter:IATouchInterpreter = IAKitOptions.touchInterpreter {
         didSet{
+            if oldValue != touchInterpreter { oldValue.deactivate();}
             _ = RawIntensity.rawIntensityInstances.map({($0 as? RawIntensity)?.currentInterpreter = touchInterpreter.newInstance})}
     }
     private var currentInterpreter:IATouchInterpretingProtocol = RawIntensity.touchInterpreter.newInstance
@@ -46,7 +47,6 @@ public class RawIntensity{
     
     
     
-    
     init(){
         RawIntensity.rawIntensityInstances.addObject(self)
     }
@@ -57,6 +57,8 @@ public class RawIntensity{
     
     
     private static var rawIntensityInstances:NSHashTable = NSHashTable(options: NSPointerFunctionsOptions.WeakMemory, capacity: 40)
+    
+    
 }
 
 

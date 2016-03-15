@@ -61,25 +61,32 @@ public class IATextEditor: IATextView {
     
     public override func becomeFirstResponder() -> Bool {
         if super.becomeFirstResponder() {
-            //iaAccessory = IAKitOptions.singleton.accessory
-            iaAccessory.delegate = self
-            //iaKeyboardVC = IAKitOptions.singleton.keyboard
             _inputVC = iaKeyboardVC
-            self.iaAccessory.setTransformKeyForScheme(withName: currentTransformer.transformer.schemeName)
-            self.iaAccessory.setTokenizerKeyValue(self.iaString!.preferedSmoothing)
-            iaKeyboardVC.delegate = self
-            iaAccessory.updateAccessoryLayout(true)
-            iaKeyboardVC.inputView!.layer.shouldRasterize = true
+            prepareToBecomeFirstResponder()
             return true
         }
         return false
     }
+    
+    func prepareToBecomeFirstResponder(){
+        //iaAccessory = IAKitOptions.singleton.accessory
+        iaAccessory.delegate = self
+        //iaKeyboardVC = IAKitOptions.singleton.keyboard
+        self.iaAccessory.setTransformKeyForScheme(withName: currentTransformer.transformer.schemeName)
+        self.iaAccessory.setTokenizerKeyValue(self.iaString!.preferedSmoothing)
+        iaKeyboardVC.delegate = self
+        iaAccessory.updateAccessoryLayout(true)
+        iaKeyboardVC.inputView!.layer.shouldRasterize = true
+        RawIntensity.touchInterpreter.activate()
+    }
+    
     public override func resignFirstResponder() -> Bool {
         if super.resignFirstResponder() {
             //iaAccessory.delegate = nil
             //iaAccessory = nil
             //iaKeyboardVC = nil
             iaKeyboardVC.inputView!.layer.shouldRasterize = true
+            RawIntensity.touchInterpreter.deactivate()
             return true
         }
         return false
@@ -101,7 +108,11 @@ public class IATextEditor: IATextView {
         
         self.typingAttributes = [NSFontAttributeName:UIFont.systemFontOfSize(baseAttributes.cSize)]
         self.layoutManager.allowsNonContiguousLayout = false
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "handleLifecycleChange:", name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication())
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "handleLifecycleChange:", name: UIApplicationWillResignActiveNotification, object: UIApplication.sharedApplication())
     }
+    deinit{NSNotificationCenter.defaultCenter().removeObserver(self)}
     
     //////////////
     
@@ -333,6 +344,15 @@ extension IATextEditor {
         newBase.underline = (self.iaString!.getAttributeValueForRange(.Underline, range: range) as? Bool) ?? self.baseAttributes.underline
         newBase.strikethrough = (self.iaString!.getAttributeValueForRange(.Strikethrough, range: range) as? Bool) ?? self.baseAttributes.strikethrough
         return newBase
+    }
+    
+    func handleLifecycleChange(notification:NSNotification!){
+        guard let notiName = notification?.name else {return}
+        if notiName == UIApplicationWillEnterForegroundNotification && self.isFirstResponder(){
+            self.prepareToBecomeFirstResponder()
+        } else if notiName == UIApplicationWillResignActiveNotification {
+            RawIntensity.touchInterpreter.deactivate()
+        }
     }
 }
 
