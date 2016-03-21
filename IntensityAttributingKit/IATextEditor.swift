@@ -24,6 +24,9 @@ public class IATextEditor: IATextView {
         didSet {iaAccessory.updateDisplayedIntensity(defaultIntensity)}
     }
     
+    var textChecker:UITextChecker!
+    ///Range of the current word for which suggestions are being made by the iaKeyboard suggestionBar
+    var rangeForSuggestionReplacement:NSRange?
     
     weak public var editorDelegate:IATextEditorDelegate?
     
@@ -76,6 +79,7 @@ public class IATextEditor: IATextView {
         self.iaAccessory.setTokenizerKeyValue(self.iaString!.preferedSmoothing)
         iaKeyboardVC.delegate = self
         iaAccessory.updateAccessoryLayout(true)
+        updateSuggestionsBar()
         iaKeyboardVC.inputView!.layer.shouldRasterize = true
         RawIntensity.touchInterpreter.activate()
     }
@@ -91,7 +95,7 @@ public class IATextEditor: IATextView {
         }
         return false
     }
-    
+
     internal override func setupPressureTextView(){
         self.editable = true
         self.keyboardDismissMode = .Interactive
@@ -111,6 +115,7 @@ public class IATextEditor: IATextView {
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "handleLifecycleChange:", name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication())
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "handleLifecycleChange:", name: UIApplicationWillResignActiveNotification, object: UIApplication.sharedApplication())
+        textChecker = UITextChecker()
     }
     deinit{NSNotificationCenter.defaultCenter().removeObserver(self)}
     
@@ -119,6 +124,7 @@ public class IATextEditor: IATextView {
     override public var selectedRange:NSRange {
         didSet{
             if selectedRange != oldValue {
+                updateSuggestionsBar()
                 var attsLoc:Int!
                 if selectedRange.length > 0 { //gets atts from the last element in the range
                     attsLoc = selectedRange.location + selectedRange.length - 1
@@ -135,10 +141,10 @@ public class IATextEditor: IATextView {
         }
     }
     
-
+    ///This is used to track a quirk in quicktype text input described below.
     private var lastSystemTextChange:(range:NSRange,text:String)?
-    
-    ///We adopt the UIViewDelegate ourselves to implement this one function internally
+ 
+    ///We adopt the UIViewDelegate ourselves to implement this one function internally. The system quicktype keyboard seems to use a private API at times when interacting with UITextView subclasses. Without using this function we have no way to intercept the replacement of words with suggestions from the suggestion bar.
     public func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
         if let last = lastSystemTextChange {
             lastSystemTextChange = (range:range,text:text)
@@ -179,16 +185,6 @@ public class IATextEditor: IATextView {
         return false
     }
     
-
-    
-//    public func textViewDidChange(textView: UITextView) {
-//
-//    }
-    
-    
-    ////////
-
-
     
     func swapKB(){
         if self.inputViewController == nil {
@@ -201,6 +197,7 @@ public class IATextEditor: IATextView {
         }
         
         self.reloadInputViews()
+        self.updateSuggestionsBar()
     }
     
     ///Sets the IATextEditor to an empty IAString and resets properties to the IAKitOptions defaults
@@ -223,6 +220,8 @@ public class IATextEditor: IATextView {
     ///Scans for urls and may perform other actions to prepare an IAString for export
     public func finalizeIAString()->IAString {
         self.iaString!.scanLinks()
+        IAKitOptions.defaultTokenizer = self.iaString!.preferedSmoothing
+        IAKitOptions.defaultTransformer = self.currentTransformer
         return self.iaString!
     }
     
@@ -236,11 +235,6 @@ public class IATextEditor: IATextView {
         }
     }
     
-//    public func textViewDidChangeSelection(textView: UITextView) {
-//        if self.iaKeyboardVC == self.inputViewController && self.isFirstResponder() {
-//            iaKeyboardVC.selectionDidChange(self)
-//        }
-//    }
 }
 
 

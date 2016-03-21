@@ -15,6 +15,8 @@ class IAKitSettingsTableViewController: UITableViewController {
     var rimNameCells:[UITableViewCell]!
     var rimAdjustmentCells:[RawIntensityAdjustmentCellBase]!
     
+    var miscCells:[UITableViewCell]!
+    
     var expandedTIAdjusterIndex:NSIndexPath?
     var expandedRIMAdjusterIndex:NSIndexPath?
     
@@ -27,6 +29,8 @@ class IAKitSettingsTableViewController: UITableViewController {
         tiAdjustmentCells = [ForceTIAdjustmentCell(),DurationTIAdjustmentCell(),ImpactDurationTIAdjustmentCell()]
         rimAdjustmentCells = [LinearRIMAdjustmentCell(), LogAxRIMAdjustmentCell()]
 
+        
+        miscCells = [SpellCheckToggleCell()]
         
         tableView.estimatedRowHeight = 40.0
         tableView.rowHeight =  UITableViewAutomaticDimension
@@ -47,13 +51,13 @@ class IAKitSettingsTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return tiNameCells.count + rimNameCells.count + 1
+        return tiNameCells.count + rimNameCells.count + miscCells.count + 1
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if expandedTIAdjusterIndex?.section == section || expandedRIMAdjusterIndex?.section == section {
             return 2
-        } else if section < 5{
+        } else if section < 6{
             return 1
         } else {
             return 0
@@ -68,8 +72,10 @@ class IAKitSettingsTableViewController: UITableViewController {
         if row == 0 { // name cells
             if section < 3 {
                 return tiNameCells[section]
-            } else {
+            } else if section < 5{
                 return rimNameCells[section - 3]
+            } else {
+                return miscCells[section - 5]
             }
         } else { //param adjustment cells
             if section < 3 {
@@ -184,6 +190,7 @@ class IAKitSettingsTableViewController: UITableViewController {
         switch section {
         case 0: return "Touch Interpreters"
         case 3: return "Raw Intensity Mapping"
+        case 5: return "Other Options"
         default: return nil
         }
     }
@@ -193,6 +200,7 @@ class IAKitSettingsTableViewController: UITableViewController {
         switch section {
         case 0: return 28.0
         case 3: return 28.0
+        case 5: return 28.0
         default: return 3.0
         }
     }

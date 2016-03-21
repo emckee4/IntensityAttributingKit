@@ -23,6 +23,9 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
     }
     var backgroundColor:UIColor = UIColor(white: 0.55, alpha: 1.0)
     
+    var keyboardSuggestionBarIsEnabled:Bool {return true}
+    var suggestionsBar:SuggestionBarView!
+    
     //MARK:- UI visual constants
 
     private let kKeyBackgroundColor = UIColor.lightGrayColor()
@@ -58,6 +61,10 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.translatesAutoresizingMaskIntoConstraints = false
+        suggestionsBar = SuggestionBarView(frame: CGRectZero)
+        suggestionsBar.translatesAutoresizingMaskIntoConstraints = false
+        suggestionsBar.delegate = self
+        suggestionBarActive = IAKitOptions.spellingSuggestionsEnabled
         setupQwertyRow()
         setupAsdfRow()
         setupZxcvRow()
@@ -68,6 +75,7 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
         self.inputView?.layer.shouldRasterize = true
         
         updateKeyMapping()
+        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -256,8 +264,7 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
     
     private func setupVerticalStackView(){
         
-        
-        verticalStackView = UIStackView(arrangedSubviews: [ qwertyStackView,asdfStackView,zxcvStackView,bottomStackView])
+        verticalStackView = UIStackView(arrangedSubviews: [suggestionsBar, qwertyStackView,asdfStackView,zxcvStackView,bottomStackView])
         verticalStackView.translatesAutoresizingMaskIntoConstraints = false
         verticalStackView.axis = .Vertical
         verticalStackView.distribution = .FillEqually
@@ -464,21 +471,6 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
         updateKeyMapping()
     }
     
-//    private func shouldCaps(text:String)->Bool{
-//        let puncCharset = NSCharacterSet(charactersInString: ".?!")
-//        guard !text.isEmpty else {return true}
-//        guard NSCharacterSet.whitespaceAndNewlineCharacterSet().characterIsMember(text.utf16.last!) else {return false}
-//        for rChar in text.utf16.reverse() {
-//            if NSCharacterSet.whitespaceAndNewlineCharacterSet().characterIsMember(rChar) {
-//                continue
-//            } else if puncCharset.characterIsMember(rChar) {
-//                return true
-//            } else {
-//                return false
-//            }
-//        }
-//        return true
-//    }
     
 }
 
@@ -487,13 +479,9 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
 //    var topRowKeyWidth:CGFloat { return(stackWidth - 9 * kStandardKeySpacing) / 10.0}
 
 
-
 @objc protocol IAKeyboardDelegate {
     optional func iaKeyboard(iaKeyboard:IAKeyboard, insertTextAtCursor text:String, intensity:Int)
-    //optional func iaKeyboardDeleteBackwards(iaKeyboard:IAKeyboard)
-    
-    ///This should be further implemented to allow autocapitalization, periods, etc
-    //optional func iaKeyboardContextAroundCursor()
+    optional func iaKeyboard(iaKeyboard:IAKeyboard, suggestionSelected text:String, intensity:Int)
     
 }
 

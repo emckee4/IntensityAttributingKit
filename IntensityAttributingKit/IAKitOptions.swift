@@ -12,7 +12,7 @@ import Foundation
 /**
 IAKitOptions is the internal singleton for the text kit which caches keyboard and stores settings which need to be persisted across sessions
 */
-class IAKitOptions:NSObject {
+public class IAKitOptions:NSObject {
     
     static let bundle:NSBundle = NSBundle(forClass: IAKitOptions.self)
     
@@ -69,17 +69,17 @@ class IAKitOptions:NSObject {
         
         static let touchInterpreterName = "IAKitOptions.touchInterpreterName"
         static let rawIntensityMapperDict = "IAKitOptions.rawIntensityMapperDict"
-        
+        static let spellingSuggestionsEnabled = "IAKitOptions.spellingSuggestions"
     }
     
     
     private static var _defaultIntensity:Int = {return (NSUserDefaults.standardUserDefaults().objectForKey(Keys.dIntensity) as? Int) ?? 40}()
-    static var defaultIntensity:Int {
+    public static var defaultIntensity:Int {
         get {return _defaultIntensity}
         set {_defaultIntensity = newValue; NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: Keys.dIntensity)}
     }
     private static var _defaultTextSize:Int = {return (NSUserDefaults.standardUserDefaults().objectForKey(Keys.dTextSize) as? Int) ?? 20}()
-    static var defaultTextSize:Int {
+    public static var defaultTextSize:Int {
         get {return _defaultTextSize}
         set {_defaultTextSize = newValue; NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: Keys.dTextSize)}
     }
@@ -87,7 +87,7 @@ class IAKitOptions:NSObject {
     private static var _defaultTransformer:IntensityTransformers = {
         return IntensityTransformers(rawValue: (NSUserDefaults.standardUserDefaults().objectForKey(Keys.dTransformerName) as? String) ?? "") ?? IntensityTransformers.WeightScheme
     }()
-    static var defaultTransformer:IntensityTransformers {
+    public static var defaultTransformer:IntensityTransformers {
         get {return _defaultTransformer}
         set {
             _defaultTransformer = newValue
@@ -98,7 +98,7 @@ class IAKitOptions:NSObject {
     private static var _defaultTokenizer:IAStringTokenizing = {
         return IAStringTokenizing(shortLabel: (NSUserDefaults.standardUserDefaults().objectForKey(Keys.dTokenizerName) as? String) ?? "") ?? IAStringTokenizing.Char
     }()
-    static var defaultTokenizer:IAStringTokenizing{
+    public static var defaultTokenizer:IAStringTokenizing{
         get {return _defaultTokenizer}
         set {_defaultTokenizer = newValue; NSUserDefaults.standardUserDefaults().setObject(newValue.shortLabel, forKey: Keys.dTokenizerName)}
     }
@@ -111,7 +111,7 @@ class IAKitOptions:NSObject {
         guard let transformerName = NSUserDefaults.standardUserDefaults().objectForKey(Keys.oTransformerName) as? String else {return nil}
         return IntensityTransformers(rawValue: transformerName)
     }()
-    static var overridesTransformer:IntensityTransformers? {
+    public static var overridesTransformer:IntensityTransformers? {
         get {return _overridesTransformer}
         set {_overridesTransformer = newValue; NSUserDefaults.standardUserDefaults().setObject(newValue?.rawValue, forKey: Keys.oTransformerName)}
     }
@@ -120,7 +120,7 @@ class IAKitOptions:NSObject {
         guard let tokenizerName = NSUserDefaults.standardUserDefaults().objectForKey(Keys.oTokenizerName) as? String else {return nil}
         return IAStringTokenizing(shortLabel: tokenizerName)
     }()
-    static var overridesTokenizer:IAStringTokenizing? {
+    public static var overridesTokenizer:IAStringTokenizing? {
         get {return _overridesTokenizer}
         set {_overridesTokenizer = newValue; NSUserDefaults.standardUserDefaults().setObject(newValue?.shortLabel, forKey: Keys.oTokenizerName)}
     }
@@ -174,6 +174,17 @@ class IAKitOptions:NSObject {
         set {
             _deviceResourcesLimited = newValue
             NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: Keys.deviceResourcesLimited)
+        }
+    }
+    
+    private static var _spellingSuggestionsEnabled:Bool = (NSUserDefaults.standardUserDefaults().objectForKey(Keys.spellingSuggestionsEnabled) as? Bool) ?? true
+    /// Determines if the IAKeyboard show the suggestions bar.
+    static var spellingSuggestionsEnabled:Bool {
+        get {return _spellingSuggestionsEnabled}
+        set {
+            _spellingSuggestionsEnabled = newValue
+            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: Keys.spellingSuggestionsEnabled)
+            keyboard.suggestionBarActive = newValue
         }
     }
     

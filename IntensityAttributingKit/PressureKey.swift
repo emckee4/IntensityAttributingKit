@@ -65,7 +65,7 @@ class PressureKey:UILabel, PressureControl {
     
     ///Sets up the key with the same actionName as text in the key
     func setCharKey(charToInsert:String, font:UIFont = UIFont.systemFontOfSize(20)){
-        guard charToInsert.utf16.count > 0 else {fatalError("can't use setCharKey with empty text")}
+        //guard charToInsert.utf16.count > 0 else {fatalError("can't use setCharKey with empty text")}
         setKey(charToInsert, actionName: charToInsert)
     }
     
@@ -120,10 +120,10 @@ class PressureKey:UILabel, PressureControl {
         //rawIntensity.reset()
     }
     
-    override func touchesEstimatedPropertiesUpdated(touches: Set<NSObject>) {
-        super.touchesEstimatedPropertiesUpdated(touches)
-        
-    }
+//    override func touchesEstimatedPropertiesUpdated(touches: Set<NSObject>) {
+//        super.touchesEstimatedPropertiesUpdated(touches)
+//        
+//    }
     
     override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
         super.touchesCancelled(touches, withEvent: event)
