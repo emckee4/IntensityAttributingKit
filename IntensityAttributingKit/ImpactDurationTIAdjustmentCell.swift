@@ -11,11 +11,11 @@ import UIKit
 final class ImpactDurationTIAdjustmentCell:RawIntensityAdjustmentCellBase {
     
     
-    
     var durationMultiplierSV:LabeledSliderView!
     var impactMultiplierSV:LabeledSliderView!
-    //var impactPower
-    //var coeficient
+    ///Not currently adjustable by users but might be exposed later:
+    //var impactExponent
+    //var constantCoeficient
     
     
     override init() {

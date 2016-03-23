@@ -12,9 +12,9 @@ import Foundation
 public class RawIntensity{
    
     public static var rawIntensityMapping:RawIntensityMapping = IAKitOptions.rawIntensityMapper {
-        didSet{intensityMappingFunction = rawIntensityMapping.function}
+        didSet{intensityMappingFunction = rawIntensityMapping.makeRIMFunction}
     }
-    private(set)static var intensityMappingFunction:RawIntensityMappingFunction = IAKitOptions.rawIntensityMapper.function
+    private(set)static var intensityMappingFunction:RawIntensityMappingFunction = IAKitOptions.rawIntensityMapper.makeRIMFunction
     
     
     static var touchInterpreter:IATouchInterpreter = IAKitOptions.touchInterpreter {

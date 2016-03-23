@@ -141,9 +141,9 @@ class IAKitSettingsTableViewController: UITableViewController {
             
         case 2: IAKitOptions.touchInterpreter = IATouchInterpreter.ImpactDuration
             
-        case 3: IAKitOptions.rawIntensityMapper = .Linear(threshold: 0,ceiling: 1)
+        case 3: IAKitOptions.rawIntensityMapper = .Linear
             
-        case 4: IAKitOptions.rawIntensityMapper = .LogAx(a:10, threshold: 0,ceiling: 1)
+        case 4: IAKitOptions.rawIntensityMapper = .LogAx
 
 
         default: return
@@ -169,8 +169,8 @@ class IAKitSettingsTableViewController: UITableViewController {
         }
         
         switch IAKitOptions.rawIntensityMapper {
-        case .Linear( _,  _): selectedRIMIndex = NSIndexPath(forRow: 0, inSection: 3)
-        case .LogAx( _, _, _): selectedRIMIndex = NSIndexPath(forRow: 0, inSection: 4)
+        case .Linear: selectedRIMIndex = NSIndexPath(forRow: 0, inSection: 3)
+        case .LogAx: selectedRIMIndex = NSIndexPath(forRow: 0, inSection: 4)
         }
         
         if let previouslySelected = tableView.indexPathsForSelectedRows {

@@ -10,7 +10,7 @@ import Foundation
 
 
 /**
-IAKitOptions is the internal singleton for the text kit which caches keyboard and stores settings which need to be persisted across sessions
+IAKitOptions contains most persisted options that need to be exposed to the outside world, along with an internal NSCache for the IAKeyboard and accessory that dont have any other logical home
 */
 public class IAKitOptions:NSObject {
     
@@ -68,7 +68,7 @@ public class IAKitOptions:NSObject {
         //static let fimParametersDictName = "IAKitOptions.fimParametersDictName"
         
         static let touchInterpreterName = "IAKitOptions.touchInterpreterName"
-        static let rawIntensityMapperDict = "IAKitOptions.rawIntensityMapperDict"
+        static let rawIntensityMapperName = "IAKitOptions.rawIntensityMapperName"
         static let spellingSuggestionsEnabled = "IAKitOptions.spellingSuggestions"
     }
     
@@ -151,18 +151,18 @@ public class IAKitOptions:NSObject {
     
     ///caches current value of rawIntensityMapper in instantiated form
     private static var _rawIntensityMapper:RawIntensityMapping = {
-        if let rawDict = NSUserDefaults.standardUserDefaults().objectForKey(Keys.rawIntensityMapperDict) as? [String:AnyObject] {
-            if let rim = RawIntensityMapping(dictDescription: rawDict) {
+        if let rawName = NSUserDefaults.standardUserDefaults().objectForKey(Keys.rawIntensityMapperName) as? String {
+            if let rim = RawIntensityMapping(rawValue:rawName) {
                 return rim
             }
         }
-            return RawIntensityMapping.Linear(threshold: 0, ceiling: 1.0)
+            return RawIntensityMapping.Linear  //default
         }()
     static var rawIntensityMapper:RawIntensityMapping {
         get{ return _rawIntensityMapper}
         set {
             _rawIntensityMapper = newValue
-            NSUserDefaults.standardUserDefaults().setObject(newValue.dictDescription, forKey: Keys.rawIntensityMapperDict)
+            NSUserDefaults.standardUserDefaults().setObject(newValue.rawValue, forKey: Keys.rawIntensityMapperName)
             RawIntensity.rawIntensityMapping = newValue
         }
     }
