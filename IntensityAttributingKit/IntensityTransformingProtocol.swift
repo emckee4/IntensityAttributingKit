@@ -36,7 +36,7 @@ public extension IntensityTransforming {
     
     public static func nsAttributesForIntensityAttributes(intensity intensity:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
         //use existing code predominantly for this
-        let weightBin = min((binNumberForSteps(intensity, steps:stepCount) + (baseAttributes.bold ? 1 : 0)), stepCount)
+        let weightBin = min((IAString.binNumberForSteps(intensity, steps:stepCount) + (baseAttributes.bold ? 1 : 0)), stepCount)
         return self.nsAttributesForBinsAndBaseAttributes(bin: weightBin, baseAttributes: baseAttributes)
     }
     

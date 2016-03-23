@@ -149,11 +149,15 @@ class IAKitSettingsTableViewController: UITableViewController {
         default: return
         }
         if indexPath.section < 3 && expandedTIAdjusterIndex != nil && indexPath.section != expandedTIAdjusterIndex?.section {
+            tableView.beginUpdates()
             tableView.deleteRowsAtIndexPaths([expandedTIAdjusterIndex!], withRowAnimation: .Top)
             expandedTIAdjusterIndex = nil
+            tableView.endUpdates()
         } else if indexPath.section >= 3 && indexPath.section < 5 && expandedRIMAdjusterIndex != nil && indexPath.section != expandedRIMAdjusterIndex?.section {
+            tableView.beginUpdates()
             tableView.deleteRowsAtIndexPaths([expandedRIMAdjusterIndex!], withRowAnimation: .Top)
             expandedRIMAdjusterIndex = nil
+            tableView.endUpdates()
         }
         
     }

@@ -6,16 +6,15 @@ IntensityAttributingKit is a swift framework which provides a means of creating,
 
 
 Next steps:
-    Add options view (change sensitivity constants, FIMF, smoothing/tokenizing)
 
     After completing a word or changing selection from a word, whole unit (chosen by smoothing method) should be rerendered if necessary to reflect smoothed unit value
-    Improve keyboard animation performance
-    Improve rendering performance
 
     Multiple keysets
         -> eventually make more/all keys potentially expanding if performance is sufficient
 
     Support additional attachment types
+
+    Make IATextView and possibly IATextEditor not subclasses of UITextView.
 
 
 Additional render schemes (if possible):

@@ -63,7 +63,7 @@ class LabeledSliderView: UIView {
         slider.bottomAnchor.constraintEqualToAnchor(self.bottomAnchor, constant: 2.0).active = true
         slider.trailingAnchor.constraintEqualToAnchor(resultLabel.leadingAnchor, constant: -8).active = true
         
-        slider.addTarget(self, action: "sliderUpdated:", forControlEvents: .ValueChanged)
+        slider.addTarget(self, action: #selector(self.sliderUpdated(_:)), forControlEvents: .ValueChanged)
         
         self.heightAnchor.constraintGreaterThanOrEqualToConstant(44).activateWithPriority(999,identifier: "LabeledSliderView minimum height")
         self.widthAnchor.constraintGreaterThanOrEqualToConstant(200).activateWithPriority(999, identifier: "LabeledSliderView minimum width")
@@ -71,7 +71,7 @@ class LabeledSliderView: UIView {
 
     
     ///Updates ressultLabel. Owning VC will be expected to add additional targets to actually do something with the changes
-    private func sliderUpdated(slider:UISlider!){
+    @objc private func sliderUpdated(slider:UISlider!){
         resultLabel.text = String(format: resultFormat, slider.value)
     }
     

@@ -551,7 +551,7 @@ extension IAIntermediate {
     ///This provides a new IAString comprised of copies of the contents in the given range. This inherits its parent's options
     public func iaSubstringFromRange(range:NSRange)->IAIntermediate {
         let textSS = self.text.substringWithRange(range).copy() as! NSString
-        let intRange = range.intRange
+        let intRange = range.toRange()!
         let intenseSS = Array(self.intensities[intRange])
 
         

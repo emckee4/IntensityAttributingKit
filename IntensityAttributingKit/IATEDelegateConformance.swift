@@ -79,12 +79,12 @@ extension IATextEditor:IAKeyboardDelegate {
 //    func iaKeyboardDeleteBackwards(iaKeyboard:IAKeyboard) {
 //        if selectedRange.length > 0 {
 //            let nextCursor = NSMakeRange(self.selectedRange.location,0)
-//            self.iaString!.removeRange(selectedRange.intRange)
+//            self.iaString!.removeRange(selectedRange.toRange()!)
 //            self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: NSAttributedString())
 //            self.selectedRange = nextCursor
 //        } else if selectedRange.location > 0 {
 //            
-//            let remRange = (self.iaString!.text as NSString).rangeOfComposedCharacterSequencesForRange(NSMakeRange(selectedRange.location - 1, 0)).intRange
+//            let remRange = (self.iaString!.text as NSString).rangeOfComposedCharacterSequencesForRange(NSMakeRange(selectedRange.location - 1, 0)).toRange()!
 //            //let remRange = (self.selectedRange.location - 1)..<self.selectedRange.location
 //            //self.iaString!.removeRange(remRange)
 //            //self.textStorage.replaceCharactersInRange(remRange.nsRange, withAttributedString: NSAttributedString())
@@ -100,12 +100,12 @@ extension IATextEditor:IAKeyboardDelegate {
     override public func deleteBackward() {
         if selectedRange.length > 0 {
             let nextCursor = NSMakeRange(self.selectedRange.location,0)
-            self.iaString!.removeRange(selectedRange.intRange)
+            self.iaString!.removeRange(selectedRange.toRange()!)
             self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: NSAttributedString())
             self.selectedRange = nextCursor
         } else if selectedRange.location > 0 {
             
-            let remRange = (self.iaString!.text as NSString).rangeOfComposedCharacterSequencesForRange(NSMakeRange(selectedRange.location - 1, 0)).intRange
+            let remRange = (self.iaString!.text as NSString).rangeOfComposedCharacterSequencesForRange(NSMakeRange(selectedRange.location - 1, 0)).toRange()!
             //let remRange = (self.selectedRange.location - 1)..<self.selectedRange.location
             //self.iaString!.removeRange(remRange)
             //self.textStorage.replaceCharactersInRange(remRange.nsRange, withAttributedString: NSAttributedString())
@@ -159,8 +159,8 @@ extension IATextEditor: IAAccessoryDelegate {
         self.defaultIntensity = value
         ///modify the intensities in the selected range
         if self.selectedRange.length > 0 {
-            self.iaString!.intensities.replaceRange(self.selectedRange.intRange, with: Array(count: self.selectedRange.length, repeatedValue: value))
-            let nsReplacement = self.iaString!.iaSubstringFromRange(self.selectedRange.intRange).convertToNSAttributedString()
+            self.iaString!.intensities.replaceRange(self.selectedRange.toRange()!, with: Array(count: self.selectedRange.length, repeatedValue: value))
+            let nsReplacement = self.iaString!.iaSubstringFromRange(self.selectedRange.toRange()!).convertToNSAttributedString()
             self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: nsReplacement)
         }
         

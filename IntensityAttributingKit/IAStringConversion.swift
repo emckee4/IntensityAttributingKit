@@ -20,7 +20,7 @@ extension IAString {
         var rangeArray:[Range<Int>] = []
         (self.text as NSString).enumerateSubstringsInRange(NSRange(location: 0, length: self.length), options: separationOptions) { (subString, strictSSRange, enclosingRange, stop) -> Void in
             if subString != nil {
-                rangeArray.append(enclosingRange.intRange)
+                rangeArray.append(enclosingRange.toRange()!)
             } else {
                 fatalError("IAIntermediate:unitRanges: found nil word in \(self.text) at \(strictSSRange) , \(enclosingRange)")
             }
@@ -49,13 +49,16 @@ extension IAString {
         for range in self.unitRanges(usingTokenizer) {
             let rangeLength = range.endIndex - range.startIndex
             let avgForRange:Int = self.intensities[range].reduce(0, combine: +) / rangeLength
-            let bin = binNumberForSteps(avgForRange, steps: bins)
+            let bin = IAString.binNumberForSteps(avgForRange, steps: bins)
             ca.setValueForRange(bin, range: range)
         }
         guard ca.validate() && ca.count == self.intensities.count else {fatalError("(IAIntermediate perUnitSmoothedIntensities) perWord.count == self.intensities.count, with separationOptions: \(usingTokenizer)")}
         return ca
     }
     
+    static func binNumberForSteps(intensity:Int, steps:Int)->Int{
+        return clamp((steps * intensity) / 100, lowerBound: 0, upperBound: steps - 1)
+    }
     
 //    private func generateIntensityAttributesArray(renderSteps steps:Int, separateOn separator:NSStringEnumerationOptions)->[(range:NSRange, ia:IntensityAttributes)]{
 //        //centers the intensity in its bin

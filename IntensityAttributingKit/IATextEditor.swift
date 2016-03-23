@@ -166,7 +166,7 @@ public class IATextEditor: IATextView {
         var repIntensity:Int!
         if range.length > 0 && text.utf16.count > 0 { //&& self.intensityChangesDynamically
             ///we replace with averages of the replaced range
-            repIntensity = self.iaString!.intensities[range.intRange].reduce(0, combine: +) / range.length
+            repIntensity = self.iaString!.intensities[range.toRange()!].reduce(0, combine: +) / range.length
             
         } else {
             repIntensity = defaultIntensity
@@ -174,7 +174,7 @@ public class IATextEditor: IATextView {
         
         newIA.insertAtPosition(text, position: 0, intensity: repIntensity, attributes: replacementAtts)
         
-        self.iaString!.replaceRange(newIA, range: range.intRange)
+        self.iaString!.replaceRange(newIA, range: range.toRange()!)
         let nsAttSub = newIA.convertToNSAttributedString()
         self.textStorage.replaceCharactersInRange(range, withAttributedString: nsAttSub)
 
@@ -249,9 +249,9 @@ extension IATextEditor {
     public override func toggleBoldface(sender: AnyObject?) {
         self.baseAttributes.bold = !self.baseAttributes.bold
         if selectedRange.length > 0 {
-            let rangeIsBold = (self.iaString!.getAttributeValueForRange(.Bold, range: selectedRange.intRange) as? Bool) ?? false
-            self.iaString!.setAttributeValueForRange(!rangeIsBold, attrName: .Bold, range: selectedRange.intRange)
-            self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: self.iaString!.iaSubstringFromRange(selectedRange.intRange).convertToNSAttributedString())
+            let rangeIsBold = (self.iaString!.getAttributeValueForRange(.Bold, range: selectedRange.toRange()!) as? Bool) ?? false
+            self.iaString!.setAttributeValueForRange(!rangeIsBold, attrName: .Bold, range: selectedRange.toRange()!)
+            self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: self.iaString!.iaSubstringFromRange(selectedRange.toRange()!).convertToNSAttributedString())
         }
         
     }
@@ -259,18 +259,18 @@ extension IATextEditor {
     public override func toggleItalics(sender: AnyObject?) {
         self.baseAttributes.italic = !self.baseAttributes.italic
         if selectedRange.length > 0 {
-            let rangeIsBold = (self.iaString!.getAttributeValueForRange(.Italic, range: selectedRange.intRange) as? Bool) ?? false
-            self.iaString!.setAttributeValueForRange(!rangeIsBold, attrName: .Italic, range: selectedRange.intRange)
-            self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: self.iaString!.iaSubstringFromRange(selectedRange.intRange).convertToNSAttributedString())
+            let rangeIsBold = (self.iaString!.getAttributeValueForRange(.Italic, range: selectedRange.toRange()!) as? Bool) ?? false
+            self.iaString!.setAttributeValueForRange(!rangeIsBold, attrName: .Italic, range: selectedRange.toRange()!)
+            self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: self.iaString!.iaSubstringFromRange(selectedRange.toRange()!).convertToNSAttributedString())
         }
     }
     
     public override func toggleUnderline(sender: AnyObject?) {
         self.baseAttributes.underline = !self.baseAttributes.underline
         if selectedRange.length > 0 {
-            let rangeIsBold = (self.iaString!.getAttributeValueForRange(.Underline, range: selectedRange.intRange) as? Bool) ?? false
-            self.iaString!.setAttributeValueForRange(!rangeIsBold, attrName: .Underline, range: selectedRange.intRange)
-            self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: self.iaString!.iaSubstringFromRange(selectedRange.intRange).convertToNSAttributedString())
+            let rangeIsBold = (self.iaString!.getAttributeValueForRange(.Underline, range: selectedRange.toRange()!) as? Bool) ?? false
+            self.iaString!.setAttributeValueForRange(!rangeIsBold, attrName: .Underline, range: selectedRange.toRange()!)
+            self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: self.iaString!.iaSubstringFromRange(selectedRange.toRange()!).convertToNSAttributedString())
         }
     }
     
@@ -330,8 +330,8 @@ extension IATextEditor {
     
     ///extracts the common atts for a specified range, defaulting to false or last when atts vary
     private func extractBaseAttsForRange(nsrange:NSRange)->IABaseAttributes{
-        let range = nsrange.intRange
-        let size = (self.iaString!.getAttributeValueForRange(.Size, range: nsrange.intRange) as? Int) ?? self.baseAttributes.size
+        let range = nsrange.toRange()!
+        let size = (self.iaString!.getAttributeValueForRange(.Size, range: nsrange.toRange()!) as? Int) ?? self.baseAttributes.size
         var newBase = IABaseAttributes(size: size )
         newBase.bold = (self.iaString!.getAttributeValueForRange(.Bold, range: range) as? Bool) ?? self.baseAttributes.bold
         newBase.italic = (self.iaString!.getAttributeValueForRange(.Italic, range: range) as? Bool) ?? self.baseAttributes.italic

@@ -195,7 +195,7 @@ public class IATextAttachment:NSTextAttachment {
 }
 
 
-extension IATextAttachment: CustomDebugStringConvertible{
+extension IATextAttachment {
     override public var debugDescription:String {
         return "<IATextAttachment>: filename: \(self.filename ?? "nil"), remoteFileURL:\(self.remoteFileURL ?? "nil"), localFileURL: \(self.localFileURL ?? "nil"), isPlaceholder:\(self.isPlaceholder)"
     }
