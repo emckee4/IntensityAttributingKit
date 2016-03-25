@@ -159,12 +159,12 @@ public class ExpandingKeyBase: UIView {
                     assert(containedStackView.arrangedSubviews.count == containedStackView.subviews.count   )
                 }
             }
-            
         }
     }
     
     ///Moves the key with the actionName specified to the center most position
     public func centerKeyWithActionName(actionName:String){
+        guard actionName != epKeys.first?.actionName else {return}
         for pk in epKeys{
             if pk.actionName == actionName {
                 moveEPKeyToFirst(pk)
@@ -182,6 +182,7 @@ public class ExpandingKeyBase: UIView {
                 break
             }
         }
+        setHiddenForExpansionState()
         layoutKeysForExpansionDirection()
     }
     
@@ -207,29 +208,20 @@ public class ExpandingKeyBase: UIView {
         _ = epKeys.map({$0.view.layer.borderColor = UIColor.blackColor().CGColor})
         if epKeys.count > 1 {
             
-            //note: embedded functions are used here to facilitate playing around with animation options
-            
-            func reveal(){
-                for pk in self.epKeys[1..<self.epKeys.count]{
-                    pk.hidden = false
-                }
+            //expanding:
+            switch self.expansionDirection {
+            case .Up:
+                self.topSVConstraint.constant = -(self.bounds.height * (CGFloat(self.epKeys.count) - 1.0))
+            case .Down:
+                self.bottomSVConstraint.constant = (self.bounds.height * (CGFloat(self.epKeys.count) - 1.0))
+            case .Left:
+                self.leftSVConstraint.constant = -(self.bounds.width * (CGFloat(self.epKeys.count) - 1.0))
+            case .Right:
+                self.rightSVConstraint.constant = (self.bounds.width * (CGFloat(self.epKeys.count) - 1.0))
             }
-            
-            func expand(){
-                switch self.expansionDirection {
-                case .Up:
-                    self.topSVConstraint.constant = -(self.bounds.height * (CGFloat(self.epKeys.count) - 1.0))
-                case .Down:
-                    self.bottomSVConstraint.constant = (self.bounds.height * (CGFloat(self.epKeys.count) - 1.0))
-                case .Left:
-                    self.leftSVConstraint.constant = -(self.bounds.width * (CGFloat(self.epKeys.count) - 1.0))
-                case .Right:
-                    self.rightSVConstraint.constant = (self.bounds.width * (CGFloat(self.epKeys.count) - 1.0))
-                }
-            }
-            
-            expand()
-            reveal()
+
+            //Revealing:
+            setHiddenForExpansionState()
         }
         
     }
@@ -239,29 +231,36 @@ public class ExpandingKeyBase: UIView {
         guard isExpanded else {return}
         isExpanded = false
         
-        func hide(){
+        //border color
+        _ = epKeys.map({$0.view.layer.borderColor = UIColor.clearColor().CGColor})
+        
+        //hiding:
+        setHiddenForExpansionState()
+        
+        //Shrinking:
+        switch self.expansionDirection {
+        case .Up:
+            self.topSVConstraint.constant = 0.0
+        case .Down:
+            self.bottomSVConstraint.constant = 0.0
+        case .Left:
+            self.leftSVConstraint.constant = 0.0
+        case .Right:
+            self.rightSVConstraint.constant = 0.0
+        }
+    }
+    
+    private func setHiddenForExpansionState(){
+        if isExpanded {
+            for pk in self.epKeys[0..<self.epKeys.count]{
+                pk.hidden = false
+            }
+        } else {
+            self.epKeys.first?.hidden = false
             for pk in self.epKeys[1..<self.epKeys.count] {
                 pk.hidden = true
             }
         }
-        _ = epKeys.map({$0.view.layer.borderColor = UIColor.clearColor().CGColor})
-        
-        func shrink(){
-            switch self.expansionDirection {
-            case .Up:
-                self.topSVConstraint.constant = 0.0
-            case .Down:
-                self.bottomSVConstraint.constant = 0.0
-            case .Left:
-                self.leftSVConstraint.constant = 0.0
-            case .Right:
-                self.rightSVConstraint.constant = 0.0
-            }
-        }
-        
-        hide()
-        shrink()
-        
     }
     
     /////////////////////////
