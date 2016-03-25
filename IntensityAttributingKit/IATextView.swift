@@ -54,19 +54,21 @@ public class IATextView: UITextView, UITextViewDelegate {
         if renderOptions != nil {
             self._renderOptions = renderOptions
         } else {
-            if let overTrans = IAKitOptions.overridesTransformer {
-                self._renderOptions = ["overrideTransformer":overTrans.rawValue]
+            if IAKitOptions.overridesTransformer != nil || IAKitOptions.overridesTokenizer != nil {
+                _renderOptions = [:]
             }
-            
+            if let overTrans = IAKitOptions.overridesTransformer {
+                self._renderOptions!["overrideTransformer"] = overTrans.rawValue
+            }
             if let overToke = IAKitOptions.overridesTokenizer {
-                if self._renderOptions == nil {self._renderOptions = [:]}
+
                 self._renderOptions!["overrideSmoothing"] = overToke.shortLabel
             }
             
         }
         
         self.iaString?.thumbSize = self.thumbSizesForAttachments
-        self.attributedText = self._iaString?.convertToNSAttributedString(withOptions: renderOptions)
+        self.attributedText = self._iaString?.convertToNSAttributedString(withOptions: _renderOptions)
     }
     
     ///Allows iaDelegate to control interaction with textAttachment. Defaults to true
