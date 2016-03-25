@@ -54,9 +54,7 @@ public class IATextView: UITextView, UITextViewDelegate {
         if renderOptions != nil {
             self._renderOptions = renderOptions
         } else {
-            if IAKitOptions.overridesTransformer != nil || IAKitOptions.overridesTokenizer != nil {
-                _renderOptions = [:]
-            }
+            _renderOptions = [:]
             if let overTrans = IAKitOptions.overridesTransformer {
                 self._renderOptions!["overrideTransformer"] = overTrans.rawValue
             }
