@@ -1,22 +1,23 @@
 //
-//  FontSizeIntensityScheme.swift
+//  AlphaIntensityScheme.swift
 //  IntensityAttributingKit
 //
-//  Created by Evan Mckee on 11/9/15.
-//  Copyright © 2015 McKeeMaKer. All rights reserved.
+//  Created by Evan Mckee on 3/25/16.
+//  Copyright © 2016 McKeeMaKer. All rights reserved.
 //
 
 import UIKit
 
-/// Varies font size relative to the base IASize as a function of intensity
-public class FontSizeIntensityScheme:IntensityTransforming {
-
-    public static let schemeName = "FontSizeScheme"
-    public static let stepCount = 10
+/// Varies font opacity as a function of intensity
+public class AlphaIntensityScheme:IntensityTransforming {
+    
+    public static let schemeName = "AlphaScheme"
+    public static let stepCount = 8
     
     public static func nsAttributesForBinsAndBaseAttributes(bin bin:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
-        let size = CGFloat(baseAttributes.size - 5 + bin)
-        var baseFont:UIFont = UIFont.systemFontOfSize(size)
+        var baseFont:UIFont = UIFont.systemFontOfSize(baseAttributes.cSize, weight: UIFontWeightMedium)
+        
+        var alphaValue:CGFloat = clamp(CGFloat(bin + 1) / CGFloat(stepCount - 1), lowerBound: 0, upperBound: 1)
         
         if baseAttributes.bold || baseAttributes.italic {
             var symbolicsToMerge = UIFontDescriptorSymbolicTraits()
@@ -28,23 +29,23 @@ public class FontSizeIntensityScheme:IntensityTransforming {
             }
             let newSymbolicTraits =  baseFont.fontDescriptor().symbolicTraits.union(symbolicsToMerge)
             let newDescriptor = baseFont.fontDescriptor().fontDescriptorWithSymbolicTraits(newSymbolicTraits)
-            baseFont = UIFont(descriptor: newDescriptor, size: size)
+            baseFont = UIFont(descriptor: newDescriptor, size: baseAttributes.cSize)
         }
-        var nsAttributes:[String:AnyObject] = [NSFontAttributeName:baseFont]
+        var nsAttributes:[String:AnyObject] = [
+            NSFontAttributeName:baseFont,
+            NSForegroundColorAttributeName:UIColor.blackColor().colorWithAlphaComponent(alphaValue)
+        ]
         
         if baseAttributes.strikethrough {
             nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
         }
         if baseAttributes.underline {
             nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
-        }
-        //TODO:- this should adjust kerning (using NSKernAttributeName) to lessen the variations in space requried due to a transform
-        
+        }        
         
         return nsAttributes
     }
-
+    
     
     
 }
-

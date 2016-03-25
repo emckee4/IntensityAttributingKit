@@ -35,6 +35,7 @@
 		C045339E1CA4794600B374D0 /* LabeledStepperAdjusterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C045339D1CA4794600B374D0 /* LabeledStepperAdjusterCell.swift */; };
 		C04533A01CA47BB200B374D0 /* SmootherOverrideAdjusterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C045339F1CA47BB200B374D0 /* SmootherOverrideAdjusterCell.swift */; };
 		C04533A21CA481F000B374D0 /* RenderOverrideAdjusterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04533A11CA481F000B374D0 /* RenderOverrideAdjusterCell.swift */; };
+		C04533AB1CA5CD6500B374D0 /* AlphaIntensityScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04533AA1CA5CD6500B374D0 /* AlphaIntensityScheme.swift */; };
 		C054632C1C9C969600652AC0 /* SuggestionBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C054632B1C9C969600652AC0 /* SuggestionBarView.swift */; };
 		C054D99E1C3DAB9100D852DE /* IATextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */; };
 		C069B2BA1C627DB1008834D3 /* IAStringArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = C069B2B91C627DB1008834D3 /* IAStringArchive.swift */; };
@@ -126,6 +127,7 @@
 		C045339D1CA4794600B374D0 /* LabeledStepperAdjusterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabeledStepperAdjusterCell.swift; sourceTree = "<group>"; };
 		C045339F1CA47BB200B374D0 /* SmootherOverrideAdjusterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmootherOverrideAdjusterCell.swift; sourceTree = "<group>"; };
 		C04533A11CA481F000B374D0 /* RenderOverrideAdjusterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RenderOverrideAdjusterCell.swift; sourceTree = "<group>"; };
+		C04533AA1CA5CD6500B374D0 /* AlphaIntensityScheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlphaIntensityScheme.swift; sourceTree = "<group>"; };
 		C054632B1C9C969600652AC0 /* SuggestionBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuggestionBarView.swift; sourceTree = "<group>"; };
 		C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextAttachment.swift; sourceTree = "<group>"; };
 		C069B2B91C627DB1008834D3 /* IAStringArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringArchive.swift; sourceTree = "<group>"; };
@@ -336,6 +338,7 @@
 				C06B1D581BF15AD8009F427A /* WeightIntensityScheme.swift */,
 				C06B1D5C1BF15CDC009F427A /* FontSizeIntensityScheme.swift */,
 				C06B1D5A1BF15C18009F427A /* HueGYRIntensityScheme.swift */,
+				C04533AA1CA5CD6500B374D0 /* AlphaIntensityScheme.swift */,
 			);
 			name = Transformers;
 			sourceTree = "<group>";
@@ -590,6 +593,7 @@
 				C031CBE61BDB097600521393 /* Extensions+NSAttributedString.swift in Sources */,
 				C095747E1C5822E300724F02 /* IAString.swift in Sources */,
 				C031CBE81BDB097600521393 /* IntensityAttributes.swift in Sources */,
+				C04533AB1CA5CD6500B374D0 /* AlphaIntensityScheme.swift in Sources */,
 				C069B2BA1C627DB1008834D3 /* IAStringArchive.swift in Sources */,
 				C09574821C59442300724F02 /* IAStringConversion.swift in Sources */,
 				C0A258D11C922FC0003287AB /* NSHashTable+Extension.swift in Sources */,

@@ -82,18 +82,6 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         cameraButton.layer.borderWidth = kButtonBorderThickness
         cameraButton.clipsToBounds = true
         cameraButton.widthAnchor.constraintEqualToAnchor(cameraButton.heightAnchor).activateWithPriority(800)
-        
-//        intensityAdjuster = IntensityAdjuster()
-//        intensityAdjuster.translatesAutoresizingMaskIntoConstraints = false
-//        intensityAdjuster.componentBackgroundColor = kButtonBackgroundColor
-//        intensityAdjuster.componentBorderColor = kButtonBorderColor
-//        intensityAdjuster.componentBorderWidth = kButtonBorderThickness
-//        intensityAdjuster.componentCornerRadius = kButtonCornerRadius
-//        intensityAdjuster.stackViewSpacing = 2.0
-//        intensityAdjuster.heightAnchor.constraintEqualToConstant(kAccessoryHeight).active = true
-//        //intensityAdjuster.showPressureSlider = true
-//        intensityAdjuster.clipsToBounds = true
-//        intensityAdjuster.delegate = self
 
         
         intensityLabel = UILabel()
@@ -151,9 +139,11 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         let weightSample = IntensityTransformers.WeightScheme.transformer.generateSampleFromText("abc", size: 20.0)
         let hueGYRSample = IntensityTransformers.HueGYRScheme.transformer.generateSampleFromText("abc", size: 20.0)
         let fontSizeSample = IntensityTransformers.FontSizeScheme.transformer.generateSampleFromText("abc", size: 20.0)
+        let alphaSample = IntensityTransformers.AlphaScheme.transformer.generateSampleFromText("abc", size: 20.0)
         transformButton.addKey(withAttributedText: weightSample, actionName: IntensityTransformers.WeightScheme.rawValue)
         transformButton.addKey(withAttributedText: hueGYRSample, actionName: IntensityTransformers.HueGYRScheme.rawValue)
         transformButton.addKey(withAttributedText: fontSizeSample, actionName: IntensityTransformers.FontSizeScheme.rawValue)
+        transformButton.addKey(withAttributedText: alphaSample, actionName: IntensityTransformers.AlphaScheme.rawValue)
         
         transformButton.backgroundColor = kButtonBackgroundColor
         transformButton.cornerRadius = kButtonCornerRadius

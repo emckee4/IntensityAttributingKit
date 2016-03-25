@@ -11,7 +11,7 @@ import UIKit
 @IBDesignable
 public class RenderOverrideAdjusterCell:LabeledStepperAdjusterCell{
     
-    let adjustmentOptions:[(optionTitle:String,option:IntensityTransformers?)] = [(optionTitle: "Message Default" ,option: nil ),(optionTitle: "Text Weight" ,option: IntensityTransformers.WeightScheme ),(optionTitle: "Text Color (GYR)" ,option: IntensityTransformers.HueGYRScheme ),(optionTitle: "Text Size" ,option: IntensityTransformers.FontSizeScheme )]
+    let adjustmentOptions:[(optionTitle:String,option:IntensityTransformers?)] = [(optionTitle: "Message Default" ,option: nil ),(optionTitle: "Text Weight" ,option: IntensityTransformers.WeightScheme ),(optionTitle: "Text Color (GYR)" ,option: IntensityTransformers.HueGYRScheme ),(optionTitle: "Text Size" ,option: IntensityTransformers.FontSizeScheme ), (optionTitle: "Text Opacity" ,option: IntensityTransformers.AlphaScheme )]
     
     
     override func setupCell() {
