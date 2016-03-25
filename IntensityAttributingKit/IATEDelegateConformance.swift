@@ -53,16 +53,14 @@ extension IATextEditor:IAKeyboardDelegate {
                 if mixedSuggestions.count >= 10 {break}
             }
         }
-        if completions != nil {
-            print("completions: \(completions)")
-        }
-        if suggestions != nil {print("suggestions: \(suggestions)")}
+        //if completions != nil {print("completions: \(completions)")}
+        //if suggestions != nil {print("suggestions: \(suggestions)")}
         iaKB.updateSuggestions(mixedSuggestions)
         
     }
     
     func iaKeyboard(iaKeyboard: IAKeyboard, suggestionSelected text: String, intensity: Int) {
-        print("suggestions selected: \(text)")
+        //print("suggestions selected: \(text)")
         let repCharCount = text.characters.count
         guard repCharCount > 0 else {return}
         guard let repRange = rangeForSuggestionReplacement?.toRange() else {return}

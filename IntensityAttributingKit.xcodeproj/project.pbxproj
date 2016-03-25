@@ -32,6 +32,9 @@
 		C038B3EA1C69310400069F9C /* ExpandingKeyControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C038B3E91C69310400069F9C /* ExpandingKeyControl.swift */; };
 		C038B3EC1C69311200069F9C /* ExpandingKeyBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C038B3EB1C69311200069F9C /* ExpandingKeyBase.swift */; };
 		C040C5081C0E4283007C1685 /* IAKitOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C040C5071C0E4283007C1685 /* IAKitOptions.swift */; };
+		C045339E1CA4794600B374D0 /* LabeledStepperAdjusterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C045339D1CA4794600B374D0 /* LabeledStepperAdjusterCell.swift */; };
+		C04533A01CA47BB200B374D0 /* SmootherOverrideAdjusterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C045339F1CA47BB200B374D0 /* SmootherOverrideAdjusterCell.swift */; };
+		C04533A21CA481F000B374D0 /* RenderOverrideAdjusterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04533A11CA481F000B374D0 /* RenderOverrideAdjusterCell.swift */; };
 		C054632C1C9C969600652AC0 /* SuggestionBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C054632B1C9C969600652AC0 /* SuggestionBarView.swift */; };
 		C054D99E1C3DAB9100D852DE /* IATextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */; };
 		C069B2BA1C627DB1008834D3 /* IAStringArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = C069B2B91C627DB1008834D3 /* IAStringArchive.swift */; };
@@ -120,6 +123,9 @@
 		C038B3E91C69310400069F9C /* ExpandingKeyControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandingKeyControl.swift; sourceTree = "<group>"; };
 		C038B3EB1C69311200069F9C /* ExpandingKeyBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandingKeyBase.swift; sourceTree = "<group>"; };
 		C040C5071C0E4283007C1685 /* IAKitOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAKitOptions.swift; sourceTree = "<group>"; };
+		C045339D1CA4794600B374D0 /* LabeledStepperAdjusterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabeledStepperAdjusterCell.swift; sourceTree = "<group>"; };
+		C045339F1CA47BB200B374D0 /* SmootherOverrideAdjusterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmootherOverrideAdjusterCell.swift; sourceTree = "<group>"; };
+		C04533A11CA481F000B374D0 /* RenderOverrideAdjusterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RenderOverrideAdjusterCell.swift; sourceTree = "<group>"; };
 		C054632B1C9C969600652AC0 /* SuggestionBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuggestionBarView.swift; sourceTree = "<group>"; };
 		C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextAttachment.swift; sourceTree = "<group>"; };
 		C069B2B91C627DB1008834D3 /* IAStringArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringArchive.swift; sourceTree = "<group>"; };
@@ -225,7 +231,7 @@
 				C080B53D1C97997800DEC424 /* RawIntensityAdjustmentCellBase.swift */,
 				C080B53F1C98842F00DEC424 /* LabeledSliderView.swift */,
 				C070DFEF1CA0A46B00840CBE /* ToggleCell.swift */,
-				C070DFF11CA0A62100840CBE /* SpellCheckToggleCell.swift */,
+				C045339D1CA4794600B374D0 /* LabeledStepperAdjusterCell.swift */,
 			);
 			name = ViewBaseClasses;
 			sourceTree = "<group>";
@@ -339,10 +345,13 @@
 			children = (
 				C014A4811CA31FF600D6312C /* ViewBaseClasses */,
 				C080B5411C988BD600DEC424 /* ImpactDurationTIAdjustmentCell.swift */,
+				C045339F1CA47BB200B374D0 /* SmootherOverrideAdjusterCell.swift */,
+				C04533A11CA481F000B374D0 /* RenderOverrideAdjusterCell.swift */,
 				C080B5441C98933900DEC424 /* DurationTIAdjustmentCell.swift */,
 				C080B5461C98949A00DEC424 /* ForceTIAdjustmentCell.swift */,
 				C080B5481C9895D700DEC424 /* LinearRIMAdjustmentCell.swift */,
 				C080B54A1C9895F000DEC424 /* LogAxRIMAdjustmentCell.swift */,
+				C070DFF11CA0A62100840CBE /* SpellCheckToggleCell.swift */,
 			);
 			name = AdjustmentCells;
 			sourceTree = "<group>";
@@ -552,6 +561,7 @@
 				C06BAFD31BF2AECE004CECA9 /* IAIntermediate.swift in Sources */,
 				C031CC061BDD948700521393 /* IAKeyboard.swift in Sources */,
 				C08253B61BE572AE0017AC14 /* ExpandingPressureKey.swift in Sources */,
+				C04533A21CA481F000B374D0 /* RenderOverrideAdjusterCell.swift in Sources */,
 				C054632C1C9C969600652AC0 /* SuggestionBarView.swift in Sources */,
 				C0E68E6F1C10C1D5005162F7 /* EPKey.swift in Sources */,
 				C031CC001BDD902000521393 /* IATextView.swift in Sources */,
@@ -559,6 +569,7 @@
 				C080B5491C9895D700DEC424 /* LinearRIMAdjustmentCell.swift in Sources */,
 				C00E94791C5BF94000551D39 /* AttachmentArray.swift in Sources */,
 				C080B5401C98842F00DEC424 /* LabeledSliderView.swift in Sources */,
+				C045339E1CA4794600B374D0 /* LabeledStepperAdjusterCell.swift in Sources */,
 				C0AE06141C6E64490096F042 /* PressureKey.swift in Sources */,
 				C06B1D531BEE8C4F009F427A /* PressureKeyProtocols.swift in Sources */,
 				C070DFF01CA0A46B00840CBE /* ToggleCell.swift in Sources */,
@@ -613,6 +624,7 @@
 				C0BCB6C41BFA60BE00654E0A /* ValueWithRange.swift in Sources */,
 				C038B3EA1C69310400069F9C /* ExpandingKeyControl.swift in Sources */,
 				C0E68E6D1C10C1AF005162F7 /* EKDirection.swift in Sources */,
+				C04533A01CA47BB200B374D0 /* SmootherOverrideAdjusterCell.swift in Sources */,
 				C01BDAA01C571954004CF045 /* RangeValuePair.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
