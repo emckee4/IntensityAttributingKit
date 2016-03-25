@@ -205,6 +205,9 @@ public class IATextEditor: IATextView {
         self.setIAString(IAString())
         defaultIntensity = IAKitOptions.defaultIntensity
         baseAttributes = IABaseAttributes(size: IAKitOptions.defaultTextSize)
+        
+        self.iaString!.preferedSmoothing = IAKitOptions.defaultTokenizer
+        self.iaString!.renderScheme = IAKitOptions.defaultTransformer
     }
     
 //    ///Ignores overrideRenderOptions

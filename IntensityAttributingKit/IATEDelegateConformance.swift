@@ -34,7 +34,7 @@ extension IATextEditor:IAKeyboardDelegate {
             return
         }
         
-        let lang = self.textInputMode!.primaryLanguage!
+        let lang = self.textInputMode?.primaryLanguage ?? NSLocale.preferredLanguages().first!
         guard let wordRange = self.tokenizer.rangeEnclosingPosition(textPosition, withGranularity: UITextGranularity.Word, inDirection: 1) else {iaKB.updateSuggestions([]);return}
 
         let start:Int = self.offsetFromPosition(self.beginningOfDocument, toPosition: wordRange.start)
