@@ -36,6 +36,7 @@
 		C04533A01CA47BB200B374D0 /* SmootherOverrideAdjusterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C045339F1CA47BB200B374D0 /* SmootherOverrideAdjusterCell.swift */; };
 		C04533A21CA481F000B374D0 /* RenderOverrideAdjusterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04533A11CA481F000B374D0 /* RenderOverrideAdjusterCell.swift */; };
 		C04533AB1CA5CD6500B374D0 /* AlphaIntensityScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04533AA1CA5CD6500B374D0 /* AlphaIntensityScheme.swift */; };
+		C04533B21CAAF2FC00B374D0 /* IACompositeTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04533B11CAAF2FC00B374D0 /* IACompositeTextView.swift */; };
 		C054632C1C9C969600652AC0 /* SuggestionBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C054632B1C9C969600652AC0 /* SuggestionBarView.swift */; };
 		C054D99E1C3DAB9100D852DE /* IATextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */; };
 		C069B2BA1C627DB1008834D3 /* IAStringArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = C069B2B91C627DB1008834D3 /* IAStringArchive.swift */; };
@@ -128,6 +129,7 @@
 		C045339F1CA47BB200B374D0 /* SmootherOverrideAdjusterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmootherOverrideAdjusterCell.swift; sourceTree = "<group>"; };
 		C04533A11CA481F000B374D0 /* RenderOverrideAdjusterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RenderOverrideAdjusterCell.swift; sourceTree = "<group>"; };
 		C04533AA1CA5CD6500B374D0 /* AlphaIntensityScheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlphaIntensityScheme.swift; sourceTree = "<group>"; };
+		C04533B11CAAF2FC00B374D0 /* IACompositeTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IACompositeTextView.swift; sourceTree = "<group>"; };
 		C054632B1C9C969600652AC0 /* SuggestionBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuggestionBarView.swift; sourceTree = "<group>"; };
 		C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextAttachment.swift; sourceTree = "<group>"; };
 		C069B2B91C627DB1008834D3 /* IAStringArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringArchive.swift; sourceTree = "<group>"; };
@@ -275,6 +277,7 @@
 			isa = PBXGroup;
 			children = (
 				C031CBFF1BDD902000521393 /* IATextView.swift */,
+				C04533B11CAAF2FC00B374D0 /* IACompositeTextView.swift */,
 				C040C5071C0E4283007C1685 /* IAKitOptions.swift */,
 				C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */,
 				C0A258D21C92363F003287AB /* Config Views+VCs */,
@@ -630,6 +633,7 @@
 				C0E68E6D1C10C1AF005162F7 /* EKDirection.swift in Sources */,
 				C04533A01CA47BB200B374D0 /* SmootherOverrideAdjusterCell.swift in Sources */,
 				C01BDAA01C571954004CF045 /* RangeValuePair.swift in Sources */,
+				C04533B21CAAF2FC00B374D0 /* IACompositeTextView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
