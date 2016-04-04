@@ -46,6 +46,7 @@ public struct IAStringOptions:Equatable {
         return result
     }
     
+    
 }
 
 
@@ -60,4 +61,31 @@ public struct IAStringOptions:Equatable {
     
     return lhs.animatesIfAvailable == rhs.animatesIfAvailable && lhs.renderScheme == rhs.renderScheme && lhs.preferedSmoothing == rhs.preferedSmoothing && lhs.animationOptions == rhs.animationOptions
 }
+
+//Extensions for converting to/from dictionaries to facilitate JSON conversion
+extension IAStringOptions {
+    init!(optionsDict:[String:AnyObject]){
+        self.renderScheme = IntensityTransformers(rawOptional: (optionsDict["renderScheme"] as? String))
+        self.preferedSmoothing = IAStringTokenizing(shortLabel: (optionsDict["preferedSmoothing"] as? String))
+        self.animatesIfAvailable = optionsDict["animates"] as? Bool
+    }
+    
+    ///animationOptions are discarded by default
+    func asOptionsDict()->[String:AnyObject]{
+        var dict:[String:AnyObject] = [:]
+        if self.renderScheme != nil {
+            dict["renderScheme"] = self.renderScheme.rawValue
+        }
+        if self.preferedSmoothing != nil {
+            dict["preferedSmoothing"] = self.preferedSmoothing.shortLabel
+        }
+        if self.animatesIfAvailable != nil {
+            dict["animates"] = self.animatesIfAvailable
+        }
+        return dict
+    }
+    
+}
+
+
 

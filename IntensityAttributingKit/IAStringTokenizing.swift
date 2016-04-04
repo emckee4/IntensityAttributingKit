@@ -10,13 +10,13 @@ import Foundation
 
 
 
-public enum IAStringTokenizing:CustomStringConvertible {
-    case Char,
-    Word,
-    Sentence,
-    Line,
-    Paragraph,
-    Message
+public enum IAStringTokenizing:String, CustomStringConvertible {
+    case Char = "Char",
+    Word = "Word",
+    Sentence = "Sequence",
+    Line = "Line",
+    Paragraph = "Paragraph",
+    Message = "Message"
     
     
     
@@ -70,7 +70,8 @@ public enum IAStringTokenizing:CustomStringConvertible {
         }
     }
     
-    public init!(shortLabel:String){
+    public init!(shortLabel:String!){
+        guard shortLabel != nil else {return nil}
         switch shortLabel {
         case IAStringTokenizing.Char.shortLabel: self = .Char
         case IAStringTokenizing.Word.shortLabel: self = .Word
