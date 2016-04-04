@@ -36,7 +36,7 @@ class IAKitSettingsTableViewController: UITableViewController {
         tableView.rowHeight =  UITableViewAutomaticDimension
         self.tableView.allowsMultipleSelection = true
         
-        //mark as highlighted/selected those cells that are current in the IAKitOptions
+        //mark as highlighted/selected those cells that are current in the IAKitPreferences
         
         refreshSelections()
         tableView.separatorStyle = .None
@@ -116,7 +116,7 @@ class IAKitSettingsTableViewController: UITableViewController {
         guard indexPath.row == 0 && indexPath.section < 5 else {return nil}
         guard let nameCell = tableView.cellForRowAtIndexPath(indexPath) else {return nil}
         guard nameCell.selected == false else {return nil}
-        guard IAKitOptions.forceTouchAvailable || !(nameCell.textLabel!.text! == "ForceTouch") else {return nil}
+        guard IAKitPreferences.forceTouchAvailable || !(nameCell.textLabel!.text! == "ForceTouch") else {return nil}
         //ensure only one cell per section is highlighted
 
         if indexPath.section < 3 {
@@ -135,15 +135,15 @@ class IAKitSettingsTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         switch indexPath.section {
-        case 0: IAKitOptions.touchInterpreter = IATouchInterpreter.Force
+        case 0: IAKitPreferences.touchInterpreter = IATouchInterpreter.Force
             
-        case 1: IAKitOptions.touchInterpreter = IATouchInterpreter.Duration
+        case 1: IAKitPreferences.touchInterpreter = IATouchInterpreter.Duration
             
-        case 2: IAKitOptions.touchInterpreter = IATouchInterpreter.ImpactDuration
+        case 2: IAKitPreferences.touchInterpreter = IATouchInterpreter.ImpactDuration
             
-        case 3: IAKitOptions.rawIntensityMapper = .Linear
+        case 3: IAKitPreferences.rawIntensityMapper = .Linear
             
-        case 4: IAKitOptions.rawIntensityMapper = .LogAx
+        case 4: IAKitPreferences.rawIntensityMapper = .LogAx
 
 
         default: return
@@ -166,13 +166,13 @@ class IAKitSettingsTableViewController: UITableViewController {
     func refreshSelections(){
         var selectedTIIndex:NSIndexPath!
         var selectedRIMIndex:NSIndexPath!
-        switch IAKitOptions.touchInterpreter {
+        switch IAKitPreferences.touchInterpreter {
         case .Force: selectedTIIndex = NSIndexPath(forRow: 0, inSection: 0)
         case .Duration: selectedTIIndex = NSIndexPath(forRow: 0, inSection: 1)
         case .ImpactDuration: selectedTIIndex = NSIndexPath(forRow: 0, inSection: 2)
         }
         
-        switch IAKitOptions.rawIntensityMapper {
+        switch IAKitPreferences.rawIntensityMapper {
         case .Linear: selectedRIMIndex = NSIndexPath(forRow: 0, inSection: 3)
         case .LogAx: selectedRIMIndex = NSIndexPath(forRow: 0, inSection: 4)
         }

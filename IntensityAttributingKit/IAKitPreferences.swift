@@ -1,5 +1,5 @@
 //
-//  IAKitOptions.swift
+//  IAKitPreferences.swift
 //  IntensityAttributingKit
 //
 //  Created by Evan Mckee on 12/1/15.
@@ -10,11 +10,11 @@ import Foundation
 
 
 /**
-IAKitOptions contains most persisted options that need to be exposed to the outside world, along with an internal NSCache for the IAKeyboard and accessory that dont have any other logical home
+IAKitPreferences contains most persisted options that need to be exposed to the outside world, along with an internal NSCache for the IAKeyboard and accessory that dont have any other logical home
 */
-public class IAKitOptions:NSObject {
+public class IAKitPreferences:NSObject {
     
-    static let bundle:NSBundle = NSBundle(forClass: IAKitOptions.self)
+    static let bundle:NSBundle = NSBundle(forClass: IAKitPreferences.self)
     
     static let forceTouchAvailable = UIScreen.mainScreen().traitCollection.forceTouchCapability == .Available
     
@@ -47,29 +47,29 @@ public class IAKitOptions:NSObject {
         vcCache.removeAllObjects()
     }
     
-    private static let iakPrefix = "com.McKeeMaKer.IntensityAttributingKit.IAKitOptions."
+    private static let iakPrefix = "com.McKeeMaKer.IntensityAttributingKit.IAKitPreferences."
     
     //// store retained options/defaults here
     private struct Keys {
-        static let dIntensity = "IAKitOptions.defaultIntensity"
-        static let dTextSize = "IAKitOptions.defaultTextSize"
-        static let dTransformerName = "IAKitOptions.defaultTransformerName"
-        static let dTokenizerName = "IAKitOptions.defaultTokenizerName"
-        //static let maxSavedImageDimensions = "IAKitOptions.maxSavedImageDimensions" //constant
+        static let dIntensity = "IAKitPreferences.defaultIntensity"
+        static let dTextSize = "IAKitPreferences.defaultTextSize"
+        static let dTransformerName = "IAKitPreferences.defaultTransformerName"
+        static let dTokenizerName = "IAKitPreferences.defaultTokenizerName"
+        //static let maxSavedImageDimensions = "IAKitPreferences.maxSavedImageDimensions" //constant
         
-        static let oTokenizerName = "IAKitOptions.overridingTokenizerName"
-        static let oTransformerName = "IAKitOptions.overridingTransformerName"
+        static let oTokenizerName = "IAKitPreferences.overridingTokenizerName"
+        static let oTransformerName = "IAKitPreferences.overridingTransformerName"
         
-        static let deviceResourcesLimited = "IAKitOptions.deviceResourcesLimited"
+        static let deviceResourcesLimited = "IAKitPreferences.deviceResourcesLimited"
         
-        //static let fimName = "IAKitOptions.forceIntensityMappingName"
+        //static let fimName = "IAKitPreferences.forceIntensityMappingName"
         //need constants
         //how to store constants for mapping in performant accessable way?
-        //static let fimParametersDictName = "IAKitOptions.fimParametersDictName"
+        //static let fimParametersDictName = "IAKitPreferences.fimParametersDictName"
         
-        static let touchInterpreterName = "IAKitOptions.touchInterpreterName"
-        static let rawIntensityMapperName = "IAKitOptions.rawIntensityMapperName"
-        static let spellingSuggestionsEnabled = "IAKitOptions.spellingSuggestions"
+        static let touchInterpreterName = "IAKitPreferences.touchInterpreterName"
+        static let rawIntensityMapperName = "IAKitPreferences.rawIntensityMapperName"
+        static let spellingSuggestionsEnabled = "IAKitPreferences.spellingSuggestions"
     }
     
     
@@ -134,7 +134,7 @@ public class IAKitOptions:NSObject {
                 return interpreter
             }
         }
-        if IAKitOptions.forceTouchAvailable {
+        if IAKitPreferences.forceTouchAvailable {
             return IATouchInterpreter.Force
         } else {
             return IATouchInterpreter.Duration

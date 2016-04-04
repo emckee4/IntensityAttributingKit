@@ -23,7 +23,7 @@ public class RenderOverrideAdjusterCell:LabeledStepperAdjusterCell{
         stepper.stepValue = 1.0
         
         
-        let currentValue = IAKitOptions.overridesTransformer
+        let currentValue = IAKitPreferences.overridesTransformer
         
         let aoIndex = adjustmentOptions.indexOf({$0.option == currentValue}) ?? 0
         stepper.value = Double(aoIndex)
@@ -36,7 +36,7 @@ public class RenderOverrideAdjusterCell:LabeledStepperAdjusterCell{
         let val = clamp(Int(stepper.value), lowerBound: 0, upperBound: adjustmentOptions.count - 1)
         
         resultLabel.text = adjustmentOptions[val].optionTitle
-        IAKitOptions.overridesTransformer = adjustmentOptions[val].option
+        IAKitPreferences.overridesTransformer = adjustmentOptions[val].option
         
     }
     

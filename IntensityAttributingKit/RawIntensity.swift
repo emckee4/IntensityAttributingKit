@@ -11,13 +11,13 @@ import Foundation
 
 public class RawIntensity{
    
-    public static var rawIntensityMapping:RawIntensityMapping = IAKitOptions.rawIntensityMapper {
+    public static var rawIntensityMapping:RawIntensityMapping = IAKitPreferences.rawIntensityMapper {
         didSet{intensityMappingFunction = rawIntensityMapping.makeRIMFunction}
     }
-    private(set)static var intensityMappingFunction:RawIntensityMappingFunction = IAKitOptions.rawIntensityMapper.makeRIMFunction
+    private(set)static var intensityMappingFunction:RawIntensityMappingFunction = IAKitPreferences.rawIntensityMapper.makeRIMFunction
     
     
-    static var touchInterpreter:IATouchInterpreter = IAKitOptions.touchInterpreter {
+    static var touchInterpreter:IATouchInterpreter = IAKitPreferences.touchInterpreter {
         didSet{
             if oldValue != touchInterpreter { oldValue.deactivate();}
             _ = RawIntensity.rawIntensityInstances.map({($0 as? RawIntensity)?.currentInterpreter = touchInterpreter.newInstance})}

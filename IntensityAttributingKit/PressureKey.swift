@@ -28,7 +28,7 @@ class PressureKey:UILabel, PressureControl {
     }
     
     private func setBackgroundColorForIntensity(precomputedValue:Int? = nil){
-        guard !IAKitOptions.deviceResourcesLimited else {return}
+        guard !IAKitPreferences.deviceResourcesLimited else {return}
         if self._baseBackgroundColor == nil {self._baseBackgroundColor = UIColor.clearColor()}
         //guard forceTouchAvailable else {contentView?.backgroundColor = selectionColor; return}
         let intensity = precomputedValue ?? (rawIntensity.currentIntensity ?? 0)

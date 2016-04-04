@@ -35,7 +35,7 @@ class PressureView:UIView, PressureControl {
     var selectionColor = UIColor.darkGrayColor()
     
     private func setBackgroundColorForIntensity(){
-        guard !IAKitOptions.deviceResourcesLimited else {return}
+        guard !IAKitPreferences.deviceResourcesLimited else {return}
         guard self.backgroundColor != nil else {return}
         //guard forceTouchAvailable else {contentView?.backgroundColor = selectionColor; return}
         let intensity = rawIntensity.currentIntensity

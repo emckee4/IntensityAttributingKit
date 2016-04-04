@@ -55,10 +55,10 @@ public class IATextView: UITextView, UITextViewDelegate {
             self._renderOptions = renderOptions
         } else {
             _renderOptions = [:]
-            if let overTrans = IAKitOptions.overridesTransformer {
+            if let overTrans = IAKitPreferences.overridesTransformer {
                 self._renderOptions!["overrideTransformer"] = overTrans.rawValue
             }
-            if let overToke = IAKitOptions.overridesTokenizer {
+            if let overToke = IAKitPreferences.overridesTokenizer {
 
                 self._renderOptions!["overrideSmoothing"] = overToke.shortLabel
             }

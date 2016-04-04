@@ -40,7 +40,7 @@ final class LogAxRIMAdjustmentCell:RawIntensityAdjustmentCellBase {
         LogAxMapping.threshold = thresholdSV.value
         LogAxMapping.ceiling = ceilingSV.value
         LogAxMapping.aParam = aParamSV.value
-        IAKitOptions.rawIntensityMapper = RawIntensityMapping.LogAx
+        IAKitPreferences.rawIntensityMapper = RawIntensityMapping.LogAx
     }
     
     

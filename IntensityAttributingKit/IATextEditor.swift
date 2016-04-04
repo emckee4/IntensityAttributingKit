@@ -11,16 +11,16 @@ import UIKit
 public class IATextEditor: IATextView {
     
     
-    internal(set) var baseAttributes:IABaseAttributes = IABaseAttributes(size: IAKitOptions.defaultTextSize)
+    internal(set) var baseAttributes:IABaseAttributes = IABaseAttributes(size: IAKitPreferences.defaultTextSize)
     
-    internal(set) var currentTransformer:IntensityTransformers = IAKitOptions.defaultTransformer {
+    internal(set) var currentTransformer:IntensityTransformers = IAKitPreferences.defaultTransformer {
         didSet {if currentTransformer != oldValue && self.inputAccessoryViewController != nil {
             self.iaAccessory.setTransformKeyForScheme(withName: currentTransformer.transformer.schemeName)
             }
         }
     }
     
-    internal(set) var defaultIntensity:Int = IAKitOptions.defaultIntensity {
+    internal(set) var defaultIntensity:Int = IAKitPreferences.defaultIntensity {
         didSet {iaAccessory.updateDisplayedIntensity(defaultIntensity)}
     }
     
@@ -36,11 +36,11 @@ public class IATextEditor: IATextView {
     
     
     private var iaAccessory:IAAccessoryVC {
-        return IAKitOptions.accessory
+        return IAKitPreferences.accessory
     }
     
     private var iaKeyboardVC:IAKeyboard {
-        return IAKitOptions.keyboard
+        return IAKitPreferences.keyboard
     }
     
     
@@ -72,9 +72,9 @@ public class IATextEditor: IATextView {
     }
     
     func prepareToBecomeFirstResponder(){
-        //iaAccessory = IAKitOptions.singleton.accessory
+        //iaAccessory = IAKitPreferences.singleton.accessory
         iaAccessory.delegate = self
-        //iaKeyboardVC = IAKitOptions.singleton.keyboard
+        //iaKeyboardVC = IAKitPreferences.singleton.keyboard
         self.iaAccessory.setTransformKeyForScheme(withName: currentTransformer.transformer.schemeName)
         self.iaAccessory.setTokenizerKeyValue(self.iaString!.preferedSmoothing)
         iaKeyboardVC.delegate = self
@@ -104,11 +104,11 @@ public class IATextEditor: IATextView {
         self.delegate = self
         self.layer.cornerRadius = 10.0
         self.textContainerInset = UIEdgeInsetsMake(7.0, 2.0, 7.0, 2.0)
-        currentTransformer = IAKitOptions.defaultTransformer
+        currentTransformer = IAKitPreferences.defaultTransformer
         self.allowsEditingTextAttributes = true
         self.setIAString(IAString())
         self.iaString!.renderScheme = currentTransformer
-        self.iaString!.preferedSmoothing = IAKitOptions.defaultTokenizer
+        self.iaString!.preferedSmoothing = IAKitPreferences.defaultTokenizer
         
         self.typingAttributes = [NSFontAttributeName:UIFont.systemFontOfSize(baseAttributes.cSize)]
         self.layoutManager.allowsNonContiguousLayout = false
@@ -200,14 +200,14 @@ public class IATextEditor: IATextView {
         self.updateSuggestionsBar()
     }
     
-    ///Sets the IATextEditor to an empty IAString and resets properties to the IAKitOptions defaults
+    ///Sets the IATextEditor to an empty IAString and resets properties to the IAKitPreferences defaults
     public func resetEditor(){
         self.setIAString(IAString())
-        defaultIntensity = IAKitOptions.defaultIntensity
-        baseAttributes = IABaseAttributes(size: IAKitOptions.defaultTextSize)
+        defaultIntensity = IAKitPreferences.defaultIntensity
+        baseAttributes = IABaseAttributes(size: IAKitPreferences.defaultTextSize)
         
-        self.iaString!.preferedSmoothing = IAKitOptions.defaultTokenizer
-        self.iaString!.renderScheme = IAKitOptions.defaultTransformer
+        self.iaString!.preferedSmoothing = IAKitPreferences.defaultTokenizer
+        self.iaString!.renderScheme = IAKitPreferences.defaultTransformer
     }
     
 //    ///Ignores overrideRenderOptions
@@ -223,8 +223,8 @@ public class IATextEditor: IATextView {
     ///Scans for urls and may perform other actions to prepare an IAString for export
     public func finalizeIAString()->IAString {
         self.iaString!.scanLinks()
-        IAKitOptions.defaultTokenizer = self.iaString!.preferedSmoothing
-        IAKitOptions.defaultTransformer = self.currentTransformer
+        IAKitPreferences.defaultTokenizer = self.iaString!.preferedSmoothing
+        IAKitPreferences.defaultTransformer = self.currentTransformer
         return self.iaString!
     }
     

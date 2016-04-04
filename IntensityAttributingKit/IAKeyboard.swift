@@ -64,7 +64,7 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
         suggestionsBar = SuggestionBarView(frame: CGRectZero)
         suggestionsBar.translatesAutoresizingMaskIntoConstraints = false
         suggestionsBar.delegate = self
-        suggestionBarActive = IAKitOptions.spellingSuggestionsEnabled
+        suggestionBarActive = IAKitPreferences.spellingSuggestionsEnabled
         setupQwertyRow()
         setupAsdfRow()
         setupZxcvRow()

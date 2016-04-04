@@ -24,7 +24,7 @@ This is now a subclass of ExpandingKeyBase.
     //MARK:- Selection and highlighting effect helpers
     
     override func bgColorForSelection() -> UIColor {
-        guard backgroundColor != nil && IAKitOptions.forceTouchAvailable else {return selectionColor ?? UIColor.blackColor()}
+        guard backgroundColor != nil && IAKitPreferences.forceTouchAvailable else {return selectionColor ?? UIColor.blackColor()}
         //TODO: add different blending methods for non-grayscale color options
         var white:CGFloat = 0.0
         var alpha:CGFloat = 1.0

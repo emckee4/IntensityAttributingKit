@@ -29,7 +29,7 @@ class ModalContainerViewController: UIViewController {
         view.addSubview(effectView)
         
         dismissButton = UIButton(type: .System)
-        let xImage = UIImage(named: "xIcon", inBundle: IAKitOptions.bundle, compatibleWithTraitCollection: self.traitCollection)!
+        let xImage = UIImage(named: "xIcon", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: self.traitCollection)!
         dismissButton.setImage(xImage, forState: .Normal)
         dismissButton.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(dismissButton)

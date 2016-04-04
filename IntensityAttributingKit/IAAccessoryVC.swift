@@ -156,7 +156,7 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         
         optionButton = UIButton(type: .Custom)
         optionButton.backgroundColor = kButtonBackgroundColor
-        let gear = UIImage(named: "optionsGear", inBundle: IAKitOptions.bundle, compatibleWithTraitCollection: self.traitCollection)!
+        let gear = UIImage(named: "optionsGear", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: self.traitCollection)!
         optionButton.tintColor = UIColor.darkGrayColor()
         optionButton.setImage(gear.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
         optionButton.addTarget(self, action: "optionButtonPressed", forControlEvents: .TouchUpInside)

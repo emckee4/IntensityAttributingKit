@@ -17,11 +17,11 @@ class SpellCheckToggleCell: ToggleCell {
         
         toggleControl.addTarget(self, action: "toggleValueChanged:", forControlEvents: .ValueChanged)
         self.textLabel?.text = "Word Suggestions"
-        toggleControl.on = IAKitOptions.spellingSuggestionsEnabled
+        toggleControl.on = IAKitPreferences.spellingSuggestionsEnabled
     }
 
     func toggleValueChanged(sender:UISwitch!){
-        IAKitOptions.spellingSuggestionsEnabled = toggleControl.on
+        IAKitPreferences.spellingSuggestionsEnabled = toggleControl.on
     }
     
 }

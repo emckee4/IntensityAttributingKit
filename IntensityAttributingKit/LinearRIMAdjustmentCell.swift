@@ -34,7 +34,7 @@ final class LinearRIMAdjustmentCell:RawIntensityAdjustmentCellBase {
     func updateRIM(slider:UISlider!){
         LinearMapping.threshold = thresholdSV.value
         LinearMapping.ceiling = ceilingSV.value
-        IAKitOptions.rawIntensityMapper = RawIntensityMapping.Linear
+        IAKitPreferences.rawIntensityMapper = RawIntensityMapping.Linear
     }
 
     

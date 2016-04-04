@@ -23,7 +23,7 @@ public class SmootherOverrideAdjusterCell:LabeledStepperAdjusterCell{
         stepper.stepValue = 1.0
         
         
-        let currentValue = IAKitOptions.overridesTokenizer
+        let currentValue = IAKitPreferences.overridesTokenizer
         
         let aoIndex = adjustmentOptions.indexOf({$0.option == currentValue}) ?? 0
         stepper.value = Double(aoIndex)
@@ -36,7 +36,7 @@ public class SmootherOverrideAdjusterCell:LabeledStepperAdjusterCell{
         let val = clamp(Int(stepper.value), lowerBound: 0, upperBound: adjustmentOptions.count - 1)
         
         resultLabel.text = adjustmentOptions[val].optionTitle
-        IAKitOptions.overridesTokenizer = adjustmentOptions[val].option
+        IAKitPreferences.overridesTokenizer = adjustmentOptions[val].option
         
     }
     
