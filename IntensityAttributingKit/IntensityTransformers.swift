@@ -3,7 +3,6 @@ import UIKit
 
 
 
-
 public enum IntensityTransformers:String {
     case HueGYRScheme = "HueGYRScheme", WeightScheme = "WeightScheme", FontSizeScheme = "FontSizeScheme", AlphaScheme = "AlphaScheme"
     
@@ -16,10 +15,13 @@ public enum IntensityTransformers:String {
         }
     }
     
+    var isAnimatable:Bool {
+        return transformer.schemeIsAnimatable
+    }
+    
+    static func animatableTransformers()->[IntensityTransformers]{
+        return [.AlphaScheme,.HueGYRScheme]
+    }
+    
+    ///
 }
-
-
-
-
-
-

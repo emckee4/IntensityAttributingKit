@@ -30,7 +30,7 @@ public class IATextAttachment:NSTextAttachment {
     public var thumbSize: ThumbSize = .Medium
     
     private static let thumbCache = NSCache()
-    //public static let placeholderImage = UIImage(named: "imagePlaceholder", inBundle: IAKitOptions.bundle, compatibleWithTraitCollection: nil)!
+    //public static let placeholderImage = UIImage(named: "imagePlaceholder", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: nil)!
     
 
     
@@ -96,27 +96,49 @@ public class IATextAttachment:NSTextAttachment {
         return nil
     }
     
-    
     override public func imageForBounds(imageBounds: CGRect, textContainer: NSTextContainer?, characterIndex charIndex: Int) -> UIImage? {
-        guard !isPlaceholder && thumbSize == .Medium else {return self.thumbSize.imagePlaceholder}
-        var cachedThumbName:String! = nil
-        if  filename != nil {
-            cachedThumbName = filename! + thumbSize.rawValue
+        if let iaContainer = textContainer as? IATextContainer {
+            if iaContainer.shouldPresentEmptyImageContainers == true {
+                return nil
+            } else {
+                return imageForThumbSize(iaContainer.preferedThumbSize)
+            }
         } else {
-            cachedThumbName = localID + thumbSize.rawValue
+            //image is being requested by a non IATextContainer, so presumably something outside of the IAKit
+            return super.imageForBounds(imageBounds, textContainer: textContainer, characterIndex: charIndex)
         }
-        if let cachedImage = IATextAttachment.thumbCache.objectForKey(cachedThumbName) as? UIImage {
-            return cachedImage
-        } else if let newThumb = super.imageForBounds(imageBounds, textContainer: textContainer, characterIndex: charIndex) {
-            IATextAttachment.thumbCache.setObject(newThumb, forKey: cachedThumbName)
-            return newThumb
-        } else {
-            return nil
-        }
+        
+        
+//        guard !isPlaceholder && thumbSize == .Medium else {return self.thumbSize.imagePlaceholder}
+//        var cachedThumbName:String! = nil
+//        if  filename != nil {
+//            cachedThumbName = filename! + thumbSize.rawValue
+//        } else {
+//            cachedThumbName = localID + thumbSize.rawValue
+//        }
+//        if let cachedImage = IATextAttachment.thumbCache.objectForKey(cachedThumbName) as? UIImage {
+//            return cachedImage
+//        } else if let newThumb = super.imageForBounds(imageBounds, textContainer: textContainer, characterIndex: charIndex) {
+//            IATextAttachment.thumbCache.setObject(newThumb, forKey: cachedThumbName)
+//            return newThumb
+//        } else {
+//            return nil
+//        }
     }
     
+    func imageForThumbSize(thumbSize:ThumbSize)->UIImage{
+        return image?.resizeImageToFit(maxSize: thumbSize.size) ?? thumbSize.imagePlaceholder
+    }
+    
+    
+    
     override public func attachmentBoundsForTextContainer(textContainer: NSTextContainer?, proposedLineFragment lineFrag: CGRect, glyphPosition position: CGPoint, characterIndex charIndex: Int) -> CGRect {
-        return CGRect(origin:CGPointZero,size:self.thumbSize.size)
+        if let iaContainer = textContainer as? IATextContainer {
+            return CGRect(origin:CGPointZero,size:iaContainer.preferedThumbSize.size)
+        } else {
+            return CGRect(origin:CGPointZero,size:ThumbSize.Tiny.size)
+        }
+        //return CGRect(origin:CGPointZero,size:self.thumbSize.size)
     }
     
     
@@ -189,8 +211,6 @@ public class IATextAttachment:NSTextAttachment {
         self.localFileURL = localURL
         attemptToRealizeFileWrapper()
     }
-    
-    
         
 }
 
@@ -231,18 +251,39 @@ public enum ThumbSize:String {
     
     struct Placeholders {
         static let ImageBoxedTiny = {
-            return UIImage(named: "imagePlaceholderBoxedTiny", inBundle: IAKitOptions.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
+            return UIImage(named: "imagePlaceholderBoxedTiny", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
         }()
         static let ImageBoxedSmall = {
-            return UIImage(named: "imagePlaceholderBoxedSmall", inBundle: IAKitOptions.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
+            return UIImage(named: "imagePlaceholderBoxedSmall", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
         }()
         static let ImageBoxedMedium = {
-            return UIImage(named: "imagePlaceholderBoxedMedium", inBundle: IAKitOptions.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
+            return UIImage(named: "imagePlaceholderBoxedMedium", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
         }()
     }
 
     
 }
+
+
+/////Placeholder for use with text layers of multilayered IATextViews.
+//class IATextAttachmentML:NSObject, NSTextAttachmentContainer {
+//    
+//    var associatedIATextAttachment:IATextAttachment!
+//    var thumbSize:ThumbSize
+//    
+//    func imageForBounds(imageBounds: CGRect, textContainer: NSTextContainer?, characterIndex charIndex: Int) -> UIImage? {
+//        return nil
+//    }
+//    func attachmentBoundsForTextContainer(textContainer: NSTextContainer?, proposedLineFragment lineFrag: CGRect, glyphPosition position: CGPoint, characterIndex charIndex: Int) -> CGRect {
+//        return CGRect(origin:CGPointZero,size:self.thumbSize.size)
+//    }
+//    
+//    init(fromAttachment:IATextAttachment, thumbSize:ThumbSize){
+//        self.associatedIATextAttachment = fromAttachment
+//        self.thumbSize = thumbSize
+//    }
+//    
+//}
 
 
 

@@ -9,9 +9,19 @@
 import UIKit
 
 
-public class HueGYRIntensityScheme:IntensityTransforming {
+public class HueGYRIntensityScheme:AnimatedIntensityTransforming {
+    //MARK:- static IntensityTransforming properties
     public static let schemeName = "HueGYRScheme"
     public static let stepCount = 20
+    
+    
+    //MARK:- AnimatedIntensityTransforming properties
+    ///Top layer carries animating color attributed text
+    public static let topLayerAnimates:Bool = true
+    ///Bottom layer carries animating black text
+    public static let bottomLayerAnimates:Bool = false
+    public static let bottomLayerTimingOffset:Double = 0
+    
     
     ///This tweakable mapping provides the primary color attribute which varies in response to intensity
     private static func colorForIntensityBin(intensityBin:Int)->UIColor{
@@ -50,6 +60,42 @@ public class HueGYRIntensityScheme:IntensityTransforming {
         return nsAttributes
     }
 
+    
+    //MARK:- AnimatedIntensityTransforming functions:
+    
+    public static func layeredNSAttributesForBinsAndBaseAttributes(bin bin:Int,baseAttributes:IABaseAttributes)->(top:[String:AnyObject], bottom:[String:AnyObject]) {
+        
+        var baseFont:UIFont = UIFont.systemFontOfSize(baseAttributes.cSize)
+        
+        if baseAttributes.bold || baseAttributes.italic {
+            var symbolicsToMerge = UIFontDescriptorSymbolicTraits()
+            if baseAttributes.bold {
+                symbolicsToMerge.unionInPlace(.TraitBold)
+            }
+            if baseAttributes.italic {
+                symbolicsToMerge.unionInPlace(.TraitItalic)
+            }
+            let newSymbolicTraits =  baseFont.fontDescriptor().symbolicTraits.union(symbolicsToMerge)
+            let newDescriptor = baseFont.fontDescriptor().fontDescriptorWithSymbolicTraits(newSymbolicTraits)
+            baseFont = UIFont(descriptor: newDescriptor, size: baseAttributes.cSize)
+        }
+        var nsAttributes:[String:AnyObject] = [NSFontAttributeName:baseFont]
+        
+        if baseAttributes.strikethrough {
+            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
+        }
+        if baseAttributes.underline {
+            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
+        }
+        
+        ///Do color text stuff here
+        var topLayerAtts = nsAttributes
+        topLayerAtts[NSForegroundColorAttributeName] = UIColor.blackColor()
+        
+        nsAttributes[NSForegroundColorAttributeName] = colorForIntensityBin(bin)
+        return (top:topLayerAtts, bottom:nsAttributes)
+        
+    }
 
 }
 

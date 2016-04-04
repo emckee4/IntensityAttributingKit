@@ -207,12 +207,12 @@ extension IAString {
         
         let smoothedBinned:CollapsingArray<Int> = binnedSmoothedIntensities(transformer.stepCount, usingTokenizer: smoother)
         assert(smoothedBinned.count == text.utf16.count && text.utf16.count == self.baseAttributes.count)
-        applyAttributes(attString, transformer: transformer, smoothedBinned: smoothedBinned)
+        applyAttributesForStaticDisplay(attString, transformer: transformer, smoothedBinned: smoothedBinned)
         
         return attString
     }
     
-    private func applyAttributes(attString:NSMutableAttributedString, transformer:IntensityTransforming.Type,smoothedBinned:CollapsingArray<Int>){
+    private func applyAttributesForStaticDisplay(attString:NSMutableAttributedString, transformer:IntensityTransforming.Type,smoothedBinned:CollapsingArray<Int>){
         //guard let self.length > 0 else {return} //This is left to the public function calling it to check
         let textLength = attString.length
         var currentIndex = 0
@@ -243,4 +243,94 @@ extension IAString {
         }
     }
 }
+
+extension IAString {
+    
+    typealias LayeredNSAttributedStrings = (top:NSAttributedString, bottom:NSAttributedString?)
+    
+    ///Converts iaString to a pair of NSAttributesStrings so that they can be opacity animated. If the render scheme is non animateable then the bottom
+    func convertToNSAttributedStringsForLayeredDisplay(withOptions options:[String:AnyObject]? = nil)->LayeredNSAttributedStrings{
+        guard self.length > 0 else {return LayeredNSAttributedStrings(top: NSAttributedString(), bottom: nil)}
+        let attString = NSMutableAttributedString(string: self.text as String)
+        for linkRVP in links {
+            attString.addAttribute(NSLinkAttributeName, value: linkRVP.value, range: linkRVP.nsRange)
+        }
+        
+        ///attachment and attachSize should always exist together
+        for attachTupple in attachments {
+            assert(self.text.subStringFromRange(attachTupple.loc..<attachTupple.loc.successor()) == "\u{FFFC}")
+            attString.addAttribute(NSAttachmentAttributeName, value: attachTupple.attach, range: NSRange(location:attachTupple.loc, length: 1))
+        }
+        
+        //options have two levels: prefered (internal) and override passed in by the user. Override trumps internal
+        var renderWithScheme = self.renderScheme
+        if let overrideScheme = options?["overrideTransformer"] as? String where IntensityTransformers(rawValue: overrideScheme) != nil{
+            renderWithScheme = IntensityTransformers(rawValue: overrideScheme)
+        }
+        let transformer = renderWithScheme.transformer
+        
+        var smoother:IAStringTokenizing
+        if let smoothingName = options?["overrideSmoothing"] as? String where IAStringTokenizing(shortLabel:smoothingName) != nil {
+            smoother = IAStringTokenizing(shortLabel:smoothingName)
+        } else {
+            smoother = self.preferedSmoothing
+        }
+        self.attachments.setThumbSizes(self.thumbSize)
+        
+        //other options should be implemented here...
+        
+        
+        //render steps needs to come from renderScheme
+        
+        
+        let smoothedBinned:CollapsingArray<Int> = binnedSmoothedIntensities(transformer.stepCount, usingTokenizer: smoother)
+        assert(smoothedBinned.count == text.utf16.count && text.utf16.count == self.baseAttributes.count)
+        
+        if transformer.schemeIsAnimatable {
+            let bottomAttString = NSMutableAttributedString(attributedString: attString)
+            applyAttributesForLayeredDisplay(topAttString:attString, bottomAttString: bottomAttString, transformer: (transformer as! AnimatedIntensityTransforming.Type), smoothedBinned: smoothedBinned)
+            return LayeredNSAttributedStrings(top:attString, bottom:bottomAttString)
+        } else {
+            applyAttributesForStaticDisplay(attString, transformer: transformer, smoothedBinned: smoothedBinned)
+            return LayeredNSAttributedStrings(top:attString, bottom:nil)
+        }
+
+    }
+    
+    private func applyAttributesForLayeredDisplay(topAttString topAttString:NSMutableAttributedString, bottomAttString:NSMutableAttributedString,transformer:AnimatedIntensityTransforming.Type,smoothedBinned:CollapsingArray<Int>){
+        //guard let self.length > 0 && topAttString.length == bottomAttString.length else {fatalError()}
+        let textLength = topAttString.length
+        var currentIndex = 0
+        var binDi = 0
+        var attsDi = 0
+        var currentBin = smoothedBinned.rvp(binDi)
+        var currentAtts =  baseAttributes.rvp(attsDi)
+        while currentIndex < textLength {
+            let atts = transformer.layeredNSAttributesForBinsAndBaseAttributes(bin: currentBin.value, baseAttributes: currentAtts.value)
+            
+            let binEnd = currentBin.range.endIndex
+            let attsEnd = currentAtts.range.endIndex
+            var endIndex:Int = 0
+            if binEnd < attsEnd {
+                endIndex = binEnd
+                currentBin = smoothedBinned.rvp(++binDi)
+            } else if attsEnd < binEnd {
+                endIndex = attsEnd
+                currentAtts =  baseAttributes.rvp(++attsDi)
+            } else {
+                endIndex = attsEnd
+                if endIndex < textLength {
+                    currentBin = smoothedBinned.rvp(++binDi)
+                    currentAtts =  baseAttributes.rvp(++attsDi)
+                }
+            }
+            let thisRange = NSRange(location: currentIndex, length: endIndex - currentIndex)
+            topAttString.addAttributes(atts.top, range: thisRange)
+            bottomAttString.addAttributes(atts.bottom, range: thisRange)
+            currentIndex = endIndex
+        }
+    }
+
+}
+
 
