@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C002E1F21CB334B1008E78A1 /* IATextRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = C002E1F11CB334B1008E78A1 /* IATextRange.swift */; };
 		C0095D921C65328A00D37A75 /* IAAccessoryInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0095D911C65328A00D37A75 /* IAAccessoryInterface.swift */; };
 		C00E94791C5BF94000551D39 /* AttachmentArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00E94781C5BF94000551D39 /* AttachmentArray.swift */; };
 		C014A4831CA325FC00D6312C /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C014A4821CA325FC00D6312C /* String+Extensions.swift */; };
@@ -99,6 +100,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C002E1F11CB334B1008E78A1 /* IATextRange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IATextRange.swift; path = ../IATextRange.swift; sourceTree = "<group>"; };
 		C0095D911C65328A00D37A75 /* IAAccessoryInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAAccessoryInterface.swift; sourceTree = "<group>"; };
 		C00E94781C5BF94000551D39 /* AttachmentArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentArray.swift; sourceTree = "<group>"; };
 		C014A4821CA325FC00D6312C /* String+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
@@ -202,6 +204,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C002E1EF1CB303AD008E78A1 /* SimpleTextViews */ = {
+			isa = PBXGroup;
+			children = (
+				C031CBFF1BDD902000521393 /* IATextView.swift */,
+				C0F42CF91C5FE10F00FA7BB0 /* IATextEditor */,
+			);
+			name = SimpleTextViews;
+			sourceTree = "<group>";
+		};
+		C002E1F01CB303F5008E78A1 /* CompositeTextViews */ = {
+			isa = PBXGroup;
+			children = (
+				C04533B11CAAF2FC00B374D0 /* IACompositeTextView.swift */,
+				C0870FE51CB1E3C00071A5F1 /* IACompositeTextEditor.swift */,
+			);
+			name = CompositeTextViews;
+			sourceTree = "<group>";
+		};
 		C0095D901C65326400D37A75 /* IAAccessory */ = {
 			isa = PBXGroup;
 			children = (
@@ -281,18 +301,17 @@
 		C031CBC81BDB094800521393 /* IntensityAttributingKit */ = {
 			isa = PBXGroup;
 			children = (
-				C031CBFF1BDD902000521393 /* IATextView.swift */,
-				C04533B11CAAF2FC00B374D0 /* IACompositeTextView.swift */,
-				C0870FE51CB1E3C00071A5F1 /* IACompositeTextEditor.swift */,
+				C002E1EF1CB303AD008E78A1 /* SimpleTextViews */,
+				C002E1F01CB303F5008E78A1 /* CompositeTextViews */,
 				C040C5071C0E4283007C1685 /* IAKitPreferences.swift */,
+				C002E1F11CB334B1008E78A1 /* IATextRange.swift */,
 				C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */,
-				C0A258D21C92363F003287AB /* Config Views+VCs */,
-				C0F42CF91C5FE10F00FA7BB0 /* IATextEditor */,
 				C06B1D541BEE9BDA009F427A /* RawIntensity */,
 				C08253B21BE571C70017AC14 /* CustomControls */,
 				C08253B31BE571E00017AC14 /* KB+Accessory */,
 				C031CBEC1BDB097E00521393 /* IAString And Transformers */,
 				C0E5D7C61BDEA50400A0A814 /* General Extensions */,
+				C0A258D21C92363F003287AB /* Config Views+VCs */,
 				C08253B41BE572260017AC14 /* Supporting Files */,
 			);
 			path = IntensityAttributingKit;
@@ -571,6 +590,7 @@
 			files = (
 				C040C5081C0E4283007C1685 /* IAKitPreferences.swift in Sources */,
 				C06BAFD31BF2AECE004CECA9 /* IAIntermediate.swift in Sources */,
+				C002E1F21CB334B1008E78A1 /* IATextRange.swift in Sources */,
 				C031CC061BDD948700521393 /* IAKeyboard.swift in Sources */,
 				C08253B61BE572AE0017AC14 /* ExpandingPressureKey.swift in Sources */,
 				C04533A21CA481F000B374D0 /* RenderOverrideAdjusterCell.swift in Sources */,

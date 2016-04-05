@@ -26,15 +26,17 @@ public class IAString {
         return attachments.count
     }
     
-    public var renderScheme:IntensityTransformers!
-    public var renderOptions:[String:AnyObject] = [:]
-    
-    public var thumbSize:ThumbSize = .Medium {
-        didSet{self.attachments.setThumbSizes(self.thumbSize)}
-    }
-    
-    public var preferedSmoothing: IAStringTokenizing = .Char
+//    public var renderScheme:IntensityTransformers!
+//    public var renderOptions:[String:AnyObject] = [:]
+//    
+//    public var thumbSize:ThumbSize = .Medium {
+//        didSet{self.attachments.setThumbSizes(self.thumbSize)}
+//    }
+//    
+//    public var preferedSmoothing: IAStringTokenizing = .Char
 
+    public var baseOptions:IAStringOptions!
+    
     ///Based on UTF16 count of text. All other counts should stay in sync with this.
     private(set) public var length:Int
     
@@ -70,13 +72,15 @@ public class IAString {
         }
         
         
+//        changed for IAStringOptions
+//        var combinedOpts = self.renderOptions
+//        combinedOpts[IAStringKeys.renderScheme] = renderScheme?.rawValue ?? IAKitPreferences.defaultTransformer.rawValue
+//        combinedOpts[IAStringKeys.preferedSmoothing] = self.preferedSmoothing.shortLabel
+//        
+//        dict[IAStringKeys.options] = combinedOpts
         
-        var combinedOpts = self.renderOptions
-        combinedOpts[IAStringKeys.renderScheme] = renderScheme?.rawValue ?? IAKitPreferences.defaultTransformer.rawValue
-        combinedOpts[IAStringKeys.preferedSmoothing] = self.preferedSmoothing.shortLabel
+        dict[IAStringKeys.options] = baseOptions.asOptionsDict()
         
-        dict[IAStringKeys.options] = combinedOpts
-    
         
         //TODO: Choosing of source of data/ conversion should occur in IATextAttachment
         var attachDict:[Int:IATextAttachment] = [:]
@@ -149,24 +153,28 @@ public class IAString {
         
         //single value
         
-        if let opts = dict[IAStringKeys.options] as? [String:AnyObject]{
-            self.renderOptions = opts
-        }
+//        if let opts = dict[IAStringKeys.options] as? [String:AnyObject]{
+//            //self.renderOptions = opts
+//        }
         
-        if let scheme = dict[IAStringKeys.renderScheme] as? String {
-            self.renderScheme = IntensityTransformers(rawValue: scheme)
-            self.renderOptions.removeValueForKey(IAStringKeys.renderScheme)
-        } else if let scheme = self.renderOptions.removeValueForKey(IAStringKeys.renderScheme) as? String where IntensityTransformers(rawValue: scheme) != nil{
-            self.renderScheme = IntensityTransformers(rawValue: scheme)
-        } else {
-            self.renderScheme = IAKitPreferences.defaultTransformer
-        }
+//        if let scheme = dict[IAStringKeys.renderScheme] as? String {
+//            self.renderScheme = IntensityTransformers(rawValue: scheme)
+//            self.renderOptions.removeValueForKey(IAStringKeys.renderScheme)
+//        } else if let scheme = self.renderOptions.removeValueForKey(IAStringKeys.renderScheme) as? String where IntensityTransformers(rawValue: scheme) != nil{
+//            self.renderScheme = IntensityTransformers(rawValue: scheme)
+//        } else {
+//            self.renderScheme = IAKitPreferences.defaultTransformer
+//        }
+//        
+//        if let ps = dict[IAStringKeys.preferedSmoothing] as? String where IAStringTokenizing(shortLabel: ps) != nil{
+//            self.preferedSmoothing = IAStringTokenizing(shortLabel: ps)
+//            self.renderOptions.removeValueForKey(IAStringKeys.preferedSmoothing)
+//        } else if let ps = self.renderOptions.removeValueForKey(IAStringKeys.preferedSmoothing) as? String where IAStringTokenizing(shortLabel: ps) != nil{
+//            self.preferedSmoothing = IAStringTokenizing(shortLabel: ps)
+//        }
         
-        if let ps = dict[IAStringKeys.preferedSmoothing] as? String where IAStringTokenizing(shortLabel: ps) != nil{
-            self.preferedSmoothing = IAStringTokenizing(shortLabel: ps)
-            self.renderOptions.removeValueForKey(IAStringKeys.preferedSmoothing)
-        } else if let ps = self.renderOptions.removeValueForKey(IAStringKeys.preferedSmoothing) as? String where IAStringTokenizing(shortLabel: ps) != nil{
-            self.preferedSmoothing = IAStringTokenizing(shortLabel: ps)
+        if let opts = IAStringOptions(optionsDict: (dict[IAStringKeys.options] as? [String:AnyObject])) {
+            self.baseOptions = opts
         }
         
     }
@@ -192,7 +200,7 @@ public class IAString {
         self.text = ""
         self.length = 0
         self.baseAttributes = CollapsingArray<IABaseAttributes>()
-        self.renderScheme = IAKitPreferences.defaultTransformer
+        //self.renderScheme = IAKitPreferences.defaultTransformer
     }
     
     
@@ -215,7 +223,7 @@ public class IAString {
         self.links = []
     }
  
-    init!(withText:String, intensities:[Int], baseAtts:CollapsingArray<IABaseAttributes>, attachments:IAAttachmentArray? = nil){
+    init!(withText:String, intensities:[Int], baseAtts:CollapsingArray<IABaseAttributes>, attachments:IAAttachmentArray? = nil, baseOptions:IAStringOptions? = nil){
         self.text = withText
         self.length = withText.utf16.count
         self.intensities = intensities
@@ -223,6 +231,7 @@ public class IAString {
         if let attaches = attachments {
             self.attachments = attaches
         }
+        self.baseOptions = baseOptions
         guard length == self.baseAttributes.count && length == self.intensities.count && self.attachments.lastLoc <= length else {return nil}
     }
 }

@@ -27,9 +27,10 @@ extension IAString {
         newIA.baseAttributes = self.baseAttributes.subRange(range)
         //links are ignored
         newIA.attachments = self.attachments.reindexedSubrange(range)
-        newIA.renderScheme = self.renderScheme
-        newIA.renderOptions = self.renderOptions
-        newIA.preferedSmoothing = self.preferedSmoothing
+//        newIA.renderScheme = self.renderScheme
+//        newIA.renderOptions = self.renderOptions
+//        newIA.preferedSmoothing = self.preferedSmoothing
+        newIA.baseOptions = self.baseOptions
         return newIA
     }
     
@@ -92,7 +93,7 @@ extension IAString {
         //first we do a replace to align our indices
         textStorage.replaceCharactersInRange(range.nsRange, withString: replacement.text)
         
-        let (renderedModRange, replacementAttString) = self.convertRangeToNSAttributedString(modRange, withOptions: nil)
+        let (renderedModRange, replacementAttString) = self.convertRangeToNSAttributedString(modRange, withOverridingOptions: nil)
         
         textStorage.replaceCharactersInRange(renderedModRange.nsRange, withAttributedString: replacementAttString)
         textStorage.endEditing()
@@ -100,7 +101,7 @@ extension IAString {
     
     ///Performs similarly to replaceRangeUpdatingTextStorage, deleting text form the store and updating the displaying textStorage to match, taking into account the interaction between the range deletion and tokenizer to determine and execute whatever changes need to be made.
     internal func deleteRangeUpdatingTextStorage(range:Range<Int>, textStorage:NSTextStorage){
-        if self.preferedSmoothing == IAStringTokenizing.Char || self.length == range.count {
+        if self.baseOptions?.preferedSmoothing == IAStringTokenizing.Char || self.length == range.count {
             self.removeRange(range)
             textStorage.beginEditing()
             textStorage.deleteCharactersInRange(range.nsRange)
@@ -111,7 +112,7 @@ extension IAString {
             
             let modRange = max(range.startIndex - 1, 0)..<min(range.startIndex + 1, self.length)
             
-            let (renderedModRange, replacementAttString) = self.convertRangeToNSAttributedString(modRange, withOptions: nil)
+            let (renderedModRange, replacementAttString) = self.convertRangeToNSAttributedString(modRange, withOverridingOptions: nil)
             textStorage.beginEditing()
             textStorage.deleteCharactersInRange(range.nsRange)
             textStorage.replaceCharactersInRange(renderedModRange.nsRange, withAttributedString: replacementAttString)
@@ -143,13 +144,14 @@ extension IAString {
         attachments.insertAttachment(attachment, atLoc: position)
     }
     
-    ///Returns an empty IAString with the same general parameters as the receiver
+    ///Returns an empty IAString with the same baseOptions as the receiver
     public func emptyCopy()->IAString {
         let newIA = IAString()
-        newIA.renderScheme = self.renderScheme
-        newIA.renderOptions = self.renderOptions
-        newIA.thumbSize = self.thumbSize
-        newIA.preferedSmoothing = self.preferedSmoothing
+//        newIA.renderScheme = self.renderScheme
+//        newIA.renderOptions = self.renderOptions
+//        newIA.thumbSize = self.thumbSize
+//        newIA.preferedSmoothing = self.preferedSmoothing
+        newIA.baseOptions = self.baseOptions
         return newIA
     }
     ///Note: does not create new instances of IATextAttachment unless deepCopy option is true

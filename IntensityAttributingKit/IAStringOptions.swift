@@ -21,7 +21,7 @@ public struct IAStringOptions:Equatable {
     ///Contains parameters like duration, animating layers, alpha levels, etc. If this is nil on an animating IAString then the transformers default parameters will be used
     public var animationOptions:IAAnimationParameters?
     
-    init(renderScheme:IntensityTransformers = IAKitPreferences.defaultTransformer, preferedSmoothing:IAStringTokenizing = IAKitPreferences.defaultTokenizer, animates:Bool = true, animationOptions:IAAnimationParameters? = nil){
+    init(renderScheme:IntensityTransformers! = IAKitPreferences.defaultTransformer, preferedSmoothing:IAStringTokenizing! = IAKitPreferences.defaultTokenizer, animates:Bool! = true, animationOptions:IAAnimationParameters? = nil){
         self.renderScheme = renderScheme
         self.preferedSmoothing = preferedSmoothing
         self.animatesIfAvailable = animates
@@ -64,7 +64,8 @@ public struct IAStringOptions:Equatable {
 
 //Extensions for converting to/from dictionaries to facilitate JSON conversion
 extension IAStringOptions {
-    init!(optionsDict:[String:AnyObject]){
+    init!(optionsDict:[String:AnyObject]!){
+        guard optionsDict != nil else {return nil}
         self.renderScheme = IntensityTransformers(rawOptional: (optionsDict["renderScheme"] as? String))
         self.preferedSmoothing = IAStringTokenizing(shortLabel: (optionsDict["preferedSmoothing"] as? String))
         self.animatesIfAvailable = optionsDict["animates"] as? Bool

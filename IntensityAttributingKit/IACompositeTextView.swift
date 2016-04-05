@@ -20,17 +20,20 @@ public class IACompositeTextView: UIView {
     //private var _renderOptions:[String:AnyObject]?
     public weak var delegate:IATextViewDelegate?
     
-    public var animatesIfPossible:Bool = true
-    private var shouldAnimate:Bool = false
+//    ///Overrides the global preferences for animation
+//    public var alwaysAnimatesIfPossible:Bool?
+    //private var shouldAnimate:Bool = false
     public var isAnimating:Bool {
         return (topTV.layer.animationForKey("opacity") != nil) || (bottomTV.layer.animationForKey("opacity") != nil)
     }
     
-    public var baseAnimationDuration:NSTimeInterval = 1
-    
     public var thumbSizesForAttachments: ThumbSize = .Medium {
         //didSet {self.iaString?.thumbSize = thumbSizesForAttachments}
-        didSet{(topTV.textContainer as? IATextContainer)?.preferedThumbSize = thumbSizesForAttachments }
+        didSet{
+            (topTV.textContainer as? IATextContainer)?.preferedThumbSize = thumbSizesForAttachments
+            (bottomTV.textContainer as? IATextContainer)?.preferedThumbSize = thumbSizesForAttachments
+            //TODO: invalidate layout if this changes
+        }
     }
     
     var overridingTransformer:IntensityTransformers? = IAKitPreferences.overridesTransformer
@@ -55,6 +58,7 @@ public class IACompositeTextView: UIView {
                width: self.bounds.width - (textContainerInset.left + textContainerInset.right),
                height: self.bounds.height - (textContainerInset.top + textContainerInset.bottom)
         )
+        //TODO: If bounds have changed but content hasn't then we should try to move imageviews rather than reloading the images. Need to make this object a delegate of the topTV's layoutManager
         
     }
     
@@ -111,24 +115,25 @@ public class IACompositeTextView: UIView {
         
         
         
-        shouldAnimate = self.animatesIfPossible
+        //shouldAnimate = self.animatesIfPossible
+        let options = iaString.baseOptions.optionsWithOverridesApplied(IAKitPreferences.iaStringOverridingOptions)
         
-        var options = [String:AnyObject]()
-        if let trans = self.overridingTransformer {
-            options["overrideTransformer"] = trans.rawValue
-            if trans.isAnimatable == false {
-                shouldAnimate = false
-            }
-        } else if iaString.renderScheme.isAnimatable == false {
-            shouldAnimate = false
-        }
-        if let smooth = self.overridingSmoother {
-            options["overrideSmoothing"] = smooth.shortLabel
-        }
+//        var options = [String:AnyObject]()
+//        if let trans = self.overridingTransformer {
+//            options["overrideTransformer"] = trans.rawValue
+//            if trans.isAnimatable == false {
+//                shouldAnimate = false
+//            }
+//        } else if iaString.renderScheme.isAnimatable == false {
+//            shouldAnimate = false
+//        }
+//        if let smooth = self.overridingSmoother {
+//            options["overrideSmoothing"] = smooth.shortLabel
+//        }
         
-        self.iaString?.thumbSize = self.thumbSizesForAttachments
+        
         //self.attributedText = self._iaString?.convertToNSAttributedString(withOptions: _renderOptions)
-        let attStrings = self.iaString.convertToNSAttributedStringsForLayeredDisplay(withOptions: options)
+        let attStrings = self.iaString.convertToNSAttributedStringsForLayeredDisplay(withOverridingOptions: options)
         topTV.attributedText = attStrings.top
         bottomTV.attributedText = attStrings.bottom
         
@@ -148,7 +153,7 @@ public class IACompositeTextView: UIView {
         
         
         //Start animation according to animation scheme if possible/desired
-        if shouldAnimate {
+        if options.animatesIfAvailable == true && options.renderScheme.isAnimatable {
             startAnimation()
         } else {
             stopAnimation()
@@ -175,21 +180,23 @@ public class IACompositeTextView: UIView {
     
     
     public func startAnimation(){
-        guard shouldAnimate else {return}
-        guard iaString != nil && iaString.length > 0 else {return}
-        let trans:IntensityTransformers = overridingTransformer ?? iaString.renderScheme
+        guard let options = iaString?.baseOptions?.optionsWithOverridesApplied(IAKitPreferences.iaStringOverridingOptions) where options.animatesIfAvailable == true && options.renderScheme.isAnimatable && iaString.length > 0 else {return}
+        
+        let trans:IntensityTransformers =  options.renderScheme
         guard let animatingTransformer = (trans.transformer as? AnimatedIntensityTransforming.Type) else {return}
+        let aniParams:IAAnimationParameters = options.animationOptions ?? animatingTransformer.defaultAnimationParameters
         // get properties, adjust offsets, start animation
-        let baseOffset = NSProcessInfo.processInfo().systemUptime % baseAnimationDuration
+        let baseOffset = NSProcessInfo.processInfo().systemUptime % aniParams.duration
+        
         if animatingTransformer.topLayerAnimates {
-            let topAnimation = IACompositeTextView.generateOpacityAnimation(0, endAlpha: 1.0, duration: baseAnimationDuration, offset: baseOffset)
+            let topAnimation = IACompositeTextView.generateOpacityAnimation(aniParams.topLayerFromValue, endAlpha: aniParams.topLayerToValue, duration: aniParams.duration, offset: baseOffset)
             topTV.layer.addAnimation(topAnimation, forKey: "opacity")
         } else {
             topTV.layer.removeAnimationForKey("opacity")
         }
         if animatingTransformer.bottomLayerAnimates{
-            let bottomOffset = baseOffset + (animatingTransformer.bottomLayerTimingOffset * baseAnimationDuration)
-            let bottomAnimation = IACompositeTextView.generateOpacityAnimation(0, endAlpha: 1.0, duration: baseAnimationDuration, offset: bottomOffset)
+            let bottomOffset = baseOffset + (animatingTransformer.bottomLayerTimingOffset * aniParams.duration)
+            let bottomAnimation = IACompositeTextView.generateOpacityAnimation(aniParams.bottomLayerFromValue, endAlpha: aniParams.bottomLayerToValue, duration: aniParams.duration, offset: bottomOffset)
             bottomTV.layer.addAnimation(bottomAnimation, forKey: "opacity")
         } else {
             bottomTV.layer.removeAnimationForKey("opacity")
@@ -198,31 +205,18 @@ public class IACompositeTextView: UIView {
     }
     
     public func stopAnimation(){
-        shouldAnimate = false
         topTV.layer.removeAnimationForKey("opacity")
         bottomTV.layer.removeAnimationForKey("opacity")
         //TODO: may want to set final value for opacity here
     }
     
+    public override func intrinsicContentSize() -> CGSize {
+        return topTV.intrinsicContentSize()
+    }
     
-//    textAlignment
-//
-//    typingAttributes
-//    
-//    linkTextAttributes
-//    
-    
-//
-//    selectedRange
-//    - scrollRangeToVisible:
-//    clearsOnInsertion
-//    
-//    selectable
-//    
-//    override public func copy(sender: AnyObject?){
-//
-//    }
-    
+    public override func systemLayoutSizeFittingSize(targetSize: CGSize) -> CGSize {
+        return topTV.systemLayoutSizeFittingSize(targetSize)
+    }
         
     static func generateOpacityAnimation(startAlpha:Float = 0, endAlpha:Float = 1, duration:NSTimeInterval, offset:NSTimeInterval = 0)->CABasicAnimation{
         let anim = CABasicAnimation(keyPath: "opacity")

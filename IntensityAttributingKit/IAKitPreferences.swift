@@ -70,6 +70,7 @@ public class IAKitPreferences:NSObject {
         static let touchInterpreterName = "IAKitPreferences.touchInterpreterName"
         static let rawIntensityMapperName = "IAKitPreferences.rawIntensityMapperName"
         static let spellingSuggestionsEnabled = "IAKitPreferences.spellingSuggestions"
+        static let animationEnabled = "IAKitPreferences.animationEnabled"
     }
     
     
@@ -186,6 +187,26 @@ public class IAKitPreferences:NSObject {
             NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: Keys.spellingSuggestionsEnabled)
             keyboard.suggestionBarActive = newValue
         }
+    }
+    
+    private static var _animationEnabled:Bool = (NSUserDefaults.standardUserDefaults().objectForKey(Keys.animationEnabled) as? Bool) ?? true
+    /// Determines if the IAKeyboard show the suggestions bar.
+    static var animationEnabled:Bool {
+        get {return _animationEnabled}
+        set {
+            _animationEnabled = newValue
+            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: Keys.animationEnabled)
+            keyboard.suggestionBarActive = newValue
+        }
+    }
+    
+    
+    static var iaStringDefaultBaseOptions:IAStringOptions {
+        return IAStringOptions(renderScheme: defaultTransformer, preferedSmoothing: defaultTokenizer, animates: animationEnabled, animationOptions: nil)
+    }
+    
+    static var iaStringOverridingOptions:IAStringOptions {
+        return IAStringOptions(renderScheme: overridesTransformer, preferedSmoothing: overridesTokenizer, animates: animationEnabled, animationOptions: nil)
     }
     
 }

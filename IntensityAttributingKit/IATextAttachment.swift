@@ -27,7 +27,7 @@ public class IATextAttachment:NSTextAttachment {
     public var localFileURL:NSURL?
 
     
-    public var thumbSize: ThumbSize = .Medium
+    //public var thumbSize: ThumbSize = .Medium
     
     private static let thumbCache = NSCache()
     //public static let placeholderImage = UIImage(named: "imagePlaceholder", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: nil)!

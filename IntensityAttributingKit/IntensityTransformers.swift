@@ -44,13 +44,13 @@ public struct IAAnimationParameters:Equatable {
     
     var duration:NSTimeInterval
     
-    var topLayerFromValue:NSNumber
-    var topLayerToValue:NSNumber
+    var topLayerFromValue:Float
+    var topLayerToValue:Float
     
-    var bottomLayerFromValue:NSNumber
-    var bottomLayerToValue:NSNumber
+    var bottomLayerFromValue:Float
+    var bottomLayerToValue:Float
     
-    init(duration:NSTimeInterval, topLayerFromValue:NSNumber,topLayerToValue:NSNumber){
+    init(duration:NSTimeInterval, topLayerFromValue:Float,topLayerToValue:Float){
         self.duration = duration
         self.topLayerFromValue = topLayerFromValue
         self.topLayerToValue = topLayerToValue
@@ -58,7 +58,7 @@ public struct IAAnimationParameters:Equatable {
         self.bottomLayerToValue = 1
     }
     
-    init(duration:NSTimeInterval, bottomLayerFromValue:NSNumber,bottomLayerToValue:NSNumber){
+    init(duration:NSTimeInterval, bottomLayerFromValue:Float,bottomLayerToValue:Float){
         self.duration = duration
         self.topLayerFromValue = 0
         self.topLayerToValue = 1
@@ -67,7 +67,7 @@ public struct IAAnimationParameters:Equatable {
         
     }
     
-    init(duration:NSTimeInterval, topFrom:NSNumber,topTo:NSNumber,bottomFrom:NSNumber,bottomTo:NSNumber){
+    init(duration:NSTimeInterval, topFrom:Float,topTo:Float,bottomFrom:Float,bottomTo:Float){
         self.duration = duration
         self.topLayerFromValue = topFrom
         self.topLayerToValue = topTo

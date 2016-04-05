@@ -166,9 +166,9 @@ public struct IAAttachmentArray:CustomStringConvertible, SequenceType {
         return IAAttachmentArray(data: newData)
     }
     
-    public func setThumbSizes(thumbSize:ThumbSize){
-        for (_,attach) in self.data {
-            attach.thumbSize = thumbSize
-        }
-    }
+//    public func setThumbSizes(thumbSize:ThumbSize){
+//        for (_,attach) in self.data {
+//            attach.thumbSize = thumbSize
+//        }
+//    }
 }

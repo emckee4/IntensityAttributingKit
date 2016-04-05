@@ -136,22 +136,31 @@ extension IAString {
 //        return intensityAttributes
 //    }
     ///Renders a substring out to the boundaries of the tokenized text, which may extend further than the requested range.
-    internal func convertRangeToNSAttributedString(range:Range<Int>, withOptions options:[String:AnyObject]? = nil)->(rangeModified:Range<Int>,attString:NSAttributedString) {
+    internal func convertRangeToNSAttributedString(range:Range<Int>, withOverridingOptions options:IAStringOptions? = nil)->(rangeModified:Range<Int>,attString:NSAttributedString) {
         
-        var renderWithScheme = self.renderScheme
-        if let overrideScheme = options?["overrideTransformer"] as? String where IntensityTransformers(rawValue: overrideScheme) != nil{
-            renderWithScheme = IntensityTransformers(rawValue: overrideScheme)
+//        var renderWithScheme = self.renderScheme
+//        if let overrideScheme = options?["overrideTransformer"] as? String where IntensityTransformers(rawValue: overrideScheme) != nil{
+//            renderWithScheme = IntensityTransformers(rawValue: overrideScheme)
+//        }
+//        let transformer = renderWithScheme.transformer
+//        
+//        var subSmoother:IAStringTokenizing
+//        if let smoothingName = options?["overrideSmoothing"] as? String where IAStringTokenizing(shortLabel:smoothingName) != nil {
+//            subSmoother = IAStringTokenizing(shortLabel:smoothingName)
+//        } else {
+//            subSmoother = self.preferedSmoothing
+//        }
+        var usingOptions = self.baseOptions ?? IAKitPreferences.iaStringDefaultBaseOptions
+        if options != nil {
+            usingOptions = usingOptions.optionsWithOverridesApplied(options!)
+            
         }
-        let transformer = renderWithScheme.transformer
+        let trans = usingOptions.renderScheme.transformer
         
-        var subSmoother:IAStringTokenizing
-        if let smoothingName = options?["overrideSmoothing"] as? String where IAStringTokenizing(shortLabel:smoothingName) != nil {
-            subSmoother = IAStringTokenizing(shortLabel:smoothingName)
-        } else {
-            subSmoother = self.preferedSmoothing
-        }
         
-        let smoothedBinned:CollapsingArray<Int> = binnedSmoothedIntensities(transformer.stepCount, usingTokenizer: subSmoother)
+        
+        
+        let smoothedBinned:CollapsingArray<Int> = binnedSmoothedIntensities(trans.stepCount, usingTokenizer: usingOptions.preferedSmoothing)
         assert(smoothedBinned.count == text.utf16.count && text.utf16.count == self.baseAttributes.count)
         
 
@@ -161,9 +170,9 @@ extension IAString {
         let modRange = smoothedBinned.data[startBinDataIndex].startIndex ..< smoothedBinned.data[endBinDataIndex - 1].endIndex
         
         let subIA = self.iaSubstringFromRange(modRange)
-        subIA.renderScheme = renderWithScheme
-        subIA.preferedSmoothing = subSmoother
-        let attString = subIA.convertToNSAttributedString(withOptions: nil)
+//        subIA.renderScheme = renderWithScheme
+//        subIA.preferedSmoothing = subSmoother
+        let attString = subIA.convertToNSAttributedString(withOverridingOptions: usingOptions)
         
 
         return (rangeModified:modRange, attString:attString)
@@ -172,7 +181,7 @@ extension IAString {
     }
     
     ///Should more clearly define options (maybe with a struct of keys). Need to add option for rendering size and style of thumbnails for attachments.
-    public func convertToNSAttributedString(withOptions options:[String:AnyObject]? = nil)->NSAttributedString{
+    public func convertToNSAttributedString(withOverridingOptions options:IAStringOptions? = nil)->NSAttributedString{
         guard self.length > 0 else {return NSAttributedString()}
         let attString = NSMutableAttributedString(string: self.text as String)
         for linkRVP in links {
@@ -186,28 +195,35 @@ extension IAString {
         }
         
         //options have two levels: prefered (internal) and override passed in by the user. Override trumps internal
-        var renderWithScheme = self.renderScheme
-        if let overrideScheme = options?["overrideTransformer"] as? String where IntensityTransformers(rawValue: overrideScheme) != nil{
-            renderWithScheme = IntensityTransformers(rawValue: overrideScheme)
-        }
-        let transformer = renderWithScheme.transformer
-        
-        var smoother:IAStringTokenizing
-        if let smoothingName = options?["overrideSmoothing"] as? String where IAStringTokenizing(shortLabel:smoothingName) != nil {
-            smoother = IAStringTokenizing(shortLabel:smoothingName)
-        } else {
-            smoother = self.preferedSmoothing
-        }
-        self.attachments.setThumbSizes(self.thumbSize)
+//        var renderWithScheme = self.renderScheme
+//        if let overrideScheme = options?["overrideTransformer"] as? String where IntensityTransformers(rawValue: overrideScheme) != nil{
+//            renderWithScheme = IntensityTransformers(rawValue: overrideScheme)
+//        }
+//        let transformer = renderWithScheme.transformer
+//        
+//        var smoother:IAStringTokenizing
+//        if let smoothingName = options?["overrideSmoothing"] as? String where IAStringTokenizing(shortLabel:smoothingName) != nil {
+//            smoother = IAStringTokenizing(shortLabel:smoothingName)
+//        } else {
+//            smoother = self.preferedSmoothing
+//        }
+//        self.attachments.setThumbSizes(self.thumbSize)
         //other options should be implemented here...
         
         
         //render steps needs to come from renderScheme
+        var usingOptions = self.baseOptions ?? IAKitPreferences.iaStringDefaultBaseOptions
+        if options != nil {
+            usingOptions = usingOptions.optionsWithOverridesApplied(options!)
+            
+        }
+        let trans = usingOptions.renderScheme.transformer
         
         
-        let smoothedBinned:CollapsingArray<Int> = binnedSmoothedIntensities(transformer.stepCount, usingTokenizer: smoother)
+        
+        let smoothedBinned:CollapsingArray<Int> = binnedSmoothedIntensities(trans.stepCount, usingTokenizer: usingOptions.preferedSmoothing)
         assert(smoothedBinned.count == text.utf16.count && text.utf16.count == self.baseAttributes.count)
-        applyAttributesForStaticDisplay(attString, transformer: transformer, smoothedBinned: smoothedBinned)
+        applyAttributesForStaticDisplay(attString, transformer: trans, smoothedBinned: smoothedBinned)
         
         return attString
     }
@@ -249,7 +265,7 @@ extension IAString {
     typealias LayeredNSAttributedStrings = (top:NSAttributedString, bottom:NSAttributedString?)
     
     ///Converts iaString to a pair of NSAttributesStrings so that they can be opacity animated. If the render scheme is non animateable then the bottom
-    func convertToNSAttributedStringsForLayeredDisplay(withOptions options:[String:AnyObject]? = nil)->LayeredNSAttributedStrings{
+    func convertToNSAttributedStringsForLayeredDisplay(withOverridingOptions options:IAStringOptions? = nil)->LayeredNSAttributedStrings{
         guard self.length > 0 else {return LayeredNSAttributedStrings(top: NSAttributedString(), bottom: nil)}
         let attString = NSMutableAttributedString(string: self.text as String)
         for linkRVP in links {
@@ -261,21 +277,30 @@ extension IAString {
             assert(self.text.subStringFromRange(attachTupple.loc..<attachTupple.loc.successor()) == "\u{FFFC}")
             attString.addAttribute(NSAttachmentAttributeName, value: attachTupple.attach, range: NSRange(location:attachTupple.loc, length: 1))
         }
+        var usingOptions = self.baseOptions ?? IAKitPreferences.iaStringDefaultBaseOptions
+        if options != nil {
+            usingOptions = usingOptions.optionsWithOverridesApplied(options!)
+
+        }
+        let trans = usingOptions.renderScheme.transformer
         
         //options have two levels: prefered (internal) and override passed in by the user. Override trumps internal
-        var renderWithScheme = self.renderScheme
-        if let overrideScheme = options?["overrideTransformer"] as? String where IntensityTransformers(rawValue: overrideScheme) != nil{
-            renderWithScheme = IntensityTransformers(rawValue: overrideScheme)
-        }
-        let transformer = renderWithScheme.transformer
+//        var renderWithScheme = self.renderScheme
+//        if let overrideScheme = options?["overrideTransformer"] as? String where IntensityTransformers(rawValue: overrideScheme) != nil{
+//            renderWithScheme = IntensityTransformers(rawValue: overrideScheme)
+//        }
+//        let transformer = renderWithScheme.transformer
+//        
+//        var smoother:IAStringTokenizing
+//        if let smoothingName = options?["overrideSmoothing"] as? String where IAStringTokenizing(shortLabel:smoothingName) != nil {
+//            smoother = IAStringTokenizing(shortLabel:smoothingName)
+//        } else {
+//            smoother = self.preferedSmoothing
+//        }
+//        self.attachments.setThumbSizes(self.thumbSize)
         
-        var smoother:IAStringTokenizing
-        if let smoothingName = options?["overrideSmoothing"] as? String where IAStringTokenizing(shortLabel:smoothingName) != nil {
-            smoother = IAStringTokenizing(shortLabel:smoothingName)
-        } else {
-            smoother = self.preferedSmoothing
-        }
-        self.attachments.setThumbSizes(self.thumbSize)
+        
+        
         
         //other options should be implemented here...
         
@@ -283,15 +308,15 @@ extension IAString {
         //render steps needs to come from renderScheme
         
         
-        let smoothedBinned:CollapsingArray<Int> = binnedSmoothedIntensities(transformer.stepCount, usingTokenizer: smoother)
+        let smoothedBinned:CollapsingArray<Int> = binnedSmoothedIntensities(trans.stepCount, usingTokenizer: usingOptions.preferedSmoothing)
         assert(smoothedBinned.count == text.utf16.count && text.utf16.count == self.baseAttributes.count)
         
-        if transformer.schemeIsAnimatable {
+        if trans.schemeIsAnimatable {
             let bottomAttString = NSMutableAttributedString(attributedString: attString)
-            applyAttributesForLayeredDisplay(topAttString:attString, bottomAttString: bottomAttString, transformer: (transformer as! AnimatedIntensityTransforming.Type), smoothedBinned: smoothedBinned)
+            applyAttributesForLayeredDisplay(topAttString:attString, bottomAttString: bottomAttString, transformer: (trans as! AnimatedIntensityTransforming.Type), smoothedBinned: smoothedBinned)
             return LayeredNSAttributedStrings(top:attString, bottom:bottomAttString)
         } else {
-            applyAttributesForStaticDisplay(attString, transformer: transformer, smoothedBinned: smoothedBinned)
+            applyAttributesForStaticDisplay(attString, transformer: trans, smoothedBinned: smoothedBinned)
             return LayeredNSAttributedStrings(top:attString, bottom:nil)
         }
 
