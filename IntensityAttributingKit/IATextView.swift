@@ -9,6 +9,8 @@
 import UIKit
 /**The IATextView is (currently) a subclass of UITextView intended for the viewing (but not editing) of IAStrings. Setting of IAStrings should be done with the setIAString method
  */
+/*
+
 public class IATextView: UITextView, UITextViewDelegate {
     
     weak public var iaDelegate:IATextViewDelegate?
@@ -113,5 +115,5 @@ public class IATextView: UITextView, UITextViewDelegate {
     //optional func iaTextEditorRequestsPresentationOfImagePicker(iaTextEditor:IATextEditor)->UIViewController?
 }
 
-
+*/
 

@@ -83,4 +83,26 @@ public enum IAStringTokenizing:String, CustomStringConvertible {
         }
     }
     
+    public var granularity:UITextGranularity {
+        switch self {
+        case .Char: return .Character
+        case .Word: return .Word
+        case .Sentence: return .Sentence
+        case .Paragraph: return .Paragraph
+        case .Line: return .Line
+        case .Message: return .Document
+        }
+    }
+    
+    init(granularity:UITextGranularity){
+        switch granularity {
+        case .Character: self = Char
+        case .Word: self = .Word
+        case .Sentence: self = .Sentence
+        case .Paragraph: self = .Paragraph
+        case .Line: self = .Line
+        case .Document: self = .Message
+        }
+    }
+    
 }

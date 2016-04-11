@@ -8,7 +8,7 @@
 
 import UIKit
 
-
+/*
 
 ///IAKeyboardDelegate implementation
 extension IATextEditor:IAKeyboardDelegate {
@@ -173,3 +173,4 @@ extension IATextEditor: IAAccessoryDelegate {
     }
     
 }
+ */

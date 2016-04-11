@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+/*
 public class IATextEditor: IATextView {
     
     
@@ -353,7 +353,7 @@ extension IATextEditor {
     }
 }
 
-
+*/
 
 
 

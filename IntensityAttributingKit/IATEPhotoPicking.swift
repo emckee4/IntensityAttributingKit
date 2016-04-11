@@ -10,7 +10,7 @@ import UIKit
 
 
 ///Image picker extension
-extension IATextEditor:UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     public func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         picker.dismissViewControllerAnimated(true, completion: nil)
@@ -62,17 +62,13 @@ extension IATextEditor:UIImagePickerControllerDelegate, UINavigationControllerDe
     
     func imageChosen(image:UIImage!){
         guard let image = image else {return}
+        guard let selectedRange = selectedRange else {return}
         let ta = IATextAttachment()
         ta.image = image.resizeImageToFit(maxSize: IAKitPreferences.maxSavedImageDimensions)
-        let insertionLoc = self.selectedRange.location
+        //let insertionLoc = self.selectedRange.location
         let newIA = self.iaString!.emptyCopy()
-        newIA.insertAttachmentAtPosition(ta, position: 0, intensity: self.defaultIntensity, attributes: baseAttributes)
-        
-        self.iaString!.replaceRange(newIA, range: self.selectedRange.toRange()!)
-        self.iaString!.thumbSize = self.thumbSizesForAttachments
-        //self.renderIAString()
-        self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: newIA.convertToNSAttributedString())
-        self.selectedRange = NSMakeRange(insertionLoc + 1, 0)
+        newIA.insertAttachmentAtPosition(ta, position: 0, intensity: self.currentIntensity, attributes: baseAttributes)
+        replaceIAStringRange(newIA, range: selectedRange)
         self.becomeFirstResponder()
     }
     

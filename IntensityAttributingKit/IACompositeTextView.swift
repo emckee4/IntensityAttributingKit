@@ -257,7 +257,7 @@ extension IACompositeTextView: UITextViewDelegate {
     
     ///Allows iaDelegate to control interaction with textAttachment. Defaults to true
     public func textView(textView: UITextView, shouldInteractWithTextAttachment textAttachment: NSTextAttachment, inRange characterRange: NSRange) -> Bool {
-        if let iaTV = textView as? IATextView, textAttachment = textAttachment as? IATextAttachment {
+        if let iaTV = textView.superview as? IACompositeTextView, textAttachment = textAttachment as? IATextAttachment {
             return delegate?.iaTextView?(iaTV, shouldInteractWithTextAttachment: textAttachment, inRange: characterRange) ?? true
         }
         return true
@@ -278,5 +278,12 @@ public class IATextContainer:NSTextContainer {
     var preferedThumbSize:ThumbSize = .Medium
 }
 
+
+///Since the IATextView and IATextEditor must subscribe to their own UITextView delegate in order to manage some of the important functionality internally, the IATextViewDelegate is used to expose certain delegate functionality to the outside world. Note: implementing functions intended for IATextEditor in a delegate of an iaTextView will do nothing.
+@objc public protocol IATextViewDelegate:class {
+    optional func iaTextView(iaTextView: IACompositeTextView, shouldInteractWithTextAttachment textAttachment: IATextAttachment, inRange characterRange: NSRange) -> Bool
+    ///Pass in the view controller that will present the UIImagePicker or nil if it shouldn't be presented.
+    //optional func iaTextEditorRequestsPresentationOfImagePicker(iaTextEditor:IATextEditor)->UIViewController?
+}
 
 

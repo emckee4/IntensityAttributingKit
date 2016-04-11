@@ -19,46 +19,35 @@ extension IAAccessoryVC: PressureKeyActionDelegate {
     //MARK:- user interface actions
     
     func kbSwitchButtonPressed(sender:UIButton!){
-        delegate?.keyboardChangeButtonPressed()
+        delegate?.accessoryKeyboardChangeButtonPressed(self)
     }
     
     func cameraButtonPressed(sender:UIButton){
-        self.delegate?.requestPickerLaunch()
+        self.delegate?.accessoryRequestsPickerLaunch(self)
     }
     
     
     func optionButtonPressed(){
-        delegate?.optionButtonPressed()
+        delegate?.accessoryOptionButtonPressed(self)
     }
     
     func tokenizerButtonPressed(actionName:String!){
         guard let tokenizer = IAStringTokenizing(shortLabel: actionName) else {return}
-        self.delegate?.requestTokenizerChange(tokenizer)
-    }
-    
-    func transformButtonPressed(actionName:String!){
-        if IntensityTransformers(rawValue: actionName) != nil {
-            self.delegate?.requestTransformerChange(toTransformerWithName: actionName)
+        if self.delegate?.accessoryRequestsSmoothingChange(self, toValue: tokenizer) ?? false {
+            tokenizerButton.centerKeyWithActionName(actionName)
         }
     }
     
-//    func pressureKeyPressed(sender: PressureControl, actionName: String, actionType: PressureKeyActionType, intensity: Float) {
-//
-//    }
-    
-    func setTransformKeyForScheme(withName schemeName:String){
-        self.transformButton.centerKeyWithActionName(schemeName)
+    func transformButtonPressed(actionName:String!){
+        guard let transformer = IntensityTransformers(rawOptional: actionName) else {return}
+        if self.delegate?.accessoryRequestsTransformerChange(self, toTransformer:transformer) ?? false {
+            self.transformButton.centerKeyWithActionName(actionName)
+        }
     }
     
-    func setTokenizerKeyValue(value:IAStringTokenizing){
-        tokenizerButton.centerKeyWithActionName(value.shortLabel)
-    }
-    
-//    func intensityLockButtonPressed(newValue:Bool){
-//        self.delegate?.iaAccessoryDidSetIntensityLock(newValue)
-//    }
     func sliderValueChanged(slider:UISlider!){
-        self.delegate?.defaultIntensityUpdated(withValue: Int(slider.value))
+        let value = clamp(Int(round(slider.value)), lowerBound: 0, upperBound: 100)
+        self.delegate?.accessoryUpdatedDefaultIntensity(self ,withValue: value)
     }
     
     func updateDisplayedIntensity(toValue:Int){
@@ -68,38 +57,19 @@ extension IAAccessoryVC: PressureKeyActionDelegate {
     
     func pressureKeyPressed(sender: PressureControl, actionName: String, intensity: Int) {
         guard actionName == "intensityButtonPressed" else {assertionFailure(); return}
-        self.delegate?.defaultIntensityUpdated(withValue: intensity)
+        self.delegate?.accessoryUpdatedDefaultIntensity(self, withValue: intensity)
     }
     
-    /*
-    NSStringEnumerationByLines = 0,
-    NSStringEnumerationByParagraphs = 1,
-    NSStringEnumerationByComposedCharacterSequences = 2,
-    NSStringEnumerationByWords = 3,
-    NSStringEnumerationBySentences = 4,
+    func setTransformKeyForScheme(transformerScheme:IntensityTransformers){
+        self.transformButton.centerKeyWithActionName(transformerScheme.rawValue)
+    }
     
-    */
+    func setTokenizerKeyValue(value:IAStringTokenizing){
+        tokenizerButton.centerKeyWithActionName(value.shortLabel)
+    }
     
 }
 
-///IAAccessoryDelegate delivers actions from the IAAccessory to the IATextView
-protocol IAAccessoryDelegate:class {
-    func keyboardChangeButtonPressed()
-    
-    func optionButtonPressed()
-    func requestTransformerChange(toTransformerWithName name:String)
-
-    func requestPickerLaunch()
-    
-    func defaultIntensityUpdated(withValue value:Int)
-    
-    func requestTokenizerChange(toValue:IAStringTokenizing)
-    
-    func iaKeyboardIsShowing()->Bool
-    
-    ///The user has pressed the iaAccessory lock intensity button.
-//    func iaAccessoryDidSetIntensityLock(toValue:Bool)
-}
     
 
 

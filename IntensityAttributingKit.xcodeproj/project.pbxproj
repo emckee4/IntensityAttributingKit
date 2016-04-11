@@ -69,6 +69,10 @@
 		C08253B61BE572AE0017AC14 /* ExpandingPressureKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08253B51BE572AE0017AC14 /* ExpandingPressureKey.swift */; };
 		C0870FC41CAF10B30071A5F1 /* IAStringOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0870FC31CAF10B30071A5F1 /* IAStringOptions.swift */; };
 		C0870FE61CB1E3C00071A5F1 /* IACompositeTextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0870FE51CB1E3C00071A5F1 /* IACompositeTextEditor.swift */; };
+		C08EE0FB1CB6DC5A0030FC3E /* IACaret.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08EE0FA1CB6DC5A0030FC3E /* IACaret.swift */; };
+		C08EE1011CB749BC0030FC3E /* KB+AccessoryDelegateConformance.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08EE1001CB749BC0030FC3E /* KB+AccessoryDelegateConformance.swift */; };
+		C08EE1031CB845AB0030FC3E /* IAAccessoryDelegateProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08EE1021CB845AB0030FC3E /* IAAccessoryDelegateProtocol.swift */; };
+		C08EE1051CB846600030FC3E /* IAKeyboardDelegateProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08EE1041CB846600030FC3E /* IAKeyboardDelegateProtocol.swift */; };
 		C095747E1C5822E300724F02 /* IAString.swift in Sources */ = {isa = PBXBuildFile; fileRef = C095747D1C5822E300724F02 /* IAString.swift */; };
 		C09574801C58259C00724F02 /* IAStringKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C095747F1C58259C00724F02 /* IAStringKeys.swift */; };
 		C09574821C59442300724F02 /* IAStringConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09574811C59442300724F02 /* IAStringConversion.swift */; };
@@ -165,6 +169,10 @@
 		C08253B51BE572AE0017AC14 /* ExpandingPressureKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ExpandingPressureKey.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		C0870FC31CAF10B30071A5F1 /* IAStringOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringOptions.swift; sourceTree = "<group>"; };
 		C0870FE51CB1E3C00071A5F1 /* IACompositeTextEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IACompositeTextEditor.swift; sourceTree = "<group>"; };
+		C08EE0FA1CB6DC5A0030FC3E /* IACaret.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IACaret.swift; sourceTree = "<group>"; };
+		C08EE1001CB749BC0030FC3E /* KB+AccessoryDelegateConformance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "KB+AccessoryDelegateConformance.swift"; sourceTree = "<group>"; };
+		C08EE1021CB845AB0030FC3E /* IAAccessoryDelegateProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAAccessoryDelegateProtocol.swift; sourceTree = "<group>"; };
+		C08EE1041CB846600030FC3E /* IAKeyboardDelegateProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAKeyboardDelegateProtocol.swift; sourceTree = "<group>"; };
 		C095747D1C5822E300724F02 /* IAString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAString.swift; sourceTree = "<group>"; };
 		C095747F1C58259C00724F02 /* IAStringKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringKeys.swift; sourceTree = "<group>"; };
 		C09574811C59442300724F02 /* IAStringConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = IAStringConversion.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -217,7 +225,7 @@
 			isa = PBXGroup;
 			children = (
 				C04533B11CAAF2FC00B374D0 /* IACompositeTextView.swift */,
-				C0870FE51CB1E3C00071A5F1 /* IACompositeTextEditor.swift */,
+				C08EE0F91CB6DC2E0030FC3E /* IACompositeEditor */,
 			);
 			name = CompositeTextViews;
 			sourceTree = "<group>";
@@ -227,6 +235,7 @@
 			children = (
 				C0E5D7C21BDEA47E00A0A814 /* IAAccessoryVC.swift */,
 				C0095D911C65328A00D37A75 /* IAAccessoryInterface.swift */,
+				C08EE1021CB845AB0030FC3E /* IAAccessoryDelegateProtocol.swift */,
 			);
 			name = IAAccessory;
 			sourceTree = "<group>";
@@ -235,6 +244,7 @@
 			isa = PBXGroup;
 			children = (
 				C01BDAA11C57F170004CF045 /* IABaseAttributes.swift */,
+				C0870FC31CAF10B30071A5F1 /* IAStringOptions.swift */,
 				C00E94781C5BF94000551D39 /* AttachmentArray.swift */,
 				C01BDA9C1C571926004CF045 /* CollapsingArray.swift */,
 				C01BDA9F1C571954004CF045 /* RangeValuePair.swift */,
@@ -268,7 +278,6 @@
 			isa = PBXGroup;
 			children = (
 				C095747D1C5822E300724F02 /* IAString.swift */,
-				C0870FC31CAF10B30071A5F1 /* IAStringOptions.swift */,
 				C09574811C59442300724F02 /* IAStringConversion.swift */,
 				C01839F51C615FDE0009316E /* IAStringEditing.swift */,
 				C01839F31C614B270009316E /* IAStringPrinting.swift */,
@@ -405,8 +414,7 @@
 		C08253B31BE571E00017AC14 /* KB+Accessory */ = {
 			isa = PBXGroup;
 			children = (
-				C031CC051BDD948700521393 /* IAKeyboard.swift */,
-				C070DFEB1CA07C2C00840CBE /* IAKeyboard+Suggestions.swift */,
+				C08EE1061CB846660030FC3E /* Keyboard */,
 				C0095D901C65326400D37A75 /* IAAccessory */,
 			);
 			name = "KB+Accessory";
@@ -420,6 +428,26 @@
 				C0D4474B1BE82381003204E7 /* ImageAssets.xcassets */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C08EE0F91CB6DC2E0030FC3E /* IACompositeEditor */ = {
+			isa = PBXGroup;
+			children = (
+				C0870FE51CB1E3C00071A5F1 /* IACompositeTextEditor.swift */,
+				C08EE1001CB749BC0030FC3E /* KB+AccessoryDelegateConformance.swift */,
+				C08EE0FA1CB6DC5A0030FC3E /* IACaret.swift */,
+			);
+			name = IACompositeEditor;
+			sourceTree = "<group>";
+		};
+		C08EE1061CB846660030FC3E /* Keyboard */ = {
+			isa = PBXGroup;
+			children = (
+				C031CC051BDD948700521393 /* IAKeyboard.swift */,
+				C08EE1041CB846600030FC3E /* IAKeyboardDelegateProtocol.swift */,
+				C070DFEB1CA07C2C00840CBE /* IAKeyboard+Suggestions.swift */,
+			);
+			name = Keyboard;
 			sourceTree = "<group>";
 		};
 		C0A258D21C92363F003287AB /* Config Views+VCs */ = {
@@ -600,6 +628,7 @@
 				C0AE06191C6E75750096F042 /* IAStringTokenizing.swift in Sources */,
 				C080B5491C9895D700DEC424 /* LinearRIMAdjustmentCell.swift in Sources */,
 				C00E94791C5BF94000551D39 /* AttachmentArray.swift in Sources */,
+				C08EE1011CB749BC0030FC3E /* KB+AccessoryDelegateConformance.swift in Sources */,
 				C080B5401C98842F00DEC424 /* LabeledSliderView.swift in Sources */,
 				C045339E1CA4794600B374D0 /* LabeledStepperAdjusterCell.swift in Sources */,
 				C0AE06141C6E64490096F042 /* PressureKey.swift in Sources */,
@@ -619,6 +648,7 @@
 				C080B53A1C974F0500DEC424 /* AccelerationHistory.swift in Sources */,
 				C06B1D501BEE8B61009F427A /* Keysets.swift in Sources */,
 				C031CBEB1BDB097600521393 /* Globals+Operators.swift in Sources */,
+				C08EE1051CB846600030FC3E /* IAKeyboardDelegateProtocol.swift in Sources */,
 				C06B1D591BF15AD9009F427A /* WeightIntensityScheme.swift in Sources */,
 				C031CBE61BDB097600521393 /* Extensions+NSAttributedString.swift in Sources */,
 				C095747E1C5822E300724F02 /* IAString.swift in Sources */,
@@ -649,6 +679,7 @@
 				C0E5D7C31BDEA47E00A0A814 /* IAAccessoryVC.swift in Sources */,
 				C031CC041BDD921100521393 /* PressureButton.swift in Sources */,
 				C01BDA9D1C571926004CF045 /* CollapsingArray.swift in Sources */,
+				C08EE1031CB845AB0030FC3E /* IAAccessoryDelegateProtocol.swift in Sources */,
 				C069B2BE1C628DE9008834D3 /* IATextEditorDelegate.swift in Sources */,
 				C080B5421C988BD600DEC424 /* ImpactDurationTIAdjustmentCell.swift in Sources */,
 				C06B1D5D1BF15CDC009F427A /* FontSizeIntensityScheme.swift in Sources */,
@@ -659,6 +690,7 @@
 				C0BCB6C41BFA60BE00654E0A /* ValueWithRange.swift in Sources */,
 				C038B3EA1C69310400069F9C /* ExpandingKeyControl.swift in Sources */,
 				C0E68E6D1C10C1AF005162F7 /* EKDirection.swift in Sources */,
+				C08EE0FB1CB6DC5A0030FC3E /* IACaret.swift in Sources */,
 				C04533A01CA47BB200B374D0 /* SmootherOverrideAdjusterCell.swift in Sources */,
 				C01BDAA01C571954004CF045 /* RangeValuePair.swift in Sources */,
 				C04533B21CAAF2FC00B374D0 /* IACompositeTextView.swift in Sources */,

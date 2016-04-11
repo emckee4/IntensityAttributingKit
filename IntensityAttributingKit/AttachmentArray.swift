@@ -166,6 +166,33 @@ public struct IAAttachmentArray:CustomStringConvertible, SequenceType {
         return IAAttachmentArray(data: newData)
     }
     
+    func rangeIsEmpty(range:Range<Int>)->Bool{
+        for (loc,_) in data {
+            if loc < range.startIndex {
+                continue
+            } else if loc < range.endIndex {
+                return true
+            } else {
+                return false
+            }
+        }
+        return false
+    }
+    ///Returns all location-attachment tupples with locations contained in the provided range
+    func attachmentsInRange(range:Range<Int>)->[LocAttach]{
+        var results:[LocAttach] = []
+        for locAttach in data {
+            if locAttach.loc < range.startIndex {
+                continue
+            } else if locAttach.loc < range.endIndex {
+                results.append(locAttach)
+            } else {
+                break
+            }
+        }
+        return results
+    }
+    
 //    public func setThumbSizes(thumbSize:ThumbSize){
 //        for (_,attach) in self.data {
 //            attach.thumbSize = thumbSize

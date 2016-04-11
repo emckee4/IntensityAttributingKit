@@ -1,6 +1,7 @@
 
 import UIKit
 
+///The IntensityTransforming protocol contains components for expressing intensity attributed text with a scheme. AnimatedIntensityTransforming adopts and extends this to provide the option of animating. IntensityTransformers is an enum which contains names and references to the types of all concrete transformers. Since this protocol leans heavily on static typed values, it's imperitive that adopters pay attention to type safety.
 public protocol IntensityTransforming {
     static var schemeName:String {get}
     ///stepCount indicates the number of divisions in intensity rendering which are actually rendered. This value allows longer stretches of similar attributes to be consolodated before being passed to the internal TextKit processors.
@@ -46,8 +47,8 @@ public extension IntensityTransforming {
     
     
 }
-// need animation offset
 
+///AnimatedIntensityTransforming protocol adopts and extends the IntensityTransforming protocol to provide options for two layer opacity animations.
 public protocol AnimatedIntensityTransforming:IntensityTransforming{
     ///NSAttributes for top and bottom layers for animating schemes
     static func layeredNSAttributesForIntensityAttributes(intensity intensity:Int,baseAttributes:IABaseAttributes)->(top:[String:AnyObject], bottom:[String:AnyObject])

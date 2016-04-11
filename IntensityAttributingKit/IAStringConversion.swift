@@ -12,6 +12,11 @@ import Foundation
 
 extension IAString {
     
+    ///Gets an array of ranges or Character/word/sentance/etc units, as determined by the separation option
+    func unitRanges(withOverridingOptions options:IAStringOptions?)->[Range<Int>]{
+        let usingOptions = (self.baseOptions ?? IAKitPreferences.iaStringDefaultBaseOptions).optionsWithOverridesApplied(options)
+        return unitRanges(usingOptions.preferedSmoothing)
+    }
     
     ///Gets an array of ranges or Character/word/sentance/etc units, as determined by the separation option
     private func unitRanges(tokenizer:IAStringTokenizing)->[Range<Int>]{
@@ -136,30 +141,14 @@ extension IAString {
 //        return intensityAttributes
 //    }
     ///Renders a substring out to the boundaries of the tokenized text, which may extend further than the requested range.
-    internal func convertRangeToNSAttributedString(range:Range<Int>, withOverridingOptions options:IAStringOptions? = nil)->(rangeModified:Range<Int>,attString:NSAttributedString) {
-        
-//        var renderWithScheme = self.renderScheme
-//        if let overrideScheme = options?["overrideTransformer"] as? String where IntensityTransformers(rawValue: overrideScheme) != nil{
-//            renderWithScheme = IntensityTransformers(rawValue: overrideScheme)
-//        }
-//        let transformer = renderWithScheme.transformer
-//        
-//        var subSmoother:IAStringTokenizing
-//        if let smoothingName = options?["overrideSmoothing"] as? String where IAStringTokenizing(shortLabel:smoothingName) != nil {
-//            subSmoother = IAStringTokenizing(shortLabel:smoothingName)
-//        } else {
-//            subSmoother = self.preferedSmoothing
-//        }
+    internal func convertRangeToNSAttributedStringExtendingBoundaries(range:Range<Int>, withOverridingOptions options:IAStringOptions? = nil)->(rangeModified:Range<Int>,attString:NSAttributedString) {
         var usingOptions = self.baseOptions ?? IAKitPreferences.iaStringDefaultBaseOptions
         if options != nil {
             usingOptions = usingOptions.optionsWithOverridesApplied(options!)
             
         }
         let trans = usingOptions.renderScheme.transformer
-        
-        
-        
-        
+
         let smoothedBinned:CollapsingArray<Int> = binnedSmoothedIntensities(trans.stepCount, usingTokenizer: usingOptions.preferedSmoothing)
         assert(smoothedBinned.count == text.utf16.count && text.utf16.count == self.baseAttributes.count)
         
@@ -170,8 +159,6 @@ extension IAString {
         let modRange = smoothedBinned.data[startBinDataIndex].startIndex ..< smoothedBinned.data[endBinDataIndex - 1].endIndex
         
         let subIA = self.iaSubstringFromRange(modRange)
-//        subIA.renderScheme = renderWithScheme
-//        subIA.preferedSmoothing = subSmoother
         let attString = subIA.convertToNSAttributedString(withOverridingOptions: usingOptions)
         
 
@@ -258,6 +245,24 @@ extension IAString {
             currentIndex = endIndex
         }
     }
+    ///Checks if modifications to a range of text would change the rendering of text beyond that range. e.g. adding/removing a character in an IAString with .Sentence level intensity smoothing would require that the entire sentence be rerendered (or at least recalculated) to reflect the new average intensity, meaning we would return false. OTOH, modifying a word in an IAString using character or word level smoothing would not affect the rendered intensities of any parts of the string outside the range, so this would return true.
+    func checkRangeIsIndependentInRendering(range:Range<Int>, overridingOptions options:IAStringOptions? = nil)->Bool{
+        guard range.isEmpty == false else {return true}
+        let usingOptions = (self.baseOptions ?? IAKitPreferences.iaStringDefaultBaseOptions).optionsWithOverridesApplied(options)
+        let renderedRanges = self.unitRanges(usingOptions.preferedSmoothing)
+        if let startRangeIndex = renderedRanges.indexOf({$0.startIndex == range.startIndex}) {
+            if renderedRanges[startRangeIndex..<renderedRanges.count].contains({$0.endIndex == range.endIndex}) {
+                return true
+            }
+        }
+        return false
+    }
+    
+    ///Returns true if the range of the iaString contains an attachment. This checks the attachment array rather than looking in the string for an attachment character.
+    func rangeContainsAttachments(range:Range<Int>)->Bool{
+        return !self.attachments.rangeIsEmpty(range)
+    }
+    
 }
 
 extension IAString {
@@ -356,6 +361,34 @@ extension IAString {
         }
     }
 
+    
+    ///Renders a substring out to the boundaries of the tokenized text, which may extend further than the requested range.
+    internal func convertRangeToLayeredAttStringExtendingBoundaries(range:Range<Int>, withOverridingOptions options:IAStringOptions? = nil)->(rangeModified:Range<Int>,topAttString:NSAttributedString, botAttString:NSAttributedString?) {
+//        var usingOptions = self.baseOptions ?? IAKitPreferences.iaStringDefaultBaseOptions
+//        if options != nil {
+//            usingOptions = usingOptions.optionsWithOverridesApplied(options!)
+//        }
+        let usingOptions = (self.baseOptions ?? IAKitPreferences.iaStringDefaultBaseOptions).optionsWithOverridesApplied(options)
+        let trans = usingOptions.renderScheme.transformer
+        
+        let smoothedBinned:CollapsingArray<Int> = binnedSmoothedIntensities(trans.stepCount, usingTokenizer: usingOptions.preferedSmoothing)
+        assert(smoothedBinned.count == text.utf16.count && text.utf16.count == self.baseAttributes.count)
+        
+        
+        let startBinDataIndex = smoothedBinned.data.indexOf({$0.range.intersects(range)})!
+        let endBinDataIndex = smoothedBinned.data[startBinDataIndex..<smoothedBinned.data.endIndex].indexOf({!($0.range.intersects(range))}) ?? smoothedBinned.data.endIndex
+        
+        let modRange = smoothedBinned.data[startBinDataIndex].startIndex ..< smoothedBinned.data[endBinDataIndex - 1].endIndex
+        
+        let subIA = self.iaSubstringFromRange(modRange)
+        //let attString = subIA.convertToNSAttributedString(withOverridingOptions: usingOptions)
+        let attStrings = subIA.convertToNSAttributedStringsForLayeredDisplay(withOverridingOptions: options)
+        
+        return (rangeModified:modRange,topAttString:attStrings.top, botAttString:attStrings.bottom)
+    }
+    
+    
+    
 }
 
 

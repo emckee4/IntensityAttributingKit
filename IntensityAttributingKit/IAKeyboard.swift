@@ -479,10 +479,6 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
 //    var topRowKeyWidth:CGFloat { return(stackWidth - 9 * kStandardKeySpacing) / 10.0}
 
 
-@objc protocol IAKeyboardDelegate {
-    optional func iaKeyboard(iaKeyboard:IAKeyboard, insertTextAtCursor text:String, intensity:Int)
-    optional func iaKeyboard(iaKeyboard:IAKeyboard, suggestionSelected text:String, intensity:Int)
-    
-}
+
 
 

@@ -2,7 +2,7 @@
 import UIKit
 
 
-
+///IntensityTransformers is an enum which contains names and references to the types of all concrete IntensityTransforming types. 
 public enum IntensityTransformers:String {
     case HueGYRScheme = "HueGYRScheme", WeightScheme = "WeightScheme", FontSizeScheme = "FontSizeScheme", AlphaScheme = "AlphaScheme"
     

@@ -175,24 +175,28 @@ public class IAString {
         
         if let opts = IAStringOptions(optionsDict: (dict[IAStringKeys.options] as? [String:AnyObject])) {
             self.baseOptions = opts
+        } else {
+            self.baseOptions = IAKitPreferences.iaStringDefaultBaseOptions
         }
         
     }
     
     ///This is intended for initialization of IAIntermediate within the module. It provides only minimal sanity checks.
-    private init!(text:String, intensities:[Int], attributes:IABaseAttributes){
+    private init!(text:String, intensities:[Int], attributes:IABaseAttributes, baseOptions:IAStringOptions = IAKitPreferences.iaStringDefaultBaseOptions){
         self.text = text
         self.length = self.text.utf16.count
         guard intensities.count == self.length else {baseAttributes = [];return nil}
         self.intensities = intensities
         self.baseAttributes = CollapsingArray.init(repeatedValue: attributes, count: self.length)
+        self.baseOptions = baseOptions
     }
     
-    init(text:String, intensity:Int, attributes:IABaseAttributes){
+    init(text:String, intensity:Int, attributes:IABaseAttributes, baseOptions:IAStringOptions = IAKitPreferences.iaStringDefaultBaseOptions){
         self.text = text
         self.length = self.text.utf16.count
         self.intensities = Array<Int>(count:self.length,repeatedValue:intensity)
         self.baseAttributes = CollapsingArray.init(repeatedValue: attributes, count: self.length)
+        self.baseOptions = IAKitPreferences.iaStringDefaultBaseOptions
     }
     
     ///Initializes an empty IAString with default options
@@ -201,6 +205,7 @@ public class IAString {
         self.length = 0
         self.baseAttributes = CollapsingArray<IABaseAttributes>()
         //self.renderScheme = IAKitPreferences.defaultTransformer
+        self.baseOptions = IAKitPreferences.iaStringDefaultBaseOptions
     }
     
     
@@ -223,7 +228,7 @@ public class IAString {
         self.links = []
     }
  
-    init!(withText:String, intensities:[Int], baseAtts:CollapsingArray<IABaseAttributes>, attachments:IAAttachmentArray? = nil, baseOptions:IAStringOptions? = nil){
+    init!(withText:String, intensities:[Int], baseAtts:CollapsingArray<IABaseAttributes>, attachments:IAAttachmentArray? = nil, baseOptions:IAStringOptions = IAKitPreferences.iaStringDefaultBaseOptions){
         self.text = withText
         self.length = withText.utf16.count
         self.intensities = intensities

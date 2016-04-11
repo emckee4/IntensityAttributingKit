@@ -12,11 +12,11 @@ import UIKit
 
 public protocol IATextEditorDelegate:class {
     ///The default implementation of this will present the view controller using the delegate adopter
-    func iaTextEditorRequestsPresentation(iaTextEditor:IATextEditor, shouldPresentVC:UIViewController)
+    func iaTextEditorRequestsPresentation(iaTextEditor:IACompositeTextEditor, shouldPresentVC:UIViewController)
     
 }
 public extension IATextEditorDelegate  {
-    public func iaTextEditorRequestsPresentation(iaTextEditor:IATextEditor, shouldPresentVC:UIViewController){
+    public func iaTextEditorRequestsPresentation(iaTextEditor:IACompositeTextEditor, shouldPresentVC:UIViewController){
         guard let vc = self as? UIViewController else {return}
         vc.presentViewController(shouldPresentVC, animated: true) { () -> Void in
             

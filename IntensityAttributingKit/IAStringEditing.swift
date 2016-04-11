@@ -14,9 +14,6 @@ import UIKit
 extension IAString {
     
     
-    
-    
-    
     ///This provides a new IAString comprised of copies of the contents in the given range. This inherits its parent's options. It will reindex its attributes and it will discard links.
     public func iaSubstringFromRange(range:Range<Int>)->IAString {
         let newIA = self.emptyCopy()
@@ -33,8 +30,6 @@ extension IAString {
         newIA.baseOptions = self.baseOptions
         return newIA
     }
-    
-    
     
     
     ///Append a 0 based IAString
@@ -81,7 +76,7 @@ extension IAString {
         self.attachments.replaceRange(replacement.attachments, ofLength: replacement.length, replacedRange: range)
         
     }
-
+/* removed for v2.1
     ///This function performs a range replace on the iaString and updates affected portions ofthe provided textStorage with the new values. This can be complicated because a replaceRange on an IAString with a multi-character length tokenizer (ie anything but character length) can affect a longer range of the textStorage than is replaced in the IAString. This function tries to avoid modifying longer stretches than is necessary.
     internal func replaceRangeUpdatingTextStorage(replacement:IAString, range:Range<Int>, textStorage:NSTextStorage){
         guard replacement.length > 0 else {deleteRangeUpdatingTextStorage(range, textStorage: textStorage); return}
@@ -119,7 +114,7 @@ extension IAString {
             textStorage.endEditing()
         } 
     }
-    
+*/
     
     //convenience editor
     public func insertAtPosition(text:String, position:Int, intensity:Int, attributes:IABaseAttributes){
@@ -163,6 +158,7 @@ extension IAString {
         newIA.intensities = self.intensities
         newIA.links = self.links
         newIA.attachments = deepCopy ? self.attachments.deepCopy() : self.attachments
+        newIA.baseOptions = self.baseOptions
         return newIA
     }
     
