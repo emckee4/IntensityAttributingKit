@@ -9,30 +9,31 @@
 import UIKit
 
 public class IACompositeTextView: UIView {
-    
-    var topTV:UITextView!
-    var bottomTV:UITextView!
+    ///The selection view holds the selection rects
+    private var selectionView:IASelectionView
+    var topTV:ThinTextView
+    var bottomTV:ThinTextView
     ///The imageLayer coordinate system is positioned to be the same as that of the textContainers. i.e. it's subject to the textContainerInset property.
-    var imageLayer:UIView!
+    ///The imageLayer view holds the actual rendered textAttachments. This allows us to show them opaquely regardless of where the textViews are in their animation cycles. This also allows us to render these asynchronously if necessary.
+    private var imageLayer:UIView
     private var imageLayerImageViews:[UIImageView] = []
     ///Use the setIAString function to set the value
     private(set) public var iaString:IAString!
     //private var _renderOptions:[String:AnyObject]?
     public weak var delegate:IATextViewDelegate?
     
-//    ///Overrides the global preferences for animation
-//    public var alwaysAnimatesIfPossible:Bool?
-    //private var shouldAnimate:Bool = false
     public var isAnimating:Bool {
         return (topTV.layer.animationForKey("opacity") != nil) || (bottomTV.layer.animationForKey("opacity") != nil)
     }
     
     public var thumbSizesForAttachments: ThumbSize = .Medium {
-        //didSet {self.iaString?.thumbSize = thumbSizesForAttachments}
         didSet{
             (topTV.textContainer as? IATextContainer)?.preferedThumbSize = thumbSizesForAttachments
             (bottomTV.textContainer as? IATextContainer)?.preferedThumbSize = thumbSizesForAttachments
-            //TODO: invalidate layout if this changes
+            if iaString.attachmentCount > 0 && thumbSizesForAttachments != oldValue {
+                //trigger layout from scratch
+                setIAString(iaString)
+            }
         }
     }
     
@@ -42,8 +43,6 @@ public class IACompositeTextView: UIView {
     public var textContainerInset:UIEdgeInsets = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0) {
         didSet {
             if textContainerInset != oldValue {
-                topTV.textContainerInset = textContainerInset
-                bottomTV?.textContainerInset = textContainerInset
                 setNeedsLayout() // layoutSubviews will update the imageLayer position
             }
         }
@@ -52,12 +51,12 @@ public class IACompositeTextView: UIView {
     public override func layoutSubviews() {
         super.layoutSubviews()   //should this be called before or after?
         //set frames for contained objects
-        topTV.frame = self.bounds
-        bottomTV?.frame = self.bounds
-        imageLayer?.frame = CGRect(x: textContainerInset.left, y: textContainerInset.top,
-               width: self.bounds.width - (textContainerInset.left + textContainerInset.right),
-               height: self.bounds.height - (textContainerInset.top + textContainerInset.bottom)
-        )
+        let frameWithInset = UIEdgeInsetsInsetRect(self.bounds, textContainerInset)
+        
+        selectionView.frame = frameWithInset
+        topTV.frame = frameWithInset
+        bottomTV.frame = frameWithInset
+        imageLayer.frame = frameWithInset
         //TODO: If bounds have changed but content hasn't then we should try to move imageviews rather than reloading the images. Need to make this object a delegate of the topTV's layoutManager
         
     }
@@ -65,77 +64,60 @@ public class IACompositeTextView: UIView {
     
     
     func setupIATV(){
-        topTV = UITextView(frame: CGRectZero, textContainer: IATextContainer(size: CGSizeZero))
-        topTV.translatesAutoresizingMaskIntoConstraints = false
-        topTV.editable = false
-        topTV.scrollEnabled = false
+        selectionView.userInteractionEnabled = false
+        selectionView.backgroundColor = UIColor.clearColor()
+        selectionView.hidden = true
+        
+        topTV.userInteractionEnabled = false
         topTV.backgroundColor = UIColor.clearColor()
         
-        bottomTV = UITextView(frame: CGRectZero, textContainer: IATextContainer(size: CGSizeZero))//UITextView(frame: CGRectZero)
-        bottomTV.translatesAutoresizingMaskIntoConstraints = false
-        bottomTV.editable = false
         bottomTV.userInteractionEnabled = false
-        bottomTV.scrollEnabled = false
         bottomTV.backgroundColor = UIColor.clearColor()
+        bottomTV.hidden = true
         
-        imageLayer = UIView(frame:CGRectZero)
-        imageLayer.translatesAutoresizingMaskIntoConstraints = false
         imageLayer.userInteractionEnabled = false
         imageLayer.layer.drawsAsynchronously = true
         imageLayer.clipsToBounds = true
+        imageLayer.hidden = true
         
         self.addSubview(imageLayer)
         self.addSubview(bottomTV)
         self.addSubview(topTV)
-        topTV.delegate = self
-        
-        
+        self.addSubview(selectionView)
     }
+    
     
     
     
 
     
     
-    private func clearTextView(){
-        stopAnimation()
-        topTV.attributedText = nil
-        bottomTV.attributedText = nil
-        bottomTV.hidden = true
-        
-        
-    }
-    
-    
     ///Prefered method for setting stored IAText for display. By default this assumes text has been prerendered and only needs bounds set on its images. If needsRendering is set as true then this will render according to whatever its included schemeName is.
     public func setIAString(iaString:IAString!, withCacheIdentifier:String? = nil){
-        self.iaString = iaString
-        guard iaString != nil else {clearTextView(); return}
-        guard iaString.length > 0 else {clearTextView(); return}
+        if iaString != nil {
+            self.iaString = iaString
+        } else {
+            self.iaString = IAString()
+        }
         
-        
-        
-        //shouldAnimate = self.animatesIfPossible
         let options = iaString.baseOptions.optionsWithOverridesApplied(IAKitPreferences.iaStringOverridingOptions)
         
-//        var options = [String:AnyObject]()
-//        if let trans = self.overridingTransformer {
-//            options["overrideTransformer"] = trans.rawValue
-//            if trans.isAnimatable == false {
-//                shouldAnimate = false
-//            }
-//        } else if iaString.renderScheme.isAnimatable == false {
-//            shouldAnimate = false
-//        }
-//        if let smooth = self.overridingSmoother {
-//            options["overrideSmoothing"] = smooth.shortLabel
-//        }
-        
+        let willAnimate = options.animatesIfAvailable == true && options.renderScheme.isAnimatable
         
         //self.attributedText = self._iaString?.convertToNSAttributedString(withOptions: _renderOptions)
+        
+
         let attStrings = self.iaString.convertToNSAttributedStringsForLayeredDisplay(withOverridingOptions: options)
-        topTV.attributedText = attStrings.top
-        bottomTV.attributedText = attStrings.bottom
+        let attStringLength = attStrings.top.length
+        topTV.textStorage.replaceCharactersInRange(NSMakeRange(0, attStringLength), withAttributedString: attStrings.top)
+        
+        if attStrings.bottom?.length == attStringLength {
+            bottomTV.hidden = false
+            bottomTV.textStorage.replaceCharactersInRange(NSMakeRange(0, attStringLength), withAttributedString: attStrings.bottom!)
+        } else {
+            bottomTV.hidden = true
+        }
+        
         
         //TODO: Need to figure out how to render attachments onto bottom layer (asynchronously ideally)
 
@@ -153,7 +135,7 @@ public class IACompositeTextView: UIView {
         
         
         //Start animation according to animation scheme if possible/desired
-        if options.animatesIfAvailable == true && options.renderScheme.isAnimatable {
+        if willAnimate {
             startAnimation()
         } else {
             stopAnimation()
@@ -161,7 +143,7 @@ public class IACompositeTextView: UIView {
     }
     
     
-    public func refreshImageLayer(){
+    func refreshImageLayer(){
         guard imageLayerImageViews.count >= iaString.attachmentCount else {fatalError("refreshImageLayer: not enough imageLayerImageViews for attachment count")}
         for (i ,locAttach) in iaString.attachments.enumerate() {
             let (location, attachment) = locAttach
@@ -179,37 +161,6 @@ public class IACompositeTextView: UIView {
     }
     
     
-    public func startAnimation(){
-        guard let options = iaString?.baseOptions?.optionsWithOverridesApplied(IAKitPreferences.iaStringOverridingOptions) where options.animatesIfAvailable == true && options.renderScheme.isAnimatable && iaString.length > 0 else {return}
-        
-        let trans:IntensityTransformers =  options.renderScheme
-        guard let animatingTransformer = (trans.transformer as? AnimatedIntensityTransforming.Type) else {return}
-        let aniParams:IAAnimationParameters = options.animationOptions ?? animatingTransformer.defaultAnimationParameters
-        // get properties, adjust offsets, start animation
-        let baseOffset = NSProcessInfo.processInfo().systemUptime % aniParams.duration
-        
-        if animatingTransformer.topLayerAnimates {
-            let topAnimation = IACompositeTextView.generateOpacityAnimation(aniParams.topLayerFromValue, endAlpha: aniParams.topLayerToValue, duration: aniParams.duration, offset: baseOffset)
-            topTV.layer.addAnimation(topAnimation, forKey: "opacity")
-        } else {
-            topTV.layer.removeAnimationForKey("opacity")
-        }
-        if animatingTransformer.bottomLayerAnimates{
-            let bottomOffset = baseOffset + (animatingTransformer.bottomLayerTimingOffset * aniParams.duration)
-            let bottomAnimation = IACompositeTextView.generateOpacityAnimation(aniParams.bottomLayerFromValue, endAlpha: aniParams.bottomLayerToValue, duration: aniParams.duration, offset: bottomOffset)
-            bottomTV.layer.addAnimation(bottomAnimation, forKey: "opacity")
-        } else {
-            bottomTV.layer.removeAnimationForKey("opacity")
-        }
-        
-    }
-    
-    public func stopAnimation(){
-        topTV.layer.removeAnimationForKey("opacity")
-        bottomTV.layer.removeAnimationForKey("opacity")
-        //TODO: may want to set final value for opacity here
-    }
-    
     public override func intrinsicContentSize() -> CGSize {
         return topTV.intrinsicContentSize()
     }
@@ -218,34 +169,59 @@ public class IACompositeTextView: UIView {
         return topTV.systemLayoutSizeFittingSize(targetSize)
     }
         
-    static func generateOpacityAnimation(startAlpha:Float = 0, endAlpha:Float = 1, duration:NSTimeInterval, offset:NSTimeInterval = 0)->CABasicAnimation{
-        let anim = CABasicAnimation(keyPath: "opacity")
-        anim.fromValue = NSNumber(float: startAlpha)
-        anim.toValue = NSNumber(float: endAlpha)
-        
-        anim.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        anim.autoreverses = true
-        anim.duration = duration
-        anim.repeatCount = 100
-        anim.timeOffset = offset
-        return anim
-    }
+
     
     
     public override init(frame: CGRect) {
+        topTV = ThinTextView()
+        bottomTV = ThinTextView()
+        selectionView = IASelectionView()
+        imageLayer = UIView()
+        
+        
         super.init(frame: frame)
         setupIATV()
     }
     
     required public init?(coder aDecoder: NSCoder) {
+        topTV = (aDecoder.decodeObjectForKey("topTV") as?  ThinTextView) ?? ThinTextView()
+        bottomTV = (aDecoder.decodeObjectForKey("bottomTV") as?  ThinTextView) ?? ThinTextView()
+        selectionView = (aDecoder.decodeObjectForKey("selectionView") as?  IASelectionView) ?? IASelectionView()
+        imageLayer = (aDecoder.decodeObjectForKey("imageLayer") as?  UIView) ?? UIView()
         super.init(coder: aDecoder)
-        if topTV == nil || bottomTV == nil || imageLayer == nil {
-            setupIATV()
+        setupIATV()
+        
+        
+        if let ts = ThumbSize(rawOptional: (aDecoder.decodeObjectForKey("thumbSizes") as? String)) {
+            thumbSizesForAttachments = ts
+        }
+        if let insetArray = aDecoder.decodeObjectForKey("textContainerInsetArray") as? [CGFloat] where insetArray.count == 4 {
+            self.textContainerInset = UIEdgeInsets(top: insetArray[0], left: insetArray[1], bottom: insetArray[2], right: insetArray[3])
+        }
+        if let iasArch = aDecoder.decodeObjectForKey("iaStringArchive") as? IAStringArchive {
+            setIAString(iasArch.iaString)
         }
     }
     
     public convenience init(){
         self.init(frame:CGRectZero)
+    }
+    
+    public override func encodeWithCoder(aCoder: NSCoder) {
+        super.encodeWithCoder(aCoder)
+        aCoder.encodeObject(topTV, forKey: "topTV")
+        aCoder.encodeObject(bottomTV, forKey: "bottomTV")
+        aCoder.encodeObject(imageLayer, forKey: "imageLayer")
+        aCoder.encodeObject(selectionView, forKey: "selectionView")
+        
+        
+        //want thumbsize, insets, iaString, etc
+        aCoder.encodeObject(thumbSizesForAttachments.rawValue, forKey: "thumbSizes")
+        let insets = [textContainerInset.top,textContainerInset.left,textContainerInset.bottom,textContainerInset.right]
+        aCoder.encodeObject(insets, forKey: "textContainerInsetArray")
+        if iaString != nil {
+            aCoder.encodeObject(IAStringArchive(iaString: iaString), forKey: "iaStringArchive")
+        }
     }
     
 }
@@ -272,11 +248,7 @@ extension IACompositeTextView: UITextViewDelegate {
 
 
 
-public class IATextContainer:NSTextContainer {
-    ///This flag can be used to indicate to the IATextAttachments that they should return nil from imageForBounds because the image will be drawn by in another layer.
-    var shouldPresentEmptyImageContainers:Bool = true
-    var preferedThumbSize:ThumbSize = .Medium
-}
+
 
 
 ///Since the IATextView and IATextEditor must subscribe to their own UITextView delegate in order to manage some of the important functionality internally, the IATextViewDelegate is used to expose certain delegate functionality to the outside world. Note: implementing functions intended for IATextEditor in a delegate of an iaTextView will do nothing.

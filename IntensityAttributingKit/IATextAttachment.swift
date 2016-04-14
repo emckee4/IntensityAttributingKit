@@ -262,6 +262,14 @@ public enum ThumbSize:String {
     }
 
     
+    init?(rawOptional:String?){
+        if let raw = rawOptional {
+            self.init(rawValue:raw)
+        } else {
+            return nil
+        }
+    }
+    
 }
 
 

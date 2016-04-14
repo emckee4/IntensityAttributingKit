@@ -38,6 +38,9 @@
 		C04533A21CA481F000B374D0 /* RenderOverrideAdjusterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04533A11CA481F000B374D0 /* RenderOverrideAdjusterCell.swift */; };
 		C04533AB1CA5CD6500B374D0 /* AlphaIntensityScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04533AA1CA5CD6500B374D0 /* AlphaIntensityScheme.swift */; };
 		C04533B21CAAF2FC00B374D0 /* IACompositeTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04533B11CAAF2FC00B374D0 /* IACompositeTextView.swift */; };
+		C0479E641CBED6D10032A5C6 /* ThinTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0479E631CBED6D10032A5C6 /* ThinTextView.swift */; };
+		C0479E661CC01E130032A5C6 /* IASelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0479E651CC01E130032A5C6 /* IASelectionView.swift */; };
+		C0479E681CC02CA50032A5C6 /* IACompositeTextView+Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0479E671CC02CA50032A5C6 /* IACompositeTextView+Animations.swift */; };
 		C054632C1C9C969600652AC0 /* SuggestionBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C054632B1C9C969600652AC0 /* SuggestionBarView.swift */; };
 		C054D99E1C3DAB9100D852DE /* IATextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */; };
 		C069B2BA1C627DB1008834D3 /* IAStringArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = C069B2B91C627DB1008834D3 /* IAStringArchive.swift */; };
@@ -138,6 +141,9 @@
 		C04533A11CA481F000B374D0 /* RenderOverrideAdjusterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RenderOverrideAdjusterCell.swift; sourceTree = "<group>"; };
 		C04533AA1CA5CD6500B374D0 /* AlphaIntensityScheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlphaIntensityScheme.swift; sourceTree = "<group>"; };
 		C04533B11CAAF2FC00B374D0 /* IACompositeTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IACompositeTextView.swift; sourceTree = "<group>"; };
+		C0479E631CBED6D10032A5C6 /* ThinTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThinTextView.swift; sourceTree = "<group>"; };
+		C0479E651CC01E130032A5C6 /* IASelectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IASelectionView.swift; sourceTree = "<group>"; };
+		C0479E671CC02CA50032A5C6 /* IACompositeTextView+Animations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IACompositeTextView+Animations.swift"; sourceTree = "<group>"; };
 		C054632B1C9C969600652AC0 /* SuggestionBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SuggestionBarView.swift; sourceTree = "<group>"; };
 		C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextAttachment.swift; sourceTree = "<group>"; };
 		C069B2B91C627DB1008834D3 /* IAStringArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringArchive.swift; sourceTree = "<group>"; };
@@ -225,6 +231,7 @@
 			isa = PBXGroup;
 			children = (
 				C04533B11CAAF2FC00B374D0 /* IACompositeTextView.swift */,
+				C0479E671CC02CA50032A5C6 /* IACompositeTextView+Animations.swift */,
 				C08EE0F91CB6DC2E0030FC3E /* IACompositeEditor */,
 			);
 			name = CompositeTextViews;
@@ -310,10 +317,12 @@
 		C031CBC81BDB094800521393 /* IntensityAttributingKit */ = {
 			isa = PBXGroup;
 			children = (
+				C040C5071C0E4283007C1685 /* IAKitPreferences.swift */,
 				C002E1EF1CB303AD008E78A1 /* SimpleTextViews */,
 				C002E1F01CB303F5008E78A1 /* CompositeTextViews */,
-				C040C5071C0E4283007C1685 /* IAKitPreferences.swift */,
 				C002E1F11CB334B1008E78A1 /* IATextRange.swift */,
+				C0479E631CBED6D10032A5C6 /* ThinTextView.swift */,
+				C0479E651CC01E130032A5C6 /* IASelectionView.swift */,
 				C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */,
 				C06B1D541BEE9BDA009F427A /* RawIntensity */,
 				C08253B21BE571C70017AC14 /* CustomControls */,
@@ -620,6 +629,7 @@
 				C06BAFD31BF2AECE004CECA9 /* IAIntermediate.swift in Sources */,
 				C002E1F21CB334B1008E78A1 /* IATextRange.swift in Sources */,
 				C031CC061BDD948700521393 /* IAKeyboard.swift in Sources */,
+				C0479E681CC02CA50032A5C6 /* IACompositeTextView+Animations.swift in Sources */,
 				C08253B61BE572AE0017AC14 /* ExpandingPressureKey.swift in Sources */,
 				C04533A21CA481F000B374D0 /* RenderOverrideAdjusterCell.swift in Sources */,
 				C054632C1C9C969600652AC0 /* SuggestionBarView.swift in Sources */,
@@ -632,6 +642,7 @@
 				C080B5401C98842F00DEC424 /* LabeledSliderView.swift in Sources */,
 				C045339E1CA4794600B374D0 /* LabeledStepperAdjusterCell.swift in Sources */,
 				C0AE06141C6E64490096F042 /* PressureKey.swift in Sources */,
+				C0479E641CBED6D10032A5C6 /* ThinTextView.swift in Sources */,
 				C06B1D531BEE8C4F009F427A /* PressureKeyProtocols.swift in Sources */,
 				C070DFF01CA0A46B00840CBE /* ToggleCell.swift in Sources */,
 				C031CBEA1BDB097600521393 /* IntensityTransformingProtocol.swift in Sources */,
@@ -661,6 +672,7 @@
 				C014A4851CA3265600D6312C /* Range+Extensions.swift in Sources */,
 				C0A258CF1C9200EC003287AB /* TouchInterpreters.swift in Sources */,
 				C031CBE91BDB097600521393 /* IntensityTransformers.swift in Sources */,
+				C0479E661CC01E130032A5C6 /* IASelectionView.swift in Sources */,
 				C0D4474E1BE97578003204E7 /* IntensityAdjuster.swift in Sources */,
 				C080B5471C98949A00DEC424 /* ForceTIAdjustmentCell.swift in Sources */,
 				C06B1D5B1BF15C18009F427A /* HueGYRIntensityScheme.swift in Sources */,
