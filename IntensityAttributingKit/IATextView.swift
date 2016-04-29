@@ -6,7 +6,7 @@
 //  Copyright © 2015 McKeeMaKer. All rights reserved.
 //
 
-import UIKit
+//import UIKit
 /**The IATextView is (currently) a subclass of UITextView intended for the viewing (but not editing) of IAStrings. Setting of IAStrings should be done with the setIAString method
  */
 /*

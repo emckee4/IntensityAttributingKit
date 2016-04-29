@@ -232,23 +232,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		C002E1EF1CB303AD008E78A1 /* SimpleTextViews */ = {
-			isa = PBXGroup;
-			children = (
-				C01FFFA71CC6A9ED00AFD366 /* lastIACTV.swift */,
-				C031CBFF1BDD902000521393 /* IATextView.swift */,
-				C0F42CF91C5FE10F00FA7BB0 /* IATextEditor */,
-			);
-			name = SimpleTextViews;
-			sourceTree = "<group>";
-		};
 		C002E1F01CB303F5008E78A1 /* CompositeTextViews */ = {
 			isa = PBXGroup;
 			children = (
 				C04533B11CAAF2FC00B374D0 /* IACompositeTextView.swift */,
 				C01FFFAF1CC6B3DF00AFD366 /* IACompositeBase */,
 				C01FFFB01CC6B3F000AFD366 /* IACompositeTextEditor */,
-				C08EE0F91CB6DC2E0030FC3E /* Dep-IACompositeEditor */,
 			);
 			name = CompositeTextViews;
 			sourceTree = "<group>";
@@ -353,8 +342,8 @@
 		C031CBC81BDB094800521393 /* IntensityAttributingKit */ = {
 			isa = PBXGroup;
 			children = (
+				C08B43001CD3F92D002F2840 /* DeprecatedFiles */,
 				C040C5071C0E4283007C1685 /* IAKitPreferences.swift */,
-				C002E1EF1CB303AD008E78A1 /* SimpleTextViews */,
 				C002E1F01CB303F5008E78A1 /* CompositeTextViews */,
 				C002E1F11CB334B1008E78A1 /* IATextRange.swift */,
 				C0479E631CBED6D10032A5C6 /* ThinTextView.swift */,
@@ -385,7 +374,6 @@
 		C031CBEC1BDB097E00521393 /* IAString And Transformers */ = {
 			isa = PBXGroup;
 			children = (
-				C00E947B1C5BF9D400551D39 /* Obsolete */,
 				C06B1D571BF15AB5009F427A /* Transformers */,
 				C01839F71C615FE80009316E /* IAString */,
 				C00E947A1C5BF9A500551D39 /* IAStringDataStructures */,
@@ -474,6 +462,18 @@
 				C0D4474B1BE82381003204E7 /* ImageAssets.xcassets */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C08B43001CD3F92D002F2840 /* DeprecatedFiles */ = {
+			isa = PBXGroup;
+			children = (
+				C00E947B1C5BF9D400551D39 /* Obsolete */,
+				C031CBFF1BDD902000521393 /* IATextView.swift */,
+				C01FFFA71CC6A9ED00AFD366 /* lastIACTV.swift */,
+				C08EE0F91CB6DC2E0030FC3E /* Dep-IACompositeEditor */,
+				C0F42CF91C5FE10F00FA7BB0 /* IATextEditor */,
+			);
+			name = DeprecatedFiles;
 			sourceTree = "<group>";
 		};
 		C08EE0F91CB6DC2E0030FC3E /* Dep-IACompositeEditor */ = {

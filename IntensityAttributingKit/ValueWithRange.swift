@@ -6,7 +6,7 @@
 //  Copyright © 2015 McKeeMaKer. All rights reserved.
 //
 
-import Foundation
+//import Foundation
 
 /*
 ///Functions similarly to an NSRange except this struct also contains a value(Any type) associated with the range. This also includes functions to convert to or from JSON ready arrays
