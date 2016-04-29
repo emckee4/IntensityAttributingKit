@@ -196,7 +196,7 @@ public class IAString {
         self.length = self.text.utf16.count
         self.intensities = Array<Int>(count:self.length,repeatedValue:intensity)
         self.baseAttributes = CollapsingArray.init(repeatedValue: attributes, count: self.length)
-        self.baseOptions = IAKitPreferences.iaStringDefaultBaseOptions
+        self.baseOptions = baseOptions
     }
     
     ///Initializes an empty IAString with default options
@@ -238,5 +238,14 @@ public class IAString {
         }
         self.baseOptions = baseOptions
         guard length == self.baseAttributes.count && length == self.intensities.count && self.attachments.lastLoc <= length else {return nil}
+    }
+    
+    func urlAtIndex(index:Int)->(url:NSURL, urlRange:Range<Int>)?{
+        if let rvpIndex = links.indexOf({$0.range.contains(index)}){
+            let rvp = links[rvpIndex] 
+            return (url:rvp.value, urlRange:rvp.range)
+        } else {
+            return nil
+        }
     }
 }

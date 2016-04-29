@@ -11,8 +11,10 @@ import UIKit
 final class IASelectionView: UIView {
 
 
-    private(set) var selectionRects:[CGRect] = []
-    private(set) var caretPosition:CGRect?
+    //private(set) var selectionRects:[CGRect] = []
+    private(set) var selectionRects:[IATextSelectionRect] = []
+    private(set) var caretRect:CGRect?
+    
     
     var selectionColor:UIColor = UIColor.cyanColor().colorWithAlphaComponent(0.3)
     var caretBlinks = true {
@@ -25,11 +27,11 @@ final class IASelectionView: UIView {
     
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
-        guard !selectionRects.isEmpty || caretPosition != nil else {return}
-        if selectionRects.isEmpty && caretPosition != nil{
+        guard !selectionRects.isEmpty || caretRect != nil else {return}
+        if selectionRects.isEmpty && caretRect != nil{
             //draw caret
             selectionColor.setFill()
-            UIRectFill(caretPosition!)
+            UIRectFill(caretRect!)
             if caretBlinks {
                 self.layer.addAnimation(blinkAnimation, forKey: "opacity")
             } else {
@@ -40,7 +42,7 @@ final class IASelectionView: UIView {
             self.layer.removeAnimationForKey("opacity")
             selectionColor.setFill()
             for sr in selectionRects {
-                UIRectFill(sr)
+                UIRectFill(sr.rect)
             }
         }
     }
@@ -52,23 +54,48 @@ final class IASelectionView: UIView {
         caretBlink.repeatCount = 99999
         caretBlink.duration = 0.75
         caretBlink.autoreverses = true
+        return caretBlink
     }()
     
-    ///Use this to update selectionRects and caretPosition. This may mark the entire view as hidden if nothing is selected or unhide itself if something is selected.
-    func updateSelections(selectionRects:[CGRect], caretPosition:CGRect?){
-        self.selectionRects = selectionRects
-        self.caretPosition = caretPosition
-        if selectionRects.isEmpty && caretPosition == nil {
+    ///Use this to update selectionRects and caretRect. This may mark the entire view as hidden if nothing is selected or unhide itself if something is selected.
+    func updateSelections(rawSelectionRects:[CGRect], caretRect:CGRect?, markEnds:Bool){
+        self.selectionRects = IATextSelectionRect.generateSelectionArray(rawSelectionRects, markEnds:markEnds)
+        self.caretRect = caretRect
+        if selectionRects.isEmpty && caretRect == nil {
             self.hidden = true
         } else {
             self.hidden = false
+            self.setNeedsDisplay()
+        }
+    }
+
+    ///If called without parameters then this will clear and hide the selectionView
+    func updateSelections(selectionRects:[IATextSelectionRect] = [], caretRect:CGRect? = nil){
+        self.selectionRects = selectionRects
+        self.caretRect = caretRect
+        if selectionRects.isEmpty && caretRect == nil {
+            self.hidden = true
+        } else {
+            self.hidden = false
+            self.setNeedsDisplay()
+        }
+    }
+    
+    func hideCursor(){
+        if self.caretRect != nil {
+            caretRect = nil
+            if selectionRects.isEmpty {
+                self.hidden = true
+            } else {
+                self.setNeedsDisplay()
+            }
         }
     }
     
     ///clears selection rects, caret, and hides
     func clearSelection(){
         selectionRects = []
-        caretPosition = nil
+        caretRect = nil
         layer.removeAnimationForKey("opaciy")
         self.hidden = true
     }

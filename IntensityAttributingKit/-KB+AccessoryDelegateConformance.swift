@@ -12,15 +12,15 @@ import Foundation
 
 
 ///IAKeyboardDelegate implementation
-extension IACompositeTextEditor:IAKeyboardDelegate {
-    
-    func iaKeyboard(iaKeyboard:IAKeyboard, insertTextAtCursor text: String, intensity: Int) {
-        guard let range = selectedRange else {return}
-        let rep = IAString(text: text, intensity: intensity, attributes: self.baseAttributes)
-        replaceIAStringRange(rep, range: range)
-        iaKeyboard.autoCapsIfNeeded()
-    }
-    
+//extension IACompositeTextEditor:IAKeyboardDelegate {
+//    
+//    func iaKeyboard(iaKeyboard:IAKeyboard, insertTextAtCursor text: String, intensity: Int) {
+//        guard let range = selectedRange else {return}
+//        let rep = IAString(text: text, intensity: intensity, attributes: self.baseAttributes)
+//        replaceIAStringRange(rep, range: range)
+//        iaKeyboard.autoCapsIfNeeded()
+//    }
+//    
 //    func updateSuggestionsBar(){
 //        //guard text != " " else {return} //handle space
 //        rangeForSuggestionReplacement = nil
@@ -116,84 +116,84 @@ extension IACompositeTextEditor:IAKeyboardDelegate {
 //    }
     
     
-}
+//}
 
 
 
 
 ///IAAccessoryDelegate implementation
-extension IACompositeTextEditor: IAAccessoryDelegate {
-    
-    func accessoryKeyboardChangeButtonPressed(accessory:IAAccessoryVC!){
-        swapKB()
-    }
-    
-    //func defaultIntensityUpdated(withValue value:Float)
-    func accessoryOptionButtonPressed(accessory:IAAccessoryVC!){
-        guard editorDelegate != nil else {return}
-        let optionsVC = IAKitSettingsTableViewController()
-        let modalContainer = ModalContainerViewController()
-        modalContainer.addChildViewController(optionsVC)
-        modalContainer.dismissalCompletionBlock = {self.becomeFirstResponder()}
-        editorDelegate?.iaTextEditorRequestsPresentation(self, shouldPresentVC: modalContainer)
-    }
-    
-//    func requestTransformerChange(accessory:IAAccessoryVC!, toTransformerWithName name:String){
-//        guard let newTransformer = IntensityTransformers(rawValue: name) else {return}
-//        accessory.setTransformKeyForScheme(withName: newTransformer.rawValue)
-//        guard newTransformer != iaString.baseOptions.renderScheme else {return}
-//        iaString.baseOptions.renderScheme = newTransformer
-//        rerenderIAString()
+//extension IACompositeTextEditor: IAAccessoryDelegate {
+//    
+//    func accessoryKeyboardChangeButtonPressed(accessory:IAAccessoryVC!){
+//        swapKB()
 //    }
-    func accessoryRequestsTransformerChange(accessory: IAAccessoryVC!, toTransformer: IntensityTransformers) -> Bool {
-        if toTransformer != iaString.baseOptions.renderScheme {
-            iaString.baseOptions.renderScheme = toTransformer
-            rerenderIAString()
-        }
-        return true
-    }
-    
-//    //weak var presentingVC:UIViewController? {get}
-//    func requestPickerLaunch(){
-//        //TODO:move logic from IAAccessory to here. Call The editor's delegate to offer presentation of the picker
+//    
+//    //func defaultIntensityUpdated(withValue value:Float)
+//    func accessoryOptionButtonPressed(accessory:IAAccessoryVC!){
+//        guard editorDelegate != nil else {return}
+//        let optionsVC = IAKitSettingsTableViewController()
+//        let modalContainer = ModalContainerViewController()
+//        modalContainer.addChildViewController(optionsVC)
+//        modalContainer.dismissalCompletionBlock = {self.becomeFirstResponder()}
+//        editorDelegate?.iaTextEditorRequestsPresentation(self, shouldPresentVC: modalContainer)
+//    }
+//    
+////    func requestTransformerChange(accessory:IAAccessoryVC!, toTransformerWithName name:String){
+////        guard let newTransformer = IntensityTransformers(rawValue: name) else {return}
+////        accessory.setTransformKeyForScheme(withName: newTransformer.rawValue)
+////        guard newTransformer != iaString.baseOptions.renderScheme else {return}
+////        iaString.baseOptions.renderScheme = newTransformer
+////        rerenderIAString()
+////    }
+//    func accessoryRequestsTransformerChange(accessory: IAAccessoryVC!, toTransformer: IntensityTransformers) -> Bool {
+//        if toTransformer != iaString.baseOptions.renderScheme {
+//            iaString.baseOptions.renderScheme = toTransformer
+//            rerenderIAString()
+//        }
+//        return true
+//    }
+//    
+////    //weak var presentingVC:UIViewController? {get}
+////    func requestPickerLaunch(){
+////        //TODO:move logic from IAAccessory to here. Call The editor's delegate to offer presentation of the picker
+////        launchPicker()
+////    }
+//    func accessoryRequestsPickerLaunch(accessory: IAAccessoryVC!) {
 //        launchPicker()
 //    }
-    func accessoryRequestsPickerLaunch(accessory: IAAccessoryVC!) {
-        launchPicker()
-    }
-    
-//    func defaultIntensityUpdated(withValue value:Int){
-//        self.defaultIntensity = value
-//        ///modify the intensities in the selected range
-//        if self.selectedRange.length > 0 {
-//            self.iaString!.intensities.replaceRange(self.selectedRange.toRange()!, with: Array(count: self.selectedRange.length, repeatedValue: value))
-//            let nsReplacement = self.iaString!.iaSubstringFromRange(self.selectedRange.toRange()!).convertToNSAttributedString()
-//            self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: nsReplacement)
+//    
+////    func defaultIntensityUpdated(withValue value:Int){
+////        self.defaultIntensity = value
+////        ///modify the intensities in the selected range
+////        if self.selectedRange.length > 0 {
+////            self.iaString!.intensities.replaceRange(self.selectedRange.toRange()!, with: Array(count: self.selectedRange.length, repeatedValue: value))
+////            let nsReplacement = self.iaString!.iaSubstringFromRange(self.selectedRange.toRange()!).convertToNSAttributedString()
+////            self.textStorage.replaceCharactersInRange(self.selectedRange, withAttributedString: nsReplacement)
+////        }
+////        
+////    }
+//    func accessoryUpdatedDefaultIntensity(accessory: IAAccessoryVC!, withValue value: Int) {
+//        //case: selection is empty: update current intensity
+//        if self.selectedRange == nil || self.selectedRange!.isEmpty {
+//            currentIntensity = value
+//        } else {
+//            //case: selection is not empty: update ranges intensity
+//            //TODO: case: selection is not empty: update ranges intensity
 //        }
-//        
 //    }
-    func accessoryUpdatedDefaultIntensity(accessory: IAAccessoryVC!, withValue value: Int) {
-        //case: selection is empty: update current intensity
-        if self.selectedRange == nil || self.selectedRange!.isEmpty {
-            currentIntensity = value
-        } else {
-            //case: selection is not empty: update ranges intensity
-            //TODO: case: selection is not empty: update ranges intensity
-        }
-    }
-    
-    func accessoryRequestsSmoothingChange(accessory: IAAccessoryVC!, toValue: IAStringTokenizing) -> Bool {
-        if toValue != self.iaString.baseOptions.preferedSmoothing {
-            self.iaString.baseOptions.preferedSmoothing = toValue
-            rerenderIAString()
-        }
-        return true
-    }
-    
-    func iaKeyboardIsShowing() -> Bool {
-        return self.keyboardIsIAKeyboard ?? false
-    }
-}
+//    
+//    func accessoryRequestsSmoothingChange(accessory: IAAccessoryVC!, toValue: IAStringTokenizing) -> Bool {
+//        if toValue != self.iaString.baseOptions.preferedSmoothing {
+//            self.iaString.baseOptions.preferedSmoothing = toValue
+//            rerenderIAString()
+//        }
+//        return true
+//    }
+//    
+//    func iaKeyboardIsShowing() -> Bool {
+//        return self.keyboardIsIAKeyboard ?? false
+//    }
+//}
 /*
  func accessoryKeyboardChangeButtonPressed(accessory:IAAccessoryVC!)
  

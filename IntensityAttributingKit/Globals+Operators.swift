@@ -23,6 +23,11 @@ import UIKit
 //    static var ReplacementChar:String {return "\u{FFFC}"}
 //}
 
+struct UTITypes {
+    static let PlainText = "public.utf8-plain-text"
+    static let RTFD = "com.apple.flat-rtfd"
+    static let IAStringArchive = "com.mckeemaker.IAStringArchive"
+}
 
 
 

@@ -9,6 +9,8 @@ import UIKit
 
 class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
     
+    static var singleton:IAKeyboard = IAKeyboard(nibName: nil, bundle: nil)
+        
     weak var delegate:IAKeyboardDelegate!
     
     var shiftKeyIsSelected:Bool {

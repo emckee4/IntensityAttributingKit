@@ -228,6 +228,13 @@ extension IAString {
         
     }
     
+    ///Changes the intensity values of all content in the range
+    func setIntensityValueForRange(range:Range<Int>, toValue:Int){
+        let newVal = clamp(toValue, lowerBound: 0, upperBound: 100)
+        for i in range {
+            intensities[i] = newVal
+        }
+    }
     
 }
 

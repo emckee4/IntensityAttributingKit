@@ -10,7 +10,7 @@ import UIKit
 
 
 
-extension IACompositeTextView{
+extension IACompositeBase{
     
     static func generateOpacityAnimation(startAlpha:Float = 0, endAlpha:Float = 1, duration:NSTimeInterval, offset:NSTimeInterval = 0)->CABasicAnimation{
         let anim = CABasicAnimation(keyPath: "opacity")

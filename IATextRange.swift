@@ -25,6 +25,10 @@ public class IATextPosition:UITextPosition, IntegerLiteralConvertible, Comparabl
     public override var description: String {
         return position.description
     }
+    
+    public func positionWithOffset(offset:Int)->IATextPosition{
+        return IATextPosition(self.position + offset)
+    }
 }
 
 @warn_unused_result public func ==(lhs:IATextPosition,rhs:IATextPosition)->Bool {
@@ -46,47 +50,53 @@ public class IATextPosition:UITextPosition, IntegerLiteralConvertible, Comparabl
 
 public class IATextRange:UITextRange{
     
-    let _start:IATextPosition
+    ///iaStart stores the IATextPosition object which is accessed by the start:UITextPosition computed property
+    let iaStart:IATextPosition
     override public var start: UITextPosition {
-        return _start
+        return iaStart
     }
     
-    let _end:IATextPosition
+    ///iaEnd stores the IATextPosition object which is accessed by the end:UITextPosition computed property
+    let iaEnd:IATextPosition
     override public var end:UITextPosition {
-        return _end
+        return iaEnd
     }
     
     override public var empty: Bool {
-        return _start == _end
+        return iaStart == iaEnd
     }
     
     init(start:IATextPosition,end:IATextPosition){
-        self._start = start
-        self._end = end
+        self.iaStart = start
+        self.iaEnd = end
         super.init()
     }
     
     init(range:Range<Int>){
-        self._start = IATextPosition(range.startIndex)
-        self._end = IATextPosition(range.endIndex)
+        self.iaStart = IATextPosition(range.startIndex)
+        self.iaEnd = IATextPosition(range.endIndex)
         super.init()
     }
     
     init(nsrange:NSRange){
-        self._start = IATextPosition(nsrange.location)
-        self._end = IATextPosition(nsrange.location + nsrange.length)
+        self.iaStart = IATextPosition(nsrange.location)
+        self.iaEnd = IATextPosition(nsrange.location + nsrange.length)
         super.init()
     }
     
     func range()->Range<Int>{
-        return _start.position..<_end.position
+        return iaStart.position..<iaEnd.position
     }
     func nsrange()->NSRange{
-        return NSMakeRange(_start.position, _end.position - _start.position)
+        return NSMakeRange(iaStart.position, iaEnd.position - iaStart.position)
     }
 
     public override var description: String {
-        return "IATextRange(\(_start),\(_end))"
+        return "IATextRange(\(iaStart),\(iaEnd))"
+    }
+    
+    func contains(position:IATextPosition)->Bool{
+        return position >= iaStart && position < iaEnd
     }
 }
 

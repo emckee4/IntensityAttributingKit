@@ -10,6 +10,7 @@ import UIKit
 
 class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
+    static var singleton = IAAccessoryVC(nibName:nil, bundle: nil)
     
     var kbSwitchButton:UIButton!
     var cameraButton:UIButton!

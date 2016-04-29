@@ -17,6 +17,7 @@ public struct IAAttachmentArray:CustomStringConvertible, SequenceType {
     var count:Int {return data.count}
     
     init!(data:[LocAttach]){
+        guard !data.isEmpty else {return}
         self.data = data.sort({$0.loc < $1.loc})
         for i in 0..<self.data.count - 1 {
             guard data[i].loc != data[i + 1].loc else {return nil}

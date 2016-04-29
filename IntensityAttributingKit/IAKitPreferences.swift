@@ -10,7 +10,9 @@ import Foundation
 
 
 /**
-IAKitPreferences contains most persisted options that need to be exposed to the outside world, along with an internal NSCache for the IAKeyboard and accessory that dont have any other logical home
+IAKitPreferences contains most persisted options that need to be exposed to the outside world
+ 
+ Formerly: (along with an internal NSCache for the IAKeyboard and accessory that dont have any other logical home)
 */
 public class IAKitPreferences:NSObject {
     
@@ -18,33 +20,43 @@ public class IAKitPreferences:NSObject {
     
     static let forceTouchAvailable = UIScreen.mainScreen().traitCollection.forceTouchCapability == .Available
     
-    //MARK:- Keyboard and accessory caching
-    private static let vcCache = NSCache()
-
+//    //MARK:- Keyboard and accessory caching
+//    private static let vcCache = NSCache()
+//
+//    static var keyboard:IAKeyboard {
+//        if let kb = vcCache.objectForKey("iaKB") as? IAKeyboard {
+//            return kb
+//        } else {
+//            let kb = IAKeyboard(nibName:nil, bundle: nil)
+//            vcCache.setObject(kb, forKey: "iaKB")
+//            return kb
+//        }
+//    }
+//    
+//    static var accessory:IAAccessoryVC {
+//        if let acc = vcCache.objectForKey("iaAccessory") as? IAAccessoryVC {
+//            return acc
+//        } else {
+//            let acc = IAAccessoryVC(nibName:nil, bundle: nil)
+//            vcCache.setObject(acc, forKey: "iaAccessory")
+//            return acc
+//        }
+//    }
+    
     static var keyboard:IAKeyboard {
-        if let kb = vcCache.objectForKey("iaKB") as? IAKeyboard {
-            return kb
-        } else {
-            let kb = IAKeyboard(nibName:nil, bundle: nil)
-            vcCache.setObject(kb, forKey: "iaKB")
-            return kb
-        }
+        return IAKeyboard.singleton
     }
     
     static var accessory:IAAccessoryVC {
-        if let acc = vcCache.objectForKey("iaAccessory") as? IAAccessoryVC {
-            return acc
-        } else {
-            let acc = IAAccessoryVC(nibName:nil, bundle: nil)
-            vcCache.setObject(acc, forKey: "iaAccessory")
-            return acc
-        }
+        return IAAccessoryVC.singleton
     }
     
     
-    ///flushes the cache containing the keyboard and accessory so that they'll be recreated on the next access request
+//    ///flushes the cache containing the keyboard and accessory so that they'll be recreated on the next access request
+    //reloads the keyboard and accessory singletons.
     static func resetKBAndAccessory(){
-        vcCache.removeAllObjects()
+        IAKeyboard.singleton = IAKeyboard(nibName: nil, bundle: nil)
+        IAAccessoryVC.singleton = IAAccessoryVC(nibName:nil, bundle: nil)
     }
     
     private static let iakPrefix = "com.McKeeMaKer.IntensityAttributingKit.IAKitPreferences."

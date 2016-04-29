@@ -27,7 +27,8 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
         self.imageChosen(nil)
     }
     
-    func launchPicker(){
+    func launchPhotoPicker(){
+        guard self.delegate?.iaTextEditorRequestsPresentationOfContentPicker(self) == true else {return}
         if UIImagePickerController.isCameraDeviceAvailable(.Rear) {
             let alert = UIAlertController(title: "Insert Photo", message: "Choose source", preferredStyle: .ActionSheet)
             alert.addAction(UIAlertAction(title: "Photo Library", style: .Default, handler: { (action) -> Void in
@@ -36,7 +37,7 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
                 imagePicker.allowsEditing = true
                 imagePicker.delegate = self
                 imagePicker.sourceType = .SavedPhotosAlbum
-                self.editorDelegate?.iaTextEditorRequestsPresentation(self, shouldPresentVC: imagePicker)
+                self.window?.rootViewController?.presentViewController(imagePicker, animated: true, completion: nil)
             }))
             alert.addAction(UIAlertAction(title: "Camera", style: .Default, handler: { (action) -> Void in
                 guard  NSThread.isMainThread() else {fatalError()}
@@ -44,11 +45,10 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
                 imagePicker.allowsEditing = true
                 imagePicker.delegate = self
                 imagePicker.sourceType = .Camera
-                self.editorDelegate?.iaTextEditorRequestsPresentation(self, shouldPresentVC: imagePicker)
+                self.window?.rootViewController?.presentViewController(imagePicker, animated: true, completion: nil)
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
-            //self.delegate?.presentingVC?.presentViewController(alert, animated: true, completion: nil)
-            self.editorDelegate?.iaTextEditorRequestsPresentation(self, shouldPresentVC: alert)
+            self.window?.rootViewController?.presentViewController(alert, animated: true, completion: nil)
         } else {
             guard  NSThread.isMainThread() else {fatalError()}
             let imagePicker = UIImagePickerController()
@@ -56,7 +56,7 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
             imagePicker.delegate = self
             imagePicker.sourceType = .SavedPhotosAlbum
             imagePicker.sourceType = .SavedPhotosAlbum
-            self.editorDelegate?.iaTextEditorRequestsPresentation(self, shouldPresentVC: imagePicker)
+            self.window?.rootViewController?.presentViewController(imagePicker, animated: true, completion: nil)
         }
     }
     

@@ -59,7 +59,7 @@ public struct IABaseAttributes:OptionSetTypeWithIntegerRawValue{
 
 
 public protocol OptionSetTypeWithIntegerRawValue:OptionSetType, Hashable {
-    typealias RawValue = Int
+    associatedtype RawValue = Int
     var rawValue:Int {get set}
     var hashValue:Int {get}
     init(rawValue:Int)

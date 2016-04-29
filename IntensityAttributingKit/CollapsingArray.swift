@@ -10,8 +10,8 @@
 
 ///Data structure protocol designed to represent series of values which include long stretches of unchanges values
 protocol ExclusiveRangeMappingProtocol:MutableCollectionType, RangeReplaceableCollectionType, CustomStringConvertible {
-    typealias Element:Equatable
-    typealias Index:RandomAccessIndexType,Hashable,IntegerLiteralConvertible
+    associatedtype Element:Equatable
+    associatedtype Index:RandomAccessIndexType,Hashable,IntegerLiteralConvertible
     var data:[RangeValuePair<Element>] {get set}
     
     var startIndex:Index {get}

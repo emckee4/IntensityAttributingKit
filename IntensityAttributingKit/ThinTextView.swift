@@ -86,6 +86,17 @@ public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDelegate
         //if animating opacity then we don't want to draw selection rects on the same layer
     }
     
+    ///Convenience function which returns the character index of the character at the provided point. If the point is not in a boundingRect of a glyph then this returns nil. The point is relative to this view.
+    func characterIndexAtPoint(point:CGPoint)->Int?{
+        let glyphIndex = layoutManager.glyphIndexForPoint(point, inTextContainer: self.textContainer)
+        let boundingRect = layoutManager.boundingRectForGlyphRange(NSMakeRange(glyphIndex, 1), inTextContainer: self.textContainer)
+        if boundingRect.contains(point) {
+            return layoutManager.characterIndexForGlyphAtIndex(glyphIndex)
+        } else {
+            return nil
+        }
+    }
+    
     
 }
 
