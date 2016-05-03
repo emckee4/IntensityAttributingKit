@@ -13,14 +13,27 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
     
     weak var delegate:IACompositeTextEditorDelegate?
     
-    lazy var baseAttributes:IABaseAttributes = {return IABaseAttributes(size:IAKitPreferences.defaultTextSize)}()
-    var currentIntensity:Int = IAKitPreferences.defaultIntensity
+    ///The baseAttributes hold the attirbutes for the selected text or text at the insertion point
+    lazy var _baseAttributes:IABaseAttributes = {return IABaseAttributes(size:IAKitPreferences.defaultTextSize)}()
+    var baseAttributes:IABaseAttributes {
+        get{return _baseAttributes}
+        set{if _baseAttributes != newValue && selectedRange?.count > 0 {defer{attributesUpdated()}}
+            _baseAttributes = newValue
+            }
+    }
+    var _currentIntensity:Int = IAKitPreferences.defaultIntensity
+    var currentIntensity:Int {
+        get{return _currentIntensity}
+        set{if currentIntensity != newValue && selectedRange?.count > 0 {defer{attributesUpdated()}}
+            _currentIntensity = newValue
+            }
+    }
     
     var _inputVC:UIInputViewController?
     
     
     
-    var selectedRange:Range<Int>?
+    //var selectedRange:Range<Int>?
     var markedRange:Range<Int>?
     
     //TODO: Gesture recognizers
@@ -63,7 +76,7 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
             } else {
                 print("selectedTextRange received non IATextRange object")
             }
-            updateSelectionLayer() //FIXME: This may be better off as a check for change
+            //updateSelectionLayer() //FIXME: This may be better off as a check for change
         }
     }
     
@@ -73,7 +86,7 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
         }
         set {
             selectedRange = newValue?.range()
-            updateSelectionLayer() //FIXME: This may be better off as a check for change
+            //updateSelectionLayer() //FIXME: This may be better off as a check for change
         }
     }
     
@@ -98,11 +111,21 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
     
     
     
+    public override func setIAString(iaString: IAString!) {
+        self.selectedRange = nil
+        self.markedRange = nil
+        super.setIAString(iaString)
+    }
     
     
+    override func setupIATV(){
+        super.setupIATV()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.handleLifecycleChange(_:)), name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication())
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.handleLifecycleChange(_:)), name: UIApplicationWillResignActiveNotification, object: UIApplication.sharedApplication())
+    }
     
     
-    
+    deinit{NSNotificationCenter.defaultCenter().removeObserver(self)}
     
     //TODO:Copy/paste/ touch based selection
     
@@ -110,8 +133,8 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
     
     //MARK:-base editing functions
     
-    ///This function performs a range replace on the iaString and updates affected portions ofthe provided textStorage with the new values. This can be complicated because a replaceRange on an IAString with a multi-character length tokenizer (ie anything but character length) can affect a longer range of the textStorage than is replaced in the IAString. This function tries to avoid modifying longer stretches than is necessary.
-    internal func replaceIAStringRange(replacement:IAString, range:Range<Int>){
+    ///This function performs a range replace on the iaString and updates affected portions ofthe provided textStorage with the new values. This can be complicated because a replaceRange on an IAString with a multi-character length tokenizer (ie anything but character length) can affect a longer range of the textStorage than is replaced in the IAString. This function tries to avoid modifying longer stretches than is necessary. If closeSelectedRange is true then the selectedRange will become the insertion point at the end of the newly updated range. If it is false then the selectedRange will be the newly inserted range.
+    internal func replaceIAStringRange(replacement:IAString, range:Range<Int>, closeSelectedRange:Bool = true){
         guard replacement.length > 0 || !range.isEmpty else {return}
         //guard replacement.length > 0 else {deleteIAStringRange(range); return}
         
@@ -140,8 +163,14 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
             repositionImageViews()
         }
         //update selection:
-        let newTextPos = positionFromPosition(beginningOfDocument, offset: (range.startIndex + replacement.length) )!
-        selectedTextRange = textRangeFromPosition(newTextPos, toPosition: newTextPos)
+        
+        if closeSelectedRange {
+            let newTextPos = positionFromPosition(beginningOfDocument, offset: (range.startIndex + replacement.length) )!
+            selectedTextRange = textRangeFromPosition(newTextPos, toPosition: newTextPos)
+        } else {
+            selectedRange = modRange
+        }
+
         
         inputDelegate?.textDidChange(self)
     }
@@ -195,15 +224,112 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
         self.iaString.baseOptions.preferedSmoothing = IAKitPreferences.defaultTokenizer
         self.iaString.baseOptions.renderScheme = IAKitPreferences.defaultTransformer
     }
- 
-    ///Updates the selection layer if needed.
-    func updateSelectionLayer(){
+
+    
+    public override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
+        if self.selectedRange != nil && (action == #selector(NSObject.paste(_:)) || action == #selector(NSObject.cut(_:)) ) {
+            return true
+        }
+        return super.canPerformAction(action, withSender: sender)
+    }
+    
+    public override func paste(sender: AnyObject?) {
+        guard selectedRange != nil else {return}
+        let pb = UIPasteboard.generalPasteboard()
+        var newIA:IAString?
+        guard let lastItem = pb.items.last as? [String:AnyObject] else {return}
+        if let iaData = lastItem[UTITypes.IAStringArchive] as? NSData {
+            newIA = IAStringArchive.unarchive(iaData)
+        }
+        if newIA == nil {
+            if let plainText = lastItem[UTITypes.PlainText] as? String {
+                newIA = IAString(text: plainText, intensity: currentIntensity, attributes: baseAttributes)
+            } else if let image = pb.image {
+                newIA = IAString()
+                let attachment = IATextAttachment()
+                attachment.image = image
+                newIA!.insertAttachmentAtPosition(attachment, position: 0, intensity: currentIntensity, attributes: baseAttributes)
+            } else if let url = pb.URL {
+                newIA = IAString(text: String(url), intensity: currentIntensity, attributes: baseAttributes)
+            }
+        }
+        guard newIA != nil else {return}
+
+        replaceIAStringRange(newIA!, range: selectedRange!)
+    }
+    
+    
+    public override func delete(sender: AnyObject?) {
+        guard selectedRange?.count > 0 else {return}
+        deleteIAStringRange(selectedRange!)
+    }
+    
+    public override func cut(sender: AnyObject?) {
+        guard selectedRange?.count > 0 else {return}
+        self.copy(sender)
+        deleteIAStringRange(selectedRange!)
+    }
+    
+    ///Updates the baseAttributes and currentIntensity to match the averages of the range or position behind the insertion point. Triggers updateSelectionLayer(). This is automatically called in a didSet on selectionRange but can be avoided by directly modifying _selectedRange
+    override func selectedRangeChanged() {
+        defer{updateSelectionLayer()}
         
+        //update current intensity and baseAttributes
+        if _selectedRange != nil {
+            if _selectedRange!.isEmpty {
+                if _selectedRange!.startIndex == 0 {
+                    if iaString.length > 0 {
+                        //use the attributes of whatever follows else dont change attributes
+                        _baseAttributes = iaString.baseAttributes[0]
+                        _currentIntensity = iaString.intensities[0]
+                    }
+                    return
+                } else {
+                    //if our empty selection range is not at zero then we use the values at the previous index
+                    _baseAttributes = iaString.baseAttributes[_selectedRange!.startIndex - 1]
+                    _currentIntensity = iaString.intensities[_selectedRange!.startIndex - 1]
+                }
+            } else {
+                //selected range is not empty, so baseAttributes and intensities are derived from the _selectedRange. We update the stored intensity and base values without
+                _currentIntensity = iaString.getAverageIntensityForRange(_selectedRange!)
+                _baseAttributes = iaString.getBaseAttributesForRange(_selectedRange!)
+            }
+        }
+    }
+    
+    ///Applies changes in attributes to a selected range's text.
+    func attributesUpdated(){
+        if selectedRange?.count > 0 {
+            let subString = iaString.iaSubstringFromRange(selectedRange!)
+            subString.setIntensityValueForRange(selectedRange!, toValue: currentIntensity)
+            subString.baseAttributes.setValueForRange(baseAttributes, range: selectedRange!)
+            replaceIAStringRange(subString, range: selectedRange!, closeSelectedRange: false)
+        }
     }
 
     
+    public override func toggleBoldface(sender: AnyObject?) {
+        self.baseAttributes.bold = !self.baseAttributes.bold
+    }
     
+    public override func toggleItalics(sender: AnyObject?) {
+        self.baseAttributes.italic = !self.baseAttributes.italic
+    }
     
+    public override func toggleUnderline(sender: AnyObject?) {
+        self.baseAttributes.underline = !self.baseAttributes.underline
+    }
+    
+    @objc private func handleLifecycleChange(notification:NSNotification!){
+        guard let notiName = notification?.name else {return}
+        if notiName == UIApplicationWillEnterForegroundNotification && self.isFirstResponder(){
+            self.prepareToBecomeFirstResponder()
+        } else if notiName == UIApplicationWillResignActiveNotification {
+            RawIntensity.touchInterpreter.deactivate()
+        }
+    }
+    
+
 }
 
 

@@ -24,9 +24,6 @@ extension IAString {
         newIA.baseAttributes = self.baseAttributes.subRange(range)
         //links are ignored
         newIA.attachments = self.attachments.reindexedSubrange(range)
-//        newIA.renderScheme = self.renderScheme
-//        newIA.renderOptions = self.renderOptions
-//        newIA.preferedSmoothing = self.preferedSmoothing
         newIA.baseOptions = self.baseOptions
         return newIA
     }
@@ -185,7 +182,7 @@ extension IAString {
     }
     
     
-    ///Returns the value for the range if it's constant over that range, or nil if otherwise
+    ///Returns the value for the range if it's constant over that range, or nil if otherwise. Size always returns an average.
     func getAttributeValueForRange(attrName:IAAttributeName,range:Range<Int>)->AnyObject?{
         switch attrName {
         case .Intensity:
@@ -195,11 +192,13 @@ extension IAString {
             }
             return startVal
         case .Size:
-            let value = self.baseAttributes[range.startIndex].size
-            for (_, rvpVal) in self.baseAttributes.rvpsCoveringRange(range) {
-                guard rvpVal.size == value else {return nil}
+            //let value = self.baseAttributes[range.startIndex].size
+            var sum:Int = 0
+            for (range, rvpVal) in self.baseAttributes.rvpsCoveringRange(range) {
+                //guard rvpVal.size == value else {return nil}
+                sum += range.count * rvpVal.size
             }
-            return value
+            return sum / range.count
         case .Bold:
             let value = self.baseAttributes[range.startIndex].bold
             for (_, rvpVal) in self.baseAttributes.rvpsCoveringRange(range) {
@@ -234,6 +233,28 @@ extension IAString {
         for i in range {
             intensities[i] = newVal
         }
+    }
+    
+    func getAverageIntensityForRange(range:Range<Int>)->Int!{
+        guard !range.isEmpty else {return nil}
+        return intensities[range].reduce(0, combine: +) / range.count
+    }
+    
+    ///Returns an ~average baseAttributes value for the range.
+    func getBaseAttributesForRange(range:Range<Int>)->IABaseAttributes!{
+        guard !range.isEmpty else {return nil}
+        let rvpsForRange = baseAttributes.rvpsCoveringRange(range)
+        if rvpsForRange.count == 1 {
+            return rvpsForRange.first!.value
+        } else {
+            var newAtts = IABaseAttributes(size:(self.getAttributeValueForRange(.Size, range: range) as! Int))
+            newAtts.bold = (getAttributeValueForRange(.Bold, range: range) as? Bool) ?? false
+            newAtts.italic = (getAttributeValueForRange(.Italic, range: range) as? Bool) ?? false
+            newAtts.underline = (getAttributeValueForRange(.Underline, range: range) as? Bool) ?? false
+            newAtts.strikethrough = (getAttributeValueForRange(.Strikethrough, range: range) as? Bool) ?? false
+            return newAtts
+        }
+        
     }
     
 }

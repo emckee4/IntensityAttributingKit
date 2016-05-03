@@ -79,7 +79,7 @@ public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDelegate
     }
     
     public func layoutManagerDidInvalidateLayout(sender: NSLayoutManager) {
-        
+        print("ThinTextView: layoutManagerDidInvalidateLayout called but unimplemented")
     }
     
     public func textStorage(textStorage: NSTextStorage, willProcessEditing editedMask: NSTextStorageEditActions, range editedRange: NSRange, changeInLength delta: Int) {
@@ -95,6 +95,15 @@ public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDelegate
         } else {
             return nil
         }
+    }
+    
+    public override func systemLayoutSizeFittingSize(targetSize: CGSize) -> CGSize {
+        print("ThinTextView: warning: systemLayoutSizeFittingSize may not be properly implemented. Consider preventing layoutmanager from redrawing during this interval (possibly via the delegate?)")
+        let currentTCSize = textContainer.size
+        textContainer.size = targetSize
+        let result = layoutManager.usedRectForTextContainer(textContainer).size
+        textContainer.size = currentTCSize
+        return result
     }
     
     

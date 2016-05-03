@@ -14,7 +14,7 @@ public class IACompositeTextView: IACompositeBase {
     
     var tapGestureRecognizer:UITapGestureRecognizer!
     
-    private(set) public var selected:Bool = false
+    //private(set) public var selected:Bool = false
     
 //    var overridingTransformer:IntensityTransformers? = IAKitPreferences.overridesTransformer
 //    var overridingSmoother:IAStringTokenizing? = IAKitPreferences.overridesTokenizer
@@ -28,7 +28,15 @@ public class IACompositeTextView: IACompositeBase {
         
     }
     
-    
+    public func setIAString(iaString:IAString!, withCacheIdentifier:String? = nil){
+        if withCacheIdentifier == nil {
+            super.setIAString(iaString)
+        } else {
+            print("setIAString using cache identifier not yet implemented")
+            
+            
+        }
+    }
     
     
     
@@ -72,47 +80,47 @@ public class IACompositeTextView: IACompositeBase {
     }
     
     
-    public override func selectAll(sender: AnyObject?) {
-        guard selectable == true else {return}
-        self.selected = true
-        self.becomeFirstResponder()
-        //use entire view as selection rect:
-        selectionView.updateSelections([self.bounds], caretRect: nil, markEnds: false)
-        // present menu
-        if sender is UITapGestureRecognizer {
-            let targetRect = CGRectMake(self.bounds.midX, self.bounds.midY, 10, 10)
-            let menu = UIMenuController.sharedMenuController()
-            menu.update()
-            menu.setTargetRect(targetRect, inView: selectionView)
-            menu.setMenuVisible(true, animated: true)
-        }
-    }
-    
-    func deselect(){
-        selected = false
-        selectionView.clearSelection()
-        UIMenuController.sharedMenuController().setMenuVisible(false, animated: true)
-    }
-    
-    public override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
-        if action == #selector(NSObject.copy(_:)) && self.iaString?.length > 0{
-            return true
-        }
-        return super.canPerformAction(action, withSender: sender)
-    }
-    
-    public override func copy(sender: AnyObject?) {
-        UIMenuController.sharedMenuController().setMenuVisible(false, animated: true)
-        guard iaString != nil && iaString.length > 0 else {return}
-        
-        let pb = UIPasteboard.generalPasteboard()
-        let copiedText = iaString.text
-        let iaArchive = IAStringArchive.archive(iaString.copy(true))
-        var pbItem:[String:AnyObject] = [:]
-        pbItem[UTITypes.PlainText] = copiedText
-        pbItem[UTITypes.IAStringArchive] = iaArchive
-        pb.addItems([pbItem])
-    }
+//    public override func selectAll(sender: AnyObject?) {
+//        guard selectable == true else {return}
+//        self.selected = true
+//        self.becomeFirstResponder()
+//        //use entire view as selection rect:
+//        selectionView.updateSelections([self.bounds], caretRect: nil, markEnds: false)
+//        // present menu
+//        if sender is UITapGestureRecognizer {
+//            let targetRect = CGRectMake(self.bounds.midX, self.bounds.midY, 10, 10)
+//            let menu = UIMenuController.sharedMenuController()
+//            menu.update()
+//            menu.setTargetRect(targetRect, inView: selectionView)
+//            menu.setMenuVisible(true, animated: true)
+//        }
+//    }
+//    
+//    func deselect(){
+//        selected = false
+//        selectionView.clearSelection()
+//        UIMenuController.sharedMenuController().setMenuVisible(false, animated: true)
+//    }
+//    
+//    public override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
+//        if action == #selector(NSObject.copy(_:)) && self.iaString?.length > 0{
+//            return true
+//        }
+//        return super.canPerformAction(action, withSender: sender)
+//    }
+//    
+//    public override func copy(sender: AnyObject?) {
+//        UIMenuController.sharedMenuController().setMenuVisible(false, animated: true)
+//        guard iaString != nil && iaString.length > 0 else {return}
+//        
+//        let pb = UIPasteboard.generalPasteboard()
+//        let copiedText = iaString.text
+//        let iaArchive = IAStringArchive.archive(iaString.copy(true))
+//        var pbItem:[String:AnyObject] = [:]
+//        pbItem[UTITypes.PlainText] = copiedText
+//        pbItem[UTITypes.IAStringArchive] = iaArchive
+//        pb.addItems([pbItem])
+//    }
     
 }
 

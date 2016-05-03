@@ -26,7 +26,18 @@ public class IACompositeBase:UIView {
     //var tapGestureRecognizer:UITapGestureRecognizer!
     
     public var selectable:Bool = true
-    //private(set) public var selected:Bool = false
+    
+    ///backing store for selectedRange. We use this so that we can change the selectedRange without calling an update when needed.
+    var _selectedRange:Range<Int>?
+    internal(set) public var selectedRange:Range<Int>? {
+        get{return _selectedRange}
+        set{
+            if _selectedRange != newValue {
+                defer{selectedRangeChanged()}
+            }
+            _selectedRange = newValue
+        }
+    }
     
     public var isAnimating:Bool {
         return (topTV.layer.animationForKey("opacity") != nil) || (bottomTV.layer.animationForKey("opacity") != nil)
@@ -100,7 +111,7 @@ public class IACompositeBase:UIView {
     
     
     ///Prefered method for setting stored IAText for display. By default this assumes text has been prerendered and only needs bounds set on its images. If needsRendering is set as true then this will render according to whatever its included schemeName is.
-    public func setIAString(iaString:IAString!, withCacheIdentifier:String? = nil){
+    public func setIAString(iaString:IAString!){
         if iaString != nil {
             self.iaString = iaString
         } else {
@@ -181,13 +192,20 @@ public class IACompositeBase:UIView {
         }
     }
     
+//    ///The intrinsicContentSize incorporates insets if the topTV ics is non-zero
+//    public override func intrinsicContentSize() -> CGSize {
+//        let ics = topTV.intrinsicContentSize()
+//        if ics == CGSizeZero {return CGSizeZero }
+//        return CGSize(width: ics.width + textContainerInset.left + textContainerInset.right, height: ics.height + textContainerInset.top + textContainerInset.bottom)
+//    }
     
-    public override func intrinsicContentSize() -> CGSize {
-        return topTV.intrinsicContentSize()
-    }
-    
+    ///The systemLayoutSizeFittingSize doesn't incorporate insets if the topTV ics is non-zero
     public override func systemLayoutSizeFittingSize(targetSize: CGSize) -> CGSize {
-        return topTV.systemLayoutSizeFittingSize(targetSize)
+        let insetHor = textContainerInset.left + textContainerInset.right
+        let insetVert = textContainerInset.top + textContainerInset.bottom
+        let sizeMinusInsets = CGSizeMake(targetSize.width - insetHor, targetSize.height - insetVert)
+        let topTVSize = topTV.systemLayoutSizeFittingSize(sizeMinusInsets)
+        return CGSizeMake(topTVSize.width + insetHor, topTVSize.height + insetVert)
     }
     
     
@@ -255,9 +273,98 @@ public class IACompositeBase:UIView {
     }
     
 
+    public override func selectAll(sender: AnyObject?) {
+        guard selectable == true else {return}
+        selectedRange = 0..<self.iaString.length
+        self.becomeFirstResponder()
+        // present menu
+        if sender is UITapGestureRecognizer {
+            let targetRect = CGRectMake(self.bounds.midX, self.bounds.midY, 10, 10)
+            let menu = UIMenuController.sharedMenuController()
+            menu.update()
+            menu.setTargetRect(targetRect, inView: selectionView)
+            menu.setMenuVisible(true, animated: true)
+        }
+    }
     
-
+    func deselect(){
+        selectedRange = nil
+        selectionView.clearSelection()
+        UIMenuController.sharedMenuController().setMenuVisible(false, animated: true)
+    }
+    
+    public override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
+        if action == #selector(NSObject.copy(_:)) && self.selectedRange?.count > 0{
+            return true
+        }
+        return super.canPerformAction(action, withSender: sender)
+    }
+    
+    ///Attachments are not being deep copied as is
+    public override func copy(sender: AnyObject?) {
+        UIMenuController.sharedMenuController().setMenuVisible(false, animated: true)
+        guard iaString != nil && selectedRange?.count > 0 && selectedRange?.startIndex >= 0 && selectedRange?.endIndex <= iaString.length else {return}
+        
+        let pb = UIPasteboard.generalPasteboard()
+        let copyOfSelected = iaString.iaSubstringFromRange(selectedRange!)
+        //let copiedText = iaString.text.subStringFromRange(selectedRange!)
+        //let iaArchive = IAStringArchive.archive(iaString.copy(true))
+        let iaArchive = IAStringArchive.archive(copyOfSelected)
+        var pbItem:[String:AnyObject] = [:]
+        pbItem[UTITypes.PlainText] = copyOfSelected.text
+        pbItem[UTITypes.IAStringArchive] = iaArchive
+        pb.addItems([pbItem])
+    }
+    
+    ///Called internally by a didSet on selectedRange. Calls updateSelectionLayer. In editing subclasses this should also update the current/next text properties.
+    func selectedRangeChanged(){
+        updateSelectionLayer()
+    }
+    
+    ///Updates the selection layer if needed.
+    func updateSelectionLayer(){
+        if selectedRange == nil {
+            selectionView.clearSelection()
+        } else if self.isFirstResponder() && selectedRange!.count == 0{
+            selectionView.updateSelections([], caretRect: caretRectForIntPosition(selectedRange!.startIndex))
+        } else {
+            let selectionRects = selectionRectsForIntRange(selectedRange!)
+            let caretRect = caretRectForIntPosition(selectedRange!.endIndex)
+            selectionView.updateSelections(selectionRects, caretRect: caretRect )
+        }
+    }
     
     
+    ///Note: This assumes forward layout direction with left-to-right writing. Caret width is fixed at 2 points
+    func caretRectForIntPosition(position: Int) -> CGRect {
+        let caretWidth:CGFloat = 2
+        let glyphRange = topTV.layoutManager.glyphRangeForCharacterRange(NSMakeRange(position, 0), actualCharacterRange: nil)
+        var baseRect:CGRect!
+        topTV.layoutManager.enumerateEnclosingRectsForGlyphRange(glyphRange, withinSelectedGlyphRange: NSMakeRange(NSNotFound, 0), inTextContainer: topTV.textContainer) { (rect, stop) in
+            baseRect = rect
+            stop.initialize(true)
+        }
+        //rect in topTV coordinate space
+        let tvRect = CGRectMake(baseRect.origin.x + baseRect.size.width, baseRect.origin.y, caretWidth, baseRect.size.height)
+        return self.convertRect(tvRect, fromView: topTV)
+    }
+    
+    /// Writing Direction and isVertical are hardcoded in this to .Natural and false, respectively.
+    func selectionRectsForIntRange(range: Range<Int>) -> [IATextSelectionRect]{
+        let glyphRange = topTV.layoutManager.glyphRangeForCharacterRange(range.nsRange, actualCharacterRange: nil)
+        var rawEnclosingRects:[CGRect] = []
+        topTV.layoutManager.enumerateEnclosingRectsForGlyphRange(glyphRange, withinSelectedGlyphRange: NSMakeRange(NSNotFound, 0), inTextContainer: topTV.textContainer) { (rect, stop) in
+            rawEnclosingRects.append(rect)
+        }
+        let convertedRects = rawEnclosingRects.map({self.convertRect($0, fromView: topTV)})
+        let selectionRects:[IATextSelectionRect] = convertedRects.enumerate().map({(i:Int, rect:CGRect)->IATextSelectionRect in
+            return IATextSelectionRect(rect: rect, writingDirection: .Natural, isVertical: false,
+                containsStart: (i == 0) ,
+                containsEnd: (i == convertedRects.count - 1)
+            )
+        })
+        return selectionRects
+    }
     
 }
+

@@ -58,6 +58,7 @@ extension IACompositeTextEditor:IAKeyboardDelegate {
     override public func resignFirstResponder() -> Bool {
         guard super.resignFirstResponder() else {return false}
         IAKitPreferences.keyboard.inputView!.layer.shouldRasterize = true
+        selectionView.hideCursor()
         RawIntensity.touchInterpreter.deactivate()
         return true
     }
