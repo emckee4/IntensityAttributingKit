@@ -23,7 +23,7 @@ extension IAKeyboard:SuggestionBarDelegate {
     }
     
     func suggestionSelected(suggestionBar: SuggestionBarView!, suggestionString: String, intensity: Int) {
-        self.delegate?.iaKeyboard?(self, suggestionSelected: suggestionString, intensity: intensity)
+        self.delegate?.iaKeyboard(self, suggestionSelected: suggestionString, intensity: intensity)
     }
     
 }

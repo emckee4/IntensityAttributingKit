@@ -60,6 +60,7 @@
 		C06B1D5B1BF15C18009F427A /* HueGYRIntensityScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D5A1BF15C18009F427A /* HueGYRIntensityScheme.swift */; };
 		C06B1D5D1BF15CDC009F427A /* FontSizeIntensityScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06B1D5C1BF15CDC009F427A /* FontSizeIntensityScheme.swift */; };
 		C06BAFD31BF2AECE004CECA9 /* IAIntermediate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06BAFD21BF2AECE004CECA9 /* IAIntermediate.swift */; };
+		C06BC1FC1CD9272100196F8B /* IACTE+GestureRecognizers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06BC1FB1CD9272100196F8B /* IACTE+GestureRecognizers.swift */; };
 		C070DFEC1CA07C2C00840CBE /* IAKeyboard+Suggestions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C070DFEB1CA07C2C00840CBE /* IAKeyboard+Suggestions.swift */; };
 		C070DFF01CA0A46B00840CBE /* ToggleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C070DFEF1CA0A46B00840CBE /* ToggleCell.swift */; };
 		C070DFF21CA0A62100840CBE /* SpellCheckToggleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C070DFF11CA0A62100840CBE /* SpellCheckToggleCell.swift */; };
@@ -75,6 +76,7 @@
 		C080B54F1C99EAB900DEC424 /* ModalContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080B54E1C99EAB900DEC424 /* ModalContainerViewController.swift */; };
 		C08253B11BE571910017AC14 /* LockingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08253B01BE571910017AC14 /* LockingKey.swift */; };
 		C08253B61BE572AE0017AC14 /* ExpandingPressureKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08253B51BE572AE0017AC14 /* ExpandingPressureKey.swift */; };
+		C084E9111CDE56E7009D387D /* IAMagnifyingLoup.swift in Sources */ = {isa = PBXBuildFile; fileRef = C084E9101CDE56E7009D387D /* IAMagnifyingLoup.swift */; };
 		C0870FC41CAF10B30071A5F1 /* IAStringOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0870FC31CAF10B30071A5F1 /* IAStringOptions.swift */; };
 		C0870FE61CB1E3C00071A5F1 /* -IACompositeTextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0870FE51CB1E3C00071A5F1 /* -IACompositeTextEditor.swift */; };
 		C08B42FF1CD282F7002F2840 /* IATextSelectionRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08B42FE1CD282F7002F2840 /* IATextSelectionRect.swift */; };
@@ -170,6 +172,7 @@
 		C06B1D5A1BF15C18009F427A /* HueGYRIntensityScheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HueGYRIntensityScheme.swift; sourceTree = "<group>"; };
 		C06B1D5C1BF15CDC009F427A /* FontSizeIntensityScheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontSizeIntensityScheme.swift; sourceTree = "<group>"; };
 		C06BAFD21BF2AECE004CECA9 /* IAIntermediate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = IAIntermediate.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		C06BC1FB1CD9272100196F8B /* IACTE+GestureRecognizers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IACTE+GestureRecognizers.swift"; sourceTree = "<group>"; };
 		C070DFEB1CA07C2C00840CBE /* IAKeyboard+Suggestions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IAKeyboard+Suggestions.swift"; sourceTree = "<group>"; };
 		C070DFEF1CA0A46B00840CBE /* ToggleCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToggleCell.swift; sourceTree = "<group>"; };
 		C070DFF11CA0A62100840CBE /* SpellCheckToggleCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpellCheckToggleCell.swift; sourceTree = "<group>"; };
@@ -185,6 +188,7 @@
 		C080B54E1C99EAB900DEC424 /* ModalContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalContainerViewController.swift; sourceTree = "<group>"; };
 		C08253B01BE571910017AC14 /* LockingKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LockingKey.swift; sourceTree = "<group>"; };
 		C08253B51BE572AE0017AC14 /* ExpandingPressureKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ExpandingPressureKey.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		C084E9101CDE56E7009D387D /* IAMagnifyingLoup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAMagnifyingLoup.swift; sourceTree = "<group>"; };
 		C0870FC31CAF10B30071A5F1 /* IAStringOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringOptions.swift; sourceTree = "<group>"; };
 		C0870FE51CB1E3C00071A5F1 /* -IACompositeTextEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "-IACompositeTextEditor.swift"; sourceTree = "<group>"; };
 		C08B42FE1CD282F7002F2840 /* IATextSelectionRect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextSelectionRect.swift; sourceTree = "<group>"; };
@@ -313,6 +317,7 @@
 			isa = PBXGroup;
 			children = (
 				C01FFFA31CC6A7E900AFD366 /* IACompositeTextEditor.swift */,
+				C06BC1FB1CD9272100196F8B /* IACTE+GestureRecognizers.swift */,
 				C01FFFAD1CC6B38900AFD366 /* IACTE+UITextInput.swift */,
 				C01FFFAB1CC6B1C400AFD366 /* IACTE+IAKeyboardPresenting.swift */,
 				C0F42CFA1C5FE13700FA7BB0 /* IATEPhotoPicking.swift */,
@@ -347,6 +352,7 @@
 				C002E1F01CB303F5008E78A1 /* CompositeTextViews */,
 				C002E1F11CB334B1008E78A1 /* IATextRange.swift */,
 				C0479E631CBED6D10032A5C6 /* ThinTextView.swift */,
+				C084E9101CDE56E7009D387D /* IAMagnifyingLoup.swift */,
 				C08B42FE1CD282F7002F2840 /* IATextSelectionRect.swift */,
 				C0479E651CC01E130032A5C6 /* IASelectionView.swift */,
 				C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */,
@@ -684,6 +690,7 @@
 				C0479E641CBED6D10032A5C6 /* ThinTextView.swift in Sources */,
 				C06B1D531BEE8C4F009F427A /* PressureKeyProtocols.swift in Sources */,
 				C070DFF01CA0A46B00840CBE /* ToggleCell.swift in Sources */,
+				C06BC1FC1CD9272100196F8B /* IACTE+GestureRecognizers.swift in Sources */,
 				C031CBEA1BDB097600521393 /* IntensityTransformingProtocol.swift in Sources */,
 				C01839F61C615FDE0009316E /* IAStringEditing.swift in Sources */,
 				C054D99E1C3DAB9100D852DE /* IATextAttachment.swift in Sources */,
@@ -709,6 +716,7 @@
 				C0A258D11C922FC0003287AB /* NSHashTable+Extension.swift in Sources */,
 				C070DFF21CA0A62100840CBE /* SpellCheckToggleCell.swift in Sources */,
 				C08EE10C1CBC1B600030FC3E /* scrap.swift in Sources */,
+				C084E9111CDE56E7009D387D /* IAMagnifyingLoup.swift in Sources */,
 				C014A4851CA3265600D6312C /* Range+Extensions.swift in Sources */,
 				C0A258CF1C9200EC003287AB /* TouchInterpreters.swift in Sources */,
 				C031CBE91BDB097600521393 /* IntensityTransformers.swift in Sources */,

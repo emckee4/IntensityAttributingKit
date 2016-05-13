@@ -17,9 +17,7 @@ public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDelegate
     let textStorage:NSTextStorage
     var thumbSize:ThumbSize {
         get{return textContainer.preferedThumbSize}
-        set{textContainer.preferedThumbSize = newValue
-            //invalidate layout if changed?
-        }
+        set{textContainer.preferedThumbSize = newValue}
     }
     
     public override init(frame: CGRect) {
@@ -113,7 +111,11 @@ public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDelegate
 public class IATextContainer:NSTextContainer {
     ///This flag can be used to indicate to the IATextAttachments that they should return nil from imageForBounds because the image will be drawn by in another layer.
     var shouldPresentEmptyImageContainers:Bool = true
-    var preferedThumbSize:ThumbSize = .Medium
+    var preferedThumbSize:ThumbSize = .Medium {
+        didSet{
+            if preferedThumbSize != oldValue {layoutManager?.textContainerChangedGeometry(self)}
+        }
+    }
     
     public override func encodeWithCoder(aCoder: NSCoder) {
         super.encodeWithCoder(aCoder)

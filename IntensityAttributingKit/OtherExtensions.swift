@@ -41,3 +41,47 @@ extension CGSize {
     }
 }
 
+extension UIGestureRecognizerState: CustomDebugStringConvertible{
+    public var debugDescription:String {
+        switch self {
+        case .Possible: return "Possible"
+        case .Began: return "Began"
+        case .Changed: return "Changed"
+        case .Ended: return "Ended"
+        case .Cancelled: return "Cancelled"
+        case .Failed: return "Failed"
+        }
+    }
+}
+
+extension CGRect {
+    ///calculates the distance of a point to the closest edge of the calling rect if it's outside the rect, or 0 if inside.
+    func distanceToPoint(point:CGPoint)->CGFloat{
+        if point.x < self.origin.x {
+            if point.y < self.origin.y {
+                return sqrt(pow(point.x - self.origin.x, 2) + pow(point.y - self.origin.y, 2))
+            } else if point.y > self.origin.y + self.height {
+                return sqrt(pow(point.x - self.origin.x, 2) + pow(point.y - (self.origin.y + self.height), 2))
+            } else {
+                return abs(point.x - self.origin.x)
+            }
+        } else if point.x > self.origin.x + self.width{
+            if point.y < self.origin.y {
+                return sqrt(pow(point.x - (self.origin.x + self.width), 2) + pow(point.y - self.origin.y, 2))
+            } else if point.y > self.origin.y + self.height {
+                return sqrt(pow(point.x - (self.origin.x + self.width), 2) + pow(point.y - (self.origin.y + self.height), 2))
+            } else {
+                return abs(point.x - (self.origin.x + self.width))
+            }
+        } else {
+            //point.x within the horizonal range of x
+            if point.y < self.origin.y {
+                return abs(point.y - self.origin.y)
+            } else if point.y > self.origin.y + self.height {
+                return abs(point.y - (self.origin.y + self.height))
+            } else {
+                return 0
+            }
+        }
+    }
+}

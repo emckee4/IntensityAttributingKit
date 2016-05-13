@@ -9,8 +9,8 @@
 import Foundation
 
 
-@objc protocol IAKeyboardDelegate {
-    optional func iaKeyboard(iaKeyboard:IAKeyboard, insertTextAtCursor text:String, intensity:Int)
-    optional func iaKeyboard(iaKeyboard:IAKeyboard, suggestionSelected text:String, intensity:Int)
+protocol IAKeyboardDelegate:class {
+    func iaKeyboard(iaKeyboard:IAKeyboard, insertTextAtCursor text:String, intensity:Int)
+    func iaKeyboard(iaKeyboard:IAKeyboard, suggestionSelected text:String, intensity:Int)
     
 }

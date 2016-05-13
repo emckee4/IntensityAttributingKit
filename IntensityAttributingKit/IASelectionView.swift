@@ -17,6 +17,7 @@ final class IASelectionView: UIView {
     
     
     var selectionColor:UIColor = UIColor.cyanColor().colorWithAlphaComponent(0.3)
+    var caretColor:UIColor = UIColor.blueColor().colorWithAlphaComponent(0.5)
     var caretBlinks = true {
         didSet{
             self.layer.removeAnimationForKey("opacity")
@@ -30,7 +31,7 @@ final class IASelectionView: UIView {
         guard !selectionRects.isEmpty || caretRect != nil else {return}
         if selectionRects.isEmpty && caretRect != nil{
             //draw caret
-            selectionColor.setFill()
+            caretColor.setFill()
             UIRectFill(caretRect!)
             if caretBlinks {
                 self.layer.addAnimation(blinkAnimation, forKey: "opacity")

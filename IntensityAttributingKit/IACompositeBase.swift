@@ -11,6 +11,7 @@ import UIKit
 
 public class IACompositeBase:UIView {
     
+    var containerView:UIView
     var selectionView:IASelectionView
     var topTV:ThinTextView
     var bottomTV:ThinTextView
@@ -25,17 +26,18 @@ public class IACompositeBase:UIView {
     
     //var tapGestureRecognizer:UITapGestureRecognizer!
     
-    public var selectable:Bool = true
+    public var selectable:Bool = false
     
     ///backing store for selectedRange. We use this so that we can change the selectedRange without calling an update when needed.
     var _selectedRange:Range<Int>?
     internal(set) public var selectedRange:Range<Int>? {
         get{return _selectedRange}
         set{
-            if _selectedRange != newValue {
-                defer{selectedRangeChanged()}
-            }
+            let selectedRangeDidChange = _selectedRange != newValue
             _selectedRange = newValue
+            if selectedRangeDidChange {
+                selectedRangeChanged()
+            }
         }
     }
     
@@ -63,11 +65,15 @@ public class IACompositeBase:UIView {
         }
     }
     
+    var menu:UIMenuController {
+        return UIMenuController.sharedMenuController()
+    }
+    
     public override func layoutSubviews() {
         super.layoutSubviews()   //should this be called before or after?
         //set frames for contained objects
         let frameWithInset = UIEdgeInsetsInsetRect(self.bounds, textContainerInset)
-        
+        containerView.frame = self.bounds
         selectionView.frame = self.bounds  //we use the full frame since we will be gettting selection rects (typically via UITextInput) in the coordinate space of the superview (the IATextView)
         topTV.frame = frameWithInset
         bottomTV.frame = frameWithInset
@@ -80,11 +86,13 @@ public class IACompositeBase:UIView {
     
     func setupIATV(){
         //selectionView.userInteractionEnabled = false
+        
         selectionView.backgroundColor = UIColor.clearColor()
         selectionView.hidden = true
         
         //topTV.userInteractionEnabled = false
         topTV.backgroundColor = UIColor.clearColor()
+        topTV.textStorage.setAttributes([NSFontAttributeName:UIFont.systemFontOfSize(40)], range: NSMakeRange(0, 0))
         
         //bottomTV.userInteractionEnabled = false
         bottomTV.backgroundColor = UIColor.clearColor()
@@ -95,11 +103,11 @@ public class IACompositeBase:UIView {
         imageLayer.clipsToBounds = true
         imageLayer.hidden = true
         
-        self.addSubview(imageLayer)
-        self.addSubview(bottomTV)
-        self.addSubview(topTV)
-        self.addSubview(selectionView)
-        
+        containerView.addSubview(imageLayer)
+        containerView.addSubview(bottomTV)
+        containerView.addSubview(topTV)
+        containerView.addSubview(selectionView)
+        self.addSubview(containerView)
         setupGestureRecognizers()
     }
     
@@ -160,8 +168,11 @@ public class IACompositeBase:UIView {
         }
     }
     
+    //Recalculates and redraws entire range of iaString, similar to what would happen calling setIAString(self.iaString) but keeps selection intact and may have optimizations (eventually). Typically called after changes in states that affect the display of the entire string, like changing the smoother or transformer (current values or global overrides).
     func rerenderIAString(){
+        let currentSelection = selectedRange
         setIAString(iaString)
+        selectedRange = currentSelection
         //TODO: only do as much work as required
     }
     
@@ -212,6 +223,7 @@ public class IACompositeBase:UIView {
     
     
     public override init(frame: CGRect) {
+        containerView = UIView(frame: frame)
         topTV = ThinTextView()
         bottomTV = ThinTextView()
         selectionView = IASelectionView()
@@ -223,6 +235,7 @@ public class IACompositeBase:UIView {
     }
     
     required public init?(coder aDecoder: NSCoder) {
+        containerView = (aDecoder.decodeObjectForKey("containerView") as?  UIView) ?? UIView()
         topTV = (aDecoder.decodeObjectForKey("topTV") as?  ThinTextView) ?? ThinTextView()
         bottomTV = (aDecoder.decodeObjectForKey("bottomTV") as?  ThinTextView) ?? ThinTextView()
         selectionView = (aDecoder.decodeObjectForKey("selectionView") as?  IASelectionView) ?? IASelectionView()
@@ -251,6 +264,7 @@ public class IACompositeBase:UIView {
     
     public override func encodeWithCoder(aCoder: NSCoder) {
         super.encodeWithCoder(aCoder)
+        aCoder.encodeObject(containerView, forKey: "containerView")
         aCoder.encodeObject(topTV, forKey: "topTV")
         aCoder.encodeObject(bottomTV, forKey: "bottomTV")
         aCoder.encodeObject(imageLayer, forKey: "imageLayer")
@@ -318,6 +332,9 @@ public class IACompositeBase:UIView {
     
     ///Called internally by a didSet on selectedRange. Calls updateSelectionLayer. In editing subclasses this should also update the current/next text properties.
     func selectedRangeChanged(){
+        if menu.menuVisible {
+            menu.setMenuVisible(false, animated: true)
+        }
         updateSelectionLayer()
     }
     
@@ -357,13 +374,13 @@ public class IACompositeBase:UIView {
             rawEnclosingRects.append(rect)
         }
         let convertedRects = rawEnclosingRects.map({self.convertRect($0, fromView: topTV)})
-        let selectionRects:[IATextSelectionRect] = convertedRects.enumerate().map({(i:Int, rect:CGRect)->IATextSelectionRect in
-            return IATextSelectionRect(rect: rect, writingDirection: .Natural, isVertical: false,
-                containsStart: (i == 0) ,
-                containsEnd: (i == convertedRects.count - 1)
-            )
-        })
-        return selectionRects
+
+        if convertedRects.isEmpty == false {
+            return IATextSelectionRect.generateSelectionArray(convertedRects)
+        } else {
+            let rect = caretRectForIntPosition(range.startIndex)
+            return [IATextSelectionRect(rect: rect, containsStart: false, containsEnd: false)]
+        }
     }
     
 }

@@ -34,6 +34,9 @@ public class IATextPosition:UITextPosition, IntegerLiteralConvertible, Comparabl
 @warn_unused_result public func ==(lhs:IATextPosition,rhs:IATextPosition)->Bool {
     return lhs.position == rhs.position
 }
+@warn_unused_result public func !=(lhs:IATextPosition,rhs:IATextPosition)->Bool {
+    return !(lhs == rhs)
+}
 @warn_unused_result public func >=(lhs:IATextPosition,rhs:IATextPosition)->Bool {
     return lhs.position >= rhs.position
 }
@@ -48,7 +51,7 @@ public class IATextPosition:UITextPosition, IntegerLiteralConvertible, Comparabl
 }
 
 
-public class IATextRange:UITextRange{
+public class IATextRange:UITextRange {
     
     ///iaStart stores the IATextPosition object which is accessed by the start:UITextPosition computed property
     let iaStart:IATextPosition
@@ -100,7 +103,12 @@ public class IATextRange:UITextRange{
     }
 }
 
-
-
+//@warn_unused_result public func ==(lhs:IATextRange,rhs:IATextRange)->Bool {
+//    return lhs.iaStart == rhs.iaStart && lhs.iaEnd == rhs.iaEnd
+//}
+//
+//@warn_unused_result public func !=(lhs:IATextRange,rhs:IATextRange)->Bool {
+//    return !(lhs == rhs)
+//}
 
 

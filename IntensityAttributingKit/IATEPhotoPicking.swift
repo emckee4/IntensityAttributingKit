@@ -28,7 +28,7 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
     }
     
     func launchPhotoPicker(){
-        guard self.delegate?.iaTextEditorRequestsPresentationOfContentPicker(self) == true else {return}
+        guard self.delegate?.iaTextEditorRequestsPresentationOfContentPicker?(self) == true else {return}
         if UIImagePickerController.isCameraDeviceAvailable(.Rear) {
             let alert = UIAlertController(title: "Insert Photo", message: "Choose source", preferredStyle: .ActionSheet)
             alert.addAction(UIAlertAction(title: "Photo Library", style: .Default, handler: { (action) -> Void in

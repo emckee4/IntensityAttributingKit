@@ -11,26 +11,31 @@ import UIKit
 public class IACompositeTextEditor:IACompositeBase, UITextInput {
     
     
-    weak var delegate:IACompositeTextEditorDelegate?
+    public weak var delegate:IACompositeTextEditorDelegate?
     
     ///The baseAttributes hold the attirbutes for the selected text or text at the insertion point
     lazy var _baseAttributes:IABaseAttributes = {return IABaseAttributes(size:IAKitPreferences.defaultTextSize)}()
     var baseAttributes:IABaseAttributes {
         get{return _baseAttributes}
-        set{if _baseAttributes != newValue && selectedRange?.count > 0 {defer{attributesUpdated()}}
+        set{let attsNeedUpdate = _baseAttributes != newValue && selectedRange?.count > 0
             _baseAttributes = newValue
+            if attsNeedUpdate {attributesUpdated()}
             }
     }
-    var _currentIntensity:Int = IAKitPreferences.defaultIntensity
+    var _currentIntensity:Int = IAKitPreferences.defaultIntensity {
+        didSet{
+            (self.inputAccessoryViewController as? IAAccessoryVC)?.updateDisplayedIntensity(currentIntensity)
+        }
+    }
     var currentIntensity:Int {
         get{return _currentIntensity}
-        set{if currentIntensity != newValue && selectedRange?.count > 0 {defer{attributesUpdated()}}
+        set{let attsNeedUpdate = currentIntensity != newValue && selectedRange?.count > 0
             _currentIntensity = newValue
+            if attsNeedUpdate{attributesUpdated()}
             }
     }
     
     var _inputVC:UIInputViewController?
-    
     
     
     //var selectedRange:Range<Int>?
@@ -38,12 +43,17 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
     
     //TODO: Gesture recognizers
     
+    var tapGR:UITapGestureRecognizer!
+    var doubleTapGR:UITapGestureRecognizer!
+    var longPressGR:UILongPressGestureRecognizer!
     
+    ///This is the initial start/end containing IATextSelectionRect used by the longPressGR during selection dragging gestures. This should only be non-nil when a longPress is in progress which is changing/dragging the text selection. This will need to be related to the longPressDragStartingPoint in order to ensure the correct amount of relative motion is represented.
+    var longPressDragStartingSelectionRect:IATextSelectionRect?
+    ///This point is the location of the beginning of a longPress that drags the edge of a text selection. This is related to the longPressDragStartingSelectionRect to determine relative distance dragged.
+    var longPressDragStartingPoint:CGPoint?
     
-    override func setupGestureRecognizers() {
-        
-    }
-    
+
+    var magnifyingLoup:IAMagnifyingLoup!
     
     
     
@@ -120,6 +130,10 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
     
     override func setupIATV(){
         super.setupIATV()
+        if magnifyingLoup == nil {
+            magnifyingLoup = IAMagnifyingLoup(viewToMagnify:containerView)
+            self.addSubview(magnifyingLoup)
+        }
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.handleLifecycleChange(_:)), name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication())
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.handleLifecycleChange(_:)), name: UIApplicationWillResignActiveNotification, object: UIApplication.sharedApplication())
     }
@@ -154,7 +168,7 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
             bottomTV.textStorage.beginEditing()
             //first we perform a replace range to line up the indices.
             bottomTV.textStorage.replaceCharactersInRange(range.nsRange, withString: replacement.text)
-            bottomTV.textStorage.replaceCharactersInRange(extendedModRange.nsRange, withAttributedString: topAttString)
+            bottomTV.textStorage.replaceCharactersInRange(extendedModRange.nsRange, withAttributedString: botAttString!)
             bottomTV.textStorage.endEditing()
         }
         if replacement.attachmentCount > 0 {
@@ -165,7 +179,8 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
         //update selection:
         
         if closeSelectedRange {
-            let newTextPos = positionFromPosition(beginningOfDocument, offset: (range.startIndex + replacement.length) )!
+            let offset = range.startIndex + replacement.length
+            let newTextPos = positionFromPosition(beginningOfDocument, offset: offset )!
             selectedTextRange = textRangeFromPosition(newTextPos, toPosition: newTextPos)
         } else {
             selectedRange = modRange
@@ -272,8 +287,6 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
     
     ///Updates the baseAttributes and currentIntensity to match the averages of the range or position behind the insertion point. Triggers updateSelectionLayer(). This is automatically called in a didSet on selectionRange but can be avoided by directly modifying _selectedRange
     override func selectedRangeChanged() {
-        defer{updateSelectionLayer()}
-        
         //update current intensity and baseAttributes
         if _selectedRange != nil {
             if _selectedRange!.isEmpty {
@@ -283,6 +296,7 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
                         _baseAttributes = iaString.baseAttributes[0]
                         _currentIntensity = iaString.intensities[0]
                     }
+                    super.selectedRangeChanged()
                     return
                 } else {
                     //if our empty selection range is not at zero then we use the values at the previous index
@@ -295,6 +309,7 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
                 _baseAttributes = iaString.getBaseAttributesForRange(_selectedRange!)
             }
         }
+        super.selectedRangeChanged()
     }
     
     ///Applies changes in attributes to a selected range's text.
@@ -329,6 +344,67 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
         }
     }
     
+    
+    override public var inputViewController:UIInputViewController? {
+        set {self._inputVC = newValue}
+        get {return self._inputVC}
+    }
+    
+    override public var inputAccessoryViewController:UIInputViewController? {
+        get {return IAAccessoryVC.singleton}
+    }
+    
+    override public func canBecomeFirstResponder() -> Bool {
+        return true
+    }
+    
+    override public func becomeFirstResponder() -> Bool {
+        _inputVC = IAKitPreferences.keyboard
+        guard super.becomeFirstResponder() else {return false}
+        prepareToBecomeFirstResponder()
+        return true
+    }
+    
+    override public func resignFirstResponder() -> Bool {
+        guard super.resignFirstResponder() else {return false}
+        IAKitPreferences.keyboard.inputView!.layer.shouldRasterize = true
+        selectionView.hideCursor()
+        RawIntensity.touchInterpreter.deactivate()
+        return true
+    }
+
+    
+    override func setupGestureRecognizers() {
+        tapGR = UITapGestureRecognizer(target: self, action: #selector(self.singleTapGestureUpdate(_:)))
+        tapGR.numberOfTapsRequired = 1
+        tapGR.numberOfTouchesRequired = 1
+        tapGR.delegate = self
+        
+        doubleTapGR = UITapGestureRecognizer(target: self, action: #selector(self.doubleTapGestureUpdate(_:)))
+        doubleTapGR.numberOfTapsRequired = 2
+        doubleTapGR.numberOfTouchesRequired = 1
+        doubleTapGR.delegate = self
+        
+        longPressGR = UILongPressGestureRecognizer(target: self, action: #selector(self.longPressGestureUpdate(_:)))
+        longPressGR.numberOfTapsRequired = 0
+        longPressGR.numberOfTouchesRequired = 1
+        longPressGR.minimumPressDuration = 0.5
+        longPressGR.allowableMovement = 20
+        longPressGR.delegate = self
+        
+        
+//        loupPanGR = UIPanGestureRecognizer(target: self, action: #selector(self.loupPanGestureUpdate(_:))  )
+//        loupPanGR.maximumNumberOfTouches = 1
+//        loupPanGR.minimumNumberOfTouches = 1
+//        loupPanGR.delegate = self
+        
+        self.addGestureRecognizer(tapGR)
+        self.addGestureRecognizer(doubleTapGR)
+        self.addGestureRecognizer(longPressGR)
+        //self.addGestureRecognizer(loupPanGR)
+    }
+
+    
 
 }
 
@@ -336,8 +412,8 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
 
 
 
-public protocol IACompositeTextEditorDelegate:class {
+@objc public protocol IACompositeTextEditorDelegate:class {
     ///The default implementation of this will present the view controller using the delegate adopter
-    func iaTextEditorRequestsPresentationOfOptionsVC(iaTextEditor:IACompositeTextEditor)->Bool
-    func iaTextEditorRequestsPresentationOfContentPicker(iaTextEditor:IACompositeTextEditor)->Bool
+    optional func iaTextEditorRequestsPresentationOfOptionsVC(iaTextEditor:IACompositeTextEditor)->Bool
+    optional func iaTextEditorRequestsPresentationOfContentPicker(iaTextEditor:IACompositeTextEditor)->Bool
 }

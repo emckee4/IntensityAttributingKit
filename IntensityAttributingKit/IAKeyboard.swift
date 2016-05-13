@@ -430,10 +430,10 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
             shiftKey.deselect(overrideSelectedLock: false)
             updateKeyMapping()
             //self.textDocumentProxy.insertText(actionName.uppercaseString)
-            self.delegate?.iaKeyboard?(self, insertTextAtCursor: actionName.uppercaseString, intensity: intensity)
+            self.delegate?.iaKeyboard(self, insertTextAtCursor: actionName.uppercaseString, intensity: intensity)
         } else {
             //self.textDocumentProxy.insertText(actionName)
-            self.delegate?.iaKeyboard?(self, insertTextAtCursor: actionName, intensity: intensity)
+            self.delegate?.iaKeyboard(self, insertTextAtCursor: actionName, intensity: intensity)
         }
     }
 

@@ -116,10 +116,10 @@ extension IACompositeTextEditor {
     }
     
     public func baseWritingDirectionForPosition(position: UITextPosition, inDirection direction: UITextStorageDirection) -> UITextWritingDirection {
-        return UITextWritingDirection.Natural
+        return UITextWritingDirection.LeftToRight
     }
     public func setBaseWritingDirection(writingDirection: UITextWritingDirection, forRange range: UITextRange) {
-        guard writingDirection == .Natural else {fatalError("setBaseWritingDirection: received baseWriting direction other than natural")}
+        guard writingDirection == .LeftToRight else {fatalError("setBaseWritingDirection: received baseWriting direction other than natural")}
     }
     
         
@@ -175,7 +175,7 @@ extension IACompositeTextEditor {
     
     public func iaPositionFromPosition(position: IATextPosition, offset: Int) -> IATextPosition? {
         let newLoc = position.position + offset
-        guard newLoc >= 0 && newLoc <= iaString.length else {print("UITextInput.positionFromPosition: new position would be out of bounds");return nil}
+        guard newLoc >= 0 && newLoc <= iaString.length else {print("UITextInput.positionFromPosition: new position would be out of bounds: \(position), + \(offset)");return nil}
         return position.positionWithOffset(offset)
     }
     
@@ -229,34 +229,11 @@ extension IACompositeTextEditor {
     
     ///Note: This assumes forward layout direction with left-to-right writing. Caret width is fixed at 2 points
     func caretRectForIAPosition(position: IATextPosition) -> CGRect {
-//        let caretWidth:CGFloat = 2
-//        let glyphRange = topTV.layoutManager.glyphRangeForCharacterRange(NSMakeRange(position.position, 0), actualCharacterRange: nil)
-//        var baseRect:CGRect!
-//        topTV.layoutManager.enumerateEnclosingRectsForGlyphRange(glyphRange, withinSelectedGlyphRange: NSMakeRange(NSNotFound, 0), inTextContainer: topTV.textContainer) { (rect, stop) in
-//            baseRect = rect
-//            stop.initialize(true)
-//        }
-//        //rect in topTV coordinate space
-//        let tvRect = CGRectMake(baseRect.origin.x + baseRect.size.width, baseRect.origin.y, caretWidth, baseRect.size.height)
-//        return self.convertRect(tvRect, fromView: topTV)
         return caretRectForIntPosition(position.position)
     }
     
     /// Writing Direction and isVertical are hardcoded in this to .Natural and false, respectively.
     func iaSelectionRectsForRange(range: IATextRange) -> [IATextSelectionRect]{
-//        let glyphRange = topTV.layoutManager.glyphRangeForCharacterRange(range.nsrange(), actualCharacterRange: nil)
-//        var rawEnclosingRects:[CGRect] = []
-//        topTV.layoutManager.enumerateEnclosingRectsForGlyphRange(glyphRange, withinSelectedGlyphRange: NSMakeRange(NSNotFound, 0), inTextContainer: topTV.textContainer) { (rect, stop) in
-//            rawEnclosingRects.append(rect)
-//        }
-//        let convertedRects = rawEnclosingRects.map({self.convertRect($0, fromView: topTV)})
-//        let selectionRects:[IATextSelectionRect] = convertedRects.enumerate().map({(i:Int, rect:CGRect)->IATextSelectionRect in
-//            return IATextSelectionRect(rect: rect, writingDirection: .Natural, isVertical: false,
-//                containsStart: (i == 0) ,
-//                containsEnd: (i == convertedRects.count - 1)
-//            )
-//        })
-//        return selectionRects
         return selectionRectsForIntRange(range.range())
     }
     
@@ -295,6 +272,7 @@ extension IACompositeTextEditor {
         let endIndex = topTV.layoutManager.characterIndexForGlyphAtIndex(glyphIndex + 1)
         return IATextRange(range: startIndex..<endIndex)
     }
+    
 }
 
 

@@ -28,14 +28,9 @@ public class IACompositeTextView: IACompositeBase {
         
     }
     
-    public func setIAString(iaString:IAString!, withCacheIdentifier:String? = nil){
-        if withCacheIdentifier == nil {
-            super.setIAString(iaString)
-        } else {
-            print("setIAString using cache identifier not yet implemented")
-            
-            
-        }
+    public func setIAString(iaString:IAString!, withCacheIdentifier:String){
+        print("setIAString using cache identifier not yet implemented")
+        ///cache should store some rendering info and probably some sizing info, eg previously calculated size for size values. any change to the data or default renderings should invalidate the cache. (Changing global prefs should probably emit a notification of such)
     }
     
     

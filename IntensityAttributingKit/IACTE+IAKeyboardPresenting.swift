@@ -13,17 +13,17 @@ import Foundation
 
 extension IACompositeTextEditor:IAKeyboardDelegate {
     
-    //private var iaAccessory:IAAccessoryVC {return IAKitPreferences.accessory}
-    //private var iaKeyboard:IAKeyboard {return IAKitPreferences.keyboard}
-    
-    override public var inputViewController:UIInputViewController? {
-        set {self._inputVC = newValue}
-        get {return self._inputVC}
+    func iaKeyboard(iaKeyboard:IAKeyboard, insertTextAtCursor text:String, intensity:Int){
+        guard selectedTextRange != nil else {return}
+        let insertionIAString = IAString(text: text, intensity: intensity, attributes: baseAttributes)
+        replaceIAStringRange(insertionIAString, range: selectedRange!)
     }
     
-    override public var inputAccessoryViewController:UIInputViewController? {
-        get {return IAAccessoryVC.singleton}
+    
+    func iaKeyboard(iaKeyboard:IAKeyboard, suggestionSelected text:String, intensity:Int){
+        
     }
+
     
     ///returns true if IAKeyboard is presented by this, false if system keyboard, and nil if this is not first responder
     var keyboardIsIAKeyboard:Bool?{
@@ -42,25 +42,6 @@ extension IACompositeTextEditor:IAKeyboardDelegate {
         }
         self.reloadInputViews()
         self.updateSuggestionsBar()
-    }
-    
-    override public func canBecomeFirstResponder() -> Bool {
-        return true
-    }
-    
-    override public func becomeFirstResponder() -> Bool {
-        _inputVC = IAKitPreferences.keyboard
-        guard super.becomeFirstResponder() else {return false}
-        prepareToBecomeFirstResponder()
-        return true
-    }
-    
-    override public func resignFirstResponder() -> Bool {
-        guard super.resignFirstResponder() else {return false}
-        IAKitPreferences.keyboard.inputView!.layer.shouldRasterize = true
-        selectionView.hideCursor()
-        RawIntensity.touchInterpreter.deactivate()
-        return true
     }
 
     func prepareToBecomeFirstResponder(){
@@ -107,7 +88,7 @@ extension IACompositeTextEditor: IAAccessoryDelegate {
     }
     
     func accessoryOptionButtonPressed(accessory:IAAccessoryVC!){
-        guard delegate?.iaTextEditorRequestsPresentationOfOptionsVC(self) == true else {return}
+        guard delegate?.iaTextEditorRequestsPresentationOfOptionsVC?(self) == true else {return}
         let optionsVC = IAKitSettingsTableViewController()
         let modalContainer = ModalContainerViewController()
         modalContainer.addChildViewController(optionsVC)
