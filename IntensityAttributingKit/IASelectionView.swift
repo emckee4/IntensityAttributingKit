@@ -8,15 +8,19 @@
 
 import UIKit
 
+/**
+    IASelectionView is used to layer selection rects, blinking insertion carets, and marked text rects onto the IACompositeTextBase subclasses. Carets and marked text rects will display simultaneously but if the selectionRects array is non empty then the selection rects will be displayed while the caret and marked text rect will be hidden.
+*/
 final class IASelectionView: UIView {
 
 
     //private(set) var selectionRects:[CGRect] = []
     private(set) var selectionRects:[IATextSelectionRect] = []
     private(set) var caretRect:CGRect?
+    private(set) var markedTextRect:CGRect?
     
-    
-    var selectionColor:UIColor = UIColor.cyanColor().colorWithAlphaComponent(0.3)
+    var selectionColor:UIColor = UIColor.cyanColor().colorWithAlphaComponent(0.25)
+    var markingColor:UIColor = UIColor.yellowColor().colorWithAlphaComponent(0.22)
     var caretColor:UIColor = UIColor.blueColor().colorWithAlphaComponent(0.5)
     var caretBlinks = true {
         didSet{
@@ -28,15 +32,23 @@ final class IASelectionView: UIView {
     
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
-        guard !selectionRects.isEmpty || caretRect != nil else {return}
-        if selectionRects.isEmpty && caretRect != nil{
-            //draw caret
-            caretColor.setFill()
-            UIRectFill(caretRect!)
-            if caretBlinks {
-                self.layer.addAnimation(blinkAnimation, forKey: "opacity")
-            } else {
-                self.layer.removeAnimationForKey("opacity")
+        guard !selectionRects.isEmpty || caretRect != nil || markedTextRect != nil else {return}
+        if selectionRects.isEmpty {
+            
+            
+            if markedTextRect != nil {
+                markingColor.setFill()
+                UIRectFill(markedTextRect!)
+            }
+            if caretRect != nil{
+                //draw caret
+                caretColor.setFill()
+                UIRectFill(caretRect!)
+                if caretBlinks && markedTextRect == nil{
+                    self.layer.addAnimation(blinkAnimation, forKey: "opacity")
+                } else {
+                    self.layer.removeAnimationForKey("opacity")
+                }
             }
         } else {
             //draw selectionRects
@@ -82,6 +94,19 @@ final class IASelectionView: UIView {
         }
     }
     
+    ///Sets markedText and caret, clears selection rects
+    func setTextMarking(markedTextRect:CGRect?,caretRect:CGRect?){
+        selectionRects = []
+        self.markedTextRect = markedTextRect
+        self.caretRect = caretRect
+        if self.markedTextRect == nil && caretRect == nil {
+            self.hidden = true
+        } else {
+            self.hidden = false
+            self.setNeedsDisplay()
+        }
+    }
+    
     func hideCursor(){
         if self.caretRect != nil {
             caretRect = nil
@@ -97,7 +122,8 @@ final class IASelectionView: UIView {
     func clearSelection(){
         selectionRects = []
         caretRect = nil
-        layer.removeAnimationForKey("opaciy")
+        markedTextRect = nil
+        layer.removeAnimationForKey("opacity")
         self.hidden = true
     }
     

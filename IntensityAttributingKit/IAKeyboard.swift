@@ -7,7 +7,7 @@
 //
 import UIKit
 
-class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
+class IAKeyboard: UIInputViewController, PressureKeyActionDelegate, SuggestionBarDelegate {
     
     static var singleton:IAKeyboard = IAKeyboard(nibName: nil, bundle: nil)
         
@@ -27,6 +27,16 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
     
     var keyboardSuggestionBarIsEnabled:Bool {return true}
     var suggestionsBar:SuggestionBarView!
+    
+    var textChecker:UITextChecker!
+    private let puncCharset = NSCharacterSet(charactersInString: ".?!")
+    
+    ///If the last space inserted was inserted as a result of a suggestion insertion then we will remove it when inserting certain punctuation
+    private var softSpace:Bool = false
+    ///Value is set true by textWillChange, causing selectionDidChange to be ignored until textDidChange fires.
+    private var textChangeInProgress = false
+    
+
     
     //MARK:- UI visual constants
 
@@ -77,7 +87,7 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
         self.inputView?.layer.shouldRasterize = true
         
         updateKeyMapping()
-        
+        textChecker = UITextChecker()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -426,53 +436,184 @@ class IAKeyboard: UIInputViewController, PressureKeyActionDelegate {
         //self.intensity = intensity
         preventRasterizationForDuration(5.0)
         UIDevice.currentDevice().playInputClick()
+        var insertionText:String!
         if shiftKey.selected {
             shiftKey.deselect(overrideSelectedLock: false)
             updateKeyMapping()
             //self.textDocumentProxy.insertText(actionName.uppercaseString)
-            self.delegate?.iaKeyboard(self, insertTextAtCursor: actionName.uppercaseString, intensity: intensity)
+            insertionText = actionName.uppercaseString
         } else {
-            //self.textDocumentProxy.insertText(actionName)
-            self.delegate?.iaKeyboard(self, insertTextAtCursor: actionName, intensity: intensity)
+            insertionText = actionName
         }
+        
+        
+        if softSpace == true && actionName.utf16.count == 1 && puncCharset.characterIsMember(actionName.utf16.first!) {
+            ///replace the softSpace with the punctuation
+            if let iaTE = delegate as? IACompositeTextEditor {
+                if iaTE.selectedRange?.isEmpty == true && iaTE.selectedRange!.startIndex > 0{
+                    let newIndex = iaTE.selectedRange!.startIndex - 1
+                    iaTE.selectedRange = newIndex..<newIndex
+                    insertionText = insertionText + " "
+                }
+            }
+        }
+        self.delegate?.iaKeyboard(self, insertTextAtCursor: insertionText, intensity: intensity)
     }
-
+    
+    
+    override func textWillChange(textInput: UITextInput?) {
+        textChangeInProgress = true
+    }
     
     override func selectionDidChange(textInput: UITextInput?) {
-        //print("selectionDidChange: \(textInput): context: <\(textDocumentProxy.documentContextBeforeInput)><\(textDocumentProxy.documentContextAfterInput)>")
-        super.selectionDidChange(textInput)
-        self.autoCapsIfNeeded()
+        softSpace = false
+        guard textChangeInProgress == false else {return}
+        updateSuggestionBar()
+        autoCapsIfNeeded()
     }
+    
+    override func textDidChange(textInput: UITextInput?) {
+        updateSuggestionBar()
+        autoCapsIfNeeded()
+    }
+    
     
     func prepareKeyboardForAppearance(){
         self.shiftKey.deselect(overrideSelectedLock: true)
+        softSpace = false
         updateKeyMapping()
         autoCapsIfNeeded()
     }
     
     
     func autoCapsIfNeeded(){
-        guard textDocumentProxy.hasText() else {self.shiftKey.selected = true; updateKeyMapping();return}
-        guard let text = textDocumentProxy.documentContextBeforeInput else {return}
-        let puncCharset = NSCharacterSet(charactersInString: ".?!")
-        guard NSCharacterSet.whitespaceAndNewlineCharacterSet().characterIsMember(text.utf16.last!) else {return}
-        for rChar in text.utf16.reverse() {
-            if NSCharacterSet.whitespaceAndNewlineCharacterSet().characterIsMember(rChar) {
-                continue
-            } else if puncCharset.characterIsMember(rChar) {
-                self.shiftKey.selected = true
-                updateKeyMapping()
-                return
-            } else {
-                return
+        guard let editor = delegate as? IACompositeTextEditor where editor.selectedRange != nil else {return}
+        guard editor.hasText() && editor.selectedRange!.startIndex > 0 else {
+            self.shiftKey.selected = true; updateKeyMapping();return
+        }
+        let preceedingTextStart = max(editor.selectedRange!.startIndex - 4, 0)
+        let preceedingText = editor.textInRange(IATextRange(range: preceedingTextStart..<editor.selectedRange!.startIndex))!
+        
+        ///Returns true if the reversed text begins with whitespace characters, then is followed by puncuation, false otherwise. (e.g. "X. " would return true while "sfs", "s  ", or "X." would return false.
+        func easierThanRegex(text:String)->Bool{
+            guard text.isEmpty == false else {return false}
+            guard NSCharacterSet.whitespaceAndNewlineCharacterSet().characterIsMember(text.utf16.last!) else {return false}
+            for rChar in preceedingText.utf16.reverse() {
+                if NSCharacterSet.whitespaceAndNewlineCharacterSet().characterIsMember(rChar) {
+                    continue
+                } else if puncCharset.characterIsMember(rChar) {
+                    return true
+                } else {
+                    return false
+                }
             }
+            return false
+        }
+        
+        
+        if  easierThanRegex(preceedingText){
+            self.shiftKey.selected = true
+            updateKeyMapping()
+        } else {
+            self.shiftKey.deselect(overrideSelectedLock: false)
+            updateKeyMapping()
+            return
+        }
+        
+        
+        
+//        guard textDocumentProxy.hasText() else {self.shiftKey.selected = true; updateKeyMapping();return}
+//        guard let text = textDocumentProxy.documentContextBeforeInput else {return}
+//        guard NSCharacterSet.whitespaceAndNewlineCharacterSet().characterIsMember(text.utf16.last!) else {return}
+//        for rChar in text.utf16.reverse() {
+//            if NSCharacterSet.whitespaceAndNewlineCharacterSet().characterIsMember(rChar) {
+//                continue
+//            } else if puncCharset.characterIsMember(rChar) {
+//                self.shiftKey.selected = true
+//                updateKeyMapping()
+//                return
+//            } else {
+//                return
+//            }
+//        }
+    }
+    
+    func updateSuggestionBar(){
+        if let editor = delegate as? IACompositeTextEditor where editor.selectedRange != nil {
+            let lang = self.textInputMode?.primaryLanguage ?? NSLocale.preferredLanguages().first!
+            if editor.selectedRange!.isEmpty {
+                //get range and text for correction
+                let iaPosition = editor.selectedIATextRange!.iaStart
+                
+                if editor.tokenizer.isPosition(iaPosition, withinTextUnit: .Word, inDirection: 0) {
+                    //we're inside of a word but not at its end. Consider trying corrections
+                    suggestionsBar.updateSuggestions([])
+                    editor.unmarkText()
+                } else if let rangeOfCurrentWord = editor.tokenizer.rangeEnclosingPosition(iaPosition, withGranularity: .Word, inDirection: 1) as? IATextRange { //editor.tokenizer.isPosition(iaPosition, withinTextUnit: .Word, inDirection: 1)
+                    //the pos should be within a text unit and at its end --- we will highlight here
+                    
+                    var suggestions:[String]!
+                    if rangeOfCurrentWord.nsrange().length > 2 {
+                        suggestions = textChecker.guessesForWordRange(rangeOfCurrentWord.nsrange(),inString: editor.iaString.text, language: lang) as? [String]
+                    }
+//                    if suggestions == nil {
+//                        suggestions = (textChecker.completionsForPartialWordRange(rangeOfCurrentWord.nsrange(), inString: editor.iaString.text, language: lang) as? [String])
+//                    }
+                    
+                    if suggestions?.isEmpty == false {
+                        editor.markedTextRange = rangeOfCurrentWord
+                        suggestionsBar.updateSuggestions(suggestions)
+                    } else {
+                        suggestionsBar.updateSuggestions([])
+                        editor.unmarkText()
+                    }
+                } else {
+                    //we should be in some whitespace, so no highlighting
+                    suggestionsBar.updateSuggestions([])
+                    editor.unmarkText()
+                }
+                
+            } else { //selected range is non empty
+                //check if selected range starts/ends on word boundaries. If so we can make suggestions.
+                if editor.tokenizer.isPosition(editor.selectedIATextRange!.iaStart, atBoundary: .Word, inDirection: 1) &&
+                    editor.tokenizer.isPosition(editor.selectedIATextRange!.iaEnd, atBoundary: .Word, inDirection: 0) {
+                    let suggestions:[String] = (textChecker.completionsForPartialWordRange(editor.selectedRange!.nsRange, inString: editor.iaString.text, language: lang) as? [String]) ?? []
+                    suggestionsBar.updateSuggestions(suggestions)
+                } else {
+                    //we aren't cleanly on boundaries so we won't be making suggestions
+                    suggestionsBar.updateSuggestions([])
+                }
+                editor.unmarkText()
+            }
+            
+            /*
+            e var $pos2 = editor.selectedIATextRange!.iaStart
+            e var $tok2 = editor.tokenizer
+            
+            e $tok.isPosition($pos2, atBoundary: .Word, inDirection: 0)
+            e $tok.isPosition($pos2, withinTextUnit: .Word, inDirection: 0)
+            e $tok.rangeEnclosingPosition($pos2, withGranularity: .Word, inDirection: 0)
+            e $tok.positionFromPosition($pos2, toBoundary: .Word, inDirection: 1) as! IATextPosition
+        */
+        } else {
+            //we either have a nil delegate or nil selectedRange on the editor
+            suggestionsBar.updateSuggestions([])
         }
     }
+    
     
     func shiftKeyPressed(){
         updateKeyMapping()
     }
     
+    func suggestionSelected(suggestionBar: SuggestionBarView!, suggestionString: String, intensity: Int) {
+        softSpace = delegate?.iaKeyboard(self, suggestionSelected: suggestionString, intensity: intensity) ?? false
+    }
+    
+    var suggestionBarActive:Bool {
+        get{return !suggestionsBar.hidden}
+        set{suggestionsBar.hidden = !newValue}
+    }
     
 }
 

@@ -76,9 +76,9 @@ public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDelegate
         self.setNeedsDisplay()
     }
     
-    public func layoutManagerDidInvalidateLayout(sender: NSLayoutManager) {
-        print("ThinTextView: layoutManagerDidInvalidateLayout called but unimplemented")
-    }
+//    public func layoutManagerDidInvalidateLayout(sender: NSLayoutManager) {
+//        print("ThinTextView: layoutManagerDidInvalidateLayout called but unimplemented")
+//    }
     
     public func textStorage(textStorage: NSTextStorage, willProcessEditing editedMask: NSTextStorageEditActions, range editedRange: NSRange, changeInLength delta: Int) {
         //if animating opacity then we don't want to draw selection rects on the same layer

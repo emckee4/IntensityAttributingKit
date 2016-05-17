@@ -20,8 +20,17 @@ extension IACompositeTextEditor:IAKeyboardDelegate {
     }
     
     
-    func iaKeyboard(iaKeyboard:IAKeyboard, suggestionSelected text:String, intensity:Int){
-        
+    func iaKeyboard(iaKeyboard:IAKeyboard, suggestionSelected text:String, intensity:Int)->Bool{
+        if markedRange != nil {
+            let rep = IAString(text: text + " ", intensity: intensity, attributes: iaString.getBaseAttributesForRange(markedRange!))
+            replaceIAStringRange(rep, range: markedRange!, closeSelectedRange: true)
+            unmarkText()
+            return true
+        } else {
+            let insertionIAString = IAString(text: text, intensity: intensity, attributes: baseAttributes)
+            replaceIAStringRange(insertionIAString, range: selectedRange!)
+            return false
+        }
     }
 
     

@@ -41,6 +41,10 @@ public class IACompositeBase:UIView {
         }
     }
     
+    var markedRange:Range<Int>? {
+        didSet{if markedRange != oldValue{updateSelectionLayer()}}
+    }
+    
     public var isAnimating:Bool {
         return (topTV.layer.animationForKey("opacity") != nil) || (bottomTV.layer.animationForKey("opacity") != nil)
     }
@@ -340,10 +344,17 @@ public class IACompositeBase:UIView {
     
     ///Updates the selection layer if needed.
     func updateSelectionLayer(){
-        if selectedRange == nil {
+        if selectedRange == nil && markedRange == nil{
             selectionView.clearSelection()
-        } else if self.isFirstResponder() && selectedRange!.count == 0{
-            selectionView.updateSelections([], caretRect: caretRectForIntPosition(selectedRange!.startIndex))
+        } else if self.isFirstResponder() && selectedRange!.count == 0 {
+            //selectionView.updateSelections([], caretRect: caretRectForIntPosition(selectedRange!.startIndex))
+            let markedRect:CGRect? = {
+                guard markedRange != nil else {return nil}
+                let gr = topTV.layoutManager.glyphRangeForCharacterRange(markedRange!.nsRange, actualCharacterRange: nil)
+                let rect = topTV.layoutManager.boundingRectForGlyphRange(gr, inTextContainer: topTV.textContainer)
+                return topTV.convertRect(rect, toView: self)
+            }()
+            selectionView.setTextMarking(markedRect, caretRect: caretRectForIntPosition(selectedRange!.startIndex))
         } else {
             let selectionRects = selectionRectsForIntRange(selectedRange!)
             let caretRect = caretRectForIntPosition(selectedRange!.endIndex)

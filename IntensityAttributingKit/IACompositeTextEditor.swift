@@ -36,11 +36,7 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
     }
     
     var _inputVC:UIInputViewController?
-    
-    
-    //var selectedRange:Range<Int>?
-    var markedRange:Range<Int>?
-    
+
     //TODO: Gesture recognizers
     
     var tapGR:UITapGestureRecognizer!
@@ -100,7 +96,7 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
         }
     }
     
-    public var markedTextRange: UITextRange? {
+    public internal(set) var markedTextRange: UITextRange? {
         get {guard markedRange != nil else {return nil}
             return IATextRange(range: markedRange!)
         }
@@ -116,7 +112,9 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
     }
     
     public var markedTextStyle: [NSObject : AnyObject]? {
-        didSet{print("markedTextStyle was set to value: \(markedTextStyle)")}
+        didSet{print("markedTextStyle was set to value: \(markedTextStyle). ")
+            
+        }
     }
     
     
@@ -150,6 +148,7 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
     ///This function performs a range replace on the iaString and updates affected portions ofthe provided textStorage with the new values. This can be complicated because a replaceRange on an IAString with a multi-character length tokenizer (ie anything but character length) can affect a longer range of the textStorage than is replaced in the IAString. This function tries to avoid modifying longer stretches than is necessary. If closeSelectedRange is true then the selectedRange will become the insertion point at the end of the newly updated range. If it is false then the selectedRange will be the newly inserted range.
     internal func replaceIAStringRange(replacement:IAString, range:Range<Int>, closeSelectedRange:Bool = true){
         guard replacement.length > 0 || !range.isEmpty else {return}
+        inputViewController?.textWillChange(self)
         //guard replacement.length > 0 else {deleteIAStringRange(range); return}
         
         self.iaString.replaceRange(replacement, range: range)
@@ -187,12 +186,14 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
         }
 
         
-        inputDelegate?.textDidChange(self)
+        //inputDelegate?.textDidChange(self)
+        inputViewController?.textDidChange(self)
     }
     
     ///Performs similarly to replaceRange:iaString, deleting text form the store and updating the displaying textStorage to match, taking into account the interaction between the range deletion and tokenizer to determine and execute whatever changes need to be made.
     internal func deleteIAStringRange(range:Range<Int>){
         guard !range.isEmpty else {return}
+        inputDelegate?.textWillChange(self)
         let rangeContainedAttachments:Bool = iaString.rangeContainsAttachments(range)
         
         if iaString.checkRangeIsIndependentInRendering(range, overridingOptions: IAKitPreferences.iaStringOverridingOptions) {
@@ -296,6 +297,7 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
                         _baseAttributes = iaString.baseAttributes[0]
                         _currentIntensity = iaString.intensities[0]
                     }
+                    inputViewController?.selectionDidChange(self)
                     super.selectedRangeChanged()
                     return
                 } else {
@@ -309,6 +311,7 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
                 _baseAttributes = iaString.getBaseAttributesForRange(_selectedRange!)
             }
         }
+        inputViewController?.selectionDidChange(self)
         super.selectedRangeChanged()
     }
     

@@ -51,7 +51,8 @@ extension IACompositeTextEditor {
     }
     
     public func hasText() -> Bool {
-        return (iaString?.text.isEmpty ?? true) == false
+        guard iaString != nil else {return false}
+        return !(iaString!.text.isEmpty)
     }
     
     
@@ -70,11 +71,11 @@ extension IACompositeTextEditor {
 
     
     public func setMarkedText(markedText: String?, selectedRange: NSRange) {
-        fatalError("setMarkedText not properlay implemented")
+        fatalError("setMarkedText not properly implemented")
     }
     
     public func unmarkText() {
-        fatalError("unmark not properlay implemented")
+        markedRange = nil
     }
     
     //MARK: Ranging and positioning
@@ -91,8 +92,25 @@ extension IACompositeTextEditor {
     
     public func positionFromPosition(position: UITextPosition, inDirection direction: UITextLayoutDirection, offset: Int) -> UITextPosition? {
         guard let position = (position as? IATextPosition) else {print("UITextInput.positionFromPosition received non IATextPosition as a parameters"); return nil}
-        guard direction == .Right else {print("positionFromPosition: receive layout direction of \(direction), rather than .Right (raw == 2) as expected"); return nil}
-        return iaPositionFromPosition(position, offset: offset)
+        ////guard direction == .Right else {print("positionFromPosition: receive layout direction of \(direction), rather than .Right (raw == 2) as expected"); return nil}
+        switch direction {
+        case .Right:
+            return iaPositionFromPosition(position, offset: offset)
+        case .Left:
+            return iaPositionFromPosition(position, offset: -offset)
+        case .Up:
+            //same result for any offset value
+            let gi = topTV.layoutManager.glyphIndexForCharacterAtIndex(position.position)
+            let br = topTV.layoutManager.boundingRectForGlyphRange(NSMakeRange(gi, 0), inTextContainer: topTV.textContainer)
+            let higherPoint = CGPointMake(br.origin.x, br.origin.y - 0.5 * br.height)
+            return closestIAPositionToPoint(higherPoint)
+        case .Down:
+            //same result for any offset value
+            let gi = topTV.layoutManager.glyphIndexForCharacterAtIndex(position.position)
+            let br = topTV.layoutManager.boundingRectForGlyphRange(NSMakeRange(gi, 0), inTextContainer: topTV.textContainer)
+            let lowerPoint = CGPointMake(br.origin.x, br.origin.y + 1.5 * br.height)
+            return closestIAPositionToPoint(lowerPoint) 
+        }
     }
     
     public func comparePosition(position: UITextPosition, toPosition other: UITextPosition) -> NSComparisonResult {
@@ -175,7 +193,9 @@ extension IACompositeTextEditor {
     
     public func iaPositionFromPosition(position: IATextPosition, offset: Int) -> IATextPosition? {
         let newLoc = position.position + offset
-        guard newLoc >= 0 && newLoc <= iaString.length else {print("UITextInput.positionFromPosition: new position would be out of bounds: \(position), + \(offset)");return nil}
+        guard newLoc >= 0 && newLoc <= iaString.length else {
+            //print("UITextInput.positionFromPosition: new position would be out of bounds: \(position), + \(offset)");
+            return nil}
         return position.positionWithOffset(offset)
     }
     
@@ -275,7 +295,12 @@ extension IACompositeTextEditor {
     
 }
 
-
+protocol IATextInput {
+    
+    
+    
+    
+}
 
 
 
