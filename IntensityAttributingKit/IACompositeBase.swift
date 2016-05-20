@@ -368,7 +368,7 @@ public class IACompositeBase:UIView {
     }
     
     
-    ///Note: This assumes forward layout direction with left-to-right writing. Caret width is fixed at 2 points
+    ///Note: This assumes forward layout direction with left-to-right writing. Caret width is fixed at 2 points. Caret will be increased in size (height increased) if it's too small (as a result of an empty field).
     func caretRectForIntPosition(position: Int) -> CGRect {
         let caretWidth:CGFloat = 2
         let glyphRange = topTV.layoutManager.glyphRangeForCharacterRange(NSMakeRange(position, 0), actualCharacterRange: nil)
@@ -377,8 +377,9 @@ public class IACompositeBase:UIView {
             baseRect = rect
             stop.initialize(true)
         }
+        let caretHeight:CGFloat = max(baseRect.size.height, 22.0) //establish minimum caret height
         //rect in topTV coordinate space
-        let tvRect = CGRectMake(baseRect.origin.x + baseRect.size.width, baseRect.origin.y, caretWidth, baseRect.size.height)
+        let tvRect = CGRectMake(baseRect.origin.x + baseRect.size.width, baseRect.origin.y, caretWidth, caretHeight)
         return self.convertRect(tvRect, fromView: topTV)
     }
     

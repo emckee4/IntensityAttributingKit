@@ -28,8 +28,6 @@ final class IASelectionView: UIView {
         }
     }
     
-    
-    
     override func drawRect(rect: CGRect) {
         guard !selectionRects.isEmpty || caretRect != nil || markedTextRect != nil else {return}
         if selectionRects.isEmpty {

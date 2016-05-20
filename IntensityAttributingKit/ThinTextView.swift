@@ -19,6 +19,14 @@ public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDelegate
         get{return textContainer.preferedThumbSize}
         set{textContainer.preferedThumbSize = newValue}
     }
+    ///systemLayoutSizeFittingSize sets this true so that didCompleteLayoutForTextContainer doesn't redraw the layer
+    private var isCalculatingSize:Bool = false
+    ///When calling systemLayoutSizeFittingSize with empty textStorage, the layout engine will be provided with an empty character in this font size for the purposes of calculating its needed size. This lets dynamic resizing cells built around ThinTextView start with the desired size.
+    var sizeForFontWhenEmpty:UIFont? = UIFont.systemFontOfSize(20)
+//    private var emptySizedAttString:NSAttributedString? {
+//        guard sizeForFontWhenEmpty != nil else {return nil}
+//        return NSAttributedString(string: "\u{200B}", attributes: [NSFontAttributeName:sizeForFontWhenEmpty!])
+//    }
     
     public override init(frame: CGRect) {
         textContainer = IATextContainer()
@@ -72,8 +80,9 @@ public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDelegate
     }
     
     public func layoutManager(layoutManager: NSLayoutManager, didCompleteLayoutForTextContainer textContainer: NSTextContainer?, atEnd layoutFinishedFlag: Bool) {
-        //could put drawing of underlayer here
-        self.setNeedsDisplay()
+        if isCalculatingSize == false {
+            self.setNeedsDisplay()
+        }
     }
     
 //    public func layoutManagerDidInvalidateLayout(sender: NSLayoutManager) {
@@ -96,11 +105,23 @@ public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDelegate
     }
     
     public override func systemLayoutSizeFittingSize(targetSize: CGSize) -> CGSize {
-        print("ThinTextView: warning: systemLayoutSizeFittingSize may not be properly implemented. Consider preventing layoutmanager from redrawing during this interval (possibly via the delegate?)")
+        //We disable drawing while this is calculating the sizes. Additionally we can calculate a size assuming a certain font/font size will be used if the sizeForFontWhenEmpty is non nil but our textStorage is empty.
+        let useEmptyAttString = textStorage.length == 0 && sizeForFontWhenEmpty != nil
         let currentTCSize = textContainer.size
+        isCalculatingSize = true
+        if useEmptyAttString {
+            textStorage.beginEditing()
+            textStorage.replaceCharactersInRange(NSMakeRange(0,0), withString: "\u{200B}")
+            textStorage.setAttributes([NSFontAttributeName:sizeForFontWhenEmpty!], range: NSMakeRange(0,1))
+            textStorage.endEditing()
+        }
         textContainer.size = targetSize
         let result = layoutManager.usedRectForTextContainer(textContainer).size
+        if useEmptyAttString {
+            textStorage.replaceCharactersInRange(NSMakeRange(0,1), withString: "")
+        }
         textContainer.size = currentTCSize
+        isCalculatingSize = false
         return result
     }
     

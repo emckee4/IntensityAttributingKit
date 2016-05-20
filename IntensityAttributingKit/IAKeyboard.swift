@@ -162,8 +162,9 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
     func prepareKeyboardForAppearance(){
         self.shiftKey?.deselect(overrideSelectedLock: true)
         softSpace = false
-        updateKeyMapping()
+        updateSuggestionBar()
         autoCapsIfNeeded()
+        updateKeyMapping()
     }
     
     
