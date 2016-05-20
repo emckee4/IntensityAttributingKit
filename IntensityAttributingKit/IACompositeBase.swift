@@ -73,6 +73,10 @@ public class IACompositeBase:UIView {
         return UIMenuController.sharedMenuController()
     }
     
+    override public var bounds: CGRect{
+        didSet{if bounds != oldValue {self.rerenderIAString()}}
+    }
+    
     public override func layoutSubviews() {
         super.layoutSubviews()   //should this be called before or after?
         //set frames for contained objects
@@ -174,10 +178,11 @@ public class IACompositeBase:UIView {
     
     //Recalculates and redraws entire range of iaString, similar to what would happen calling setIAString(self.iaString) but keeps selection intact and may have optimizations (eventually). Typically called after changes in states that affect the display of the entire string, like changing the smoother or transformer (current values or global overrides).
     func rerenderIAString(){
-        let currentSelection = selectedRange
-        setIAString(iaString)
-        selectedRange = currentSelection
-        //TODO: only do as much work as required
+        guard iaString != nil else {return}
+        self.setNeedsDisplay()
+        self.repositionImageViews()
+        self.updateSelectionLayer()
+        //TODO: might need to call reposition or refreshImageLayer
     }
     
     func refreshImageLayer(){

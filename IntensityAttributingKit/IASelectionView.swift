@@ -31,7 +31,6 @@ final class IASelectionView: UIView {
     
     
     override func drawRect(rect: CGRect) {
-        super.drawRect(rect)
         guard !selectionRects.isEmpty || caretRect != nil || markedTextRect != nil else {return}
         if selectionRects.isEmpty {
             
@@ -73,6 +72,7 @@ final class IASelectionView: UIView {
     ///Use this to update selectionRects and caretRect. This may mark the entire view as hidden if nothing is selected or unhide itself if something is selected.
     func updateSelections(rawSelectionRects:[CGRect], caretRect:CGRect?, markEnds:Bool){
         self.selectionRects = IATextSelectionRect.generateSelectionArray(rawSelectionRects, markEnds:markEnds)
+        self.markedTextRect = nil
         self.caretRect = caretRect
         if selectionRects.isEmpty && caretRect == nil {
             self.hidden = true
@@ -84,6 +84,7 @@ final class IASelectionView: UIView {
 
     ///If called without parameters then this will clear and hide the selectionView
     func updateSelections(selectionRects:[IATextSelectionRect] = [], caretRect:CGRect? = nil){
+        self.markedTextRect = nil
         self.selectionRects = selectionRects
         self.caretRect = caretRect
         if selectionRects.isEmpty && caretRect == nil {
@@ -101,6 +102,7 @@ final class IASelectionView: UIView {
         self.caretRect = caretRect
         if self.markedTextRect == nil && caretRect == nil {
             self.hidden = true
+            
         } else {
             self.hidden = false
             self.setNeedsDisplay()
@@ -110,7 +112,7 @@ final class IASelectionView: UIView {
     func hideCursor(){
         if self.caretRect != nil {
             caretRect = nil
-            if selectionRects.isEmpty {
+            if selectionRects.isEmpty && markedTextRect == nil{
                 self.hidden = true
             } else {
                 self.setNeedsDisplay()

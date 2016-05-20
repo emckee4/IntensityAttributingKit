@@ -92,6 +92,7 @@
 		C0AE06141C6E64490096F042 /* PressureKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AE06131C6E64490096F042 /* PressureKey.swift */; };
 		C0AE06191C6E75750096F042 /* IAStringTokenizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AE06181C6E75750096F042 /* IAStringTokenizing.swift */; };
 		C0BCB6C41BFA60BE00654E0A /* ValueWithRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BCB6C31BFA60BE00654E0A /* ValueWithRange.swift */; };
+		C0CCA1241CEBA9340042CCF7 /* KeyboardLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CCA1231CEBA9340042CCF7 /* KeyboardLayoutView.swift */; };
 		C0CDB1391C5EC30500F6D548 /* IATextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CDB1381C5EC30500F6D548 /* IATextEditor.swift */; };
 		C0D4474A1BE6BC16003204E7 /* RawIntensity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D447491BE6BC16003204E7 /* RawIntensity.swift */; };
 		C0D4474C1BE82381003204E7 /* ImageAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0D4474B1BE82381003204E7 /* ImageAssets.xcassets */; };
@@ -203,6 +204,7 @@
 		C0AE06131C6E64490096F042 /* PressureKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PressureKey.swift; sourceTree = "<group>"; };
 		C0AE06181C6E75750096F042 /* IAStringTokenizing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringTokenizing.swift; sourceTree = "<group>"; };
 		C0BCB6C31BFA60BE00654E0A /* ValueWithRange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueWithRange.swift; sourceTree = "<group>"; };
+		C0CCA1231CEBA9340042CCF7 /* KeyboardLayoutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardLayoutView.swift; sourceTree = "<group>"; };
 		C0CDB1381C5EC30500F6D548 /* IATextEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = IATextEditor.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		C0D447491BE6BC16003204E7 /* RawIntensity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawIntensity.swift; sourceTree = "<group>"; };
 		C0D4474B1BE82381003204E7 /* ImageAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ImageAssets.xcassets; sourceTree = "<group>"; };
@@ -496,6 +498,7 @@
 			children = (
 				C031CC051BDD948700521393 /* IAKeyboard.swift */,
 				C08EE1041CB846600030FC3E /* IAKeyboardDelegateProtocol.swift */,
+				C0CCA1231CEBA9340042CCF7 /* KeyboardLayoutView.swift */,
 			);
 			name = Keyboard;
 			sourceTree = "<group>";
@@ -748,6 +751,7 @@
 				C08B42FF1CD282F7002F2840 /* IATextSelectionRect.swift in Sources */,
 				C069B2BC1C628D87008834D3 /* IATEDelegateConformance.swift in Sources */,
 				C0BCB6C41BFA60BE00654E0A /* ValueWithRange.swift in Sources */,
+				C0CCA1241CEBA9340042CCF7 /* KeyboardLayoutView.swift in Sources */,
 				C038B3EA1C69310400069F9C /* ExpandingKeyControl.swift in Sources */,
 				C0E68E6D1C10C1AF005162F7 /* EKDirection.swift in Sources */,
 				C08EE0FB1CB6DC5A0030FC3E /* IACaret.swift in Sources */,

@@ -187,6 +187,7 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
 
         
         //inputDelegate?.textDidChange(self)
+        markedRange = nil // let the textDidChange method in IAKeyboard update the marked range
         inputViewController?.textDidChange(self)
     }
     
@@ -217,7 +218,7 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
         
         let newTextPos = positionFromPosition(beginningOfDocument, offset: range.startIndex )!
         selectedTextRange = textRangeFromPosition(newTextPos, toPosition: newTextPos)
-        
+        markedRange = nil
         inputDelegate?.textDidChange(self)
     }
     
@@ -371,6 +372,7 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
     override public func resignFirstResponder() -> Bool {
         guard super.resignFirstResponder() else {return false}
         IAKitPreferences.keyboard.inputView!.layer.shouldRasterize = true
+        unmarkText()
         selectionView.hideCursor()
         RawIntensity.touchInterpreter.deactivate()
         return true

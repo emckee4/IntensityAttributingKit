@@ -46,11 +46,12 @@ extension IACompositeTextEditor:IAKeyboardDelegate {
             IAKitPreferences.keyboard.prepareKeyboardForAppearance()
             IAKitPreferences.accessory.updateAccessoryLayout(true)
         } else {
+            unmarkText()
             self._inputVC = nil
             IAKitPreferences.accessory.updateAccessoryLayout(false)
         }
         self.reloadInputViews()
-        self.updateSuggestionsBar()
+        
     }
 
     func prepareToBecomeFirstResponder(){
@@ -110,6 +111,9 @@ extension IACompositeTextEditor: IAAccessoryDelegate {
         guard toTransformer != iaString.baseOptions.renderScheme else {return true}
         self.iaString.baseOptions.renderScheme = toTransformer
         rerenderIAString()
+        if iaString.baseOptions.animatesIfAvailable && toTransformer.isAnimatable {
+            self.startAnimation()
+        }
         return true
     }
     

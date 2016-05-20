@@ -17,15 +17,6 @@ class SuggestionBarView: UIView, PressureKeyActionDelegate {
     private(set)var pressureKeys:[PressureKey]!
     private(set)var stackView:UIStackView!
     
-    override var bounds:CGRect{
-        didSet{
-            layoutForBounds(bounds)
-            if bounds.width != oldValue.width {
-                ///This ensures that the correct number of suggestions are displayed
-                //updateSuggestions(suggestions)
-            }
-        }
-    }
     
     var visibleCellCount:Int {return pressureKeys.reduce(0, combine: {$0 + ($1.hidden ? 0 : 1)})}
     
@@ -78,19 +69,18 @@ class SuggestionBarView: UIView, PressureKeyActionDelegate {
         stackView.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    
-
-    
-    func layoutForBounds(bounds:CGRect){
+    override func layoutSubviews() {
         let numberOfCellsToMakeVisible = Int(bounds.width) / 120
-        guard visibleCellCount != numberOfCellsToMakeVisible else {return}
-        for pk in pressureKeys {
-            if pk.tag < numberOfCellsToMakeVisible {
-                pk.hidden = false
-            } else {
-                pk.hidden = true
+        if visibleCellCount != numberOfCellsToMakeVisible {
+            for pk in pressureKeys {
+                if pk.tag < numberOfCellsToMakeVisible {
+                    pk.hidden = false
+                } else {
+                    pk.hidden = true
+                }
             }
         }
+        super.layoutSubviews()
     }
     
     ///Groups all selections into a separately named function for convenience and to enable easy changing of internal implementation.

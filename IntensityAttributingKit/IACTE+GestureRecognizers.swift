@@ -120,28 +120,12 @@ extension IACompositeTextEditor: UIGestureRecognizerDelegate {
     }
 
 
-
-    
-//    @objc func loupPanGestureUpdate(sender:UIPanGestureRecognizer!){
-//        //TODO: enable loup Pan
-//        print("pan")
-//    }
-    
     public func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOfGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer == tapGR && (otherGestureRecognizer == doubleTapGR || otherGestureRecognizer == longPressGR) && self.isFirstResponder(){
             return true
         }
         return false
     }
-    
-    
-//    public func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-//        if gestureRecognizer == doubleTapGR && otherGestureRecognizer == longPressGR || gestureRecognizer == longPressGR && otherGestureRecognizer == doubleTapGR {
-//            return true
-//        } else {
-//            return false
-//        }
-//    }
     
     
     public override func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
