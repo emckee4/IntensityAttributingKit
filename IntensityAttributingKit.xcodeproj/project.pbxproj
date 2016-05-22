@@ -35,6 +35,7 @@
 		C031CC001BDD902000521393 /* IATextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBFF1BDD902000521393 /* IATextView.swift */; };
 		C031CC041BDD921100521393 /* PressureButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CC031BDD921100521393 /* PressureButton.swift */; };
 		C031CC061BDD948700521393 /* IAKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CC051BDD948700521393 /* IAKeyboard.swift */; };
+		C0326E231CF27C2700E6161F /* IAImageLayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0326E221CF27C2700E6161F /* IAImageLayerView.swift */; };
 		C038B3EA1C69310400069F9C /* ExpandingKeyControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C038B3E91C69310400069F9C /* ExpandingKeyControl.swift */; };
 		C038B3EC1C69311200069F9C /* ExpandingKeyBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C038B3EB1C69311200069F9C /* ExpandingKeyBase.swift */; };
 		C040C5081C0E4283007C1685 /* IAKitPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C040C5071C0E4283007C1685 /* IAKitPreferences.swift */; };
@@ -147,6 +148,7 @@
 		C031CBFF1BDD902000521393 /* IATextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextView.swift; sourceTree = "<group>"; };
 		C031CC031BDD921100521393 /* PressureButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PressureButton.swift; sourceTree = "<group>"; };
 		C031CC051BDD948700521393 /* IAKeyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAKeyboard.swift; sourceTree = "<group>"; };
+		C0326E221CF27C2700E6161F /* IAImageLayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAImageLayerView.swift; sourceTree = "<group>"; };
 		C038B3E91C69310400069F9C /* ExpandingKeyControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandingKeyControl.swift; sourceTree = "<group>"; };
 		C038B3EB1C69311200069F9C /* ExpandingKeyBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandingKeyBase.swift; sourceTree = "<group>"; };
 		C040C5071C0E4283007C1685 /* IAKitPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAKitPreferences.swift; sourceTree = "<group>"; };
@@ -355,6 +357,7 @@
 				C084E9101CDE56E7009D387D /* IAMagnifyingLoup.swift */,
 				C08B42FE1CD282F7002F2840 /* IATextSelectionRect.swift */,
 				C0479E651CC01E130032A5C6 /* IASelectionView.swift */,
+				C0326E221CF27C2700E6161F /* IAImageLayerView.swift */,
 				C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */,
 				C08253B31BE571E00017AC14 /* KB+Accessory */,
 				C06B1D541BEE9BDA009F427A /* RawIntensity */,
@@ -757,6 +760,7 @@
 				C08EE0FB1CB6DC5A0030FC3E /* IACaret.swift in Sources */,
 				C04533A01CA47BB200B374D0 /* SmootherOverrideAdjusterCell.swift in Sources */,
 				C01BDAA01C571954004CF045 /* RangeValuePair.swift in Sources */,
+				C0326E231CF27C2700E6161F /* IAImageLayerView.swift in Sources */,
 				C04533B21CAAF2FC00B374D0 /* IACompositeTextView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

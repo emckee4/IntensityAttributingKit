@@ -100,16 +100,15 @@ public class IACompositeBase:UIView {
         
         //topTV.userInteractionEnabled = false
         topTV.backgroundColor = UIColor.clearColor()
-        topTV.textStorage.setAttributes([NSFontAttributeName:UIFont.systemFontOfSize(40)], range: NSMakeRange(0, 0))
         
         //bottomTV.userInteractionEnabled = false
         bottomTV.backgroundColor = UIColor.clearColor()
         bottomTV.hidden = true
         
         //imageLayer.userInteractionEnabled = false
-        imageLayer.layer.drawsAsynchronously = true
+        imageLayer.layer.drawsAsynchronously = false
         imageLayer.clipsToBounds = true
-        imageLayer.hidden = true
+        //imageLayer.hidden = true
         
         containerView.addSubview(imageLayer)
         containerView.addSubview(bottomTV)
@@ -177,8 +176,20 @@ public class IACompositeBase:UIView {
     }
     
     //Recalculates and redraws entire range of iaString, similar to what would happen calling setIAString(self.iaString) but keeps selection intact and may have optimizations (eventually). Typically called after changes in states that affect the display of the entire string, like changing the smoother or transformer (current values or global overrides).
-    func rerenderIAString(){
+    func rerenderIAString(recalculateStrings recalculateStrings:Bool = false){
         guard iaString != nil else {return}
+        if recalculateStrings{
+            let options = iaString.baseOptions.optionsWithOverridesApplied(IAKitPreferences.iaStringOverridingOptions)
+            let attStrings = self.iaString.convertToNSAttributedStringsForLayeredDisplay(withOverridingOptions: options)
+            let attStringLength = attStrings.top.length
+            topTV.textStorage.replaceCharactersInRange(NSMakeRange(0, topTV.textStorage.length), withAttributedString: attStrings.top)
+            if attStrings.bottom?.length == attStringLength {
+                bottomTV.hidden = false
+                bottomTV.textStorage.replaceCharactersInRange(NSMakeRange(0, bottomTV.textStorage.length), withAttributedString: attStrings.bottom!)
+            } else {
+                bottomTV.hidden = true
+            }
+        }
         self.setNeedsDisplay()
         self.repositionImageViews()
         self.updateSelectionLayer()
@@ -186,13 +197,22 @@ public class IACompositeBase:UIView {
     }
     
     func refreshImageLayer(){
-        guard imageLayerImageViews.count >= iaString.attachmentCount else {fatalError("refreshImageLayer: not enough imageLayerImageViews for attachment count")}
+        guard iaString.attachmentCount > 0 else {imageLayer.hidden = true; return}
+        if imageLayer.hidden {imageLayer.hidden = false}
+        if imageLayerImageViews.count < iaString.attachmentCount {
+            for _ in 0..<(iaString.attachmentCount - imageLayerImageViews.count){
+                let newImageView = UIImageView(frame: CGRectZero)
+                newImageView.translatesAutoresizingMaskIntoConstraints = false
+                imageLayerImageViews.append(newImageView)
+                imageLayer.addSubview(newImageView)
+            }
+        }
         for (i ,locAttach) in iaString.attachments.enumerate() {
+            imageLayerImageViews[i].hidden = false
             let (location, attachment) = locAttach
             let attachRect = topTV.layoutManager.boundingRectForGlyphRange(NSMakeRange(location, 1), inTextContainer: topTV.textContainer)
-            imageLayerImageViews[i].image = attachment.imageForThumbSize(self.thumbSizesForAttachments)
-            imageLayerImageViews[i].hidden = false
             imageLayerImageViews[i].frame = attachRect
+            imageLayerImageViews[i].image = ThumbSize.Medium.imagePlaceholder//attachment.imageForThumbSize(self.thumbSizesForAttachments)
         }
         if iaString.attachmentCount < imageLayerImageViews.count {
             for i in (iaString.attachmentCount)..<(imageLayerImageViews.count){
@@ -204,7 +224,7 @@ public class IACompositeBase:UIView {
     
     ///If bounds change but images do not need to be reloaded then this can be called as a more efficient alternative to refreshImageLayer.
     func repositionImageViews(){
-        guard imageLayerImageViews.count >= iaString.attachmentCount else {fatalError("repositionImageViews: not enough imageLayerImageViews for attachment count")}
+        guard imageLayerImageViews.count >= iaString.attachmentCount else {refreshImageLayer();return}
         for (i ,locAttach) in iaString.attachments.enumerate() {
             let (location, _) = locAttach
             let attachRect = topTV.layoutManager.boundingRectForGlyphRange(NSMakeRange(location, 1), inTextContainer: topTV.textContainer)

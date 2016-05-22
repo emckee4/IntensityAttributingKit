@@ -106,17 +106,6 @@ extension IACompositeTextEditor: IAAccessoryDelegate {
         self.window?.rootViewController?.presentViewController(modalContainer, animated: true, completion: nil)
     }
     
-    ///Return true to inform the iaAccessory that it should center the button associated with the transformer.
-    func accessoryRequestsTransformerChange(accessory:IAAccessoryVC!, toTransformer:IntensityTransformers)->Bool{
-        guard toTransformer != iaString.baseOptions.renderScheme else {return true}
-        self.iaString.baseOptions.renderScheme = toTransformer
-        rerenderIAString()
-        if iaString.baseOptions.animatesIfAvailable && toTransformer.isAnimatable {
-            self.startAnimation()
-        }
-        return true
-    }
-    
     func accessoryRequestsPickerLaunch(accessory:IAAccessoryVC!){
         launchPhotoPicker() //the check of the IATE delegate for whether to present the picker is called in launchPhotoPicker
     }
@@ -132,10 +121,21 @@ extension IACompositeTextEditor: IAAccessoryDelegate {
         
     }
     
+    ///Return true to inform the iaAccessory that it should center the button associated with the transformer.
+    func accessoryRequestsTransformerChange(accessory:IAAccessoryVC!, toTransformer:IntensityTransformers)->Bool{
+        guard toTransformer != iaString.baseOptions.renderScheme else {return true}
+        self.iaString.baseOptions.renderScheme = toTransformer
+        rerenderIAString(recalculateStrings: true)
+        if iaString.baseOptions.animatesIfAvailable && toTransformer.isAnimatable {
+            self.startAnimation()
+        }
+        return true
+    }
+    
     func accessoryRequestsSmoothingChange(accessory:IAAccessoryVC!, toValue:IAStringTokenizing)->Bool{
         guard toValue != iaString.baseOptions.preferedSmoothing else {return true}
         self.iaString.baseOptions.preferedSmoothing = toValue
-        rerenderIAString()
+        rerenderIAString(recalculateStrings: true)
         return true
     }
     

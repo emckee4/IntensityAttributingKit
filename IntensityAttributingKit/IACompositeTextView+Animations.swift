@@ -28,9 +28,9 @@ extension IACompositeBase{
     
     public func startAnimation(){
         guard let options = iaString?.baseOptions?.optionsWithOverridesApplied(IAKitPreferences.iaStringOverridingOptions) where options.animatesIfAvailable == true && options.renderScheme.isAnimatable && iaString.length > 0 else {return}
-        
+        if bottomTV.hidden == true {bottomTV.hidden = false}
         let trans:IntensityTransformers =  options.renderScheme
-        guard let animatingTransformer = (trans.transformer as? AnimatedIntensityTransforming.Type) else {return}
+        guard let animatingTransformer:AnimatedIntensityTransforming.Type = (trans.transformer as? AnimatedIntensityTransforming.Type) else {return}
         let aniParams:IAAnimationParameters = options.animationOptions ?? animatingTransformer.defaultAnimationParameters
         // get properties, adjust offsets, start animation
         let baseOffset = NSProcessInfo.processInfo().systemUptime % aniParams.duration
@@ -54,6 +54,7 @@ extension IACompositeBase{
     public func stopAnimation(){
         topTV.layer.removeAnimationForKey("opacity")
         bottomTV.layer.removeAnimationForKey("opacity")
+        //bottomTV.hidden = true
         //TODO: may want to set final value for opacity here
     }
 }

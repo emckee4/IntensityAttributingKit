@@ -133,6 +133,7 @@ public class IATextAttachment:NSTextAttachment {
     
     
     override public func attachmentBoundsForTextContainer(textContainer: NSTextContainer?, proposedLineFragment lineFrag: CGRect, glyphPosition position: CGPoint, characterIndex charIndex: Int) -> CGRect {
+        let sug = super.attachmentBoundsForTextContainer(textContainer!, proposedLineFragment: lineFrag, glyphPosition: position, characterIndex: charIndex)
         if let iaContainer = textContainer as? IATextContainer {
             return CGRect(origin:CGPointZero,size:iaContainer.preferedThumbSize.size)
         } else {
