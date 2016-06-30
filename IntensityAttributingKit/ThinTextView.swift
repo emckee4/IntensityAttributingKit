@@ -54,16 +54,46 @@ public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDelegate
     func setupSTV(){
         textStorage.addLayoutManager(layoutManager)
         textContainer.replaceLayoutManager(layoutManager)
-        textContainer.size = self.bounds.size
+        //textContainer.size = self.bounds.size
+        textContainer.heightTracksTextView = false
+        textContainer.widthTracksTextView = true
+        textContainer.size = CGSizeMake(self.bounds.size.width, 10000000.0)
         layoutManager.delegate = self
         textStorage.delegate = self
+        textContainer.lineBreakMode = .ByWordWrapping
     }
+    
+    //Doesn't get called in normal IA stack (frame-didSet gets called instead) but should be included in case thin viewer is used elsewhere
+    public override var bounds: CGRect {
+        didSet{
+            if textContainer.size != self.bounds.size && textContainer.heightTracksTextView && textContainer.widthTracksTextView{
+                textContainer.size = self.bounds.size
+            } else if textContainer.heightTracksTextView && textContainer.size.height != self.bounds.height {
+                textContainer.size.height = self.bounds.height
+            } else if textContainer.widthTracksTextView && textContainer.size.width != self.bounds.width {
+                textContainer.size.width = self.bounds.width
+            }
+        }
+    }
+
+    public override var frame: CGRect {
+        didSet{
+            if textContainer.size != self.bounds.size && textContainer.heightTracksTextView && textContainer.widthTracksTextView{
+                textContainer.size = self.bounds.size
+            } else if textContainer.heightTracksTextView && textContainer.size.height != self.bounds.height {
+                textContainer.size.height = self.bounds.height
+            } else if textContainer.widthTracksTextView && textContainer.size.width != self.bounds.width {
+                textContainer.size.width = self.bounds.width
+            }
+        }
+    }
+    
     
     public override func layoutSubviews() {
         super.layoutSubviews()
-        if textContainer.size != self.bounds.size {
-            textContainer.size = self.bounds.size
-        }
+//        if textContainer.size != self.bounds.size {
+//            textContainer.size = self.bounds.size
+//        }
         
         
     }
@@ -163,5 +193,12 @@ public class IATextContainer:NSTextContainer {
     override init(size:CGSize){
         super.init(size: size)
     }
+    
+//    public override func lineFragmentRectForProposedRect(proposedRect: CGRect, atIndex characterIndex: Int, writingDirection baseWritingDirection: NSWritingDirection, remainingRect: UnsafeMutablePointer<CGRect>) -> CGRect {
+//        let rem:CGRect = remainingRect.memory
+//        let result = super.lineFragmentRectForProposedRect(proposedRect, atIndex: characterIndex, writingDirection: baseWritingDirection, remainingRect: remainingRect)
+//        print("lfrpr: proposed:\(proposedRect), at:\(characterIndex), remOld:\(rem), remNew:\(remainingRect.memory)   result:\(result)")
+//        return result
+//    }
 }
 
