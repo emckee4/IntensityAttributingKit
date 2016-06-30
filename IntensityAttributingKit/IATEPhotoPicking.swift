@@ -24,7 +24,8 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
     }
     
     public func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        self.imageChosen(nil)
+        picker.dismissViewControllerAnimated(true, completion: nil)
+        self.becomeFirstResponder()
     }
     
     func launchPhotoPicker(){
@@ -61,7 +62,7 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
     }
     
     func imageChosen(image:UIImage!){
-        guard let image = image else {return}
+        guard let image = image else {self.becomeFirstResponder();return}
         guard let selectedRange = selectedRange else {return}
         let ta = IATextAttachment()
         ta.image = image.resizeImageToFit(maxSize: IAKitPreferences.maxSavedImageDimensions)

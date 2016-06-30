@@ -172,12 +172,12 @@ public struct IAAttachmentArray:CustomStringConvertible, SequenceType {
             if loc < range.startIndex {
                 continue
             } else if loc < range.endIndex {
-                return true
-            } else {
                 return false
+            } else {
+                return true
             }
         }
-        return false
+        return true
     }
     ///Returns all location-attachment tupples with locations contained in the provided range
     func attachmentsInRange(range:Range<Int>)->[LocAttach]{
