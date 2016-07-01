@@ -7,8 +7,9 @@
 //
 
 import UIKit
-
-
+/**
+Abstract parent class for IACompositeTextEditor and IACompositeTextView. 
+*/
 public class IACompositeBase:UIView {
     
     var containerView:UIView
@@ -119,6 +120,7 @@ public class IACompositeBase:UIView {
         setupGestureRecognizers()
     }
     
+    ///Implement in subclasses as needed
     func setupGestureRecognizers(){
         
     }
@@ -150,6 +152,7 @@ public class IACompositeBase:UIView {
             bottomTV.textStorage.replaceCharactersInRange(NSMakeRange(0, bottomTV.textStorage.length), withAttributedString: attStrings.bottom!)
         } else {
             bottomTV.hidden = true
+            bottomTV.textStorage.replaceCharactersInRange(NSMakeRange(0, bottomTV.textStorage.length), withAttributedString: NSAttributedString())
         }
         
         
@@ -179,7 +182,7 @@ public class IACompositeBase:UIView {
     //Recalculates and redraws entire range of iaString, similar to what would happen calling setIAString(self.iaString) but keeps selection intact and may have optimizations (eventually). Typically called after changes in states that affect the display of the entire string, like changing the smoother or transformer (current values or global overrides).
     func rerenderIAString(recalculateStrings recalculateStrings:Bool = false){
         guard iaString != nil else {return}
-        if recalculateStrings{
+        if recalculateStrings || (bottomTV.hidden == false && bottomTV.textStorage.length != topTV.textStorage.length){
             let options = iaString.baseOptions.optionsWithOverridesApplied(IAKitPreferences.iaStringOverridingOptions)
             let attStrings = self.iaString.convertToNSAttributedStringsForLayeredDisplay(withOverridingOptions: options)
             let attStringLength = attStrings.top.length
@@ -372,7 +375,8 @@ public class IACompositeBase:UIView {
     
     ///Updates the selection layer if needed.
     func updateSelectionLayer(){
-        if selectedRange == nil && markedRange == nil{
+        if selectedRange == nil { // changed from selectedRange == nil && markedRange == nil
+            markedRange = nil
             selectionView.clearSelection()
         } else if self.isFirstResponder() && selectedRange!.count == 0 {
             //selectionView.updateSelections([], caretRect: caretRectForIntPosition(selectedRange!.startIndex))

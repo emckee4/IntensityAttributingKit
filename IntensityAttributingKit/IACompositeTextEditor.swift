@@ -242,8 +242,11 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
         return result
     }
     
-    ///Sets the IATextEditor to an empty IAString and resets properties to the IAKitPreferences defaults. This should be called while the editor is not first responder.
+    ///Sets the IATextEditor to an empty IAString and resets properties to the IAKitPreferences defaults. Resigns as first responder.
     public func resetEditor(){
+        if self.isFirstResponder() {
+            self.resignFirstResponder()
+        }
         self.setIAString(IAString())
         currentIntensity = IAKitPreferences.defaultIntensity
         baseAttributes = IABaseAttributes(size: IAKitPreferences.defaultTextSize)
