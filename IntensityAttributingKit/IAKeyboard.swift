@@ -107,7 +107,7 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
     }
     ///cycles the pages of the current keyset
     func swapKeysetPageButtonPressed(){
-        currentKeyPageNumber++
+        currentKeyPageNumber += 1
         updateKeyMapping()
     }
     

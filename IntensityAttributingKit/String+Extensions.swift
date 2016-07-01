@@ -31,7 +31,7 @@ extension String {
     
     mutating func removeIntRange(range:Range<Int>) throws{
         guard let start = indexFromInt(range.startIndex), end = indexFromInt(range.endIndex) else {throw NSError(domain: "String.removeIntRange", code: -2, userInfo: [NSLocalizedDescriptionKey: "Bad indeces"])}
-        self.removeRange(Range<Index>(start:start,end:end))
+        self.removeRange(start..<end)
     }
     
     mutating func removeNSRange(range:NSRange) {
@@ -42,7 +42,7 @@ extension String {
     
     ///Random upper/lowercase letters with length
     static func randomAlphaString(length:Int)->String{
-        let baseString:NSString = "abcdefghijklmnopqrstuvwxyz" + "abcdefghijklmnopqrstuvwxyz".uppercaseString
+        let baseString:NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         var outputString = ""
         
         for _ in 0..<length {

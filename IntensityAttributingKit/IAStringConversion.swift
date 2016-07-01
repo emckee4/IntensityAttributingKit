@@ -343,15 +343,19 @@ extension IAString {
             var endIndex:Int = 0
             if binEnd < attsEnd {
                 endIndex = binEnd
-                currentBin = smoothedBinned.rvp(++binDi)
+                binDi += 1
+                currentBin = smoothedBinned.rvp(binDi)
             } else if attsEnd < binEnd {
                 endIndex = attsEnd
-                currentAtts =  baseAttributes.rvp(++attsDi)
+                attsDi += 1
+                currentAtts =  baseAttributes.rvp(attsDi)
             } else {
                 endIndex = attsEnd
                 if endIndex < textLength {
-                    currentBin = smoothedBinned.rvp(++binDi)
-                    currentAtts =  baseAttributes.rvp(++attsDi)
+                    binDi += 1
+                    currentBin = smoothedBinned.rvp(binDi)
+                    attsDi += 1
+                    currentAtts =  baseAttributes.rvp(attsDi)
                 }
             }
             let thisRange = NSRange(location: currentIndex, length: endIndex - currentIndex)
