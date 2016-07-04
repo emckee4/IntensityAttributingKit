@@ -55,7 +55,7 @@ public class IACompositeBase:UIView {
         didSet{
             topTV.thumbSize = thumbSizesForAttachments
             bottomTV.thumbSize = thumbSizesForAttachments
-            if iaString.attachmentCount > 0 && thumbSizesForAttachments != oldValue {
+            if iaString?.attachmentCount > 0 && thumbSizesForAttachments != oldValue {
                 //trigger layout from scratch
                 setIAString(iaString)
             }
@@ -239,18 +239,38 @@ public class IACompositeBase:UIView {
     }
     
 //    ///The intrinsicContentSize incorporates insets if the topTV ics is non-zero
-//    public override func intrinsicContentSize() -> CGSize {
-//        let ics = topTV.intrinsicContentSize()
-//        if ics == CGSizeZero {return CGSizeZero }
-//        return CGSize(width: ics.width + textContainerInset.left + textContainerInset.right, height: ics.height + textContainerInset.top + textContainerInset.bottom)
+    public override func intrinsicContentSize() -> CGSize {
+        //return super.intrinsicContentSize()
+            //topTV.intrinsicContentSize()
+        return topTV.intrinsicContentSize()
+    }
+    
+//    ///The systemLayoutSizeFittingSize doesn't incorporate insets if the topTV ics is non-zero
+//    public override func systemLayoutSizeFittingSize(targetSize: CGSize) -> CGSize {
+//        let insetHor = textContainerInset.left + textContainerInset.right
+//        let insetVert = textContainerInset.top + textContainerInset.bottom
+//        let sizeMinusInsets = CGSizeMake(targetSize.width - insetHor, targetSize.height - insetVert)
+//        let topTVSize = topTV.systemLayoutSizeFittingSize(sizeMinusInsets)
+//        return CGSizeMake(topTVSize.width + insetHor, topTVSize.height + insetVert)
+//    }
+//    
+//    public override func systemLayoutSizeFittingSize(targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
+//        if verticalFittingPriority < horizontalFittingPriority {
+//            return systemLayoutSizeFittingSize(CGSizeMake(targetSize.width, 10000000))
+//        } else if verticalFittingPriority > horizontalFittingPriority{
+//            return systemLayoutSizeFittingSize(CGSizeMake(10000000,targetSize.height))
+//        } else{
+//            return systemLayoutSizeFittingSize(targetSize)
+//        }
+//        
+//        
 //    }
     
-    ///The systemLayoutSizeFittingSize doesn't incorporate insets if the topTV ics is non-zero
-    public override func systemLayoutSizeFittingSize(targetSize: CGSize) -> CGSize {
+    public override func sizeThatFits(size: CGSize) -> CGSize {
         let insetHor = textContainerInset.left + textContainerInset.right
         let insetVert = textContainerInset.top + textContainerInset.bottom
-        let sizeMinusInsets = CGSizeMake(targetSize.width - insetHor, targetSize.height - insetVert)
-        let topTVSize = topTV.systemLayoutSizeFittingSize(sizeMinusInsets)
+        let sizeMinusInsets = CGSizeMake(size.width - insetHor, size.height - insetVert)
+        let topTVSize = topTV.sizeThatFits(sizeMinusInsets)
         return CGSizeMake(topTVSize.width + insetHor, topTVSize.height + insetVert)
     }
     

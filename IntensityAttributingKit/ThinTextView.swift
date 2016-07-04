@@ -134,8 +134,29 @@ public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDelegate
         }
     }
     
-    public override func systemLayoutSizeFittingSize(targetSize: CGSize) -> CGSize {
-        //We disable drawing while this is calculating the sizes. Additionally we can calculate a size assuming a certain font/font size will be used if the sizeForFontWhenEmpty is non nil but our textStorage is empty.
+//    public override func systemLayoutSizeFittingSize(targetSize: CGSize) -> CGSize {
+//        //We disable drawing while this is calculating the sizes. Additionally we can calculate a size assuming a certain font/font size will be used if the sizeForFontWhenEmpty is non nil but our textStorage is empty.
+//        let useEmptyAttString = textStorage.length == 0 && sizeForFontWhenEmpty != nil
+//        let currentTCSize = textContainer.size
+//        isCalculatingSize = true
+//        if useEmptyAttString {
+//            textStorage.beginEditing()
+//            textStorage.replaceCharactersInRange(NSMakeRange(0,0), withString: "\u{200B}")
+//            textStorage.setAttributes([NSFontAttributeName:sizeForFontWhenEmpty!], range: NSMakeRange(0,1))
+//            textStorage.endEditing()
+//        }
+//        //FIXME: the below doesn't seem to be updating with the used rect. Instead of using systemLayout... this should perhaps be its own function
+//        textContainer.size = targetSize
+//        let result = layoutManager.usedRectForTextContainer(textContainer).size
+//        if useEmptyAttString {
+//            textStorage.replaceCharactersInRange(NSMakeRange(0,1), withString: "")
+//        }
+//        textContainer.size = currentTCSize
+//        isCalculatingSize = false
+//        return result
+//    }
+    
+    public override func sizeThatFits(size: CGSize) -> CGSize {
         let useEmptyAttString = textStorage.length == 0 && sizeForFontWhenEmpty != nil
         let currentTCSize = textContainer.size
         isCalculatingSize = true
@@ -145,7 +166,8 @@ public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDelegate
             textStorage.setAttributes([NSFontAttributeName:sizeForFontWhenEmpty!], range: NSMakeRange(0,1))
             textStorage.endEditing()
         }
-        textContainer.size = targetSize
+        //FIXME: the below doesn't seem to be updating with the used rect. Instead of using systemLayout... this should perhaps be its own function
+        textContainer.size = size
         let result = layoutManager.usedRectForTextContainer(textContainer).size
         if useEmptyAttString {
             textStorage.replaceCharactersInRange(NSMakeRange(0,1), withString: "")
@@ -155,6 +177,20 @@ public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDelegate
         return result
     }
     
+    public override func intrinsicContentSize() -> CGSize {
+        if self.bounds.size == CGSizeZero {
+            //let s = systemLayoutSizeFittingSize(CGSizeMake(10000000, 1000000))
+            let s = sizeThatFits(CGSizeMake(10000000, 1000000))
+
+            print("ttv (bounds = Zero) ics: \(s)")
+            return s
+        } else {
+            let gr = layoutManager.glyphRangeForTextContainer(self.textContainer)
+            let ics = layoutManager.boundingRectForGlyphRange(gr, inTextContainer: textContainer).size
+            print("ttv (bounds = \(bounds.size)) ics: \(ics), gr:\(gr)")
+            return ics
+        }
+    }
     
 }
 
