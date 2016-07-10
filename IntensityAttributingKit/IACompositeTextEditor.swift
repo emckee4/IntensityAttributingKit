@@ -147,7 +147,7 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
     
     ///This function performs a range replace on the iaString and updates affected portions ofthe provided textStorage with the new values. This can be complicated because a replaceRange on an IAString with a multi-character length tokenizer (ie anything but character length) can affect a longer range of the textStorage than is replaced in the IAString. This function tries to avoid modifying longer stretches than is necessary. If closeSelectedRange is true then the selectedRange will become the insertion point at the end of the newly updated range. If it is false then the selectedRange will be the newly inserted range.
     internal func replaceIAStringRange(replacement:IAString, range:Range<Int>, closeSelectedRange:Bool = true){
-        guard replacement.length > 0 || !range.isEmpty else {return}
+        guard replacement.length > 0  || !range.isEmpty else {return} 
         let transitioningFromEmptyToContent:Bool = iaString.text.isEmpty
         inputViewController?.textWillChange(self)
         //guard replacement.length > 0 else {deleteIAStringRange(range); return}
@@ -163,7 +163,7 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
         topTV.textStorage.replaceCharactersInRange(range.nsRange, withString: replacement.text)
         topTV.textStorage.replaceCharactersInRange(extendedModRange.nsRange, withAttributedString: topAttString)
         topTV.textStorage.endEditing()
-        
+        topTV.invalidateIntrinsicContentSize()
         if botAttString != nil {
             if bottomTV.hidden {
                 bottomTV.hidden = false
@@ -217,7 +217,7 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
             replaceIAStringRange(iaString.emptyCopy(), range: range)
             return
         }
-        
+        topTV.invalidateIntrinsicContentSize()
         if rangeContainedAttachments {
             refreshImageLayer()
         } else if iaString.attachmentCount > 0 {

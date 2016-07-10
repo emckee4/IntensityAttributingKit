@@ -19,6 +19,17 @@ public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDelegate
         get{return textContainer.preferedThumbSize}
         set{textContainer.preferedThumbSize = newValue}
     }
+    
+    ///The intrinsicContentSize of the view will be calculated against this if set.
+    var preferedMaxLayoutWidth:CGFloat? {
+        didSet{if oldValue != preferedMaxLayoutWidth {
+                invalidateIntrinsicContentSize()
+            }}
+    }
+    
+    ///If true (as in the case of the bottomTV of the IAComposite views) then this view does minimal sizing calculations of its own and has no intrinsicContentSize.
+    var thinTVIsSlave:Bool = false
+    
     ///systemLayoutSizeFittingSize sets this true so that didCompleteLayoutForTextContainer doesn't redraw the layer
     private var isCalculatingSize:Bool = false
     ///When calling systemLayoutSizeFittingSize with empty textStorage, the layout engine will be provided with an empty character in this font size for the purposes of calculating its needed size. This lets dynamic resizing cells built around ThinTextView start with the desired size.
@@ -28,12 +39,19 @@ public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDelegate
 //        return NSAttributedString(string: "\u{200B}", attributes: [NSFontAttributeName:sizeForFontWhenEmpty!])
 //    }
     
+    private var cachedICS:CGSize?
+    
     public override init(frame: CGRect) {
         textContainer = IATextContainer()
         layoutManager = NSLayoutManager()
         textStorage = NSTextStorage()
         super.init(frame: frame)
         setupSTV()
+    }
+    
+    public override func invalidateIntrinsicContentSize() {
+        cachedICS = nil
+        super.invalidateIntrinsicContentSize()
     }
     
     public required init?(coder aDecoder: NSCoder) {
@@ -155,7 +173,7 @@ public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDelegate
 //        isCalculatingSize = false
 //        return result
 //    }
-    
+    ///This performs text layout as need to fit the size. This will ignore preferedMaxLayoutWidth
     public override func sizeThatFits(size: CGSize) -> CGSize {
         let useEmptyAttString = textStorage.length == 0 && sizeForFontWhenEmpty != nil
         let currentTCSize = textContainer.size
@@ -178,16 +196,24 @@ public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDelegate
     }
     
     public override func intrinsicContentSize() -> CGSize {
-        if self.bounds.size == CGSizeZero {
+        guard thinTVIsSlave == false else {return CGSizeMake(UIViewNoIntrinsicMetric, UIViewNoIntrinsicMetric)}
+        guard cachedICS == nil else {return cachedICS!}
+        if let pmlw = preferedMaxLayoutWidth {
+            let stf = sizeThatFits(CGSizeMake(pmlw, 1000000))
+            cachedICS = stf
+            print("ttv (pmlw = \(pmlw)) ics: \(stf)")
+            return stf
+        } else if self.bounds.size == CGSizeZero {
             //let s = systemLayoutSizeFittingSize(CGSizeMake(10000000, 1000000))
-            let s = sizeThatFits(CGSizeMake(10000000, 1000000))
-
-            print("ttv (bounds = Zero) ics: \(s)")
-            return s
+            let stf = sizeThatFits(CGSizeMake(10000000, 1000000))
+            cachedICS = stf
+            print("ttv (bounds = Zero) ics: \(stf)")
+            return stf
         } else {
             let gr = layoutManager.glyphRangeForTextContainer(self.textContainer)
             let ics = layoutManager.boundingRectForGlyphRange(gr, inTextContainer: textContainer).size
             print("ttv (bounds = \(bounds.size)) ics: \(ics), gr:\(gr)")
+            cachedICS = ics
             return ics
         }
     }

@@ -30,6 +30,23 @@ public class IACompositeBase:UIView {
     
     public var selectable:Bool = false
     
+    public var preferedMaxLayoutWidth:CGFloat? {
+        get{
+            if let val = topTV.preferedMaxLayoutWidth {
+                return val + textContainerInset.left + textContainerInset.right
+            } else {
+                return nil
+            }
+        }
+        set{
+            if newValue != nil {
+                topTV.preferedMaxLayoutWidth = newValue! - (textContainerInset.left + textContainerInset.right)
+            } else {
+                topTV.preferedMaxLayoutWidth = nil
+            }
+        }
+    }
+    
     ///backing store for selectedRange. We use this so that we can change the selectedRange without calling an update when needed.
     var _selectedRange:Range<Int>?
     internal(set) public var selectedRange:Range<Int>? {
@@ -62,11 +79,17 @@ public class IACompositeBase:UIView {
         }
     }
     
+    var topTVTopConstraint:NSLayoutConstraint!
+    var topTVLeadingConstraint:NSLayoutConstraint!
+    var topTVBottomConstraint:NSLayoutConstraint!
+    var topTVTrailingConstraint:NSLayoutConstraint!
     
+    private var insetConstraintsNeedUpdating = false
     public var textContainerInset:UIEdgeInsets = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0) {
         didSet {
             if textContainerInset != oldValue {
-                setNeedsLayout() // layoutSubviews will update the imageLayer position
+                insetConstraintsNeedUpdating = true
+                setNeedsUpdateConstraints()
             }
         }
     }
@@ -79,23 +102,52 @@ public class IACompositeBase:UIView {
         didSet{if bounds != oldValue {self.rerenderIAString()}}
     }
     
+    //define constraints
+    
+    /// if non nil then the corners of the internal container view are set with this value. We interface with the container view instead of this view itself sinc
+    public var cornerRadius:CGFloat {
+        get{return self.containerView.layer.cornerRadius}
+        set{self.containerView.layer.cornerRadius = newValue}
+    }
+    
+    public override var backgroundColor: UIColor? {
+        get{return containerView.backgroundColor}
+        set{containerView.backgroundColor = newValue}
+    }
+    
+    
+    
+    public override func updateConstraints() {
+        if insetConstraintsNeedUpdating{
+            insetConstraintsNeedUpdating = false
+            topTVTopConstraint.constant = textContainerInset.top
+            topTVLeadingConstraint.constant = textContainerInset.left
+            topTVBottomConstraint.constant = -textContainerInset.bottom
+            topTVTrailingConstraint.constant = -textContainerInset.right
+        }
+        
+        
+        
+        super.updateConstraints()
+    }
+    
     public override func layoutSubviews() {
         super.layoutSubviews()   //should this be called before or after?
-        //set frames for contained objects
-        let frameWithInset = UIEdgeInsetsInsetRect(self.bounds, textContainerInset)
-        containerView.frame = self.bounds
-        selectionView.frame = self.bounds  //we use the full frame since we will be gettting selection rects (typically via UITextInput) in the coordinate space of the superview (the IATextView)
-        topTV.frame = frameWithInset
-        bottomTV.frame = frameWithInset
-        imageLayerView.frame = frameWithInset
+//        //set frames for contained objects
+//        let frameWithInset = UIEdgeInsetsInsetRect(self.bounds, textContainerInset)
+//        containerView.frame = self.bounds
+//        selectionView.frame = self.bounds  //we use the full frame since we will be gettting selection rects (typically via UITextInput) in the coordinate space of the superview (the IATextView)
+//        topTV.frame = frameWithInset
+//        bottomTV.frame = frameWithInset
+//        imageLayerView.frame = frameWithInset
         //TODO: If bounds have changed but content hasn't then we should try to move imageviews rather than reloading the images. Need to make this object a delegate of the topTV's layoutManager
-        
     }
     
     
     
     func setupIATV(){
         //selectionView.userInteractionEnabled = false
+        containerView.clipsToBounds = true
         
         selectionView.backgroundColor = UIColor.clearColor()
         selectionView.hidden = true
@@ -105,11 +157,12 @@ public class IACompositeBase:UIView {
         
         //bottomTV.userInteractionEnabled = false
         bottomTV.backgroundColor = UIColor.clearColor()
+        bottomTV.thinTVIsSlave = true
         bottomTV.hidden = true
         
         //imageLayer.userInteractionEnabled = false
         imageLayerView.layer.drawsAsynchronously = false
-        imageLayerView.clipsToBounds = true
+        //imageLayerView.clipsToBounds = true
         //imageLayer.hidden = true
         
         containerView.addSubview(imageLayerView)
@@ -118,7 +171,59 @@ public class IACompositeBase:UIView {
         containerView.addSubview(selectionView)
         self.addSubview(containerView)
         setupGestureRecognizers()
+        setupConstraints()
+        super.backgroundColor = UIColor.clearColor()
     }
+    
+    
+
+    
+    
+    func setupConstraints(){
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        topTV.translatesAutoresizingMaskIntoConstraints = false
+        bottomTV.translatesAutoresizingMaskIntoConstraints = false
+        selectionView.translatesAutoresizingMaskIntoConstraints = false
+        imageLayerView.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        topTVTopConstraint = topTV.topAnchor.constraintEqualToAnchor(self.topAnchor, constant: textContainerInset.top).activateWithPriority(1000, identifier: "topTVTopConstraint")
+        topTVLeadingConstraint =  topTV.leadingAnchor.constraintEqualToAnchor(self.leadingAnchor, constant: textContainerInset.left).activateWithPriority(1000, identifier: "topTVLeadingConstraint")
+        
+        topTV.setContentCompressionResistancePriority(751, forAxis: .Horizontal)
+        topTV.setContentCompressionResistancePriority(750, forAxis: .Vertical)
+        
+        topTVBottomConstraint = topTV.bottomAnchor.constraintEqualToAnchor(self.bottomAnchor, constant: -textContainerInset.bottom).activateWithPriority(1000, identifier: "topTVBottomConstraint")
+        topTVTrailingConstraint = topTV.trailingAnchor.constraintEqualToAnchor(self.trailingAnchor, constant: -textContainerInset.right).activateWithPriority(1000, identifier: "topTVTrailingConstraint")
+        //topTVBottomConstraint = self.bottomAnchor.constraintEqualToAnchor(topTV.bottomAnchor, constant: 0.0).activateWithPriority(1000, identifier: "topTVBottomConstraint")
+        //topTVTrailingConstraint = self.trailingAnchor.constraintEqualToAnchor(topTV.trailingAnchor, constant: 0.0).activateWithPriority(1000, identifier: "topTVTrailingConstraint")
+        
+
+        //container and selection view match own bounds
+        containerView.topAnchor.constraintEqualToAnchor(self.topAnchor, constant: 0).activateWithPriority(1000)
+        containerView.leadingAnchor.constraintEqualToAnchor(self.leadingAnchor, constant: 0).activateWithPriority(1000)
+        containerView.trailingAnchor.constraintEqualToAnchor(self.trailingAnchor, constant: 0).activateWithPriority(1000)
+        containerView.bottomAnchor.constraintEqualToAnchor(self.bottomAnchor, constant: 0).activateWithPriority(1000)
+        
+        selectionView.topAnchor.constraintEqualToAnchor(self.topAnchor, constant: 0).activateWithPriority(1000)
+        selectionView.leadingAnchor.constraintEqualToAnchor(self.leadingAnchor, constant: 0).activateWithPriority(1000)
+        selectionView.trailingAnchor.constraintEqualToAnchor(self.trailingAnchor, constant: 0).activateWithPriority(1000)
+        selectionView.bottomAnchor.constraintEqualToAnchor(self.bottomAnchor, constant: 0).activateWithPriority(1000)
+        
+        //bottomTV and imagelayer match topTV bounds
+        
+        bottomTV.topAnchor.constraintEqualToAnchor(topTV.topAnchor, constant: 0).activateWithPriority(1000)
+        bottomTV.leadingAnchor.constraintEqualToAnchor(topTV.leadingAnchor, constant: 0).activateWithPriority(1000)
+        bottomTV.trailingAnchor.constraintEqualToAnchor(topTV.trailingAnchor, constant: 0).activateWithPriority(1000)
+        bottomTV.bottomAnchor.constraintEqualToAnchor(topTV.bottomAnchor, constant: 0).activateWithPriority(1000)
+        
+        imageLayerView.topAnchor.constraintEqualToAnchor(topTV.topAnchor, constant: 0).activateWithPriority(1000)
+        imageLayerView.leadingAnchor.constraintEqualToAnchor(topTV.leadingAnchor, constant: 0).activateWithPriority(1000)
+        imageLayerView.trailingAnchor.constraintEqualToAnchor(topTV.trailingAnchor, constant: 0).activateWithPriority(1000)
+        imageLayerView.bottomAnchor.constraintEqualToAnchor(topTV.bottomAnchor, constant: 0).activateWithPriority(1000)
+    }
+    
+    
     
     ///Implement in subclasses as needed
     func setupGestureRecognizers(){
@@ -135,7 +240,7 @@ public class IACompositeBase:UIView {
         } else {
             self.iaString = IAString()
         }
-        
+        topTV.invalidateIntrinsicContentSize()
         let options = iaString.baseOptions.optionsWithOverridesApplied(IAKitPreferences.iaStringOverridingOptions)
         
         let willAnimate = options.animatesIfAvailable == true && options.renderScheme.isAnimatable
@@ -242,7 +347,11 @@ public class IACompositeBase:UIView {
     public override func intrinsicContentSize() -> CGSize {
         //return super.intrinsicContentSize()
             //topTV.intrinsicContentSize()
-        return topTV.intrinsicContentSize()
+        var val = topTV.intrinsicContentSize()
+        
+        val.width += textContainerInset.left + textContainerInset.right
+        val.height += textContainerInset.top + textContainerInset.bottom
+        return val
     }
     
 //    ///The systemLayoutSizeFittingSize doesn't incorporate insets if the topTV ics is non-zero

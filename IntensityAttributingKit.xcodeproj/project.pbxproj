@@ -144,7 +144,7 @@
 		C031CBE41BDB097600521393 /* IntensityTransformingProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntensityTransformingProtocol.swift; sourceTree = "<group>"; };
 		C031CBE51BDB097600521393 /* Globals+Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Globals+Operators.swift"; sourceTree = "<group>"; };
 		C031CBED1BDB09FD00521393 /* IAStringDemoTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringDemoTests.swift; sourceTree = "<group>"; };
-		C031CBFD1BDD8DA700521393 /* Readme */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Readme; sourceTree = "<group>"; };
+		C031CBFD1BDD8DA700521393 /* Readme */ = {isa = PBXFileReference; explicitFileType = net.daringfireball.markdown; fileEncoding = 4; path = Readme; sourceTree = "<group>"; };
 		C031CBFF1BDD902000521393 /* IATextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextView.swift; sourceTree = "<group>"; };
 		C031CC031BDD921100521393 /* PressureButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PressureButton.swift; sourceTree = "<group>"; };
 		C031CC051BDD948700521393 /* IAKeyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAKeyboard.swift; sourceTree = "<group>"; };
