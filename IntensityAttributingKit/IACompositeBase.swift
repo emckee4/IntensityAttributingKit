@@ -456,19 +456,19 @@ public class IACompositeBase:UIView {
         selectedRange = 0..<self.iaString.length
         self.becomeFirstResponder()
         // present menu
-        if sender is UITapGestureRecognizer {
-            let targetRect = CGRectMake(self.bounds.midX, self.bounds.midY, 10, 10)
-            let menu = UIMenuController.sharedMenuController()
-            menu.update()
-            menu.setTargetRect(targetRect, inView: selectionView)
-            menu.setMenuVisible(true, animated: true)
-        }
+        //if sender is UILongPressGestureRecognizer {
+            presentMenu(nil)
+        //}
     }
     
     func deselect(){
-        selectedRange = nil
-        selectionView.clearSelection()
-        UIMenuController.sharedMenuController().setMenuVisible(false, animated: true)
+        if selectedRange != nil {
+            selectedRange = nil
+            selectionView.clearSelection()
+            if menu.menuVisible {
+                menu.setMenuVisible(false, animated: true)
+            }
+        }
     }
     
     public override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
@@ -523,6 +523,15 @@ public class IACompositeBase:UIView {
         }
     }
     
+    ///Presents a UIMenuController using the provided targetRect or in the middle of the view if none is provided
+    func presentMenu(targetRect:CGRect?)->UIMenuController{
+        let targetRect = CGRectMake(self.bounds.midX, self.bounds.midY, 10, 10)
+        let menu = UIMenuController.sharedMenuController()
+        menu.update()
+        menu.setTargetRect(targetRect, inView: selectionView)
+        menu.setMenuVisible(true, animated: true)
+        return menu
+    }
     
     ///Note: This assumes forward layout direction with left-to-right writing. Caret width is fixed at 2 points. Caret will be increased in size (height increased) if it's too small (as a result of an empty field).
     func caretRectForIntPosition(position: Int) -> CGRect {

@@ -13,6 +13,7 @@ public class IACompositeTextView: IACompositeBase {
     public weak var delegate:IATextViewDelegate?
     
     var tapGestureRecognizer:UITapGestureRecognizer!
+    var longPressGestureRecognizer:UILongPressGestureRecognizer!
     
     //private(set) public var selected:Bool = false
     
@@ -23,9 +24,10 @@ public class IACompositeTextView: IACompositeBase {
     
     override func setupGestureRecognizers(){
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(IACompositeTextView.tapDetected(_:)))
+        longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(IACompositeTextView.longPressDetected(_:)))
         
         self.addGestureRecognizer(tapGestureRecognizer)
-        
+        self.addGestureRecognizer(longPressGestureRecognizer)
     }
     
     public func setIAString(iaString:IAString!, withCacheIdentifier:String){
@@ -35,7 +37,10 @@ public class IACompositeTextView: IACompositeBase {
     }
     
     
-    
+    override func setupIATV() {
+        super.setupIATV()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(IACompositeTextView.menuWillHide(_:)), name: UIMenuControllerWillHideMenuNotification, object: nil)
+    }
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -54,8 +59,25 @@ public class IACompositeTextView: IACompositeBase {
         super.encodeWithCoder(aCoder)
     }
     
+    deinit{
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
     
     func tapDetected(sender:UITapGestureRecognizer!){
+        print("tap")
+//        if sender?.state == .Ended {
+//            let location = sender.locationInView(topTV)
+//            guard let touchIndex = topTV.characterIndexAtPoint(location) else {deselect(); return}  //or make this select all/deselect all
+//            if let attachment = iaString.attachments[touchIndex] {
+//                self.delegate?.iaTextView?(self, userInteractedWithAttachment: attachment, inRange: NSMakeRange(touchIndex, 1))
+//                return
+//            } else if let (url, urlRange) = iaString.urlAtIndex(touchIndex) {
+//                self.delegate?.iaTextView?(self, userInteractedWithURL: url, inRange: urlRange.nsRange)
+//            } else {
+//                self.selectAll(sender)
+//            }
+//        }
+        
         if sender?.state == .Ended {
             let location = sender.locationInView(topTV)
             guard let touchIndex = topTV.characterIndexAtPoint(location) else {deselect(); return}  //or make this select all/deselect all
@@ -65,14 +87,37 @@ public class IACompositeTextView: IACompositeBase {
             } else if let (url, urlRange) = iaString.urlAtIndex(touchIndex) {
                 self.delegate?.iaTextView?(self, userInteractedWithURL: url, inRange: urlRange.nsRange)
             } else {
+                self.deselect()
+            }
+        }
+        
+    }
+
+    func longPressDetected(sender:UILongPressGestureRecognizer!){
+        print("lp")
+        if sender?.state == .Began {
+            let location = sender.locationInView(topTV)
+            guard let touchIndex = topTV.characterIndexAtPoint(location) else {deselect(); return}  //or make this select all/deselect all
+            if let attachment = iaString.attachments[touchIndex] {
+                //self.delegate?.iaTextView?(self, userInteractedWithAttachment: attachment, inRange: NSMakeRange(touchIndex, 1))
+                selectedRange = touchIndex..<(touchIndex + 1)
+                presentMenu(nil)
+            } else if let (url, urlRange) = iaString.urlAtIndex(touchIndex) {
+                //self.delegate?.iaTextView?(self, userInteractedWithURL: url, inRange: urlRange.nsRange)
+                selectedRange = urlRange
+                presentMenu(nil)
+            } else {
                 self.selectAll(sender)
             }
         }
     }
-
     
     public override func canBecomeFirstResponder() -> Bool {
         return true
+    }
+
+    func menuWillHide(notification:NSNotification!){
+        deselect()
     }
     
     

@@ -14,12 +14,16 @@ IACompositeBase contains the common code for the IACompositeTextView and IACompo
 IACompositeTextView is made for display only and doesn't support editing beyond simply setting an IAString. It's intended to allow more caching and other performance minded changes, though much hasn't been implemented.
 IACompositeTextEditor conforms to UITextInput and is built to interact with the IAKeyboard and IAAccessory. It has custom gesture recognizers, more intricate copy/pasting and insertion capabilities.
 
-In all cases it's intended that sizing for autosizing cells will be handled with calls to systemLayoutSizeFittingSize rather than the interplay between internal constraints and intrinsicContentSize as is used in the UITextView. This is simpler to implement and more efficient since it us to get away with fewer text layout passes when determining content size.
+In all cases it's intended that sizing for autosizing cells will be calculated after a preferedMaxLayoutWidth has been set (similar to UILabel). This is simpler to implement and more efficient that what is used in a UITextView since it lets us get away with fewer text layout passes when determining content size. sizeThatFits(targetSize) can be used to flexibly calculate how much space will be needed in either direction to fully contain the content.
 
-As far as performance goes, this isn't expected to be very useful for anything older than the 5s or preferably the 6. 
+As far as performance goes, this isn't expected to be very useful for anything older than the 5s or preferably the 6. There are quite a few transparent layers on screen and animating at once along with typesetting and glyph drawing activities which are CPU intensive. This won't be a huge problem with only a few IA views on screen but with tableview full of them performance may suffer in more demanding situations like scrolling and resizing.
 
 
+TODO: add notes on IAKeyboard with notes on intensity recognizers 
 
+TODO: add notes on renderings and animation
+TODO: Notes on options singleton
+TODO: notes on constructiong
 
 Next steps:
 
@@ -37,4 +41,21 @@ Additional render schemes (if possible):
     dynamic/pulsing fade
     animated glyphs
     animated colored shadows
+
+
+
+Readme stuff to do: Notes on 
+    basic construction: 
+        IATextView/Editor
+        IAKeyboard/Accessory
+    Rendering types
+    Animations
+
+    Data types:
+        IAString and associated types
+    Additional view components which can be separated from the rest of stuff
+
+
+
+
 

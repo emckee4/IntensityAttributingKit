@@ -201,18 +201,15 @@ public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDelegate
         if let pmlw = preferedMaxLayoutWidth {
             let stf = sizeThatFits(CGSizeMake(pmlw, 1000000))
             cachedICS = stf
-            print("ttv (pmlw = \(pmlw)) ics: \(stf)")
             return stf
         } else if self.bounds.size == CGSizeZero {
             //let s = systemLayoutSizeFittingSize(CGSizeMake(10000000, 1000000))
             let stf = sizeThatFits(CGSizeMake(10000000, 1000000))
             cachedICS = stf
-            print("ttv (bounds = Zero) ics: \(stf)")
             return stf
         } else {
             let gr = layoutManager.glyphRangeForTextContainer(self.textContainer)
             let ics = layoutManager.boundingRectForGlyphRange(gr, inTextContainer: textContainer).size
-            print("ttv (bounds = \(bounds.size)) ics: \(ics), gr:\(gr)")
             cachedICS = ics
             return ics
         }
