@@ -292,6 +292,22 @@ extension IACompositeTextEditor {
         let endIndex = topTV.layoutManager.characterIndexForGlyphAtIndex(glyphIndex + 1)
         return IATextRange(range: startIndex..<endIndex)
     }
+        
+    ///Returns the next boundary after the position unless the position is itself a boundary in which case it returns itself
+    func nextBoundaryIncludingOrAfterIAPosition(position:IATextPosition)->IATextPosition{
+        if position.position == 0 {
+            return position
+        } else if position == endOfDocument {
+            return position
+        } else if tokenizer.isPosition(position, atBoundary: .Word, inDirection: 1) {
+            return position
+        } else if let newPos = tokenizer.positionFromPosition(position, toBoundary: .Word, inDirection: 0) as? IATextPosition{
+            return newPos
+        } else {
+            return endOfDocument as! IATextPosition
+        }
+        
+    }
     
 }
 

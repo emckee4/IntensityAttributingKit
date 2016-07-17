@@ -8,6 +8,10 @@
 
 import UIKit
 
+/*
+ IACompositeTextView implements very little beyond what is implemented by IACompositeBase. It's intended as a lighter alternative to IACompositeTextEditor for cases where only viewing and basic interaction (copy, view links, attachments) are needed.
+ 
+ */
 public class IACompositeTextView: IACompositeBase {
 
     public weak var delegate:IATextViewDelegate?
@@ -31,7 +35,7 @@ public class IACompositeTextView: IACompositeBase {
     }
     
     public func setIAString(iaString:IAString!, withCacheIdentifier:String){
-        print("setIAString using cache identifier not yet implemented")
+        //print("setIAString using cache identifier not yet implemented")
         ///cache should store some rendering info and probably some sizing info, eg previously calculated size for size values. any change to the data or default renderings should invalidate the cache. (Changing global prefs should probably emit a notification of such)
         super.setIAString(iaString)
     }
@@ -64,20 +68,6 @@ public class IACompositeTextView: IACompositeBase {
     }
     
     func tapDetected(sender:UITapGestureRecognizer!){
-        print("tap")
-//        if sender?.state == .Ended {
-//            let location = sender.locationInView(topTV)
-//            guard let touchIndex = topTV.characterIndexAtPoint(location) else {deselect(); return}  //or make this select all/deselect all
-//            if let attachment = iaString.attachments[touchIndex] {
-//                self.delegate?.iaTextView?(self, userInteractedWithAttachment: attachment, inRange: NSMakeRange(touchIndex, 1))
-//                return
-//            } else if let (url, urlRange) = iaString.urlAtIndex(touchIndex) {
-//                self.delegate?.iaTextView?(self, userInteractedWithURL: url, inRange: urlRange.nsRange)
-//            } else {
-//                self.selectAll(sender)
-//            }
-//        }
-        
         if sender?.state == .Ended {
             let location = sender.locationInView(topTV)
             guard let touchIndex = topTV.characterIndexAtPoint(location) else {deselect(); return}  //or make this select all/deselect all
@@ -90,11 +80,9 @@ public class IACompositeTextView: IACompositeBase {
                 self.deselect()
             }
         }
-        
     }
 
     func longPressDetected(sender:UILongPressGestureRecognizer!){
-        print("lp")
         if sender?.state == .Began {
             let location = sender.locationInView(topTV)
             guard let touchIndex = topTV.characterIndexAtPoint(location) else {deselect(); return}  //or make this select all/deselect all

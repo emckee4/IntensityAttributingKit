@@ -21,15 +21,27 @@ extension IACompositeTextEditor: UIGestureRecognizerDelegate {
         let loc = sender.locationInView(self)
         let position = closestIAPositionToPoint(loc)
         
-        if let selectedIATR = selectedIATextRange where selectedIATR.contains(position) {
-            let targetRect = CGRectMake(loc.x - 10, loc.y - 10, 20, 20)
-            menu.setTargetRect(targetRect, inView: self)
-            menu.setMenuVisible(true, animated: true)
-        } else {
-            selectedIATextRange = IATextRange(start: position, end: position)
+        if selectedIATextRange == nil {
+            //let closestBoundary = closestWordOrDocBoundaryPositionToIAPosition(position)
+            let closestBoundary = nextBoundaryIncludingOrAfterIAPosition(position)
+            selectedRange = (closestBoundary.position)..<(closestBoundary.position)
+        } else if selectedIATextRange!.empty {
+                ///We need to calculate the appropriate word boundary to determine where the caret will be and whether this is the same or different from the current selection
+                let closestBoundary = nextBoundaryIncludingOrAfterIAPosition(position)
+                if selectedRange!.startIndex == closestBoundary.position {
+                    presentMenu(CGRect(origin: loc, size: CGSizeMake(10, 10)))
+                } else {
+                    selectedRange = closestBoundary.position..<closestBoundary.position
+                }
+        } else { //non-empty selection range
+            if selectedIATextRange!.contains(position) {
+                presentMenu(firstRectForIARange(selectedIATextRange!))
+            } else {
+                //let closestBoundary = closestWordOrDocBoundaryPositionToIAPosition(position)
+                let closestBoundary = nextBoundaryIncludingOrAfterIAPosition(position)
+                selectedRange = (closestBoundary.position)..<(closestBoundary.position)
+            }
         }
-        
-        
     }
     
     @objc func doubleTapGestureUpdate(sender:UITapGestureRecognizer!){
@@ -41,9 +53,11 @@ extension IACompositeTextEditor: UIGestureRecognizerDelegate {
             //find word and select its range
             let newRange = tokenizer.rangeEnclosingPosition(iaPos, withGranularity: .Word, inDirection: direction)
             selectedTextRange = newRange
+            presentMenu(CGRect(origin: location, size: CGSizeMake(10, 10)))
         } else {
             //highlight more
             selectAll(sender)
+            presentMenu(CGRect(origin: location, size: CGSizeMake(10, 10)))
         }
     }
     

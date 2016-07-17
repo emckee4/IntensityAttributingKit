@@ -117,8 +117,6 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
         }
     }
     
-    
-    
     public override func setIAString(iaString: IAString!) {
         self.selectedRange = nil
         self.markedRange = nil
@@ -302,6 +300,13 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
     ///Updates the baseAttributes and currentIntensity to match the averages of the range or position behind the insertion point. Triggers updateSelectionLayer(). This is automatically called in a didSet on selectionRange but can be avoided by directly modifying _selectedRange
     override func selectedRangeChanged() {
         //update current intensity and baseAttributes
+        if markedRange != nil {
+            if _selectedRange == nil {
+                markedRange = nil
+            } else if _selectedRange!.startIndex > markedRange!.endIndex || _selectedRange!.endIndex < markedRange!.startIndex {
+                markedRange = nil
+            }
+        }
         if _selectedRange != nil {
             if _selectedRange!.isEmpty {
                 if _selectedRange!.startIndex == 0 {
@@ -421,7 +426,6 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
         //self.addGestureRecognizer(loupPanGR)
     }
 
-    
 
 }
 
