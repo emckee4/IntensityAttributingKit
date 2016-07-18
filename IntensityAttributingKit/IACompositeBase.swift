@@ -133,6 +133,10 @@ public class IACompositeBase:UIView {
     
     public override func layoutSubviews() {
         super.layoutSubviews()   //should this be called before or after?
+//        if iaString != nil && imageLayerView.layedOutForContainerSize != topTV.textContainer.size && iaString.attachmentCount > 0{
+//            imageLayerView.repositionImageViews(iaString, layoutManager: topTV.layoutManager)
+//
+//        }
 //        //set frames for contained objects
 //        let frameWithInset = UIEdgeInsetsInsetRect(self.bounds, textContainerInset)
 //        containerView.frame = self.bounds
@@ -165,9 +169,10 @@ public class IACompositeBase:UIView {
         //imageLayerView.clipsToBounds = true
         //imageLayer.hidden = true
         
-        containerView.addSubview(imageLayerView)
+        //containerView.addSubview(imageLayerView)
         containerView.addSubview(bottomTV)
         containerView.addSubview(topTV)
+        containerView.addSubview(imageLayerView)
         containerView.addSubview(selectionView)
         self.addSubview(containerView)
         setupGestureRecognizers()
@@ -284,7 +289,7 @@ public class IACompositeBase:UIView {
         }
     }
     
-    //Recalculates and redraws entire range of iaString, similar to what would happen calling setIAString(self.iaString) but keeps selection intact and may have optimizations (eventually). Typically called after changes in states that affect the display of the entire string, like changing the smoother or transformer (current values or global overrides).
+    ///Forces layout and drawing of IAString. If recalculate option is true, then this recalculates entire range of iaString, similar to what would happen calling setIAString(self.iaString) but keeps selection intact. This function is typically called without the recalculatStrings option when bounds change or with recalculateStrings after changes in states that affect the display of the entire string, like changing the smoother or transformer (current values or global overrides).
     func rerenderIAString(recalculateStrings recalculateStrings:Bool = false){
         guard iaString != nil else {return}
         if recalculateStrings || (bottomTV.hidden == false && bottomTV.textStorage.length != topTV.textStorage.length){
@@ -298,13 +303,17 @@ public class IACompositeBase:UIView {
             } else {
                 bottomTV.hidden = true
             }
+        } else {
+            self.setNeedsLayout()
         }
-        self.setNeedsDisplay()
+        self.layoutIfNeeded()
         self.repositionImageViews()
+        self.setNeedsDisplay()
         self.updateSelectionLayer()
         //TODO: might need to call reposition or refreshImageLayer
     }
     
+    ///This calls the imageLayerView's imagesWereChanged function. This is called when the count or content of the attachments may have changed. If only position has changed then repositionImageViews is prefered as it is less expensive.
     func refreshImageLayer(){
 //        guard iaString.attachmentCount > 0 else {return}
 //        if imageLayer.hidden {imageLayer.hidden = false}
@@ -332,7 +341,7 @@ public class IACompositeBase:UIView {
         imageLayerView.imagesWereChanged(inIAString: iaString, layoutManager: topTV.layoutManager)
     }
     
-    ///If bounds change but images do not need to be reloaded then this can be called as a more efficient alternative to refreshImageLayer.
+    ///If attachment positions have changed but the images do not need to be reloaded then this can be called as a more efficient alternative to refreshImageLayer. It calls the repositionImageViews function of the imageLayerView
     func repositionImageViews(){
 //        guard imageLayerImageViews.count >= iaString.attachmentCount else {refreshImageLayer();return}
 //        for (i ,locAttach) in iaString.attachments.enumerate() {
