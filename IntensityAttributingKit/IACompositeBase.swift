@@ -277,9 +277,9 @@ public class IACompositeBase:UIView {
 //            }
 //            
 //        }
-        
+        invalidateIntrinsicContentSize()
         refreshImageLayer()
-        
+        updateSelectionLayer()
         
         //Start animation according to animation scheme if possible/desired
         if willAnimate {
@@ -341,7 +341,7 @@ public class IACompositeBase:UIView {
         imageLayerView.imagesWereChanged(inIAString: iaString, layoutManager: topTV.layoutManager)
     }
     
-    ///If attachment positions have changed but the images do not need to be reloaded then this can be called as a more efficient alternative to refreshImageLayer. It calls the repositionImageViews function of the imageLayerView
+    ///If attachment positions have changed but the images do not need to be reloaded then this can be called as a more efficient alternative to refreshImageLayer.
     func repositionImageViews(){
 //        guard imageLayerImageViews.count >= iaString.attachmentCount else {refreshImageLayer();return}
 //        for (i ,locAttach) in iaString.attachments.enumerate() {
