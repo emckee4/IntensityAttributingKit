@@ -254,10 +254,41 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
 
     
     public override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
+        switch action {
+        case #selector(NSObject.paste(_:)):
+            return (_selectedRange != nil && pasteboardHasIACompatibleData())
+        case #selector(NSObject.copy(_:)):
+            return (_selectedRange != nil && _selectedRange!.isEmpty == false)
+        case #selector(NSObject.selectAll(_:)):
+            return iaString.length > 0
+        case #selector(NSObject.delete(_:)):
+            return false
+        case #selector(NSObject.cut(_:)):
+            return (_selectedRange != nil && _selectedRange!.isEmpty == false)
+        default:
+            return super.canPerformAction(action, withSender: sender)
+        }
         if self.selectedRange != nil && (action == #selector(NSObject.paste(_:)) || action == #selector(NSObject.cut(_:)) ) {
             return true
         }
         return super.canPerformAction(action, withSender: sender)
+    }
+    
+    ///Tests if the general UIPasteboard has data which can be pasted into the IATextEditor
+    func pasteboardHasIACompatibleData()->Bool{
+        let pb = UIPasteboard.generalPasteboard()
+        guard let lastItem = pb.items.last as? [String:AnyObject] else {return false}
+        if (lastItem[UTITypes.PlainText] as? String) != nil {
+            return true
+        } else if pb.image != nil {
+            return true
+        } else if pb.URL != nil {
+            return true
+        } else if (lastItem[UTITypes.IAStringArchive] as? NSData) != nil {
+                return true
+        } else {
+            return false
+        }
     }
     
     public override func paste(sender: AnyObject?) {
@@ -284,7 +315,6 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
 
         replaceIAStringRange(newIA!, range: selectedRange!)
     }
-    
     
     public override func delete(sender: AnyObject?) {
         guard selectedRange?.count > 0 else {return}

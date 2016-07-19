@@ -15,7 +15,8 @@ extension IACompositeTextEditor: UIGestureRecognizerDelegate {
     
     @objc func singleTapGestureUpdate(sender:UITapGestureRecognizer!){
         guard sender.state == .Ended else {return}
-        if !self.isFirstResponder() {
+        let becomingFirstResponder = !self.isFirstResponder()
+        if becomingFirstResponder {
             becomeFirstResponder()
         }
         let loc = sender.locationInView(self)
@@ -26,13 +27,14 @@ extension IACompositeTextEditor: UIGestureRecognizerDelegate {
             let closestBoundary = nextBoundaryIncludingOrAfterIAPosition(position)
             selectedRange = (closestBoundary.position)..<(closestBoundary.position)
         } else if selectedIATextRange!.empty {
-                ///We need to calculate the appropriate word boundary to determine where the caret will be and whether this is the same or different from the current selection
-                let closestBoundary = nextBoundaryIncludingOrAfterIAPosition(position)
-                if selectedRange!.startIndex == closestBoundary.position {
-                    presentMenu(CGRect(origin: loc, size: CGSizeMake(10, 10)))
-                } else {
-                    selectedRange = closestBoundary.position..<closestBoundary.position
-                }
+            ///We need to calculate the appropriate word boundary to determine where the caret will be and whether this is the same or different from the current selection
+            let closestBoundary = nextBoundaryIncludingOrAfterIAPosition(position)
+            if selectedRange!.startIndex == closestBoundary.position && !becomingFirstResponder && menu.menuVisible == false{
+                presentMenu(firstRectForIARange(selectedIATextRange!))//CGRect(origin: loc, size: CGSizeMake(10, 10)))
+            } else {
+                menu.menuVisible = false
+                selectedRange = closestBoundary.position..<closestBoundary.position
+            }
         } else { //non-empty selection range
             if selectedIATextRange!.contains(position) {
                 presentMenu(firstRectForIARange(selectedIATextRange!))
