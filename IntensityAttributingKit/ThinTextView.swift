@@ -199,17 +199,23 @@ public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDelegate
         guard thinTVIsSlave == false else {return CGSizeMake(UIViewNoIntrinsicMetric, UIViewNoIntrinsicMetric)}
         guard cachedICS == nil else {return cachedICS!}
         if let pmlw = preferedMaxLayoutWidth {
-            let stf = sizeThatFits(CGSizeMake(pmlw, 1000000))
-            cachedICS = stf
-            return stf
+            var ics = sizeThatFits(CGSizeMake(floor(pmlw), 1000000))
+            ics.height = ceil(ics.height)
+            ics.width = ceil(ics.width)
+            cachedICS = ics
+            return ics
         } else if self.bounds.size == CGSizeZero {
             //let s = systemLayoutSizeFittingSize(CGSizeMake(10000000, 1000000))
-            let stf = sizeThatFits(CGSizeMake(10000000, 1000000))
-            cachedICS = stf
-            return stf
+            var ics = sizeThatFits(CGSizeMake(10000000, 1000000))
+            ics.height = ceil(ics.height)
+            ics.width = ceil(ics.width)
+            cachedICS = ics
+            return ics
         } else {
             let gr = layoutManager.glyphRangeForTextContainer(self.textContainer)
-            let ics = layoutManager.boundingRectForGlyphRange(gr, inTextContainer: textContainer).size
+            var ics = layoutManager.boundingRectForGlyphRange(gr, inTextContainer: textContainer).size
+            ics.height = ceil(ics.height)
+            ics.width = ceil(ics.width)
             cachedICS = ics
             return ics
         }
