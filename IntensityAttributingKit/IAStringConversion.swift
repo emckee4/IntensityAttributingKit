@@ -378,17 +378,17 @@ extension IAString {
         let smoothedBinned:CollapsingArray<Int> = binnedSmoothedIntensities(trans.stepCount, usingTokenizer: usingOptions.preferedSmoothing)
         assert(smoothedBinned.count == text.utf16.count && text.utf16.count == self.baseAttributes.count)
         
-        
-        let startBinDataIndex = smoothedBinned.data.indexOf({$0.range.intersects(range)})!
-        let endBinDataIndex = smoothedBinned.data[startBinDataIndex..<smoothedBinned.data.endIndex].indexOf({!($0.range.intersects(range))}) ?? smoothedBinned.data.endIndex
-        
-        let modRange = smoothedBinned.data[startBinDataIndex].startIndex ..< smoothedBinned.data[endBinDataIndex - 1].endIndex
-        
-        let subIA = self.iaSubstringFromRange(modRange)
-        //let attString = subIA.convertToNSAttributedString(withOverridingOptions: usingOptions)
-        let attStrings = subIA.convertToNSAttributedStringsForLayeredDisplay(withOverridingOptions: options)
-        
-        return (rangeModified:modRange,topAttString:attStrings.top, botAttString:attStrings.bottom)
+        var modRange:Range<Int>!
+        if let startBinDataIndex = smoothedBinned.data.indexOf({$0.range.intersects(range)}) {
+            let endBinDataIndex = smoothedBinned.data[startBinDataIndex..<smoothedBinned.data.endIndex].indexOf({!($0.range.intersects(range))}) ?? smoothedBinned.data.endIndex
+            modRange = smoothedBinned.data[startBinDataIndex].startIndex ..< smoothedBinned.data[endBinDataIndex - 1].endIndex
+            let subIA = self.iaSubstringFromRange(modRange)
+            let attStrings = subIA.convertToNSAttributedStringsForLayeredDisplay(withOverridingOptions: options)
+            return (rangeModified:modRange,topAttString:attStrings.top, botAttString:attStrings.bottom)
+        } else {
+            let attStrings = self.convertToNSAttributedStringsForLayeredDisplay(withOverridingOptions: options)
+            return (rangeModified:0..<self.length,topAttString:attStrings.top, botAttString:attStrings.bottom)
+        }
     }
     
     
