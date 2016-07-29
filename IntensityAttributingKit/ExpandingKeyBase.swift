@@ -58,6 +58,18 @@ public class ExpandingKeyBase: UIView {
     ///Background color for selected cell. On PressureSensitive subclasses this will be the color which indicates 100% pressure.
     @IBInspectable public var selectionColor:UIColor?
     
+    ///This is the default text color when none is provided otherwise. Setting this after providing a color to an individual label based cell (e.g. via an NSAttributedString) will overwrite that textColor.
+    public var textColor: UIColor = UIColor.blackColor(){
+        didSet{
+            guard textColor != oldValue else {return}
+            for key in epKeys {
+                if let lab = key.view as? UILabel {
+                    lab.textColor = textColor
+                }
+            }
+        }
+    }
+    
     ///When a key is selected it will automatically become the first/primary key
     public var selectedBecomesFirst = false
     
@@ -293,6 +305,7 @@ public class ExpandingKeyBase: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .Center
         label.font = font
+        label.textColor = self.textColor
         self.addKey(label, actionName: actionName)
     }
     
@@ -302,6 +315,9 @@ public class ExpandingKeyBase: UIView {
         label.attributedText = attributedText
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .Center
+        if attributedText.attribute(NSForegroundColorAttributeName, atIndex: 0, effectiveRange: nil) == nil {
+            label.textColor = self.textColor
+        }
         self.addKey(label, actionName: actionName)
     }
     

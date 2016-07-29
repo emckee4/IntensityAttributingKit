@@ -17,6 +17,17 @@ class SuggestionBarView: UIView, PressureKeyActionDelegate {
     private(set)var pressureKeys:[PressureKey]!
     private(set)var stackView:UIStackView!
     
+    var textColor:UIColor? {
+        didSet{if textColor != nil {
+            pressureKeys.map({$0.textColor = textColor})
+            }
+        }
+    }
+    override var backgroundColor: UIColor? {
+        didSet {
+            pressureKeys.map({$0.backgroundColor = backgroundColor})
+        }
+    }
     
     var visibleCellCount:Int {return pressureKeys.reduce(0, combine: {$0 + ($1.hidden ? 0 : 1)})}
     
@@ -45,7 +56,7 @@ class SuggestionBarView: UIView, PressureKeyActionDelegate {
     
     func setupView(){
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = UIColor.lightGrayColor()
+//        self.backgroundColor = UIColor.lightGrayColor()
         pressureKeys = []
         let maxNumberKeys = Int(max(UIScreen.mainScreen().bounds.height,UIScreen.mainScreen().bounds.width)) / 120
         for i in 0..<maxNumberKeys{
@@ -54,6 +65,12 @@ class SuggestionBarView: UIView, PressureKeyActionDelegate {
             pressureKeys.append(pk)
             pk.tag = i
             pk.translatesAutoresizingMaskIntoConstraints = false
+            if self.backgroundColor != nil {
+                pk.backgroundColor = self.backgroundColor
+            }
+            if self.textColor != nil {
+                pk.textColor = self.textColor
+            }
         }
      
         
