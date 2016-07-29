@@ -10,9 +10,7 @@ import Foundation
 
 
 /**
-IAKitPreferences contains most persisted options that need to be exposed to the outside world
- 
- Formerly: (along with an internal NSCache for the IAKeyboard and accessory that dont have any other logical home)
+IAKitPreferences contains most persisted options that need to be exposed to the outside world along with some purely internal stuff. Putting as many of the configurable options as possible in one place seems preferable while the organization and features of this project is still in such flux
 */
 public class IAKitPreferences:NSObject {
     
@@ -74,15 +72,12 @@ public class IAKitPreferences:NSObject {
         
         static let deviceResourcesLimited = "IAKitPreferences.deviceResourcesLimited"
         
-        //static let fimName = "IAKitPreferences.forceIntensityMappingName"
-        //need constants
-        //how to store constants for mapping in performant accessable way?
-        //static let fimParametersDictName = "IAKitPreferences.fimParametersDictName"
-        
         static let touchInterpreterName = "IAKitPreferences.touchInterpreterName"
         static let rawIntensityMapperName = "IAKitPreferences.rawIntensityMapperName"
         static let spellingSuggestionsEnabled = "IAKitPreferences.spellingSuggestions"
         static let animationEnabled = "IAKitPreferences.animationEnabled"
+        
+        static let visualPreferences = "IAKitPreferences.visualPrefs"
     }
     
     
@@ -220,5 +215,17 @@ public class IAKitPreferences:NSObject {
     static var iaStringOverridingOptions:IAStringOptions {
         return IAStringOptions(renderScheme: overridesTransformer, preferedSmoothing: overridesTokenizer, animates: animationEnabled, animationOptions: nil)
     }
-    
+
+    private static var _visualPreferences:IAKitVisualPreferences = IAKitVisualPreferences(archive: NSUserDefaults.standardUserDefaults().objectForKey(Keys.visualPreferences) as? NSData) ?? IAKitVisualPreferences.Default
+    ///Keyboard and accessory visual characteristics.
+    public static var visualPreferences:IAKitVisualPreferences {
+        get{return _visualPreferences}
+        set{
+            _visualPreferences = newValue
+            NSUserDefaults.standardUserDefaults().setObject(newValue.convertToArchive(), forKey: Keys.visualPreferences)
+        }
+    }
 }
+
+
+

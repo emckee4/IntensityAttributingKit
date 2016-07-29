@@ -15,11 +15,13 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
 
     //MARK:- UI visual constants
     
-    private let kKeyBackgroundColor = UIColor.lightGrayColor()
+    private let keyBackgroundColor = IAKitPreferences.visualPreferences.kbButtonColor
+    private let keyTintColor = IAKitPreferences.visualPreferences.kbButtonTintColor
     private let kKeyHeight:CGFloat = 40.0
     private let kStandardKeySpacing:CGFloat = 4.0
     private let kStackInset:CGFloat = 2.0
     private let kKeyCornerRadius:CGFloat = 4.0
+    private let suggestionBarScaleFactor:CGFloat = IAKitPreferences.visualPreferences.kbSuggestionBarScaleFactor//0.75
     
     private var verticalStackView:UIStackView!
     private var qwertyStackView:UIStackView!
@@ -65,6 +67,8 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
     func setupView(){
         
         suggestionsBar = SuggestionBarView(frame: CGRectZero)
+        suggestionsBar.backgroundColor = IAKitPreferences.visualPreferences.kbSuggestionsBackgroundColor
+        suggestionsBar.textColor = IAKitPreferences.visualPreferences.kbSuggestionsTextColor
         suggestionsBar.translatesAutoresizingMaskIntoConstraints = true
         self.addSubview(suggestionsBar)
         suggestionsBar.delegate = self
@@ -121,9 +125,10 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
         shiftKey.imageEdgeInsets = imageEdgeInsets
         shiftKey.imageView!.contentMode = .ScaleAspectFit
         shiftKey.layer.cornerRadius = kKeyCornerRadius
-        shiftKey.backgroundColor = kKeyBackgroundColor
+        shiftKey.backgroundColor = keyBackgroundColor
         shiftKey.setImage(UIImage(named: "caps2", inBundle: bundle, compatibleWithTraitCollection: nil), forState: .Selected)
         shiftKey.addTarget(self, action: "shiftKeyPressed:", forControlEvents: .TouchUpInside)
+        shiftKey.tintColor = keyTintColor
         
         zxcvStackView.addArrangedSubview(shiftKey)
         
@@ -144,14 +149,14 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
         backspace = UIButton()
         backspace.tag = 3901
         backspace.translatesAutoresizingMaskIntoConstraints = false
-        backspace.setImage(UIImage(named: "backspace", inBundle: bundle, compatibleWithTraitCollection: nil), forState: .Normal )
+        backspace.setImage(UIImage(named: "backspace", inBundle: bundle, compatibleWithTraitCollection: nil)?.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal )
         backspace.imageEdgeInsets = imageEdgeInsets
         backspace.imageView!.contentMode = .ScaleAspectFit
-        backspace.backgroundColor = kKeyBackgroundColor
+        backspace.backgroundColor = keyBackgroundColor
         backspace.layer.cornerRadius = kKeyCornerRadius
         zxcvStackView.addArrangedSubview(backspace)
         backspace.addTarget(self, action: "backspaceKeyPressed", forControlEvents: .TouchUpInside)
-        
+        backspace.tintColor = keyTintColor
         
         let placeholderWidth = leftPlaceholder.widthAnchor.constraintEqualToAnchor(rightPlaceholder.widthAnchor)  //local placeholders, any orientation
         placeholderWidth.priority = 999
@@ -168,7 +173,8 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
         swapKeysetButton.setTitle("12/*", forState: .Normal)
         swapKeysetButton.titleLabel!.adjustsFontSizeToFitWidth = true
         swapKeysetButton.translatesAutoresizingMaskIntoConstraints = false
-        swapKeysetButton.backgroundColor = kKeyBackgroundColor
+        swapKeysetButton.tintColor = keyTintColor
+        swapKeysetButton.backgroundColor = keyBackgroundColor
         swapKeysetButton.layer.cornerRadius = kKeyCornerRadius
         swapKeysetButton.addTarget(self, action: "swapKeysetPageButtonPressed", forControlEvents: .TouchUpInside)
         bottomStackView.addArrangedSubview(swapKeysetButton)
@@ -177,7 +183,7 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
         
         spacebar = PressureKey()
         spacebar.tag = 4901
-        spacebar.backgroundColor = kKeyBackgroundColor
+        spacebar.backgroundColor = keyBackgroundColor
         spacebar.setCharKey(" ")
         spacebar.delegate = self
         spacebar.layer.cornerRadius = kKeyCornerRadius
@@ -189,7 +195,9 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
         expandingPuncKey = ExpandingPressureKey(frame:CGRectZero)
         expandingPuncKey.tag = 4900
         expandingPuncKey.delegate = self
-        expandingPuncKey.backgroundColor = kKeyBackgroundColor
+        expandingPuncKey.backgroundColor = keyBackgroundColor
+        expandingPuncKey.tintColor = keyTintColor
+        expandingPuncKey.textColor = keyTintColor
         
         expandingPuncKey.addKey(withTextLabel: ".", actionName: ".")
         expandingPuncKey.addKey(withTextLabel: ",", actionName: ",")
@@ -204,9 +212,10 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
         returnKey.delegate = self
         let returnKeyView = UILabel()
         returnKeyView.text = "Return"
+        returnKeyView.textColor = keyTintColor
         returnKeyView.textAlignment = .Center
         returnKey.setAsSpecialKey(returnKeyView, actionName: "\n")
-        returnKey.backgroundColor = kKeyBackgroundColor
+        returnKey.backgroundColor = keyBackgroundColor
         returnKey.layer.cornerRadius = kKeyCornerRadius
         bottomStackView.addArrangedSubview(returnKey)
         self.addSubview(bottomStackView)
@@ -335,8 +344,9 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
         let nextKey = PressureKey()
         nextKey.tag = tag
         nextKey.delegate = self
-        nextKey.backgroundColor = kKeyBackgroundColor
+        nextKey.backgroundColor = keyBackgroundColor
         nextKey.layer.cornerRadius = kKeyCornerRadius
+        nextKey.textColor = keyTintColor
         nextKey.clipsToBounds = true
         return nextKey
     }
@@ -347,10 +357,9 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
     override func layoutSubviews() {
         super.layoutSubviews()
         if suggestionsBar.hidden == false {
-            let suggestionBarProportion:CGFloat = 0.75
             let heightMinusInsetsAndSpacing = self.bounds.height - edgeInsets.top - edgeInsets.bottom - (4 * verticalSpacing)
             //(height - insets - 4*spacing) / 4.75
-            let svHeight = floor(heightMinusInsetsAndSpacing / (4.0 + suggestionBarProportion))
+            let svHeight = floor(heightMinusInsetsAndSpacing / (4.0 + suggestionBarScaleFactor))
             let suggBarHeight = floor(heightMinusInsetsAndSpacing - (4.0 * svHeight))
             let commonWidth = bounds.width - edgeInsets.left - edgeInsets.right
             

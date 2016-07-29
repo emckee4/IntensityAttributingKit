@@ -29,7 +29,7 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
     var currentKeyPageNumber = 0 {
         didSet{currentKeyPageNumber >= currentKeyset.totalKeyPages ? currentKeyPageNumber = 0: ()}
     }
-    var backgroundColor:UIColor = UIColor(white: 0.55, alpha: 1.0)
+    var backgroundColor:UIColor = IAKitPreferences.visualPreferences.kbBackgroundColor //UIColor(white: 0.55, alpha: 1.0)
     
     var keyboardSuggestionBarIsEnabled:Bool {return true}
 
@@ -49,7 +49,7 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
         
         keyboardView = KeyboardLayoutView(frame: CGRectZero, inputViewStyle: .Keyboard)
         keyboardView.translatesAutoresizingMaskIntoConstraints = false
-        //inputView?.addSubview(keyboardView)
+        keyboardView.backgroundColor = self.backgroundColor
         inputView = keyboardView
         keyboardView.topAnchor.constraintEqualToAnchor(inputView?.topAnchor).active = true
         keyboardView.bottomAnchor.constraintEqualToAnchor(inputView?.bottomAnchor).active = true

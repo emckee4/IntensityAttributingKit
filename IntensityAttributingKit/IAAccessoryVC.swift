@@ -32,10 +32,10 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
     //MARK:- layout constants
     
     let kAccessoryHeight:CGFloat = 44.0
-    let kButtonCornerRadius:CGFloat = 5.0
-    let kButtonBorderThickness:CGFloat = 1.0
-    let kButtonBorderColor:CGColor = UIColor.darkGrayColor().CGColor
-    let kButtonBackgroundColor:UIColor = UIColor.lightGrayColor()
+    let kButtonCornerRadius:CGFloat = IAKitPreferences.visualPreferences.accessoryButtonCornerRadius//5.0
+    let kButtonBorderThickness:CGFloat = IAKitPreferences.visualPreferences.accessoryButtonBorderWidth
+    let kButtonBorderColor:CGColor = IAKitPreferences.visualPreferences.accessoryButtonBorderColor.CGColor
+    let kButtonBackgroundColor:UIColor = IAKitPreferences.visualPreferences.accessoryButtonBackgroundColor
     //let kButtonTextColor = UIColor.darkGrayColor()
     
     
@@ -53,16 +53,17 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
     }
     
     func setupVC(){
-        self.inputView!.backgroundColor = UIColor(white: 0.8, alpha: 1.0)
-        self.inputView!.translatesAutoresizingMaskIntoConstraints = false
-        self.inputView?.layer.rasterizationScale = UIScreen.mainScreen().scale
-        self.inputView?.layer.shouldRasterize = true
+        inputView!.backgroundColor = IAKitPreferences.visualPreferences.accessoryBackgroundColor
+        inputView!.translatesAutoresizingMaskIntoConstraints = false
+        inputView!.layer.rasterizationScale = UIScreen.mainScreen().scale
+        inputView!.layer.shouldRasterize = true
+        inputView!.tintColor = IAKitPreferences.visualPreferences.accessoryTintColor
         
         kbSwitchButton = UIButton(type: .System)
         kbSwitchButton.setImage(UIImage(named: "Keyboard", inBundle: bundle, compatibleWithTraitCollection: nil), forState: .Normal )
         kbSwitchButton.imageView?.contentMode = .ScaleAspectFit
         kbSwitchButton.backgroundColor = kButtonBackgroundColor
-        kbSwitchButton.imageEdgeInsets = UIEdgeInsets(top: 4.0, left: 4.0, bottom: 4.0, right: 4.0)
+        kbSwitchButton.imageEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
         kbSwitchButton.addTarget(self, action: "kbSwitchButtonPressed:", forControlEvents: .TouchUpInside)
         kbSwitchButton.translatesAutoresizingMaskIntoConstraints = false
         kbSwitchButton.layer.cornerRadius = kButtonCornerRadius
@@ -99,6 +100,7 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         intensityButton.widthAnchor.constraintGreaterThanOrEqualToAnchor(intensityButton.heightAnchor, multiplier: 1.0).activateWithPriority(999, identifier: "iaAccessory.intensityButton: W >= H")
         intensityButton.clipsToBounds = true
         intensityButton.setKey("100", actionName: "intensityButtonPressed")
+        intensityButton.textColor = IAKitPreferences.visualPreferences.accessoryTintColor
         intensityButton.delegate = self
         
         
@@ -119,10 +121,6 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         tokenizerButton.addKey(withTextLabel: word, actionName: word)
         let sentence = IAStringTokenizing.Sentence.shortLabel
         tokenizerButton.addKey(withTextLabel: sentence, actionName: sentence)
-//        let line = IAStringTokenizing.Line.shortLabel
-//        tokenizerButton.addKey(withTextLabel: line, actionName: line)
-        //let par = IAStringTokenizing.Paragraph.shortLabel
-        //tokenizerButton.addKey(withTextLabel: par, actionName: par)
         let mes = IAStringTokenizing.Message.shortLabel
         tokenizerButton.addKey(withTextLabel: mes, actionName: mes)
         
@@ -130,6 +128,8 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         tokenizerButton.cornerRadius = kButtonCornerRadius
         //tokenizerButton.widthAnchor.constraintGreaterThanOrEqualToConstant(transformButton.intrinsicContentSize().width + 10.0).active = true
         tokenizerButton.widthAnchor.constraintGreaterThanOrEqualToAnchor(tokenizerButton.heightAnchor).activateWithPriority(999, identifier: "iaAccessory.tokenizerEK: W >= H")
+        tokenizerButton.widthAnchor.constraintEqualToAnchor(tokenizerButton.heightAnchor, multiplier: 1.33).activateWithPriority(800, identifier: "iaAccessory.tokenizerEK: W = H*1.25")
+        
         tokenizerButton.layer.borderColor = kButtonBorderColor
         tokenizerButton.layer.borderWidth = kButtonBorderThickness
         tokenizerButton.translatesAutoresizingMaskIntoConstraints = false
@@ -150,6 +150,7 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         transformButton.cornerRadius = kButtonCornerRadius
         transformButton.widthAnchor.constraintGreaterThanOrEqualToConstant(transformButton.intrinsicContentSize().width + 10.0).activateWithPriority(999, identifier: "iaAccessory.transformEK: W >= self.intrinsicContentsSize.W + 10 (ie inset)")
         transformButton.widthAnchor.constraintGreaterThanOrEqualToAnchor(transformButton.heightAnchor).activateWithPriority(999, identifier: "iaAccessory.transformEK: W >= H")
+        transformButton.widthAnchor.constraintEqualToAnchor(transformButton.heightAnchor, multiplier: 1.33).activateWithPriority(800, identifier: "iaAccessory.transformEK: W = H*1.33")
         transformButton.layer.borderColor = kButtonBorderColor
         transformButton.layer.borderWidth = kButtonBorderThickness
         //add config here
@@ -158,7 +159,6 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         optionButton = UIButton(type: .Custom)
         optionButton.backgroundColor = kButtonBackgroundColor
         let gear = UIImage(named: "optionsGear", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: self.traitCollection)!
-        optionButton.tintColor = UIColor.darkGrayColor()
         optionButton.setImage(gear.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
         optionButton.addTarget(self, action: "optionButtonPressed", forControlEvents: .TouchUpInside)
         optionButton.layer.cornerRadius = kButtonCornerRadius
