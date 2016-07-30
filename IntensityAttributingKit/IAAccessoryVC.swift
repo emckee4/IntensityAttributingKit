@@ -115,14 +115,33 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         
         tokenizerButton = ExpandingKeyControl(expansionDirection: .Up)
         tokenizerButton.setSelector(self, selector: "tokenizerButtonPressed:")
-        let ch = IAStringTokenizing.Char.shortLabel
-        tokenizerButton.addKey(withTextLabel: ch, actionName: ch)
-        let word = IAStringTokenizing.Word.shortLabel
-        tokenizerButton.addKey(withTextLabel: word, actionName: word)
-        let sentence = IAStringTokenizing.Sentence.shortLabel
-        tokenizerButton.addKey(withTextLabel: sentence, actionName: sentence)
-        let mes = IAStringTokenizing.Message.shortLabel
-        tokenizerButton.addKey(withTextLabel: mes, actionName: mes)
+//        let ch = IAStringTokenizing.Char.shortLabel
+//        tokenizerButton.addKey(withTextLabel: ch, actionName: ch)
+//        let word = IAStringTokenizing.Word.shortLabel
+//        tokenizerButton.addKey(withTextLabel: word, actionName: word)
+//        let sentence = IAStringTokenizing.Sentence.shortLabel
+//        tokenizerButton.addKey(withTextLabel: sentence, actionName: sentence)
+//        let mes = IAStringTokenizing.Message.shortLabel
+//        tokenizerButton.addKey(withTextLabel: mes, actionName: mes)
+        let charIcon = UIImage(named: "charTok", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: self.traitCollection)!.imageWithRenderingMode(.AlwaysTemplate)
+        let charIV = UIImageView(image: charIcon)
+        charIV.contentMode = .ScaleAspectFit
+        tokenizerButton.addKey(charIV, actionName: IAStringTokenizing.Char.shortLabel)
+        
+        let wordIcon = UIImage(named: "word", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: self.traitCollection)!.imageWithRenderingMode(.AlwaysTemplate)
+        let wordIV = UIImageView(image: wordIcon)
+        wordIV.contentMode = .ScaleAspectFit
+        tokenizerButton.addKey(wordIV, actionName: IAStringTokenizing.Word.shortLabel)
+        
+        let sentenceIcon = UIImage(named: "sentence", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: self.traitCollection)!.imageWithRenderingMode(.AlwaysTemplate)
+        let sentenceIV = UIImageView(image: sentenceIcon)
+        sentenceIV.contentMode = .ScaleAspectFit
+        tokenizerButton.addKey(sentenceIV, actionName: IAStringTokenizing.Sentence.shortLabel)
+        
+        let messageIcon = UIImage(named: "message", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: self.traitCollection)!.imageWithRenderingMode(.AlwaysTemplate)
+        let messageIV = UIImageView(image: messageIcon)
+        messageIV.contentMode = .ScaleAspectFit
+        tokenizerButton.addKey(messageIV, actionName: IAStringTokenizing.Message.shortLabel)
         
         tokenizerButton.backgroundColor = kButtonBackgroundColor
         tokenizerButton.cornerRadius = kButtonCornerRadius
