@@ -484,13 +484,19 @@ public class IACompositeBase:UIView {
         if action == #selector(NSObject.copy(_:)) && self.selectedRange?.count > 0{
             return true
         }
+        if action == #selector(NSObject.selectAll(_:)){
+            if _selectedRange != nil && _selectedRange!.count == iaString.length {
+                return false //filter out cases where we've already selected all
+            }
+            return iaString.length > 0
+        }
         return super.canPerformAction(action, withSender: sender)
     }
     
     ///Attachments are not being deep copied as is
     public override func copy(sender: AnyObject?) {
-        UIMenuController.sharedMenuController().setMenuVisible(false, animated: true)
-        guard iaString != nil && selectedRange?.count > 0 && selectedRange?.startIndex >= 0 && selectedRange?.endIndex <= iaString.length else {return}
+        defer{UIMenuController.sharedMenuController().setMenuVisible(false, animated: true)}
+        guard iaString != nil && _selectedRange?.count > 0 && _selectedRange?.startIndex >= 0 && _selectedRange?.endIndex <= iaString.length else {return}
         
         let pb = UIPasteboard.generalPasteboard()
         let copyOfSelected = iaString.iaSubstringFromRange(selectedRange!)
@@ -500,7 +506,7 @@ public class IACompositeBase:UIView {
         var pbItem:[String:AnyObject] = [:]
         pbItem[UTITypes.PlainText] = copyOfSelected.text
         pbItem[UTITypes.IAStringArchive] = iaArchive
-        pb.addItems([pbItem])
+        pb.items = [pbItem]
     }
     
     ///Called internally by a didSet on selectedRange. Calls updateSelectionLayer. In editing subclasses this should also update the current/next text properties.

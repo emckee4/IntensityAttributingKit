@@ -82,7 +82,6 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
             } else {
                 print("selectedTextRange received non IATextRange object")
             }
-            //updateSelectionLayer() //FIXME: This may be better off as a check for change
         }
     }
     
@@ -92,7 +91,6 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
         }
         set {
             selectedRange = newValue?.range()
-            //updateSelectionLayer() //FIXME: This may be better off as a check for change
         }
     }
     
@@ -132,14 +130,11 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
         }
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.handleLifecycleChange(_:)), name: UIApplicationWillEnterForegroundNotification, object: UIApplication.sharedApplication())
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.handleLifecycleChange(_:)), name: UIApplicationWillResignActiveNotification, object: UIApplication.sharedApplication())
+        self.selectable = true
     }
     
     
     deinit{NSNotificationCenter.defaultCenter().removeObserver(self)}
-    
-    //TODO:Copy/paste/ touch based selection
-    
-    
     
     //MARK:-base editing functions
     
@@ -260,6 +255,9 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
         case #selector(NSObject.copy(_:)):
             return (_selectedRange != nil && _selectedRange!.isEmpty == false)
         case #selector(NSObject.selectAll(_:)):
+            if _selectedRange != nil && _selectedRange!.count == iaString.length {
+                return false //filter out cases where we've already selected all
+            }
             return iaString.length > 0
         case #selector(NSObject.delete(_:)):
             return false
@@ -268,10 +266,10 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
         default:
             return super.canPerformAction(action, withSender: sender)
         }
-        if self.selectedRange != nil && (action == #selector(NSObject.paste(_:)) || action == #selector(NSObject.cut(_:)) ) {
-            return true
-        }
-        return super.canPerformAction(action, withSender: sender)
+//        if self.selectedRange != nil && (action == #selector(NSObject.paste(_:)) || action == #selector(NSObject.cut(_:)) ) {
+//            return true
+//        }
+//        return super.canPerformAction(action, withSender: sender)
     }
     
     ///Tests if the general UIPasteboard has data which can be pasted into the IATextEditor

@@ -243,6 +243,7 @@
 		C002E1F01CB303F5008E78A1 /* CompositeTextViews */ = {
 			isa = PBXGroup;
 			children = (
+				C01E0F4B1D51390900C5471B /* TextKit subclasses */,
 				C04533B11CAAF2FC00B374D0 /* IACompositeTextView.swift */,
 				C01FFFAF1CC6B3DF00AFD366 /* IACompositeBase */,
 				C01FFFB01CC6B3F000AFD366 /* IACompositeTextEditor */,
@@ -308,9 +309,31 @@
 			name = IAString;
 			sourceTree = "<group>";
 		};
+		C01E0F4A1D5138F300C5471B /* IAComposite Subviews */ = {
+			isa = PBXGroup;
+			children = (
+				C0479E631CBED6D10032A5C6 /* ThinTextView.swift */,
+				C084E9101CDE56E7009D387D /* IAMagnifyingLoup.swift */,
+				C0479E651CC01E130032A5C6 /* IASelectionView.swift */,
+				C0326E221CF27C2700E6161F /* IAImageLayerView.swift */,
+			);
+			name = "IAComposite Subviews";
+			sourceTree = "<group>";
+		};
+		C01E0F4B1D51390900C5471B /* TextKit subclasses */ = {
+			isa = PBXGroup;
+			children = (
+				C002E1F11CB334B1008E78A1 /* IATextRange.swift */,
+				C08B42FE1CD282F7002F2840 /* IATextSelectionRect.swift */,
+				C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */,
+			);
+			name = "TextKit subclasses";
+			sourceTree = "<group>";
+		};
 		C01FFFAF1CC6B3DF00AFD366 /* IACompositeBase */ = {
 			isa = PBXGroup;
 			children = (
+				C01E0F4A1D5138F300C5471B /* IAComposite Subviews */,
 				C01FFFA51CC6A97400AFD366 /* IACompositeBase.swift */,
 				C0479E671CC02CA50032A5C6 /* IACompositeTextView+Animations.swift */,
 			);
@@ -355,13 +378,6 @@
 				C040C5071C0E4283007C1685 /* IAKitPreferences.swift */,
 				C01E0F471D4BD5FB00C5471B /* IAKitVisualPreferences.swift */,
 				C002E1F01CB303F5008E78A1 /* CompositeTextViews */,
-				C002E1F11CB334B1008E78A1 /* IATextRange.swift */,
-				C0479E631CBED6D10032A5C6 /* ThinTextView.swift */,
-				C084E9101CDE56E7009D387D /* IAMagnifyingLoup.swift */,
-				C08B42FE1CD282F7002F2840 /* IATextSelectionRect.swift */,
-				C0479E651CC01E130032A5C6 /* IASelectionView.swift */,
-				C0326E221CF27C2700E6161F /* IAImageLayerView.swift */,
-				C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */,
 				C08253B31BE571E00017AC14 /* KB+Accessory */,
 				C06B1D541BEE9BDA009F427A /* RawIntensity */,
 				C08253B21BE571C70017AC14 /* CustomControls */,
