@@ -60,6 +60,13 @@ public class IACompositeBase:UIView {
         }
     }
     
+    public var maximumNumberOfLines:Int = 0 {
+        didSet{
+            topTV.textContainer.maximumNumberOfLines = maximumNumberOfLines
+            bottomTV.textContainer.maximumNumberOfLines = maximumNumberOfLines
+        }
+    }
+    
     var markedRange:Range<Int>? {
         didSet{if markedRange != oldValue{updateSelectionLayer()}}
     }
