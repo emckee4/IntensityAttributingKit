@@ -63,7 +63,8 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         kbSwitchButton.setImage(UIImage(named: "Keyboard", inBundle: bundle, compatibleWithTraitCollection: nil), forState: .Normal )
         kbSwitchButton.imageView?.contentMode = .ScaleAspectFit
         kbSwitchButton.backgroundColor = kButtonBackgroundColor
-        kbSwitchButton.imageEdgeInsets = UIEdgeInsets(top: 5.0, left: 5.0, bottom: 5.0, right: 5.0)
+        kbSwitchButton.imageEdgeInsets = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
+        kbSwitchButton.widthAnchor.constraintLessThanOrEqualToAnchor(kbSwitchButton.heightAnchor, multiplier: 1.2).activateWithPriority(998, identifier: "kbSwitchButton W <= H*1.2")
         kbSwitchButton.addTarget(self, action: "kbSwitchButtonPressed:", forControlEvents: .TouchUpInside)
         kbSwitchButton.translatesAutoresizingMaskIntoConstraints = false
         kbSwitchButton.layer.cornerRadius = kButtonCornerRadius
