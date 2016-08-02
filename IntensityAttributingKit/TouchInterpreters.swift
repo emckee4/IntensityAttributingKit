@@ -242,7 +242,7 @@ struct DurationTouchInterpreter:IATouchInterpretingProtocol{
         }
     }
     mutating func endInteractionYieldingRawResult(withTouch touch:UITouch?)->Float{
-        guard let ts = touch?.timestamp else {touchStartTime = nil; return 0.0}
+        guard let ts = touch?.timestamp where touchStartTime != nil else {touchStartTime = nil; return 0.0}
         let result = min(Float(ts - touchStartTime) * DurationTouchInterpreter.durationMultiplier, 1.0)
         touchStartTime = nil
         return result

@@ -137,7 +137,9 @@ extension IACompositeTextEditor {
         return UITextWritingDirection.LeftToRight
     }
     public func setBaseWritingDirection(writingDirection: UITextWritingDirection, forRange range: UITextRange) {
-        guard writingDirection == .LeftToRight else {fatalError("setBaseWritingDirection: received baseWriting direction other than natural")}
+        if writingDirection == .LeftToRight {
+            print("setBaseWritingDirection: received baseWriting direction other than natural. Ignoring.")
+        }
     }
     
         
