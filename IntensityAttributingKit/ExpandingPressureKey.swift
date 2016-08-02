@@ -54,8 +54,8 @@ This is now a subclass of ExpandingKeyBase.
         }
     }
     
-    override func handleKeySelection(selectedKey: EPKey) {
-        self.delegate?.pressureKeyPressed(self, actionName: selectedKey.actionName, intensity: touchIntensity.endInteraction(withTouch: nil))
+    override func handleKeySelection(selectedKey: EPKey, finalTouch:UITouch?) {
+        self.delegate?.pressureKeyPressed(self, actionName: selectedKey.actionName, intensity: touchIntensity.endInteraction(withTouch: finalTouch))
     }
     
     

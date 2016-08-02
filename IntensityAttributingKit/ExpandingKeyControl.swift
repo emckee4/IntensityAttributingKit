@@ -26,7 +26,7 @@ import UIKit
         selector = nil
     }
     
-    override func handleKeySelection(selectedKey:EPKey){
+    override func handleKeySelection(selectedKey:EPKey, finalTouch:UITouch?){
         if target != nil && selector != nil {
             target?.performSelector(Selector(self.selector!), withObject: selectedKey.actionName)
         }

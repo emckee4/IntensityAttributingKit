@@ -343,7 +343,7 @@ public class ExpandingKeyBase: UIView {
         
     }
     ///Called immediately after selectedEPKey is updated to a non-nil value in touches ended. Override to implement additional non standard actions during touchesEnded to handle key selection.
-    func handleKeySelection(selectedKey:EPKey){
+    func handleKeySelection(selectedKey:EPKey, finalTouch:UITouch?){
         
     }
     
@@ -389,7 +389,7 @@ public class ExpandingKeyBase: UIView {
             }
             guard selectedEPKey != nil else {selectedEPKey = nil; shrinkView(); return}
             
-            defer {handleKeySelection(newSelectedKey!)}
+            defer {handleKeySelection(newSelectedKey!, finalTouch: touch)}
             if selectedBecomesFirst {
                 defer{
                     moveEPKeyToFirst(newSelectedKey!)

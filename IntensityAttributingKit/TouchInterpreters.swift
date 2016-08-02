@@ -234,7 +234,7 @@ struct DurationTouchInterpreter:IATouchInterpretingProtocol{
     var touchStartTime:NSTimeInterval!
     
     mutating func updateIntensityYieldingRawResult(withTouch touch:UITouch)->Float{
-        if touch.phase == .Began {
+        if touch.phase == .Began || touchStartTime == nil{
             touchStartTime = touch.timestamp
             return 0.0
         } else {
