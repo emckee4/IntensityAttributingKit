@@ -8,7 +8,7 @@
 
 import Foundation
 
-
+///Keys used when storing/archiving IAString components
 public struct IAStringKeys {
     public static let text = "text"
     public static let intensities = "intensities"

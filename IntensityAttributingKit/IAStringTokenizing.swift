@@ -9,7 +9,7 @@
 import Foundation
 
 
-
+///Intensity tokenizing determines how intensity values are smoothed/averaged across text when displayed. Intensity can be displayed at the individual character level of granularity or values can be averaged by words, sentences, or the entire message.
 public enum IAStringTokenizing:String, CustomStringConvertible {
     case Char = "Char",
     Word = "Word",

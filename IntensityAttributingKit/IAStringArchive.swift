@@ -9,7 +9,7 @@
 import Foundation
 
 /**
-Provides an NSCoding complient wrapper for iaString, allowing IAString itself to remain non-objective C
+Provides an NSCoding complient wrapper for iaString, allowing IAString itself to remain pleasently non-objective C.
  */
 public class IAStringArchive:NSObject, NSCoding {
     

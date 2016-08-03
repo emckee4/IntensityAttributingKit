@@ -8,7 +8,8 @@
 
 import UIKit
 
-
+/**The IAString is the core data structure at the heart of the IntensityAttributingKit. It's similar in concept to an NSAttributedString except that it's designed to more abstractly represent the data that may be displayed via varying schemes.
+*/
 public class IAString {
     
     internal(set) public var text:String {
@@ -25,15 +26,6 @@ public class IAString {
     public var attachmentCount:Int {
         return attachments.count
     }
-    
-//    public var renderScheme:IntensityTransformers!
-//    public var renderOptions:[String:AnyObject] = [:]
-//    
-//    public var thumbSize:ThumbSize = .Medium {
-//        didSet{self.attachments.setThumbSizes(self.thumbSize)}
-//    }
-//    
-//    public var preferedSmoothing: IAStringTokenizing = .Char
 
     public var baseOptions:IAStringOptions!
     
@@ -72,30 +64,11 @@ public class IAString {
         }
         
         
-//        changed for IAStringOptions
-//        var combinedOpts = self.renderOptions
-//        combinedOpts[IAStringKeys.renderScheme] = renderScheme?.rawValue ?? IAKitPreferences.defaultTransformer.rawValue
-//        combinedOpts[IAStringKeys.preferedSmoothing] = self.preferedSmoothing.shortLabel
-//        
-//        dict[IAStringKeys.options] = combinedOpts
-        
         dict[IAStringKeys.options] = baseOptions.asOptionsDict()
         
         
-        //TODO: Choosing of source of data/ conversion should occur in IATextAttachment
         var attachDict:[Int:IATextAttachment] = [:]
         for (loc,attach) in self.attachments {
-//            //let nsTA = attachVWR.value as! IATextAttachment
-//            if let data = attach.contents {
-//                dataDict[loc] = data
-//            } else if let wrapper = attach.fileWrapper where wrapper.regularFileContents != nil {
-//                dataDict[loc] = wrapper.regularFileContents!
-//            } else if let image = attach.image {
-//                dataDict[loc] = UIImageJPEGRepresentation(image, 0.8)!
-//            } else {
-//                print("error converting text attachment to NSData. Appending empty placeholder instead")
-//                dataDict[loc] = NSData()
-//            }
             attachDict[loc] = attach
         }
         dict[IAStringKeys.iaTextAttachments] = attachDict
@@ -149,29 +122,7 @@ public class IAString {
                 let newAttach = IATextAttachment(filename: filename, remoteURL: remoteURL, localURL: nil)
                 self.attachments[loc] = newAttach
             }
-        } 
-        
-        //single value
-        
-//        if let opts = dict[IAStringKeys.options] as? [String:AnyObject]{
-//            //self.renderOptions = opts
-//        }
-        
-//        if let scheme = dict[IAStringKeys.renderScheme] as? String {
-//            self.renderScheme = IntensityTransformers(rawValue: scheme)
-//            self.renderOptions.removeValueForKey(IAStringKeys.renderScheme)
-//        } else if let scheme = self.renderOptions.removeValueForKey(IAStringKeys.renderScheme) as? String where IntensityTransformers(rawValue: scheme) != nil{
-//            self.renderScheme = IntensityTransformers(rawValue: scheme)
-//        } else {
-//            self.renderScheme = IAKitPreferences.defaultTransformer
-//        }
-//        
-//        if let ps = dict[IAStringKeys.preferedSmoothing] as? String where IAStringTokenizing(shortLabel: ps) != nil{
-//            self.preferedSmoothing = IAStringTokenizing(shortLabel: ps)
-//            self.renderOptions.removeValueForKey(IAStringKeys.preferedSmoothing)
-//        } else if let ps = self.renderOptions.removeValueForKey(IAStringKeys.preferedSmoothing) as? String where IAStringTokenizing(shortLabel: ps) != nil{
-//            self.preferedSmoothing = IAStringTokenizing(shortLabel: ps)
-//        }
+        }
         
         if let opts = IAStringOptions(optionsDict: (dict[IAStringKeys.options] as? [String:AnyObject])) {
             self.baseOptions = opts

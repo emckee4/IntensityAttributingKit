@@ -10,9 +10,9 @@ import UIKit
 
 
 
-///Extension providing subrange from range
+///Extension providing IAString modification as well as subrange operations.
 extension IAString {
-    
+
     
     ///This provides a new IAString comprised of copies of the contents in the given range. This inherits its parent's options. It will reindex its attributes and it will discard links.
     public func iaSubstringFromRange(range:Range<Int>)->IAString {
@@ -73,45 +73,6 @@ extension IAString {
         self.attachments.replaceRange(replacement.attachments, ofLength: replacement.length, replacedRange: range)
         
     }
-/* removed for v2.1
-    ///This function performs a range replace on the iaString and updates affected portions ofthe provided textStorage with the new values. This can be complicated because a replaceRange on an IAString with a multi-character length tokenizer (ie anything but character length) can affect a longer range of the textStorage than is replaced in the IAString. This function tries to avoid modifying longer stretches than is necessary.
-    internal func replaceRangeUpdatingTextStorage(replacement:IAString, range:Range<Int>, textStorage:NSTextStorage){
-        guard replacement.length > 0 else {deleteRangeUpdatingTextStorage(range, textStorage: textStorage); return}
-        
-        self.replaceRange(replacement, range: range)
-        let modRange = range.startIndex ..< (range.startIndex + replacement.length)
-        
-        textStorage.beginEditing()
-        //first we do a replace to align our indices
-        textStorage.replaceCharactersInRange(range.nsRange, withString: replacement.text)
-        
-        let (renderedModRange, replacementAttString) = self.convertRangeToNSAttributedString(modRange, withOverridingOptions: nil)
-        
-        textStorage.replaceCharactersInRange(renderedModRange.nsRange, withAttributedString: replacementAttString)
-        textStorage.endEditing()
-    }
-    
-    ///Performs similarly to replaceRangeUpdatingTextStorage, deleting text form the store and updating the displaying textStorage to match, taking into account the interaction between the range deletion and tokenizer to determine and execute whatever changes need to be made.
-    internal func deleteRangeUpdatingTextStorage(range:Range<Int>, textStorage:NSTextStorage){
-        if self.baseOptions?.preferedSmoothing == IAStringTokenizing.Char || self.length == range.count {
-            self.removeRange(range)
-            textStorage.beginEditing()
-            textStorage.deleteCharactersInRange(range.nsRange)
-            textStorage.endEditing()
-            return
-        } else {
-            self.removeRange(range)
-            
-            let modRange = max(range.startIndex - 1, 0)..<min(range.startIndex + 1, self.length)
-            
-            let (renderedModRange, replacementAttString) = self.convertRangeToNSAttributedString(modRange, withOverridingOptions: nil)
-            textStorage.beginEditing()
-            textStorage.deleteCharactersInRange(range.nsRange)
-            textStorage.replaceCharactersInRange(renderedModRange.nsRange, withAttributedString: replacementAttString)
-            textStorage.endEditing()
-        } 
-    }
-*/
     
     //convenience editor
     public func insertAtPosition(text:String, position:Int, intensity:Int, attributes:IABaseAttributes){
@@ -139,10 +100,6 @@ extension IAString {
     ///Returns an empty IAString with the same baseOptions as the receiver
     public func emptyCopy()->IAString {
         let newIA = IAString()
-//        newIA.renderScheme = self.renderScheme
-//        newIA.renderOptions = self.renderOptions
-//        newIA.thumbSize = self.thumbSize
-//        newIA.preferedSmoothing = self.preferedSmoothing
         newIA.baseOptions = self.baseOptions
         return newIA
     }
