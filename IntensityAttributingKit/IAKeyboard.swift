@@ -7,6 +7,7 @@
 //
 import UIKit
 
+///The IAKeyboard provides the primary means for inputing intensity attributed text. It displays a configurable set of PressureKeys and ExpandingPressureKeys (via the KeyboardLayoutView) and packages/forwards their event data to the delegate IACompositeTextEditor. The IAKeyboard also handles the autocaps and suggestion bar content generation when it is active and in the foreground (as the system keyboard does for itself when presented).
 class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDelegate {
     
     static var singleton:IAKeyboard = IAKeyboard(nibName: nil, bundle: nil)

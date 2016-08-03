@@ -8,13 +8,14 @@
 
 import UIKit
 
+/** The IAAccessoryVC provides the input accessory used by the IACompositeEditor. It provides access to a varity of options and interfaces and can trigger the presentation of other VCs relevant to the IAString editing process.
+ */
 class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     static var singleton = IAAccessoryVC(nibName:nil, bundle: nil)
     
     var kbSwitchButton:UIButton!
     var cameraButton:UIButton!
-    //var intensityAdjuster:IntensityAdjuster!
     var intensityButton:PressureKey!
     var intensityLabel:UILabel!
     var intensitySlider:UISlider!
@@ -23,7 +24,6 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
     var optionButton:UIButton!
     var transformButton:ExpandingKeyControl!
     var stackView:UIStackView!
-    //var imagePicker:UIImagePickerController!
     
     var delegate:IAAccessoryDelegate?
     
@@ -116,14 +116,7 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         
         tokenizerButton = ExpandingKeyControl(expansionDirection: .Up)
         tokenizerButton.setSelector(self, selector: "tokenizerButtonPressed:")
-//        let ch = IAStringTokenizing.Char.shortLabel
-//        tokenizerButton.addKey(withTextLabel: ch, actionName: ch)
-//        let word = IAStringTokenizing.Word.shortLabel
-//        tokenizerButton.addKey(withTextLabel: word, actionName: word)
-//        let sentence = IAStringTokenizing.Sentence.shortLabel
-//        tokenizerButton.addKey(withTextLabel: sentence, actionName: sentence)
-//        let mes = IAStringTokenizing.Message.shortLabel
-//        tokenizerButton.addKey(withTextLabel: mes, actionName: mes)
+
         let charIcon = UIImage(named: "charTok", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: self.traitCollection)!.imageWithRenderingMode(.AlwaysTemplate)
         let charIV = UIImageView(image: charIcon)
         charIV.contentMode = .ScaleAspectFit

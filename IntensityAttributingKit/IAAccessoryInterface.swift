@@ -12,7 +12,7 @@ import UIKit
 
 
 
-
+///This is the primary interface between the accessory and the IACompositeTextEditor
 extension IAAccessoryVC: PressureKeyActionDelegate {
     
     

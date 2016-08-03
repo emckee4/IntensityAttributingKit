@@ -222,31 +222,6 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
     }
 
     
-
-//    private func setupVerticalStackView(){
-//        
-//        verticalStackView = UIStackView(arrangedSubviews: [suggestionsBar, qwertyStackView,asdfStackView,zxcvStackView,bottomStackView])
-//        verticalStackView.translatesAutoresizingMaskIntoConstraints = false
-//        verticalStackView.axis = .Vertical
-//        verticalStackView.distribution = .FillEqually
-//        verticalStackView.spacing = 5.0
-//        verticalStackView.alignment = .Fill
-//        verticalStackView.layoutMarginsRelativeArrangement = true
-//        
-//        verticalStackView.layoutMargins = UIEdgeInsets(top: kStackInset, left: kStackInset, bottom: kStackInset, right: kStackInset)
-//        
-//        view.addSubview(verticalStackView)
-//        verticalStackView.topAnchor.constraintEqualToAnchor(view.topAnchor).active = true
-//        verticalStackView.leftAnchor.constraintEqualToAnchor(view.leftAnchor).active = true
-//        verticalStackView.rightAnchor.constraintEqualToAnchor(view.rightAnchor).active = true
-//        verticalStackView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor).active = true
-//        
-//        view.backgroundColor = backgroundColor
-//        
-//    }
-    
-    
-    
     private func setupKeyConstraints(){
         for key in standardPressureKeys[1..<standardPressureKeys.count]{
             let widthConstraint = key.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor)
@@ -269,9 +244,6 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
         landscapeOnlyConstraints.append( returnKey.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 1.0) )
         
     }
-
-    
-    
     
     
     //MARK:- Setting/Changing key mappings

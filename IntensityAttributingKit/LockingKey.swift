@@ -9,7 +9,7 @@
 import UIKit
 
 
-///Sticky state toggling button which supports a locking selected state on double tap
+///Sticky state toggling button which supports a locking selected state on double tap. This is used as the shift key.
 class LockingKey:UIButton {
     
 //    let kSelectedLockedOnFlag:UInt = 1 << 16
@@ -62,19 +62,6 @@ class LockingKey:UIButton {
             self.selected = false
         }
     }
-    
-//    override var state:UIControlState {
-//        get { if selectedLockedOn { return super.state.union(kSelectedLockedOnState) } else { return super.state.subtract(kSelectedLockedOnState) } }
-//    }
-    
-    /*
-    setImageForSelectionLock
-    
-    setText/AttributedTextForSelectionLock
-    
-    setHighlighting, bgcolor, bgimage, etc for selectionLock
-    
-    */
 
     
 }
