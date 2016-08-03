@@ -7,16 +7,13 @@
 //
 
 import UIKit
-
+///PressureButton is a UIButton derived control which adds RawIntensity. It's used only in the IAAccessory pressure pad since it's otherwise less useful than the delegate based PressureKey/View classes.
 class PressureButton: UIButton {
     
     lazy var rawIntensity:RawIntensity = RawIntensity()
     
     ///this value is made available for the receiving class after it receives the action message from a touch
     var lastIntensity:Int = 0
-    // {
-    //    return rawIntensity.currentIntensity
-    //}
     
     private var baseBackgroundColor:UIColor? {
         didSet {super.backgroundColor = baseBackgroundColor}

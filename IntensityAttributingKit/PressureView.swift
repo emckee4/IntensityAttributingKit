@@ -9,15 +9,11 @@
 import UIKit
 
 
-///Delegate based equivilent of PressureButton.
+///The PressureView is basically the same as PressureKey except that its base class is UIView instead of UILabel.
 class PressureView:UIView, PressureControl {
     
     lazy var rawIntensity:RawIntensity = RawIntensity()
     
-    //    ///this value is made available for the receiving class after it receives the action message from a touch
-    //    var lastIntensity:Float {
-    //        return rawIntensity.intensity
-    //    }
     weak var delegate:PressureKeyActionDelegate?
     
     var contentView:UIView!

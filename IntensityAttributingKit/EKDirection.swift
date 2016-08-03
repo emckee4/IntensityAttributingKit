@@ -9,10 +9,7 @@
 import Foundation
 
 
-
-
-
-///The direction in which an ExpandingPressureKey grows on selection
+///The direction in which an ExpandingPressureKey grows on selection. It's helper computed variables are used by other layout functions.
 public enum EKDirection {
     case Up,Down,Left,Right
     

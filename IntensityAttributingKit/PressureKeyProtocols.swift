@@ -12,19 +12,15 @@ import Foundation
 
 
 
-///protocol for PressureView and ExpandingPressureKey for the pressure sensitive buttons using the PressureKeyAction delegate pattern
+///protocol for PressureKey, PressureView and ExpandingPressureKey for the pressure sensitive buttons using the PressureKeyAction delegate pattern
 public protocol PressureControl {
     weak var delegate:PressureKeyActionDelegate? {get set}
 }
 
-///Protocol for delegate used by PressureView and ExpandingPressureKey
+///Protocol for delegate used by PressureKey, PressureView and ExpandingPressureKey
 public protocol PressureKeyActionDelegate:class {
     func pressureKeyPressed(sender:PressureControl, actionName:String, intensity:Int)
 }
 
-
-//public enum PressureKeyActionType {
-//    case CharInsert, TriggerFunction
-//}
 
 

@@ -8,7 +8,9 @@
 
 import UIKit
 
-
+/**
+The PressureKey passes its touch data to the RawIntensity constellation of classes/structs in order to provide touch intensity data during/on completion of touch events. 
+*/
 class PressureKey:UILabel, PressureControl {
     
     lazy var rawIntensity:RawIntensity = RawIntensity()
@@ -119,11 +121,6 @@ class PressureKey:UILabel, PressureControl {
         self.resetBackground()
         //rawIntensity.reset()
     }
-    
-//    override func touchesEstimatedPropertiesUpdated(touches: Set<NSObject>) {
-//        super.touchesEstimatedPropertiesUpdated(touches)
-//        
-//    }
     
     override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
         super.touchesCancelled(touches, withEvent: event)

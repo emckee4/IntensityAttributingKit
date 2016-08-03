@@ -14,8 +14,7 @@ Abstract base class for ExpandingKeyControl and ExpandingPressureControl which p
  Future changes:
  Add animation by animating frame expansion prior to expanding constraints to match.
  Consider giving leway on out of bounds presses
- -Expand in two directions: L shaped expansion like multi keys on the ios system keyboard.
-
+ Expand in two directions: L shaped expansion like multi keys on the ios system keyboard.
 */
 public class ExpandingKeyBase: UIView {
     
@@ -325,8 +324,6 @@ public class ExpandingKeyBase: UIView {
         guard let keyIndex = epKeys.indexOf({$0.actionName == actionName}) else {return}
         let keyToRemove = epKeys.removeAtIndex(keyIndex)
         keyToRemove.view.removeFromSuperview()
-//        let svIndex = containedStackView.subviews.indexOf({$0 == keyToRemove.view})
-//        containedStackView.subviews.removeAtIndex(svIndex)
         self.layoutKeysForExpansionDirection()
     }
     

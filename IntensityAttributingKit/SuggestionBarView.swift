@@ -8,6 +8,9 @@
 
 import UIKit
 
+/**
+Provides an interface for displaying and selecting suggestions on and as provided by the IAKeyboard. The SuggestionBarView is able to provide intensity data because it's actually an array of PressureKey's, though it acts as the delegate to those keys and packages events received into its own SuggestionBarDelegate.
+*/
 class SuggestionBarView: UIView, PressureKeyActionDelegate {
 
     private(set) var suggestions:[String] = []

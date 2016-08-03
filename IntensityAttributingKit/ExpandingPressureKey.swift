@@ -12,7 +12,6 @@ import UIKit
 /** Configurable dropdown-like button which provides intensity for touch selections using RawIntensity.
 Uses PressureKeyActionDelegate to pass conforming class the actionName and intensity values for a touchUpInside.
 This is now a subclass of ExpandingKeyBase.
- 
 */
 @IBDesignable public class ExpandingPressureKey: ExpandingKeyBase, PressureControl {
     
