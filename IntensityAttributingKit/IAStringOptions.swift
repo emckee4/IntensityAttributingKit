@@ -8,9 +8,8 @@
 
 import Foundation
 
-
+///IAStringOptions holds IntensityTransformer and smoothing/tokenizer options of an IAString. These values hold for the entirety of an IAString. These can be overriden by the displayer without modifying the underlying values using the optionsWithOverridesApplied function.
 public struct IAStringOptions:Equatable {
-    
     
     public var renderScheme:IntensityTransformers!
     public var preferedSmoothing: IAStringTokenizing!
@@ -52,14 +51,7 @@ public struct IAStringOptions:Equatable {
 
 
 
-
 @warn_unused_result public func ==(lhs:IAStringOptions,rhs:IAStringOptions)->Bool{
-//    guard lhs.animatesIfAvailable == rhs.animatesIfAvailable else {return false}  ///This needs to be determined separately due to a bug at the time of writing
-//    guard lhs.renderScheme == rhs.renderScheme else {return false}
-//    guard lhs.preferedSmoothing == rhs.preferedSmoothing else {return false}
-//    guard lhs.animationOptions == rhs.animationOptions else {return false}
-//    return true
-    
     return lhs.animatesIfAvailable == rhs.animatesIfAvailable && lhs.renderScheme == rhs.renderScheme && lhs.preferedSmoothing == rhs.preferedSmoothing && lhs.animationOptions == rhs.animationOptions
 }
 

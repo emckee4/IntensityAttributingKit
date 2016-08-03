@@ -8,6 +8,7 @@
 
 import UIKit
 
+///Configurable cell type used in the RawIntensity param adjustment cells. This one has a label with title, a slider, and a value/result label.
 class LabeledSliderView: UIView {
     
     var slider:UISlider!

@@ -16,9 +16,9 @@ extension Range where Element:Comparable {
         if self.startIndex >= range.endIndex || self.endIndex <= range.startIndex {
             return false
         }
-        
         return true
     }
+    
     ///Returns true if this range wholly contains the provided range, false otherwise. A range with zero length will not be contained in anything.
     func contains(range:Range<Element>)->Bool {
         return range.startIndex >= self.startIndex && range.endIndex <= self.endIndex

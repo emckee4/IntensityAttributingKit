@@ -8,6 +8,7 @@
 
 import UIKit
 
+///This holds the IAKit adjustment cells necessary for configuring intensity interpreters. It will typically be presented within the ModalContainerViewController when the gear icon is pressed on the IAAccessory.
 class IAKitSettingsTableViewController: UITableViewController {
 
     var tiNameCells:[UITableViewCell]!

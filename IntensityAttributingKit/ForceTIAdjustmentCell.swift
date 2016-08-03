@@ -8,6 +8,7 @@
 
 import UIKit
 
+///Prebaked tableview cell for adjusting the RawIntensity parameters within the keyboard options menu or otherwise.
 final class ForceTIAdjustmentCell:RawIntensityAdjustmentCellBase {
 
     

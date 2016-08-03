@@ -8,15 +8,14 @@
 
 import UIKit
 
+///Prebaked tableview cell for adjusting the RawIntensity parameters within the keyboard options menu or otherwise.
 final class ImpactDurationTIAdjustmentCell:RawIntensityAdjustmentCellBase {
-    
     
     var durationMultiplierSV:LabeledSliderView!
     var impactMultiplierSV:LabeledSliderView!
     ///Not currently adjustable by users but might be exposed later:
     //var impactExponent
     //var constantCoeficient
-    
     
     override init() {
         super.init()
@@ -28,7 +27,6 @@ final class ImpactDurationTIAdjustmentCell:RawIntensityAdjustmentCellBase {
         
         durationMultiplierSV.slider.addTarget(self, action: "updateDurationMultiplier:", forControlEvents: .ValueChanged)
         impactMultiplierSV.slider.addTarget(self, action: "updateImpactMultiplier:", forControlEvents: .ValueChanged)
-        //itemDescriptionTextView.sizeToFit()
     }
 
     required init?(coder aDecoder: NSCoder) {

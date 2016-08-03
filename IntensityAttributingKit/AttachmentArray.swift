@@ -8,7 +8,9 @@
 
 import Foundation
 
-
+/**
+ The IAAttachmentArray is a sparse array created so that it's indexes could be adjusted easily when inserting/deleting content in the IAString. The underlying data structure is a data array containing tupples of the user facing index (loc) and the IATextAttachment (attach). Functions which interact with the index read or change the loc values of any contained LocAttach tupples.
+ */
 public struct IAAttachmentArray:CustomStringConvertible, SequenceType {
     public typealias LocAttach = (loc:Int,attach:IATextAttachment)
     var data:[LocAttach] = []

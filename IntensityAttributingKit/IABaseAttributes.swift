@@ -8,7 +8,7 @@
 import UIKit
 
 
-///OptionSet containing the less often varying component attributes
+///OptionSet (raw integer valued) containing the less often varying component attributes including base values for text size, bold/italic/underline/strikethrough.
 public struct IABaseAttributes:OptionSetTypeWithIntegerRawValue{
     public var rawValue:Int
     public init(rawValue:Int){self.rawValue = rawValue}

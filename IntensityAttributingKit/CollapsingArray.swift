@@ -8,7 +8,7 @@
 
 
 
-///Data structure protocol designed to represent series of values which include long stretches of unchanges values
+///Data structure protocol designed to represent series of values which include long stretches of unchanges values. Arguably a linked list might perform better for the same purposes though it shouldn't matter for the length of IAStrings we're using. This maps more cleanly to the format we use in the JSON representations.
 protocol ExclusiveRangeMappingProtocol:MutableCollectionType, RangeReplaceableCollectionType, CustomStringConvertible {
     associatedtype Element:Equatable
     associatedtype Index:RandomAccessIndexType,Hashable,IntegerLiteralConvertible
@@ -16,8 +16,6 @@ protocol ExclusiveRangeMappingProtocol:MutableCollectionType, RangeReplaceableCo
     
     var startIndex:Index {get}
     var endIndex:Index {get}
-    
-    //var expandedArray:[Element] {get}
     
 }
 
@@ -52,8 +50,8 @@ public struct ERMPGenerator<Element:Equatable>: GeneratorType {
 }
 
 
-//
-/////exclusive, full coverage interval mapping designed for short intervals
+/**Data structure designed to represent series of values which include long stretches of unchanges values (whcih must conform to equatable). This stores an array of RangeValuePairs which are structs containing a Range<Int> representing the index as seen by the user and a value. The ranges do not intersect but the union of the ranges covers the entire index space of the Collapsing Array. This data structure will be more efficient for handling long stretches of unchanged values than would be a plain array, though a linked list might perform better for the same purposes. It shouldn't matter for the length of IAStrings we're using. This maps more cleanly to the format we use in the JSON representations.
+ */
 struct CollapsingArray<Element:Equatable>: ExclusiveRangeMappingProtocol, ArrayLiteralConvertible {
     typealias Index = Int
     var data:[RangeValuePair<Element>] = []
@@ -276,21 +274,6 @@ struct CollapsingArray<Element:Equatable>: ExclusiveRangeMappingProtocol, ArrayL
         return results  
     }
     
-//    func dataIndexRangeForIndexRange(range:Range<Int>,includePartials:Bool = true)->Range<Int>{
-//        var diStart:Int!
-//        var diEnd:Int!
-//        for (di,rvp) in self.data.enumerate(){
-//            if includePartials {
-//                if range.contains(rvp.startIndex) || range.contains(rvp.endIndex - 1) || rvp.range.contains(range.startIndex) {
-//                    
-//                }
-//            } else {
-//
-//            }
-//        }
-//        return 0..<1
-//    }
-    
     ///Returns a copy of a slice with its indeces zeroed
     func subRange(subRange:Range<Int>)->CollapsingArray<Element>{
         guard subRange.startIndex >= 0 && subRange.endIndex <= self.endIndex  else {fatalError("removeRange: out of bounds: \(subRange), from \(self.startIndex..<self.endIndex)")}
@@ -427,70 +410,4 @@ extension CollapsingArray where Element:OptionSetTypeWithIntegerRawValue {
     
 }
 
-
-
-//extension CollapsingArray {
-//    
-//    static func iaBaseAttsArrayFromIntArrays(rvpArray:[[Int]])->CollapsingArray<IABaseAttributes>{
-//        var ca = CollapsingArray<IABaseAttributes>()
-//        //guard rvpArray.first?.startIndex == 0 else {return nil}
-//        for item in rvpArray {
-//            //guard item.count == 3 else {print("init!(rvpArray:[[Int]]):  bad data"); return nil}
-//            ca.data.append(RangeValuePair(value: IABaseAttributes(rawValue:item[2]), startIndex: item[0], endIndex: item[1]))
-//        }
-//        //guard ca.validate() else {return nil}
-//        return ca
-//    }
-//    
-//
-//}
-
-//extension CollapsingArray {
-//    static func binAttZip(bins bins:CollapsingArray<Int>,atts:CollapsingArray<IABaseAttributes>)->CollapsingArray<BinAttPair>{
-//        let totalLength = bins.count
-//        guard totalLength == atts.count else {fatalError("binAttZip: bins.count != atts.count ")}
-//        guard totalLength > 0 else {return CollapsingArray<BinAttPair>()}
-//        var baps = CollapsingArray<BinAttPair>()
-//        var currentIndex = 0
-//        var binDi = 0
-//        var attsDi = 0
-//        while currentIndex < totalLength {
-//            let binAttPair = BinAttPair(bin: bins.data[binDi].value, atts: atts.data[attsDi].value)
-//            let binEnd = bins.data[binDi].endIndex
-//            let attsEnd = atts.data[attsDi].endIndex
-//            var endIndex:Int!
-//            if binEnd < attsEnd {
-//                endIndex = binEnd
-//                binDi++
-//            } else if attsEnd < binEnd {
-//                endIndex = attsEnd
-//                attsDi++
-//            } else {
-//                endIndex == attsEnd
-//                binDi++
-//                attsDi++
-//            }
-//            let rvp = RangeValuePair(value: binAttPair, startIndex: currentIndex, endIndex: endIndex)
-//            currentIndex = endIndex
-//            baps.data.append(rvp)
-//        }
-//        return baps
-//    }
-//}
-//
-//struct BinAttPair:Hashable {
-//    let bin:Int
-//    let atts:IABaseAttributes
-//    
-//    init(bin:Int, atts:IABaseAttributes){
-//        self.bin = bin
-//        self.atts = atts
-//    }
-//    
-//    var hashValue:Int {return bin.hashValue * 0x1000 + atts.hashValue}
-//}
-//
-//func ==(lhs:BinAttPair, rhs:BinAttPair)->Bool{
-//    return lhs.hashValue == rhs.hashValue
-//}
 

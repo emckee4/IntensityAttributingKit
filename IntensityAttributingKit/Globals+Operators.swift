@@ -16,12 +16,6 @@ import UIKit
 }
 
 
-//let ReplacementChar:String = "\u{FFFC}"
-//let ReplacementCodeUnit:UInt16 = "\u{FFFC}".utf16.first!
-
-//internal extension String {
-//    static var ReplacementChar:String {return "\u{FFFC}"}
-//}
 
 struct UTITypes {
     static let PlainText = "public.utf8-plain-text"

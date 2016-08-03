@@ -8,9 +8,9 @@
 
 import UIKit
 
+///Prebaked tableview cell for enabling/disabling the suggestion bar in the IAKeyboard.
 class SpellCheckToggleCell: ToggleCell {
 
-    
     
     override func setupCell(){
         super.setupCell()

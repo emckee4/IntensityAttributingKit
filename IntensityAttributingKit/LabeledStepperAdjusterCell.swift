@@ -8,6 +8,8 @@
 
 import UIKit
 
+
+///Configurable cell type used in the RawIntensity param adjustment cells. This one has a label with title, a stepper, and a label for results/value.
 public class LabeledStepperAdjusterCell:UITableViewCell{
     
     @IBInspectable public var titleLabel:UILabel!

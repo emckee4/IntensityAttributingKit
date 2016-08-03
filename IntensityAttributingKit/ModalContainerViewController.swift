@@ -8,7 +8,7 @@
 
 import UIKit
 
-///ViewController with dismiss button intended to hold other VCs during modal presentations
+///ViewController with dismiss button intended to hold other VCs during modal presentations. This is used primarily to hold the IAKitSettingsTableViewController while keeping it flexible enough to be displayed as-is elsewhere. It also has the benefit of having a dismissalCompletionBlock.
 class ModalContainerViewController: UIViewController {
 
     var dismissButton:UIButton!
@@ -29,7 +29,7 @@ class ModalContainerViewController: UIViewController {
         view.addSubview(effectView)
         
         dismissButton = UIButton(type: .System)
-        let xImage = UIImage(named: "xIcon", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: self.traitCollection)!
+        let xImage = UIImage(named: "circleX", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: self.traitCollection)!
         dismissButton.setImage(xImage, forState: .Normal)
         dismissButton.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(dismissButton)

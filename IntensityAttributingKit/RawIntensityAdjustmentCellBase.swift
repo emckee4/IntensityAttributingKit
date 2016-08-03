@@ -8,6 +8,7 @@
 
 import UIKit
 
+///Abstract cell type used in the RawIntensity param adjustment cells.
 class RawIntensityAdjustmentCellBase: UITableViewCell {
 
     var itemDescriptionLabel:UILabel!
@@ -43,8 +44,7 @@ class RawIntensityAdjustmentCellBase: UITableViewCell {
         contentStackView.translatesAutoresizingMaskIntoConstraints = false
         contentStackView.axis = .Vertical
         self.contentView.addSubview(contentStackView)
-        //itemDescriptionTextView.widthAnchor.constraintGreaterThanOrEqualToAnchor(contentStackView.widthAnchor, constant: -8).activateWithPriority(100, identifier: nil)
-        //itemDescriptionTextView.heightAnchor.constraintGreaterThanOrEqualToConstant(20.0).activateWithPriority(999, identifier: nil)
+        
         contentStackView.topAnchor.constraintEqualToAnchor(contentView.layoutMarginsGuide.topAnchor, constant: 0).active = true
         contentStackView.leadingAnchor.constraintEqualToAnchor(contentView.layoutMarginsGuide.leadingAnchor).active = true
         contentStackView.trailingAnchor.constraintEqualToAnchor(contentView.layoutMarginsGuide.trailingAnchor).active = true

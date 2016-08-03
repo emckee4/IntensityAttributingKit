@@ -8,6 +8,7 @@
 
 import UIKit
 
+///Prebaked tableview cell for adjusting the RawIntensity parameters within the keyboard options menu or otherwise.
 final class DurationTIAdjustmentCell:RawIntensityAdjustmentCellBase {
     
     
@@ -16,13 +17,10 @@ final class DurationTIAdjustmentCell:RawIntensityAdjustmentCellBase {
     
     override init() {
         super.init()
-        //self.translatesAutoresizingMaskIntoConstraints = false
-        //self.textLabel?.text = "Duration"
         self.itemDescriptionLabel.text = "Touch intensity is a function of touch duration. Longer touches yield higher intensities."
         durationMultiplierSV = LabeledSliderView(labelText: "DurationMultiplier", sliderMin: 0.0, sliderMax: 4.0, sliderValue: DurationTouchInterpreter.durationMultiplier)
         contentStackView.addArrangedSubview(durationMultiplierSV)
         durationMultiplierSV.slider.addTarget(self, action: "updateDurationMultiplier:", forControlEvents: .ValueChanged)
-        //itemDescriptionTextView.sizeToFit()
     }
     
     required init?(coder aDecoder: NSCoder) {

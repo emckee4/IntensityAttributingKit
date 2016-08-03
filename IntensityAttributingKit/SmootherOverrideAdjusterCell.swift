@@ -8,7 +8,7 @@
 
 import UIKit
 
-@IBDesignable
+///Prebaked tableview cell for adjusting the RawIntensity parameters within the keyboard options menu or otherwise.
 public class SmootherOverrideAdjusterCell:LabeledStepperAdjusterCell{
     
     let adjustmentOptions:[(optionTitle:String,option:IAStringTokenizing?)] = [(optionTitle: "Message Default" ,option: nil ),(optionTitle: "By Character" ,option: IAStringTokenizing.Char ),(optionTitle: "By Word" ,option: IAStringTokenizing.Word ),(optionTitle: "By Sentence" ,option: IAStringTokenizing.Sentence ),(optionTitle: "By Message" ,option: IAStringTokenizing.Message )]

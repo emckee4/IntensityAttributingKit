@@ -9,6 +9,7 @@
 import UIKit
 
 
+///Configurable cell type used in the RawIntensity param adjustment cells. This one has a switch control.
 class ToggleCell:UITableViewCell {
     
     var toggleControl:UISwitch!

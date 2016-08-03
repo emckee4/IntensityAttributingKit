@@ -9,6 +9,9 @@
 import Foundation
 
 extension String {
+    
+    static var kReplacementChar:String {return "\u{FFFC}"}
+    
     ///This takes a Range<Int> and returns a substring corresponding to this. If the start or end indeces bisect a grapheme cluster then the start or end will show as substitution characters. To check for this, use subStringFromRangeValidated instead.
     func subStringFromRange(range:Range<Int>)->String{
         let nsRange = NSRange(location: range.startIndex, length: range.endIndex - range.startIndex)
@@ -51,20 +54,6 @@ extension String {
         }
         return outputString
     }
+    
 }
 
-
-
-
-
-//extension String {
-//    func rangeFromNSRange(nsRange : NSRange) -> Range<String.Index>? {
-//        let from16 = utf16.startIndex.advancedBy(nsRange.location, limit: utf16.endIndex)
-//        let to16 = from16.advancedBy(nsRange.length, limit: utf16.endIndex)
-//        if let from = String.Index(from16, within: self),
-//            let to = String.Index(to16, within: self) {
-//                return from ..< to
-//        }
-//        return nil
-//    }
-//}

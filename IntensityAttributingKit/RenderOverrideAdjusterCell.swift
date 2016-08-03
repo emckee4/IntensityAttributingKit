@@ -8,7 +8,7 @@
 
 import UIKit
 
-@IBDesignable
+///Prebaked tableview cell for adjusting the RawIntensity parameters within the keyboard options menu or otherwise.
 public class RenderOverrideAdjusterCell:LabeledStepperAdjusterCell{
     
     let adjustmentOptions:[(optionTitle:String,option:IntensityTransformers?)] = [(optionTitle: "Message Default" ,option: nil ),(optionTitle: "Text Weight" ,option: IntensityTransformers.WeightScheme ),(optionTitle: "Text Color (GYR)" ,option: IntensityTransformers.HueGYRScheme ),(optionTitle: "Text Size" ,option: IntensityTransformers.FontSizeScheme ), (optionTitle: "Text Opacity" ,option: IntensityTransformers.AlphaScheme )]
