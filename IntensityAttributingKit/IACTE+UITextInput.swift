@@ -9,12 +9,13 @@
 import Foundation
 
 /*
-UIKeyInput, UITextInput Implementations along with native primitives using IA Objects.
+UIKeyInput, UITextInput Implementations along with underlying functions using IA Objects.
 Layout directions are hard coded at present. For most UITextInput functions there is a native option with "IA" in the name which takes and returns IATextPosition/IATextRange objects and the like. They're located in the later part of this file.
  
- setMarkedText, unmarkText, setBaseWritingDirection are not implemented and will throw fatal errors if called.
+ setMarkedText, setBaseWritingDirection are not implemented and will print warnings then do nothing.
  baseWritingDirectionForPosition is hard coded to return .Natural
  
+ I don't know enough about text layout and rendering in non western scripts to provide full functionality for non-western scripts at this point.
 */
 extension IACompositeTextEditor {
     
@@ -25,9 +26,6 @@ extension IACompositeTextEditor {
         guard selectedRange != nil else {print("insertText called while selectedRange is nil"); return}
         let replacement = IAString(text: text, intensity: currentIntensity, attributes: baseAttributes)
         replaceIAStringRange(replacement, range: selectedRange!)
-        //let newIndex = selectedRange!.startIndex + replacement.length
-        //selectedRange = newIndex..<newIndex.successor()
-        //updateSelectionLayer()
     }
     
     public func deleteBackward() {
@@ -313,12 +311,6 @@ extension IACompositeTextEditor {
     
 }
 
-protocol IATextInput {
-    
-    
-    
-    
-}
 
 
 

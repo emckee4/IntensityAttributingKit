@@ -9,7 +9,7 @@
 import UIKit
 
 
-
+///Common text animation handling for all IACompositeBase derived classes.
 extension IACompositeBase{
     
     static func generateOpacityAnimation(startAlpha:Float = 0, endAlpha:Float = 1, duration:NSTimeInterval, offset:NSTimeInterval = 0)->CABasicAnimation{

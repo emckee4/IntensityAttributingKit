@@ -9,7 +9,7 @@
 import UIKit
 
 /**
-IATextAttachment is a subclass of NSTextAttachment providing thumbnails of various sizes for files which are cached in the cases of files with names (via the NSFileWrapper).
+IATextAttachment is a subclass of NSTextAttachment providing thumbnails of various sizes for files which are cached in the cases of files with names (via the NSFileWrapper). The IATextAttachment uses the preferedThumbSize property of the IATextContainer passed in via its NSTextAttachmentContainer functions in order to provide one of a few fixed sizes and placeholders. By forcing fixed sizes predetermined by the IACompositeBase derived class (and passed through the IATextContainer), the layout can be calculated (using attachmentBoundsForTextContainer) without needing access to the image data which may be either slow or not present. The actual drawing of the text can likewise occur more quickly since imageForBounds will return nil, causing the ThinTextView layers to draw empty rects over which the IAImageLayerView will later (and possibly asynchrounously) draw the image. This not only allows us to animate the opacity of the text layers without affecting the images, but it also improves drawing performance immensely compared to the conventional out of the box methods.
 */
 public class IATextAttachment:NSTextAttachment {
     
@@ -26,9 +26,6 @@ public class IATextAttachment:NSTextAttachment {
     public var remoteFileURL:NSURL?
     public var localFileURL:NSURL?
 
-    
-    //public var thumbSize: ThumbSize = .Medium
-    
     private static let thumbCache = NSCache()
     //public static let placeholderImage = UIImage(named: "imagePlaceholder", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: nil)!
     
@@ -108,22 +105,6 @@ public class IATextAttachment:NSTextAttachment {
             return super.imageForBounds(imageBounds, textContainer: textContainer, characterIndex: charIndex)
         }
         
-        
-//        guard !isPlaceholder && thumbSize == .Medium else {return self.thumbSize.imagePlaceholder}
-//        var cachedThumbName:String! = nil
-//        if  filename != nil {
-//            cachedThumbName = filename! + thumbSize.rawValue
-//        } else {
-//            cachedThumbName = localID + thumbSize.rawValue
-//        }
-//        if let cachedImage = IATextAttachment.thumbCache.objectForKey(cachedThumbName) as? UIImage {
-//            return cachedImage
-//        } else if let newThumb = super.imageForBounds(imageBounds, textContainer: textContainer, characterIndex: charIndex) {
-//            IATextAttachment.thumbCache.setObject(newThumb, forKey: cachedThumbName)
-//            return newThumb
-//        } else {
-//            return nil
-//        }
     }
     
     func imageForThumbSize(thumbSize:ThumbSize)->UIImage{
@@ -188,12 +169,6 @@ public class IATextAttachment:NSTextAttachment {
     }
     
     
-    
-//    public init(){
-//        super.init(data: nil, ofType: nil)
-//        usePlaceholderImage()
-//    }
-    
     ///Attempts to load filewrapper contents
     public func attemptToRealizeFileWrapper()->Bool{
 //        if let localURL = self.localFileURL {
@@ -224,7 +199,7 @@ extension IATextAttachment {
 
 
 
-
+///The thumbsize enum contains the rects for thumbnail sizes in the IAComposite views as well as accessors for the placeholders of each size.
 public enum ThumbSize:String {
     case Tiny = "Tiny",
     Small = "Small",
@@ -272,28 +247,6 @@ public enum ThumbSize:String {
     }
     
 }
-
-
-/////Placeholder for use with text layers of multilayered IATextViews.
-//class IATextAttachmentML:NSObject, NSTextAttachmentContainer {
-//    
-//    var associatedIATextAttachment:IATextAttachment!
-//    var thumbSize:ThumbSize
-//    
-//    func imageForBounds(imageBounds: CGRect, textContainer: NSTextContainer?, characterIndex charIndex: Int) -> UIImage? {
-//        return nil
-//    }
-//    func attachmentBoundsForTextContainer(textContainer: NSTextContainer?, proposedLineFragment lineFrag: CGRect, glyphPosition position: CGPoint, characterIndex charIndex: Int) -> CGRect {
-//        return CGRect(origin:CGPointZero,size:self.thumbSize.size)
-//    }
-//    
-//    init(fromAttachment:IATextAttachment, thumbSize:ThumbSize){
-//        self.associatedIATextAttachment = fromAttachment
-//        self.thumbSize = thumbSize
-//    }
-//    
-//}
-
 
 
 

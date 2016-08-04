@@ -12,7 +12,7 @@ import Foundation
 
 extension IACompositeTextEditor: UIGestureRecognizerDelegate {
     
-    
+    ///Single taps make the textEditor first responder when it isn't already. It will move the cursor to the nearest word boundary or, if the new selection is already at/encompassing that boundary, toggle the selection menu.
     @objc func singleTapGestureUpdate(sender:UITapGestureRecognizer!){
         guard sender.state == .Ended else {return}
         let becomingFirstResponder = !self.isFirstResponder()
@@ -46,6 +46,7 @@ extension IACompositeTextEditor: UIGestureRecognizerDelegate {
         }
     }
     
+    ///Double tap gesture will select the range of the word under the tap
     @objc func doubleTapGestureUpdate(sender:UITapGestureRecognizer!){
         guard sender.state == .Ended else {return}
         let location = sender.locationInView(self)
@@ -63,11 +64,10 @@ extension IACompositeTextEditor: UIGestureRecognizerDelegate {
         }
     }
     
+    ///Longpresses trigger the presentation of the IAMagnifyingLoup which allows fine grained dragging of the edge of a selection range or the caret if no non-empty range was previously selected.
     @objc func longPressGestureUpdate(sender:UILongPressGestureRecognizer!){
         let location = sender.locationInView(self)
         let iaPos = closestIAPositionToPoint(location)
-        
-        debugPrint("Long Press recognized: state:\(sender.state), pos: \(iaPos.position)")
         
         guard sender.state == .Began || sender.state == .Changed else {
             longPressDragStartingPoint = nil

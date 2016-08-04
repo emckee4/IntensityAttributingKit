@@ -10,7 +10,7 @@ import Foundation
 
 
 /**
- This struct stores the values for common visual theming traits of the IAKeyboard and IAAccessory
+ This struct stores the values for common visual theming traits of the IAKeyboard and IAAccessory. Using init:archive and convertToArchive() it can be saved and stored as it is in the IAKitPreferences.
  */
 public struct IAKitVisualPreferences {
     public var profileName:String

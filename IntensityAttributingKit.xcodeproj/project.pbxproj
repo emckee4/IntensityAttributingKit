@@ -18,6 +18,9 @@
 		C01BDAA01C571954004CF045 /* RangeValuePair.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01BDA9F1C571954004CF045 /* RangeValuePair.swift */; };
 		C01BDAA21C57F170004CF045 /* IABaseAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01BDAA11C57F170004CF045 /* IABaseAttributes.swift */; };
 		C01E0F481D4BD5FB00C5471B /* IAKitVisualPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01E0F471D4BD5FB00C5471B /* IAKitVisualPreferences.swift */; };
+		C01E0F4D1D53D47C00C5471B /* IATextContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01E0F4C1D53D47C00C5471B /* IATextContainer.swift */; };
+		C01E0F4F1D53E48400C5471B /* TouchInterpreters-Smoothable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01E0F4E1D53E48400C5471B /* TouchInterpreters-Smoothable.swift */; };
+		C01E0F511D53E50800C5471B /* IATouchInterpreter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01E0F501D53E50800C5471B /* IATouchInterpreter.swift */; };
 		C01FFFA41CC6A7E900AFD366 /* IACompositeTextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01FFFA31CC6A7E900AFD366 /* IACompositeTextEditor.swift */; };
 		C01FFFA61CC6A97400AFD366 /* IACompositeBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01FFFA51CC6A97400AFD366 /* IACompositeBase.swift */; };
 		C01FFFAC1CC6B1C400AFD366 /* IACTE+IAKeyboardPresenting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01FFFAB1CC6B1C400AFD366 /* IACTE+IAKeyboardPresenting.swift */; };
@@ -77,7 +80,7 @@
 		C095747E1C5822E300724F02 /* IAString.swift in Sources */ = {isa = PBXBuildFile; fileRef = C095747D1C5822E300724F02 /* IAString.swift */; };
 		C09574801C58259C00724F02 /* IAStringKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C095747F1C58259C00724F02 /* IAStringKeys.swift */; };
 		C09574821C59442300724F02 /* IAStringConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09574811C59442300724F02 /* IAStringConversion.swift */; };
-		C0A258CF1C9200EC003287AB /* TouchInterpreters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0A258CE1C9200EC003287AB /* TouchInterpreters.swift */; };
+		C0A258CF1C9200EC003287AB /* TouchInterpreters-DurationBased.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0A258CE1C9200EC003287AB /* TouchInterpreters-DurationBased.swift */; };
 		C0A258D11C922FC0003287AB /* NSHashTable+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0A258D01C922FC0003287AB /* NSHashTable+Extension.swift */; };
 		C0AE06141C6E64490096F042 /* PressureKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AE06131C6E64490096F042 /* PressureKey.swift */; };
 		C0AE06191C6E75750096F042 /* IAStringTokenizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AE06181C6E75750096F042 /* IAStringTokenizing.swift */; };
@@ -114,6 +117,9 @@
 		C01BDA9F1C571954004CF045 /* RangeValuePair.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RangeValuePair.swift; sourceTree = "<group>"; };
 		C01BDAA11C57F170004CF045 /* IABaseAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IABaseAttributes.swift; sourceTree = "<group>"; };
 		C01E0F471D4BD5FB00C5471B /* IAKitVisualPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAKitVisualPreferences.swift; sourceTree = "<group>"; };
+		C01E0F4C1D53D47C00C5471B /* IATextContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextContainer.swift; sourceTree = "<group>"; };
+		C01E0F4E1D53E48400C5471B /* TouchInterpreters-Smoothable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TouchInterpreters-Smoothable.swift"; sourceTree = "<group>"; };
+		C01E0F501D53E50800C5471B /* IATouchInterpreter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATouchInterpreter.swift; sourceTree = "<group>"; };
 		C01FFFA31CC6A7E900AFD366 /* IACompositeTextEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IACompositeTextEditor.swift; sourceTree = "<group>"; };
 		C01FFFA51CC6A97400AFD366 /* IACompositeBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IACompositeBase.swift; sourceTree = "<group>"; };
 		C01FFFAB1CC6B1C400AFD366 /* IACTE+IAKeyboardPresenting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IACTE+IAKeyboardPresenting.swift"; sourceTree = "<group>"; };
@@ -176,7 +182,7 @@
 		C095747D1C5822E300724F02 /* IAString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAString.swift; sourceTree = "<group>"; };
 		C095747F1C58259C00724F02 /* IAStringKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringKeys.swift; sourceTree = "<group>"; };
 		C09574811C59442300724F02 /* IAStringConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = IAStringConversion.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		C0A258CE1C9200EC003287AB /* TouchInterpreters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TouchInterpreters.swift; sourceTree = "<group>"; };
+		C0A258CE1C9200EC003287AB /* TouchInterpreters-DurationBased.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TouchInterpreters-DurationBased.swift"; sourceTree = "<group>"; };
 		C0A258D01C922FC0003287AB /* NSHashTable+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSHashTable+Extension.swift"; sourceTree = "<group>"; };
 		C0AE06131C6E64490096F042 /* PressureKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PressureKey.swift; sourceTree = "<group>"; };
 		C0AE06181C6E75750096F042 /* IAStringTokenizing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringTokenizing.swift; sourceTree = "<group>"; };
@@ -271,10 +277,10 @@
 		C01E0F4A1D5138F300C5471B /* IAComposite Subviews */ = {
 			isa = PBXGroup;
 			children = (
-				C0479E631CBED6D10032A5C6 /* ThinTextView.swift */,
 				C084E9101CDE56E7009D387D /* IAMagnifyingLoup.swift */,
 				C0479E651CC01E130032A5C6 /* IASelectionView.swift */,
 				C0326E221CF27C2700E6161F /* IAImageLayerView.swift */,
+				C0479E631CBED6D10032A5C6 /* ThinTextView.swift */,
 			);
 			name = "IAComposite Subviews";
 			sourceTree = "<group>";
@@ -284,6 +290,7 @@
 			children = (
 				C002E1F11CB334B1008E78A1 /* IATextRange.swift */,
 				C08B42FE1CD282F7002F2840 /* IATextSelectionRect.swift */,
+				C01E0F4C1D53D47C00C5471B /* IATextContainer.swift */,
 				C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */,
 			);
 			name = "TextKit subclasses";
@@ -380,7 +387,9 @@
 			isa = PBXGroup;
 			children = (
 				C0D447491BE6BC16003204E7 /* RawIntensity.swift */,
-				C0A258CE1C9200EC003287AB /* TouchInterpreters.swift */,
+				C0A258CE1C9200EC003287AB /* TouchInterpreters-DurationBased.swift */,
+				C01E0F501D53E50800C5471B /* IATouchInterpreter.swift */,
+				C01E0F4E1D53E48400C5471B /* TouchInterpreters-Smoothable.swift */,
 				C06B1D551BEE9C40009F427A /* RawIntensityMapping.swift */,
 				C080B5391C974F0500DEC424 /* AccelerationHistory.swift */,
 			);
@@ -620,6 +629,7 @@
 				C08253B61BE572AE0017AC14 /* ExpandingPressureKey.swift in Sources */,
 				C04533A21CA481F000B374D0 /* RenderOverrideAdjusterCell.swift in Sources */,
 				C054632C1C9C969600652AC0 /* SuggestionBarView.swift in Sources */,
+				C01E0F4F1D53E48400C5471B /* TouchInterpreters-Smoothable.swift in Sources */,
 				C0E68E6F1C10C1D5005162F7 /* EPKey.swift in Sources */,
 				C0AE06191C6E75750096F042 /* IAStringTokenizing.swift in Sources */,
 				C01FFFAC1CC6B1C400AFD366 /* IACTE+IAKeyboardPresenting.swift in Sources */,
@@ -648,6 +658,7 @@
 				C08EE1051CB846600030FC3E /* IAKeyboardDelegateProtocol.swift in Sources */,
 				C06B1D591BF15AD9009F427A /* WeightIntensityScheme.swift in Sources */,
 				C095747E1C5822E300724F02 /* IAString.swift in Sources */,
+				C01E0F511D53E50800C5471B /* IATouchInterpreter.swift in Sources */,
 				C04533AB1CA5CD6500B374D0 /* AlphaIntensityScheme.swift in Sources */,
 				C069B2BA1C627DB1008834D3 /* IAStringArchive.swift in Sources */,
 				C09574821C59442300724F02 /* IAStringConversion.swift in Sources */,
@@ -656,7 +667,7 @@
 				C01E0F481D4BD5FB00C5471B /* IAKitVisualPreferences.swift in Sources */,
 				C084E9111CDE56E7009D387D /* IAMagnifyingLoup.swift in Sources */,
 				C014A4851CA3265600D6312C /* Range+Extensions.swift in Sources */,
-				C0A258CF1C9200EC003287AB /* TouchInterpreters.swift in Sources */,
+				C0A258CF1C9200EC003287AB /* TouchInterpreters-DurationBased.swift in Sources */,
 				C031CBE91BDB097600521393 /* IntensityTransformers.swift in Sources */,
 				C01FFFA61CC6A97400AFD366 /* IACompositeBase.swift in Sources */,
 				C0479E661CC01E130032A5C6 /* IASelectionView.swift in Sources */,
@@ -683,6 +694,7 @@
 				C06B1D561BEE9C40009F427A /* RawIntensityMapping.swift in Sources */,
 				C080B54D1C989DB300DEC424 /* IAKitSettingsTableViewController.swift in Sources */,
 				C08B42FF1CD282F7002F2840 /* IATextSelectionRect.swift in Sources */,
+				C01E0F4D1D53D47C00C5471B /* IATextContainer.swift in Sources */,
 				C0CCA1241CEBA9340042CCF7 /* KeyboardLayoutView.swift in Sources */,
 				C038B3EA1C69310400069F9C /* ExpandingKeyControl.swift in Sources */,
 				C0E68E6D1C10C1AF005162F7 /* EKDirection.swift in Sources */,

@@ -9,8 +9,8 @@
 import UIKit
 
 
-
-class IAMagnifyingLoup:UIView {
+/// The IAMagnifyingLoup provides a zoomed in view of a text selection caret or boundary in an IACompositeTextEditor.
+final class IAMagnifyingLoup:UIView {
     
     weak var viewToMagnify:UIView?
     

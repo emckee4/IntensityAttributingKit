@@ -13,8 +13,6 @@ import UIKit
 */
 final class IASelectionView: UIView {
 
-
-    //private(set) var selectionRects:[CGRect] = []
     private(set) var selectionRects:[IATextSelectionRect] = []
     private(set) var caretRect:CGRect?
     private(set) var markedTextRect:CGRect?

@@ -19,13 +19,6 @@ public class IACompositeTextView: IACompositeBase {
     var tapGestureRecognizer:UITapGestureRecognizer!
     var longPressGestureRecognizer:UILongPressGestureRecognizer!
     
-    //private(set) public var selected:Bool = false
-    
-//    var overridingTransformer:IntensityTransformers? = IAKitPreferences.overridesTransformer
-//    var overridingSmoother:IAStringTokenizing? = IAKitPreferences.overridesTokenizer
-    
-    
-    
     override func setupGestureRecognizers(){
         tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(IACompositeTextView.tapDetected(_:)))
         longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(IACompositeTextView.longPressDetected(_:)))
@@ -34,6 +27,7 @@ public class IACompositeTextView: IACompositeBase {
         self.addGestureRecognizer(longPressGestureRecognizer)
     }
     
+    ///This isn't yet implemented differently than the ordinary setIAString, though it's intended to allow for some caching of layout information in situations where an IAString is repeatedly redrawn in IACompositeTextViews (e.g. in a table view).
     public func setIAString(iaString:IAString!, withCacheIdentifier:String){
         //print("setIAString using cache identifier not yet implemented")
         ///cache should store some rendering info and probably some sizing info, eg previously calculated size for size values. any change to the data or default renderings should invalidate the cache. (Changing global prefs should probably emit a notification of such)
@@ -67,6 +61,7 @@ public class IACompositeTextView: IACompositeBase {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
+    ///Tap on an attachment or url will cause those to be passed to the delegate. Tap elsewhere deselects.
     func tapDetected(sender:UITapGestureRecognizer!){
         if sender?.state == .Ended {
             let location = sender.locationInView(topTV)
@@ -82,6 +77,7 @@ public class IACompositeTextView: IACompositeBase {
         }
     }
 
+    ///A longpress will select all
     func longPressDetected(sender:UILongPressGestureRecognizer!){
         if sender?.state == .Began {
             let location = sender.locationInView(topTV)
@@ -108,71 +104,7 @@ public class IACompositeTextView: IACompositeBase {
         deselect()
     }
     
-    
-//    public override func selectAll(sender: AnyObject?) {
-//        guard selectable == true else {return}
-//        self.selected = true
-//        self.becomeFirstResponder()
-//        //use entire view as selection rect:
-//        selectionView.updateSelections([self.bounds], caretRect: nil, markEnds: false)
-//        // present menu
-//        if sender is UITapGestureRecognizer {
-//            let targetRect = CGRectMake(self.bounds.midX, self.bounds.midY, 10, 10)
-//            let menu = UIMenuController.sharedMenuController()
-//            menu.update()
-//            menu.setTargetRect(targetRect, inView: selectionView)
-//            menu.setMenuVisible(true, animated: true)
-//        }
-//    }
-//    
-//    func deselect(){
-//        selected = false
-//        selectionView.clearSelection()
-//        UIMenuController.sharedMenuController().setMenuVisible(false, animated: true)
-//    }
-//    
-//    public override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
-//        if action == #selector(NSObject.copy(_:)) && self.iaString?.length > 0{
-//            return true
-//        }
-//        return super.canPerformAction(action, withSender: sender)
-//    }
-//    
-//    public override func copy(sender: AnyObject?) {
-//        UIMenuController.sharedMenuController().setMenuVisible(false, animated: true)
-//        guard iaString != nil && iaString.length > 0 else {return}
-//        
-//        let pb = UIPasteboard.generalPasteboard()
-//        let copiedText = iaString.text
-//        let iaArchive = IAStringArchive.archive(iaString.copy(true))
-//        var pbItem:[String:AnyObject] = [:]
-//        pbItem[UTITypes.PlainText] = copiedText
-//        pbItem[UTITypes.IAStringArchive] = iaArchive
-//        pb.addItems([pbItem])
-//    }
-    
 }
-
-
-
-
-//extension IACompositeTextView {
-//    
-//    ///Allows iaDelegate to control interaction with textAttachment. Defaults to true
-//    public func textView(textView: UITextView, shouldInteractWithTextAttachment textAttachment: NSTextAttachment, inRange characterRange: NSRange) -> Bool {
-//        if let iaTV = textView.superview as? IACompositeTextView, textAttachment = textAttachment as? IATextAttachment {
-//            return delegate?.iaTextView?(iaTV, shouldInteractWithTextAttachment: textAttachment, inRange: characterRange) ?? true
-//        }
-//        return true
-//    }
-//    
-//    public func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
-//        return true
-//    }
-//    
-//    
-//}
-
 
 
 

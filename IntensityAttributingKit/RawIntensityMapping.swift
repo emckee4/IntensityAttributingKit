@@ -10,6 +10,7 @@ import Foundation
 
 typealias RawIntensityMappingFunction = ((raw:Float)->Int)
 
+///This enum keeps track of the available RIM functions.
 public enum RawIntensityMapping:String {
     case Linear = "LinearMapping",
     LogAx = "LogAxMapping"
@@ -23,7 +24,7 @@ public enum RawIntensityMapping:String {
     }
 }
 
-
+///Rescales raw intensity linearly between the threshold and ceiling values
 struct LinearMapping{
     private static var _threshold:Float = {return (NSUserDefaults.standardUserDefaults().objectForKey("LinearMapping:threshold") as? Float) ?? 0.0}()
     static var threshold:Float {
@@ -47,6 +48,7 @@ struct LinearMapping{
     }
 }
 
+///Rescales raw intensity logarithmically: rescaled = log(1 + (ceiling - threshold) * aParam) / 100
 struct LogAxMapping {
     private static var _threshold:Float = {return (NSUserDefaults.standardUserDefaults().objectForKey("LogAxMapping:threshold") as? Float) ?? 0.0}()
     static var threshold:Float {
@@ -76,70 +78,4 @@ struct LogAxMapping {
         return rim
     }
 }
-
-
-//public enum RawIntensityMapping {
-//    case Linear(threshold:Float,ceiling:Float),
-//    LogAx(a:Float,threshold:Float,ceiling:Float)
-//
-//    var function:RawIntensityMappingFunction{
-//        switch self{
-//        case .Linear(let threshold, let ceiling): return LinearMapping.generateFunction(threshold:threshold, ceiling: ceiling)
-//        case .LogAx(let a, let threshold, let ceiling): return LogAxMapping.generateFunction(a,threshold:threshold,ceiling:ceiling)
-//        }
-//
-//    }
-//
-//    public var shortName:String {
-//        switch self {
-//        case .Linear: return "Linear"
-//        case .LogAx: return "LogAx"
-//        }
-//    }
-//
-//    var dictDescription:[String:AnyObject]{
-//        switch self{
-//            case .Linear(let threshold, let ceiling): return ["name":self.shortName,"threshold":threshold, "ceiling":ceiling]
-//            case .LogAx(let a, let threshold, let ceiling): return ["name":self.shortName, "a":a,"threshold":threshold, "ceiling":ceiling]
-//        }
-//    }
-//
-//    init!(dictDescription:[String:AnyObject]){
-//        //require matching name, otherwise fill in default values where needed
-//        guard let name = dictDescription["name"] as? String else {return nil}
-//        let threshold = (dictDescription["threshold"] as? Float) ?? 0.0
-//        let ceiling = (dictDescription["ceiling"] as? Float) ?? 1.0
-//
-//        switch name {
-//            case "Linear": self = .Linear(threshold: threshold, ceiling: ceiling)
-//            case "LogAx":
-//                let a = (dictDescription["a"] as? Float) ?? 10.0
-//                self = .LogAx(a: a, threshold: threshold, ceiling: ceiling)
-//        default:
-//            return nil
-//        }
-//
-//    }
-//
-//    var threshold:Float {
-//        switch self {
-//        case .Linear(let threshold, _): return threshold
-//        case .LogAx(_, let threshold, _): return threshold
-//        }
-//    }
-//    var ceiling:Float {
-//        switch self {
-//        case .Linear( _, let ceiling): return ceiling
-//        case .LogAx( _,  _, let ceiling): return ceiling
-//        }
-//    }
-//
-//    ///Parameter "a", where appropriate
-//    var a:Float? {
-//        switch self {
-//        case .Linear( _, _): return nil
-//        case .LogAx( let a,  _, _): return a
-//        }
-//    }
-//}
 

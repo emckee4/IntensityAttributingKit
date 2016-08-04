@@ -251,16 +251,6 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
                 }
                 editor.unmarkText()
             }
-            
-            /*
-            e var $pos2 = editor.selectedIATextRange!.iaStart
-            e var $tok2 = editor.tokenizer
-            
-            e $tok.isPosition($pos2, atBoundary: .Word, inDirection: 0)
-            e $tok.isPosition($pos2, withinTextUnit: .Word, inDirection: 0)
-            e $tok.rangeEnclosingPosition($pos2, withGranularity: .Word, inDirection: 0)
-            e $tok.positionFromPosition($pos2, toBoundary: .Word, inDirection: 1) as! IATextPosition
-        */
         } else {
             //we either have a nil delegate or nil selectedRange on the editor
             suggestionsBar.updateSuggestions([])

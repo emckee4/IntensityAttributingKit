@@ -18,16 +18,10 @@ public class IACompositeBase:UIView {
     var bottomTV:ThinTextView
     ///The imageLayer coordinate system is positioned to be the same as that of the textContainers. i.e. it's subject to the textContainerInset property.
     ///The imageLayer view holds the actual rendered textAttachments. This allows us to show them opaquely regardless of where the textViews are in their animation cycles. This also allows us to render these asynchronously if necessary.
-//var imageLayer:UIView
-//var imageLayerImageViews:[UIImageView] = []
     var imageLayerView:IAImageLayerView
     ///Use the setIAString function to set the value
     internal(set) public var iaString:IAString!
 
-    //public weak var delegate:IATextViewDelegate?
-    
-    //var tapGestureRecognizer:UITapGestureRecognizer!
-    
     public var selectable:Bool = false
     
     public var preferedMaxLayoutWidth:CGFloat? {
@@ -132,51 +126,24 @@ public class IACompositeBase:UIView {
             topTVBottomConstraint.constant = -textContainerInset.bottom
             topTVTrailingConstraint.constant = -textContainerInset.right
         }
-        
-        
-        
         super.updateConstraints()
     }
     
-    public override func layoutSubviews() {
-        super.layoutSubviews()   //should this be called before or after?
-//        if iaString != nil && imageLayerView.layedOutForContainerSize != topTV.textContainer.size && iaString.attachmentCount > 0{
-//            imageLayerView.repositionImageViews(iaString, layoutManager: topTV.layoutManager)
-//
-//        }
-//        //set frames for contained objects
-//        let frameWithInset = UIEdgeInsetsInsetRect(self.bounds, textContainerInset)
-//        containerView.frame = self.bounds
-//        selectionView.frame = self.bounds  //we use the full frame since we will be gettting selection rects (typically via UITextInput) in the coordinate space of the superview (the IATextView)
-//        topTV.frame = frameWithInset
-//        bottomTV.frame = frameWithInset
-//        imageLayerView.frame = frameWithInset
-        //TODO: If bounds have changed but content hasn't then we should try to move imageviews rather than reloading the images. Need to make this object a delegate of the topTV's layoutManager
-    }
-    
-    
     
     func setupIATV(){
-        //selectionView.userInteractionEnabled = false
         containerView.clipsToBounds = true
         
         selectionView.backgroundColor = UIColor.clearColor()
         selectionView.hidden = true
         
-        //topTV.userInteractionEnabled = false
         topTV.backgroundColor = UIColor.clearColor()
         
-        //bottomTV.userInteractionEnabled = false
         bottomTV.backgroundColor = UIColor.clearColor()
         bottomTV.thinTVIsSlave = true
         bottomTV.hidden = true
         
-        //imageLayer.userInteractionEnabled = false
         imageLayerView.layer.drawsAsynchronously = false
-        //imageLayerView.clipsToBounds = true
-        //imageLayer.hidden = true
         
-        //containerView.addSubview(imageLayerView)
         containerView.addSubview(bottomTV)
         containerView.addSubview(topTV)
         containerView.addSubview(imageLayerView)
@@ -207,9 +174,6 @@ public class IACompositeBase:UIView {
         
         topTVBottomConstraint = topTV.bottomAnchor.constraintEqualToAnchor(self.bottomAnchor, constant: -textContainerInset.bottom).activateWithPriority(1000, identifier: "topTVBottomConstraint")
         topTVTrailingConstraint = topTV.trailingAnchor.constraintEqualToAnchor(self.trailingAnchor, constant: -textContainerInset.right).activateWithPriority(1000, identifier: "topTVTrailingConstraint")
-        //topTVBottomConstraint = self.bottomAnchor.constraintEqualToAnchor(topTV.bottomAnchor, constant: 0.0).activateWithPriority(1000, identifier: "topTVBottomConstraint")
-        //topTVTrailingConstraint = self.trailingAnchor.constraintEqualToAnchor(topTV.trailingAnchor, constant: 0.0).activateWithPriority(1000, identifier: "topTVTrailingConstraint")
-        
 
         //container and selection view match own bounds
         containerView.topAnchor.constraintEqualToAnchor(self.topAnchor, constant: 0).activateWithPriority(1000)
@@ -272,18 +236,6 @@ public class IACompositeBase:UIView {
             bottomTV.textStorage.replaceCharactersInRange(NSMakeRange(0, bottomTV.textStorage.length), withAttributedString: NSAttributedString())
         }
         
-        
-        //TODO: Need to figure out how to render attachments onto bottom layer (asynchronously ideally)
-        
-//        if iaString.attachmentCount > imageLayerImageViews.count {
-//            for _ in 0..<(iaString.attachmentCount - imageLayerImageViews.count){
-//                let newImageView = UIImageView(frame: CGRectZero)
-//                newImageView.translatesAutoresizingMaskIntoConstraints = false
-//                imageLayerImageViews.append(newImageView)
-//                imageLayer.addSubview(newImageView)
-//            }
-//            
-//        }
         invalidateIntrinsicContentSize()
         refreshImageLayer()
         updateSelectionLayer()
@@ -322,40 +274,11 @@ public class IACompositeBase:UIView {
     
     ///This calls the imageLayerView's imagesWereChanged function. This is called when the count or content of the attachments may have changed. If only position has changed then repositionImageViews is prefered as it is less expensive.
     func refreshImageLayer(){
-//        guard iaString.attachmentCount > 0 else {return}
-//        if imageLayer.hidden {imageLayer.hidden = false}
-//        if imageLayerImageViews.count < iaString.attachmentCount {
-//            for _ in 0..<(iaString.attachmentCount - imageLayerImageViews.count){
-//                let newImageView = UIImageView(frame: CGRectZero)
-//                newImageView.translatesAutoresizingMaskIntoConstraints = false
-//                imageLayerImageViews.append(newImageView)
-//                imageLayer.addSubview(newImageView)
-//            }
-//        }
-//        for (i ,locAttach) in iaString.attachments.enumerate() {
-//            imageLayerImageViews[i].hidden = false
-//            let (location, attachment) = locAttach
-//            let attachRect = topTV.layoutManager.boundingRectForGlyphRange(NSMakeRange(location, 1), inTextContainer: topTV.textContainer)
-//            imageLayerImageViews[i].frame = attachRect
-//            imageLayerImageViews[i].image = ThumbSize.Medium.imagePlaceholder//attachment.imageForThumbSize(self.thumbSizesForAttachments)
-//        }
-//        if iaString.attachmentCount < imageLayerImageViews.count {
-//            for i in (iaString.attachmentCount)..<(imageLayerImageViews.count){
-//                imageLayerImageViews[i].image = nil
-//                imageLayerImageViews[i].hidden = true
-//            }
-//        }
         imageLayerView.imagesWereChanged(inIAString: iaString, layoutManager: topTV.layoutManager)
     }
     
     ///If attachment positions have changed but the images do not need to be reloaded then this can be called as a more efficient alternative to refreshImageLayer.
     func repositionImageViews(){
-//        guard imageLayerImageViews.count >= iaString.attachmentCount else {refreshImageLayer();return}
-//        for (i ,locAttach) in iaString.attachments.enumerate() {
-//            let (location, _) = locAttach
-//            let attachRect = topTV.layoutManager.boundingRectForGlyphRange(NSMakeRange(location, 1), inTextContainer: topTV.textContainer)
-//            imageLayerImageViews[i].frame = attachRect
-//        }
         imageLayerView.repositionImageViews(self.iaString, layoutManager: topTV.layoutManager)
     }
     
@@ -370,27 +293,6 @@ public class IACompositeBase:UIView {
         return val
     }
     
-//    ///The systemLayoutSizeFittingSize doesn't incorporate insets if the topTV ics is non-zero
-//    public override func systemLayoutSizeFittingSize(targetSize: CGSize) -> CGSize {
-//        let insetHor = textContainerInset.left + textContainerInset.right
-//        let insetVert = textContainerInset.top + textContainerInset.bottom
-//        let sizeMinusInsets = CGSizeMake(targetSize.width - insetHor, targetSize.height - insetVert)
-//        let topTVSize = topTV.systemLayoutSizeFittingSize(sizeMinusInsets)
-//        return CGSizeMake(topTVSize.width + insetHor, topTVSize.height + insetVert)
-//    }
-//    
-//    public override func systemLayoutSizeFittingSize(targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
-//        if verticalFittingPriority < horizontalFittingPriority {
-//            return systemLayoutSizeFittingSize(CGSizeMake(targetSize.width, 10000000))
-//        } else if verticalFittingPriority > horizontalFittingPriority{
-//            return systemLayoutSizeFittingSize(CGSizeMake(10000000,targetSize.height))
-//        } else{
-//            return systemLayoutSizeFittingSize(targetSize)
-//        }
-//        
-//        
-//    }
-    
     public override func sizeThatFits(size: CGSize) -> CGSize {
         let insetHor = textContainerInset.left + textContainerInset.right
         let insetVert = textContainerInset.top + textContainerInset.bottom
@@ -398,8 +300,6 @@ public class IACompositeBase:UIView {
         let topTVSize = topTV.sizeThatFits(sizeMinusInsets)
         return CGSizeMake(topTVSize.width + insetHor, topTVSize.height + insetVert)
     }
-    
-    
     
     
     public override init(frame: CGRect) {

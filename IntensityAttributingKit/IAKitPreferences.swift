@@ -10,7 +10,7 @@ import Foundation
 
 
 /**
-IAKitPreferences contains most persisted options that need to be exposed to the outside world along with some purely internal stuff. Putting as many of the configurable options as possible in one place seems preferable while the organization and features of this project is still in such flux
+IAKitPreferences contains most persisted options that need to be exposed to the outside world along with some purely internal stuff. Putting as many of the configurable options as possible in one place seems preferable while the organization and features of this project is still in such flux. Preferences are stored in the NSUserDefaults.standardUserDefaults of the app.
 */
 public class IAKitPreferences:NSObject {
     
@@ -18,49 +18,27 @@ public class IAKitPreferences:NSObject {
     
     static let forceTouchAvailable = UIScreen.mainScreen().traitCollection.forceTouchCapability == .Available
     
-//    //MARK:- Keyboard and accessory caching
-//    private static let vcCache = NSCache()
-//
-//    static var keyboard:IAKeyboard {
-//        if let kb = vcCache.objectForKey("iaKB") as? IAKeyboard {
-//            return kb
-//        } else {
-//            let kb = IAKeyboard(nibName:nil, bundle: nil)
-//            vcCache.setObject(kb, forKey: "iaKB")
-//            return kb
-//        }
-//    }
-//    
-//    static var accessory:IAAccessoryVC {
-//        if let acc = vcCache.objectForKey("iaAccessory") as? IAAccessoryVC {
-//            return acc
-//        } else {
-//            let acc = IAAccessoryVC(nibName:nil, bundle: nil)
-//            vcCache.setObject(acc, forKey: "iaAccessory")
-//            return acc
-//        }
-//    }
-    
+    ///Convenience accessory to the IAKeyboard.singleton
     static var keyboard:IAKeyboard {
         return IAKeyboard.singleton
     }
     
+    ///Convenience accessory to the IAAccessoryVC.singleton
     static var accessory:IAAccessoryVC {
         return IAAccessoryVC.singleton
     }
     
     
-//    ///flushes the cache containing the keyboard and accessory so that they'll be recreated on the next access request
-    //reloads the keyboard and accessory singletons.
+    ///Reloads the keyboard and accessory singletons. This will cause any changes in global settings which affect the KB/accessory (like visual theming) to take effect.
     static func resetKBAndAccessory(){
         IAKeyboard.singleton = IAKeyboard(nibName: nil, bundle: nil)
         IAAccessoryVC.singleton = IAAccessoryVC(nibName:nil, bundle: nil)
     }
     
-    private static let iakPrefix = "com.McKeeMaKer.IntensityAttributingKit.IAKitPreferences."
-    
-    //// store retained options/defaults here
+    ///String keys for NSUserDefaults
     private struct Keys {
+        static let iakPrefix = "com.McKeeMaKer.IntensityAttributingKit."
+        
         static let dIntensity = "IAKitPreferences.defaultIntensity"
         static let dTextSize = "IAKitPreferences.defaultTextSize"
         static let dTransformerName = "IAKitPreferences.defaultTransformerName"
@@ -78,6 +56,7 @@ public class IAKitPreferences:NSObject {
         static let animationEnabled = "IAKitPreferences.animationEnabled"
         
         static let visualPreferences = "IAKitPreferences.visualPrefs"
+        
     }
     
     

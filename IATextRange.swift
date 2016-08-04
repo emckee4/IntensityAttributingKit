@@ -8,7 +8,7 @@
 
 import UIKit
 
-
+///IATextPosition is the UITextPosition subclass necessary for reimplementation of UITextInput. The position is integer is public in the unlike the superclass in which it is private and inaccessable.
 public class IATextPosition:UITextPosition, IntegerLiteralConvertible, Comparable {
     let position:Int
     
@@ -50,7 +50,7 @@ public class IATextPosition:UITextPosition, IntegerLiteralConvertible, Comparabl
     return lhs.position < rhs.position
 }
 
-
+///IATextRange is the UITextRange subclass necessary for reimplementation of UITextInput. It provides convenience functions for converting to/from Range<Int> and NSRange types.
 public class IATextRange:UITextRange {
     
     ///iaStart stores the IATextPosition object which is accessed by the start:UITextPosition computed property
@@ -103,12 +103,12 @@ public class IATextRange:UITextRange {
     }
 }
 
-//@warn_unused_result public func ==(lhs:IATextRange,rhs:IATextRange)->Bool {
-//    return lhs.iaStart == rhs.iaStart && lhs.iaEnd == rhs.iaEnd
-//}
-//
-//@warn_unused_result public func !=(lhs:IATextRange,rhs:IATextRange)->Bool {
-//    return !(lhs == rhs)
-//}
+@warn_unused_result public func ==(lhs:IATextRange,rhs:IATextRange)->Bool {
+    return lhs.iaStart == rhs.iaStart && lhs.iaEnd == rhs.iaEnd
+}
+
+@warn_unused_result public func !=(lhs:IATextRange,rhs:IATextRange)->Bool {
+    return !(lhs == rhs)
+}
 
 

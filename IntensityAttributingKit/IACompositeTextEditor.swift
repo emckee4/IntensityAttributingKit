@@ -8,8 +8,10 @@
 
 import UIKit
 
+/** The IACompositeTextEditor is the primary means of creating and interacting with IAStrings. Unlike IACompositeTextViews, this editor conforms to UITextInput as well as the protocols of the IAKeyboard and IAAccessory, allowing input and editing with both the custom keyboard and system/3rd party keyboards. IACompositeTextEditor is derived from IACompositeBase but is much heavier weight than the simpler stripped down IACompositeTextView.
+ 
+*/
 public class IACompositeTextEditor:IACompositeBase, UITextInput {
-    
     
     public weak var delegate:IACompositeTextEditorDelegate?
     
@@ -50,8 +52,6 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
     
 
     var magnifyingLoup:IAMagnifyingLoup!
-    
-    
     
     
     //MARK:- Stored properties for UITextInput protocol
@@ -266,10 +266,6 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
         default:
             return super.canPerformAction(action, withSender: sender)
         }
-//        if self.selectedRange != nil && (action == #selector(NSObject.paste(_:)) || action == #selector(NSObject.cut(_:)) ) {
-//            return true
-//        }
-//        return super.canPerformAction(action, withSender: sender)
     }
     
     ///Tests if the general UIPasteboard has data which can be pasted into the IATextEditor
@@ -443,15 +439,9 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
         longPressGR.delegate = self
         
         
-//        loupPanGR = UIPanGestureRecognizer(target: self, action: #selector(self.loupPanGestureUpdate(_:))  )
-//        loupPanGR.maximumNumberOfTouches = 1
-//        loupPanGR.minimumNumberOfTouches = 1
-//        loupPanGR.delegate = self
-        
         self.addGestureRecognizer(tapGR)
         self.addGestureRecognizer(doubleTapGR)
         self.addGestureRecognizer(longPressGR)
-        //self.addGestureRecognizer(loupPanGR)
     }
 
 

@@ -9,7 +9,7 @@
 import UIKit
 
 
-///Image picker extension
+///Image picker extension. This handles the presentation and aftermath of a UIImagePickerController.
 extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     public func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
@@ -28,6 +28,7 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
         self.becomeFirstResponder()
     }
     
+    ///If the IATextEditorDelegate returns true then this function will launch the image picker vc on the root view controller of the window holding the text editor. This may be more of a divergence from the MVC pattern than usual but it allows this Framework to be a little more self contained and easy to implement in other projects. The simplest alternative is to instantiate the picker VC and pass it to the delegate to be presented or discarded, but this method works and keeps things easy for now.
     func launchPhotoPicker(){
         guard self.delegate?.iaTextEditorRequestsPresentationOfContentPicker?(self) == true else {return}
         if UIImagePickerController.isCameraDeviceAvailable(.Rear) {

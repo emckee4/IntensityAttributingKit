@@ -10,7 +10,7 @@ import Foundation
 
 
 
-
+///IAKeyboardDelegate conformance. Most of these are self explanatory. The keyboard uses the UIKeyInput deleteBackwards function for backspace while using its custom iaKeyboard:insertTextAtCursor: function here for insertion.
 extension IACompositeTextEditor:IAKeyboardDelegate {
     
     func iaKeyboard(iaKeyboard:IAKeyboard, insertTextAtCursor text:String, intensity:Int){
@@ -19,7 +19,7 @@ extension IACompositeTextEditor:IAKeyboardDelegate {
         replaceIAStringRange(insertionIAString, range: selectedRange!)
     }
     
-    
+    ///Handles replacement of marked text after a suggestion is chosen from the IAKeyboard SuggestionView
     func iaKeyboard(iaKeyboard:IAKeyboard, suggestionSelected text:String, intensity:Int)->Bool{
         if markedRange != nil {
             let rep = IAString(text: text + " ", intensity: intensity, attributes: iaString.getBaseAttributesForRange(markedRange!))
@@ -75,22 +75,14 @@ extension IACompositeTextEditor:IAKeyboardDelegate {
         iaAccessory.setTokenizerKeyValue(self.iaString!.baseOptions.preferedSmoothing)
         
         iaAccessory.updateAccessoryLayout(true)
-        updateSuggestionsBar()
+        iaKeyboard.updateSuggestionBar()
         iaKeyboard.inputView!.layer.shouldRasterize = true
         RawIntensity.touchInterpreter.activate()
     }
     
-    func updateSuggestionsBar(){
-        print("updateSuggestionsBar")
-    }
-    
-    
-    
-    
-    
 }
 
-
+///IAAccessory delegate conformance. Most of these are pretty self explanatory.
 extension IACompositeTextEditor: IAAccessoryDelegate {
     
     func accessoryKeyboardChangeButtonPressed(accessory:IAAccessoryVC!){

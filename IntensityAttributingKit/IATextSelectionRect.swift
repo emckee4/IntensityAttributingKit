@@ -8,7 +8,7 @@
 
 import UIKit
 
-
+///A custom subclass of the UITextSelectionRect is needed in order to more fully reimplement the UITextInput protocol.
 public class IATextSelectionRect: UITextSelectionRect {
     
     private let _rect: CGRect
@@ -65,11 +65,5 @@ public class IATextSelectionRect: UITextSelectionRect {
     
 }
 
-/*
- (50.509765625, 7.0, 244.490234375, 22.48046875) false false
- (5.0, 29.48046875, 81.685546875, 22.48046875) false false
- (50.0, 7.0, 0.0, 23.48046875) true false
- (87.0, 28.48046875, 0.0, 23.48046875) false true
- */
 
 

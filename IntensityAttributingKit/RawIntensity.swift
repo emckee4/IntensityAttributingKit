@@ -8,43 +8,46 @@
 
 import Foundation
 
-
+/**The RawIntensity is the front end of the intensity determining system of the IAKit. RawIntensity passes in touch events to an IATouchInterpreter and converts this data to a raw intensity value. This value is then passed through a RawIntensityMapping function which rescales the raw intensity according to its configurable parameters. The touch interpreter, RIM function, and their parameters are stored in the IAKitPreferences and they're most easily configured via
+IAKitSettingsTableViewController which is presented by pressing the gear in the IAAccessory. */
 public class RawIntensity{
    
     public static var rawIntensityMapping:RawIntensityMapping = IAKitPreferences.rawIntensityMapper {
         didSet{intensityMappingFunction = rawIntensityMapping.makeRIMFunction}
     }
+    ///Only one RIM function needs to be generated for each set of parameters. This function can then be used by all RawIntensity objects.
     private(set)static var intensityMappingFunction:RawIntensityMappingFunction = IAKitPreferences.rawIntensityMapper.makeRIMFunction
     
     
     static var touchInterpreter:IATouchInterpreter = IAKitPreferences.touchInterpreter {
+        //if we change the touchInterpreter type then we need to provide instances of the new touchInterpreter to all instances of RawIntensity
         didSet{
             if oldValue != touchInterpreter { oldValue.deactivate();}
             _ = RawIntensity.rawIntensityInstances.map({($0 as? RawIntensity)?.currentInterpreter = touchInterpreter.newInstance})}
     }
     private var currentInterpreter:IATouchInterpretingProtocol = RawIntensity.touchInterpreter.newInstance
-//    {
-//        didSet{print("updated currentInterpreter")}
-//    }
     
+    ///Called by touchesBegan/Changed/Ended functions in controls utilizing RawIntensity.
     func updateIntensity(withTouch touch:UITouch){
         currentInterpreter.updateIntensityYieldingRawResult(withTouch: touch)
     }
     
+    ///Called by Ended function in controls utilizing RawIntensity.
     func endInteraction(withTouch touch:UITouch?)->Int{
         let raw = currentInterpreter.endInteractionYieldingRawResult(withTouch: touch)
         return RawIntensity.intensityMappingFunction(raw:raw)
     }
     
+    ///Called by touchesCancelled function in controls utilizing RawIntensity.
     func cancelInteraction(){
         currentInterpreter.cancelInteraction()
     }
     
+    ///Most current value of intensity, 0-100
     var currentIntensity:Int! {
         guard let raw = currentInterpreter.currentRawValue else {return nil}
         return RawIntensity.intensityMappingFunction(raw: raw)
     }
-    
     
     
     init(){
@@ -55,43 +58,11 @@ public class RawIntensity{
         RawIntensity.rawIntensityInstances.removeObject(self)
     }
     
-    
+    ///Storing all instances in a weak NSHashTable lets us perform actions on all existing instances of RawIntensity at once. This is mainly used for propagating changes to the RawIntensityMapping or touchInterpreter functions used by all RawIntensity classes.
     private static var rawIntensityInstances:NSHashTable = NSHashTable(options: NSPointerFunctionsOptions.WeakMemory, capacity: 40)
     
     
 }
-
-
-
-
-
-
-/* Notes:
-
-Process: rawIntensity contained by control is reset on touches began with:
-rawIntensity = RawIntensity(withValue: touch.force,maximumPossibleForce: touch.maximumPossibleForce)
-    or
-rawIntensity.reset()
-
-This restarts the timer and sets the force array to [0]
-
-This should be replaced by a touchinside method and a reset method/ or 
-update/begin
-end -> with result
-cancel
-
-RawIntensity handles touch, packages everything
-
-
-
-
-//intensitymapping is limited to the mapping curve and can be handled more or less as is, with some adjustments to the interface for saving/restoring-  and with function parameters being (raw:Int)->Int
-
-
-
-
-
-*/
 
 
 

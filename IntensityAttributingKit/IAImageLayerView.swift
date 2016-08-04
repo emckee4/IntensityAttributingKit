@@ -84,54 +84,9 @@ class IAImageLayerView: UIView {
     
     private func removeImage(imageLocalID:String){
         guard let iv = imageViewForId.removeValueForKey(imageLocalID) else {print("IAImageLayerView. removeImage: couldnt find iv for localID \(imageLocalID)");return}
-//        iv.hidden = true
-//        iv.image = nil
         iv.removeFromSuperview()
         
     }
-
-    
-    
     
 }
 
-
-
-/*
-     func refreshImageLayer(){
-        guard iaString.attachmentCount > 0 else {imageLayer.hidden = true; return}
-        if imageLayer.hidden {imageLayer.hidden = false}
-        if imageLayerImageViews.count < iaString.attachmentCount {
-            for _ in 0..<(iaString.attachmentCount - imageLayerImageViews.count){
-                let newImageView = UIImageView(frame: CGRectZero)
-                newImageView.translatesAutoresizingMaskIntoConstraints = false
-                imageLayerImageViews.append(newImageView)
-                imageLayer.addSubview(newImageView)
-            }
-        }
-        for (i ,locAttach) in iaString.attachments.enumerate() {
-            imageLayerImageViews[i].hidden = false
-            let (location, attachment) = locAttach
-            let attachRect = topTV.layoutManager.boundingRectForGlyphRange(NSMakeRange(location, 1), inTextContainer: topTV.textContainer)
-            imageLayerImageViews[i].frame = attachRect
-            imageLayerImageViews[i].image = ThumbSize.Medium.imagePlaceholder//attachment.imageForThumbSize(self.thumbSizesForAttachments)
-        }
-        if iaString.attachmentCount < imageLayerImageViews.count {
-            for i in (iaString.attachmentCount)..<(imageLayerImageViews.count){
-                imageLayerImageViews[i].image = nil
-                imageLayerImageViews[i].hidden = true
-            }
-        }
-    }
-    
-    ///If bounds change but images do not need to be reloaded then this can be called as a more efficient alternative to refreshImageLayer.
-    func repositionImageViews(){
-        guard imageLayerImageViews.count >= iaString.attachmentCount else {refreshImageLayer();return}
-        for (i ,locAttach) in iaString.attachments.enumerate() {
-            let (location, _) = locAttach
-            let attachRect = topTV.layoutManager.boundingRectForGlyphRange(NSMakeRange(location, 1), inTextContainer: topTV.textContainer)
-            imageLayerImageViews[i].frame = attachRect
-        }
-    }
- 
- */
