@@ -430,10 +430,9 @@
 			children = (
 				C08253B01BE571910017AC14 /* LockingKey.swift */,
 				C054632B1C9C969600652AC0 /* SuggestionBarView.swift */,
+				C06B1D521BEE8C4F009F427A /* PressureKeyProtocols.swift */,
 				C0AE06151C6E66490096F042 /* PressureKeys */,
 				C0E68E691C10C14F005162F7 /* ExpandingKeys */,
-				C06B1D521BEE8C4F009F427A /* PressureKeyProtocols.swift */,
-				C06B1D511BEE8BDC009F427A /* Keyset Management */,
 			);
 			name = CustomControls;
 			sourceTree = "<group>";
@@ -443,6 +442,7 @@
 			children = (
 				C08EE1061CB846660030FC3E /* Keyboard */,
 				C0095D901C65326400D37A75 /* IAAccessory */,
+				C06B1D511BEE8BDC009F427A /* Keyset Management */,
 			);
 			name = "KB+Accessory";
 			sourceTree = "<group>";
