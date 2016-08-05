@@ -16,7 +16,8 @@ public class IAKitPreferences:NSObject {
     
     static let bundle:NSBundle = NSBundle(forClass: IAKitPreferences.self)
     
-    static let forceTouchAvailable = UIScreen.mainScreen().traitCollection.forceTouchCapability == .Available
+    static let forceTouchAvailable = (UIScreen.mainScreen().traitCollection.forceTouchCapability == .Available) && (UIDevice.currentDevice().model.rangeOfString("Simulator") == nil)
+
     
     ///Convenience accessory to the IAKeyboard.singleton
     static var keyboard:IAKeyboard {

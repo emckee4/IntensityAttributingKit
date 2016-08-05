@@ -15,7 +15,7 @@ class ModalContainerViewController: UIViewController {
     var effectView:UIVisualEffectView!
     
     var dismissalCompletionBlock:(Void->Void)?
-    let kDismissButtonSize:CGFloat = 28
+    let kDismissButtonSize:CGFloat = 26
     
     ///If true then the dismissButton will overlay the trailing top corner. Otherwise it will be placed above it.
     var dismissButtonOverlays:Bool = true
