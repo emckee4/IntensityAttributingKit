@@ -97,6 +97,10 @@ public class HueGYRIntensityScheme:AnimatedIntensityTransforming {
         
     }
 
+    public static var defaultAnimationParameters:IAAnimationParameters {
+        return IAAnimationParameters(duration: 1, topFrom: 0.0, topTo: 0.5, bottomFrom: 0, bottomTo: 1)
+    }
+    
 }
 
 
