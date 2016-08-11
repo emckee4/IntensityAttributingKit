@@ -19,13 +19,33 @@ class MessageThreadTableVC: UITableViewController, IATextViewDelegate {
     ///Cell iaTextViews will have their preferredMAxLayoutWidth set to values based on this rather than the present width if non-nil. This is used during rotations.
     var reloadingToWidth:CGFloat?
     
+    ///Background view and layer for tableview
+    var gv:UIView!
+    var gradientLayer:CAGradientLayer!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.registerClass(MessageCell.self, forCellReuseIdentifier: "MessageCell")
-
+        
         self.tableView.separatorStyle = .None
         self.tableView.keyboardDismissMode = .Interactive
         self.tableView.panGestureRecognizer.addTarget(self.parentViewController!, action: #selector(MessageThreadViewController.pan(_:)))
+        
+        gv = UIView(frame: tableView.bounds)
+        gradientLayer = CAGradientLayer()
+        gradientLayer.frame = CGRect(origin: CGPointZero, size: UIScreen.mainScreen().bounds.size)
+        gradientLayer.colors = [UIColor.darkGrayColor().CGColor,UIColor.purpleColor().CGColor]
+        gradientLayer.locations = [0.0,1.0]
+        gv.layer.insertSublayer(gradientLayer, atIndex: 0)
+        self.tableView.backgroundColor = UIColor.clearColor()
+        self.tableView.backgroundView = gv
+        gv.widthAnchor.constraintEqualToAnchor(tableView.widthAnchor).active = true
+        gv.heightAnchor.constraintEqualToAnchor(tableView.heightAnchor).active = true
+        gv.topAnchor.constraintEqualToAnchor(tableView.topAnchor).active = true
+        gv.leftAnchor.constraintEqualToAnchor(tableView.leftAnchor).active = true
+        gv.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.backgroundColor = UIColor.darkGrayColor()
     }
 
     override func didReceiveMemoryWarning() {
@@ -50,7 +70,6 @@ class MessageThreadTableVC: UITableViewController, IATextViewDelegate {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return messages.count
     }
-
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("MessageCell", forIndexPath: indexPath) as! MessageCell
@@ -142,10 +161,13 @@ class MessageThreadTableVC: UITableViewController, IATextViewDelegate {
         //tableView.
         super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
         reloadingToWidth = size.width
+        let maxDimension = max(size.width + 30,size.height + 30)
+        self.gradientLayer.frame = CGRect(origin: CGPointZero,size: CGSize(width:maxDimension, height: maxDimension))
         
         coordinator.animateAlongsideTransition(nil) { (context) in
             self.reloadingToWidth = nil
             self.scrollToBottom(true)
+            self.gradientLayer.frame = CGRect(origin: CGPointZero,size: CGSize(width: size.width + 40, height: size.height + 40))
         }
         tableView.reloadData()
         

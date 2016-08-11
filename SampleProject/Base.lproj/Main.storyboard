@@ -13,10 +13,32 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
+                    <connections>
+                        <segue destination="swQ-An-pzf" kind="relationship" relationship="rootViewController" id="HGE-5o-MSZ"/>
+                    </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wko-qc-4uQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-28" y="-23"/>
+        </scene>
+        <!--Message Thread View Controller-->
+        <scene sceneID="eA6-OX-VoB">
+            <objects>
+                <viewController id="swQ-An-pzf" customClass="MessageThreadViewController" customModule="IAKitSampleProject" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="rMT-6O-qeJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="AZg-pD-nyI"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="PQr-Wi-gIL">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="OHW-FG-jJH"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="JQR-Tw-GeK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="691" y="-17"/>
         </scene>
     </scenes>
 </document>

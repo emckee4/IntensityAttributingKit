@@ -16,15 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         IAKitPreferences.visualPreferences = IAKitVisualPreferences.FlatBasicGray
-        if let nav = self.window?.rootViewController as? UINavigationController{
-            let mtvc = MessageThreadViewController()
-            mtvc.navigationItem.title = "Messages"
-            nav.setViewControllers([mtvc], animated: false)
-            
-        }
-//        self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
-//        self.window!.rootViewController = MessageThreadViewController()
-//        self.window!.makeKeyAndVisible()
         return true
     }
 

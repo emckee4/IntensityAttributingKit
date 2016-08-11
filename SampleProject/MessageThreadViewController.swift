@@ -38,13 +38,8 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
         super.viewDidLoad()
         initialSceneSetup()
         configureSendButton()
-        let gv = UIView(frame: self.view.bounds)
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = self.view.bounds
-        gradientLayer.colors = [UIColor.darkGrayColor(),UIColor.purpleColor()]
-        gradientLayer.locations = [0.0,1.0]
-        gv.layer.addSublayer(gradientLayer)
-        messageThreadTableVC.tableView.backgroundView = gv
+        self.navigationItem.title = "Messages"
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "KB Themes", style: .Plain, target: self, action: #selector(MessageThreadViewController.changeKBTheme))
 
     }
 
@@ -240,6 +235,20 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
         if composerBar.frame.origin.y > 0{
             messageThreadTableVC.tableView.contentInset.bottom =  self.view.bounds.height - composerBar.frame.origin.y
         }
+    }
+    
+    func changeKBTheme(){
+        switch IAKitPreferences.visualPreferences {
+        
+        case IAKitVisualPreferences.Default:
+            IAKitPreferences.visualPreferences = IAKitVisualPreferences.HotdogStand
+        case IAKitVisualPreferences.FlatBasicGray:
+            IAKitPreferences.visualPreferences = IAKitVisualPreferences.Default
+        default:
+            IAKitPreferences.visualPreferences = IAKitVisualPreferences.FlatBasicGray
+        }
+        //composerBar.textEditor.resignFirstResponder()
+        IAKitPreferences.resetKBAndAccessory()
     }
 
 }
