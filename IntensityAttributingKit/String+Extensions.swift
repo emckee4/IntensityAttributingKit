@@ -44,7 +44,7 @@ extension String {
     }
     
     ///Random upper/lowercase letters with length
-    static func randomAlphaString(length:Int)->String{
+    public static func randomAlphaString(length:Int)->String{
         let baseString:NSString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         var outputString = ""
         

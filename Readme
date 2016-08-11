@@ -69,8 +69,8 @@ Additional render scheme ideas:
 
 
 
-
-
-
-
+//////////////////////////////
+IAKitSampleProject:
+This contains a stripped down messaging interface to demonstrate the setup and use of IAKit. This is a heavily stripped down version of what's used in the IntensityMessaging app, so the construction doesn't make quite as much sense as it does in the app.
+The biggest difference is that the MessageThreadTableVC (tableViewController) in the app can function independently of the MessageThreadViewController (which also manages the composerBar) since it relies on an NSFetchedResultsController for updates. For this sample app we just have the MessageThreadTableVC holding an array of Message structs and all of the stuff related to CoreData and asynchronous events and refresh triggers are stripped out. 
 
