@@ -12,7 +12,7 @@ import Foundation
 /**
  This struct stores the values for common visual theming traits of the IAKeyboard and IAAccessory. Using init:archive and convertToArchive() it can be saved and stored as it is in the IAKitPreferences.
  */
-public struct IAKitVisualPreferences {
+public struct IAKitVisualPreferences:Equatable {
     public var profileName:String
     
     public var accessoryBackgroundColor:UIColor
@@ -188,3 +188,27 @@ public struct IAKitVisualPreferences {
     }()
     
 }
+
+@warn_unused_result public func ==(lhs:IAKitVisualPreferences, rhs:IAKitVisualPreferences)->Bool{
+    return lhs.profileName == rhs.profileName &&
+    
+    lhs.accessoryBackgroundColor == rhs.accessoryBackgroundColor &&
+    lhs.accessoryButtonBackgroundColor  == rhs.accessoryButtonBackgroundColor  &&
+    lhs.accessoryTintColor  == rhs.accessoryTintColor  &&
+    lhs.accessoryButtonBorderColor  == rhs.accessoryButtonBorderColor  &&
+    lhs.accessoryButtonCornerRadius  == rhs.accessoryButtonCornerRadius  &&
+    lhs.accessoryButtonBorderWidth  == rhs.accessoryButtonBorderWidth  &&
+    
+    lhs.kbBackgroundColor  == rhs.kbBackgroundColor  &&
+    lhs.kbButtonColor  == rhs.kbButtonColor  &&
+    lhs.kbButtonTintColor  == rhs.kbButtonTintColor  &&
+    lhs.kbSuggestionsBackgroundColor  == rhs.kbSuggestionsBackgroundColor  &&
+    lhs.kbSuggestionsTextColor  == rhs.kbSuggestionsTextColor  &&
+        
+    lhs.kbSuggestionBarScaleFactor  == rhs.kbSuggestionBarScaleFactor
+}
+
+@warn_unused_result public func !=(lhs:IAKitVisualPreferences, rhs:IAKitVisualPreferences)->Bool{
+    return !(lhs == rhs)
+}
+

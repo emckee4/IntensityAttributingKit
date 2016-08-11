@@ -30,8 +30,14 @@ public class IAKitPreferences:NSObject {
     }
     
     
-    ///Reloads the keyboard and accessory singletons. This will cause any changes in global settings which affect the KB/accessory (like visual theming) to take effect.
-    static func resetKBAndAccessory(){
+    ///Reloads the keyboard and accessory singletons. This will cause any changes in global settings which affect the KB/accessory (like visual theming) to take effect. This will automatically call a global resignFirstResponder.
+    public static func resetKBAndAccessory(){
+        //Below don't work for custom input VCs so we use a hack below
+        //IAAccessoryVC.singleton.dismissKeyboard()
+        //IAKeyboard.singleton.dismissKeyboard()
+        //Dismissal hack
+        UIApplication.sharedApplication().sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, forEvent: nil)
+        
         IAKeyboard.singleton = IAKeyboard(nibName: nil, bundle: nil)
         IAAccessoryVC.singleton = IAAccessoryVC(nibName:nil, bundle: nil)
     }
@@ -197,7 +203,7 @@ public class IAKitPreferences:NSObject {
     }
 
     private static var _visualPreferences:IAKitVisualPreferences = IAKitVisualPreferences(archive: NSUserDefaults.standardUserDefaults().objectForKey(Keys.visualPreferences) as? NSData) ?? IAKitVisualPreferences.Default
-    ///Keyboard and accessory visual characteristics.
+    ///Keyboard and accessory visual characteristics. Note: changes made after IAKeyboard/IAAccessory have been instantiated won't be reflected until IAKitPreferences.resetKBAndAccessory() is called.
     public static var visualPreferences:IAKitVisualPreferences {
         get{return _visualPreferences}
         set{
