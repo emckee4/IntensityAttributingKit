@@ -75,8 +75,10 @@ These protocols make it remarkably easy to add transformers to the IAKit. The on
 
 
 
-# IAKitSampleProject:
-The IAKit SampleProject is a stripped down messaging interface for demonstrating the basic setup and use of the IAKit. Its code is derived from that used in the IntensityMessaging app but with CoreData, asynchrounous image loading, and much of the other unneccessary complications removed. The IAKit can be used in a simpler manner if desired, especially if you don't care about dynamic sizing, caching of sizing data, or reusability of the MessageThreadTableViewController without the MessageThreadVC.
+# IAKit SampleProject:
+The IAKit SampleProject is a stripped down messaging interface for demonstrating the basic setup and use of the IAKit. Its code is derived from that used in the IntensityMessaging app but with CoreData, asynchrounous image loading, and much of the other unneccessary complications removed. The IAKit can be used in a simpler manner if desired, especially if you don't care about dynamic sizing, caching of sizing data, or reusability of the MessageThreadTableViewController without the MessageThreadVC. 
+
+The sample project now includes a toggle for keyboard themes. I suggest HotdogStand.
 
 
 
