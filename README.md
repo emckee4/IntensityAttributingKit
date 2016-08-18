@@ -1,7 +1,7 @@
 # IntensityAttributingKit (v3)
 © 2016 by Evan McKee
 
-IntensityAttributingKit is a swift framework which provides a means of creating, displaying, and converting text with "intensity" attributes by the user on an iOS device. Ideally the user would have a 3dTouch capable phone so that intensity of a character can be derived from the pressure applied to the key, but intensity can also be applied using touch duration or a manual control. 
+IntensityAttributingKit is a swift framework which provides a means of creating, displaying, and converting text with "intensity" attributes by the user on an iOS device. Ideally the user would have a 3dTouch capable phone so that intensity of a character can be derived from the pressure applied to the key, but intensity can also be applied using touch duration, screen impact data derived from the accelerometer, or a manual control. 
 
 This project is the base for the IntensityMessaging app intended for release shortly. Check for updates at [www.intensitymessaging.com](https://www.intensitymessaging.com). Until release you can see it in action via the included sample project.
 
