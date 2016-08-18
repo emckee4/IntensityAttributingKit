@@ -1,11 +1,13 @@
-IntensityAttributingKit (v3)
+## IntensityAttributingKit (v3)
 © 2015 by Evan McKee
 
-IntensityAttributingKit is a swift framework which provides a means of creating, displaying, and converting text with "intensity" attributes by the user on an iOS device. Ideally the user would have a 3dTouch capable phone so that intensity of a character can be derived from the pressure applied to the key, but intensity can also be applied using touch duration or a manual control.
+IntensityAttributingKit is a swift framework which provides a means of creating, displaying, and converting text with "intensity" attributes by the user on an iOS device. Ideally the user would have a 3dTouch capable phone so that intensity of a character can be derived from the pressure applied to the key, but intensity can also be applied using touch duration or a manual control. 
+
+This project is the base for the IntensityMessaging app intended for release shortly. Check for updates at [www.intensitymessaging.com](https://www.intensitymessaging.com). Until release you can see it in action via the included sample project.
 
 With version 3 the editor and view were rewritten as subclasses of UIView rather than UITextView. Building directly on TextKit enabled more animation options and the removal of some hacky fixes that had been necessitated by Apple's use of private APIs within some of their own objects (like UITextView). The new IACompositeTextView/Editor classes (derivatives of the IACompositeBase abstract class) use 4 layers to render animations for the intensity rendering schemes that support it. On top is the selectionView which draws selection rects, the text insertion caret, and text marking. Below that is the imageLayerView which draws the thumbnails of any inserted attachments at the proper position which is determined by the layout/typesetting engine in the topTV, which itself will display empty rectangles where an attachment belongs. Beneath these top two views are the top and bottom ThinTextView's. The top ThinTextView is the one responsible for generating sizing information and is the drawer of text in the schemes which don't support animation. When animating, the bottomTV will be drawn with different attributes and some combination of changing opacities between the layers will result in the animation effect for the user. The layers are separated so that images can be properly displayed even when the text layers are animating their opacity. It also may (or may not, I've only eyeball measured this since this design decision was otherwise necessary) improve the performance text drawing in cases when an image needs to be moved around (e.g. when inserting text before an image or resizing textview) but doesn't need to be fully redrawn. Redrawing of images tends to be much more expensive in terms of processing overhead than are translational transforms of already drawn bitmaps. 
 
-Components classes:
+# Components classes:
 
 IACompositeBase is the abstract parent class containing the common code for the IACompositeTextView and IACompositeTextEditor. It holds four visible subviews (IASelectionView, ImageViewLayer, top ThinTextView, bottom ThinTextView) stacked upon each other with a fifth view (the IAMagnifyingLoup) visible when needed. The IACompositeBase class also contains the animation code for animating opacity. For performance reasons, as much work as possible is pushed off of the CPU and onto the GPU. As a consequence of this and many other optimizations, the performance of the IAComposite derived classes is adequate even on older devices (iPhone 5) and in a few speicific cases superior to naively implemented UITextView.
 
@@ -48,14 +50,14 @@ IAKitPreferences:
 
 
 
-Readme TODO:
+# Readme TODO:
     Add basics on setup and use.
     Explain a little version history and why things now work the way they do.
     
 
 
 
-Possible future improvements:
+# Possible future improvements:
     Multiple keysets
         -> eventually make more/all keys potentially expanding if performance is sufficient
 
@@ -69,8 +71,8 @@ Additional render scheme ideas:
 
 
 
-//////////////////////////////
-IAKitSampleProject:
+
+### IAKitSampleProject:
 This contains a stripped down messaging interface to demonstrate the setup and use of IAKit. This is a heavily stripped down version of what's used in the IntensityMessaging app, so the construction doesn't make quite as much sense as it does in the app.
 The biggest difference is that the MessageThreadTableVC (tableViewController) in the app can function independently of the MessageThreadViewController (which also manages the composerBar) since it relies on an NSFetchedResultsController for updates. For this sample app we just have the MessageThreadTableVC holding an array of Message structs and all of the stuff related to CoreData and asynchronous events and refresh triggers are stripped out. 
 

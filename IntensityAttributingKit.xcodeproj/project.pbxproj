@@ -32,7 +32,7 @@
 		C031CBEA1BDB097600521393 /* IntensityTransformingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBE41BDB097600521393 /* IntensityTransformingProtocol.swift */; };
 		C031CBEB1BDB097600521393 /* Globals+Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBE51BDB097600521393 /* Globals+Operators.swift */; };
 		C031CBEE1BDB09FD00521393 /* IAStringDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBED1BDB09FD00521393 /* IAStringDemoTests.swift */; };
-		C031CBFE1BDD8DA700521393 /* Readme in Resources */ = {isa = PBXBuildFile; fileRef = C031CBFD1BDD8DA700521393 /* Readme */; };
+		C031CBFE1BDD8DA700521393 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = C031CBFD1BDD8DA700521393 /* README.md */; };
 		C031CC061BDD948700521393 /* IAKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CC051BDD948700521393 /* IAKeyboard.swift */; };
 		C0326E231CF27C2700E6161F /* IAImageLayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0326E221CF27C2700E6161F /* IAImageLayerView.swift */; };
 		C038B3EA1C69310400069F9C /* ExpandingKeyControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C038B3E91C69310400069F9C /* ExpandingKeyControl.swift */; };
@@ -148,7 +148,7 @@
 		C031CBE41BDB097600521393 /* IntensityTransformingProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntensityTransformingProtocol.swift; sourceTree = "<group>"; };
 		C031CBE51BDB097600521393 /* Globals+Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Globals+Operators.swift"; sourceTree = "<group>"; };
 		C031CBED1BDB09FD00521393 /* IAStringDemoTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringDemoTests.swift; sourceTree = "<group>"; };
-		C031CBFD1BDD8DA700521393 /* Readme */ = {isa = PBXFileReference; explicitFileType = net.daringfireball.markdown; fileEncoding = 4; path = Readme; sourceTree = "<group>"; };
+		C031CBFD1BDD8DA700521393 /* README.md */ = {isa = PBXFileReference; explicitFileType = net.daringfireball.markdown; fileEncoding = 4; path = README.md; sourceTree = "<group>"; };
 		C031CC051BDD948700521393 /* IAKeyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAKeyboard.swift; sourceTree = "<group>"; };
 		C0326E221CF27C2700E6161F /* IAImageLayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAImageLayerView.swift; sourceTree = "<group>"; };
 		C038B3E91C69310400069F9C /* ExpandingKeyControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandingKeyControl.swift; sourceTree = "<group>"; };
@@ -358,7 +358,7 @@
 		C031CBBC1BDB094800521393 = {
 			isa = PBXGroup;
 			children = (
-				C031CBFD1BDD8DA700521393 /* Readme */,
+				C031CBFD1BDD8DA700521393 /* README.md */,
 				C031CBC81BDB094800521393 /* IntensityAttributingKit */,
 				C031CBD41BDB094800521393 /* IntensityAttributingKitTests */,
 				C06079F61D5BC2FA0027A72F /* IAKitSampleProject */,
@@ -695,7 +695,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0D4474C1BE82381003204E7 /* ImageAssets.xcassets in Resources */,
-				C031CBFE1BDD8DA700521393 /* Readme in Resources */,
+				C031CBFE1BDD8DA700521393 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1074,6 +1074,7 @@
 				C0607A051D5BC2FA0027A72F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
