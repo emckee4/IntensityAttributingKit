@@ -60,7 +60,7 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         inputView!.tintColor = IAKitPreferences.visualPreferences.accessoryTintColor
         
         kbSwitchButton = UIButton(type: .System)
-        kbSwitchButton.setImage(UIImage(named: "Keyboard", inBundle: bundle, compatibleWithTraitCollection: nil), forState: .Normal )
+        kbSwitchButton.setImage(UIImage(named: "Keyboard", inBundle: bundle, compatibleWithTraitCollection: nil)!.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal )
         kbSwitchButton.imageView?.contentMode = .ScaleAspectFit
         kbSwitchButton.backgroundColor = kButtonBackgroundColor
         kbSwitchButton.imageEdgeInsets = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
@@ -118,24 +118,28 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         tokenizerButton.setSelector(self, selector: "tokenizerButtonPressed:")
 
         let charIcon = UIImage(named: "charTok", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: self.traitCollection)!.imageWithRenderingMode(.AlwaysTemplate)
-        let charIV = UIImageView(image: charIcon)
-        charIV.contentMode = .ScaleAspectFit
-        tokenizerButton.addKey(charIV, actionName: IAStringTokenizing.Char.shortLabel)
+//        let charIV = UIImageView(image: charIcon)
+//        charIV.contentMode = .ScaleAspectFit
+//        tokenizerButton.addKey(charIV, actionName: IAStringTokenizing.Char.shortLabel)
+        tokenizerButton.addKey(image: charIcon, actionName: IAStringTokenizing.Char.shortLabel, contentMode: .ScaleAspectFit)
         
         let wordIcon = UIImage(named: "word", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: self.traitCollection)!.imageWithRenderingMode(.AlwaysTemplate)
-        let wordIV = UIImageView(image: wordIcon)
-        wordIV.contentMode = .ScaleAspectFit
-        tokenizerButton.addKey(wordIV, actionName: IAStringTokenizing.Word.shortLabel)
+//        let wordIV = UIImageView(image: wordIcon)
+//        wordIV.contentMode = .ScaleAspectFit
+//        tokenizerButton.addKey(wordIV, actionName: IAStringTokenizing.Word.shortLabel)
+        tokenizerButton.addKey(image: wordIcon, actionName: IAStringTokenizing.Word.shortLabel, contentMode: .ScaleAspectFit)
         
         let sentenceIcon = UIImage(named: "sentence", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: self.traitCollection)!.imageWithRenderingMode(.AlwaysTemplate)
-        let sentenceIV = UIImageView(image: sentenceIcon)
-        sentenceIV.contentMode = .ScaleAspectFit
-        tokenizerButton.addKey(sentenceIV, actionName: IAStringTokenizing.Sentence.shortLabel)
+//        let sentenceIV = UIImageView(image: sentenceIcon)
+//        sentenceIV.contentMode = .ScaleAspectFit
+//        tokenizerButton.addKey(sentenceIV, actionName: IAStringTokenizing.Sentence.shortLabel)
+        tokenizerButton.addKey(image: sentenceIcon, actionName: IAStringTokenizing.Sentence.shortLabel, contentMode: .ScaleAspectFit)
         
         let messageIcon = UIImage(named: "message", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: self.traitCollection)!.imageWithRenderingMode(.AlwaysTemplate)
-        let messageIV = UIImageView(image: messageIcon)
-        messageIV.contentMode = .ScaleAspectFit
-        tokenizerButton.addKey(messageIV, actionName: IAStringTokenizing.Message.shortLabel)
+//        let messageIV = UIImageView(image: messageIcon)
+//        messageIV.contentMode = .ScaleAspectFit
+//        tokenizerButton.addKey(messageIV, actionName: IAStringTokenizing.Message.shortLabel)
+        tokenizerButton.addKey(image: messageIcon, actionName: IAStringTokenizing.Message.shortLabel, contentMode: .ScaleAspectFit)
         
         tokenizerButton.backgroundColor = kButtonBackgroundColor
         tokenizerButton.cornerRadius = kButtonCornerRadius
@@ -171,7 +175,7 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         
         optionButton = UIButton(type: .Custom)
         optionButton.backgroundColor = kButtonBackgroundColor
-        let gear = UIImage(named: "optionsGear", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: self.traitCollection)!
+        let gear = UIImage(named: "optionsGear", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: self.traitCollection)!.imageWithRenderingMode(.AlwaysTemplate)
         optionButton.setImage(gear.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
         optionButton.addTarget(self, action: "optionButtonPressed", forControlEvents: .TouchUpInside)
         optionButton.layer.cornerRadius = kButtonCornerRadius

@@ -297,6 +297,25 @@ public class ExpandingKeyBase: UIView {
         keyView.backgroundColor = self.backgroundColor
     }
     
+    public func addKey(image image:UIImage, actionName:String, contentMode:UIViewContentMode = .ScaleAspectFit, edgeInsets: UIEdgeInsets? = nil){
+        guard !(epKeys.map({$0.actionName == actionName}).contains(true)) else {return}
+        let iv = UIImageView(image: image)
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.contentMode = contentMode
+        if let edgeInsets = edgeInsets where edgeInsets != UIEdgeInsetsZero{
+            let container = UIView()
+            container.translatesAutoresizingMaskIntoConstraints = false
+            container.addSubview(iv)
+            iv.leftAnchor.constraintEqualToAnchor(container.leftAnchor, constant: edgeInsets.left).activateWithPriority(999, identifier: "\(actionName) image leftInset")
+            iv.rightAnchor.constraintEqualToAnchor(container.rightAnchor, constant: -edgeInsets.right).activateWithPriority(999, identifier: "\(actionName) image rightInset")
+            iv.topAnchor.constraintEqualToAnchor(container.topAnchor, constant: edgeInsets.top).activateWithPriority(999, identifier: "\(actionName) image topInset")
+            iv.bottomAnchor.constraintEqualToAnchor(container.bottomAnchor, constant: -edgeInsets.bottom).activateWithPriority(999, identifier: "\(actionName) image bottomInset")
+            self.addKey(container, actionName: actionName)
+        } else {
+           self.addKey(iv, actionName: actionName)
+        }
+    }
+    
     public func addKey(withTextLabel text:String, withFont font:UIFont=UIFont.systemFontOfSize(20.0), actionName: String){
         guard !(epKeys.map({$0.actionName == actionName}).contains(true)) else {return}
         let label = UILabel()
