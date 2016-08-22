@@ -22,8 +22,8 @@ extension IAAccessoryVC: PressureKeyActionDelegate {
         delegate?.accessoryKeyboardChangeButtonPressed(self)
     }
     
-    func cameraButtonPressed(sender:UIButton){
-        self.delegate?.accessoryRequestsPickerLaunch(self)
+    func attachmentButtonPressed(actionName:String!){
+        self.delegate?.accessoryRequestsPickerLaunch(self, pickerName: actionName)
     }
     
     

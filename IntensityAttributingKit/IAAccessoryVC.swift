@@ -15,7 +15,7 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
     static var singleton = IAAccessoryVC(nibName:nil, bundle: nil)
     
     var kbSwitchButton:UIButton!
-    var cameraButton:UIButton!
+    var attachmentButton:ExpandingKeyControl!
     var intensityButton:PressureKey!
     var intensityLabel:UILabel!
     var intensitySlider:UISlider!
@@ -73,19 +73,17 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         kbSwitchButton.clipsToBounds = true
         
 
-        cameraButton = UIButton(type: .System)
-        cameraButton.setImage(UIImage(named: "camera", inBundle: bundle, compatibleWithTraitCollection: nil), forState: .Normal )
-        cameraButton.imageView?.contentMode = .ScaleAspectFit
-        cameraButton.backgroundColor = kButtonBackgroundColor
-        cameraButton.imageEdgeInsets = UIEdgeInsets(top: 4.0, left: 4.0, bottom: 4.0, right: 4.0)
-        cameraButton.addTarget(self, action: "cameraButtonPressed:", forControlEvents: .TouchUpInside)
-        cameraButton.translatesAutoresizingMaskIntoConstraints = false
-        cameraButton.layer.cornerRadius = kButtonCornerRadius
-        cameraButton.layer.borderColor = kButtonBorderColor
-        cameraButton.layer.borderWidth = kButtonBorderThickness
-        cameraButton.clipsToBounds = true
-        cameraButton.widthAnchor.constraintEqualToAnchor(cameraButton.heightAnchor).activateWithPriority(800)
-
+        attachmentButton = ExpandingKeyControl(expansionDirection: .Up)
+        attachmentButton.setSelector(self, selector: "attachmentButtonPressed:")
+        let cameraImage = UIImage(named: "camera", inBundle: bundle, compatibleWithTraitCollection: nil)!.imageWithRenderingMode(.AlwaysTemplate)
+        attachmentButton.addKey(image: cameraImage, actionName: "photo", contentMode: .ScaleAspectFit, edgeInsets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
+        attachmentButton.addKey(withTextLabel: "Vid", actionName: "video")
+        attachmentButton.addKey(withTextLabel: "Loc", actionName: "location")
+        attachmentButton.backgroundColor = kButtonBackgroundColor
+        attachmentButton.cornerRadius = kButtonCornerRadius
+        attachmentButton.widthAnchor.constraintEqualToAnchor(attachmentButton.heightAnchor, multiplier: 1.0).activateWithPriority(999, identifier: "iaAccessory.attachmentButton: W = H")
+        attachmentButton.layer.borderColor = kButtonBorderColor
+        attachmentButton.layer.borderWidth = kButtonBorderThickness
         
         intensityLabel = UILabel()
         intensityLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -187,7 +185,7 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
          
         
 
-        stackView = UIStackView(arrangedSubviews: [kbSwitchButton, cameraButton, intensityButton, intensitySlider, tokenizerButton, transformButton,optionButton])
+        stackView = UIStackView(arrangedSubviews: [kbSwitchButton, attachmentButton, intensityButton, intensitySlider, tokenizerButton, transformButton,optionButton])
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.alignment = .Fill
         stackView.axis = .Horizontal

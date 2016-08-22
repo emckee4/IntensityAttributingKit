@@ -19,7 +19,7 @@ protocol IAAccessoryDelegate:class {
     ///Return true to inform the iaAccessory that it should center the button associated with the transformer.
     func accessoryRequestsTransformerChange(accessory:IAAccessoryVC!, toTransformer:IntensityTransformers)->Bool
     
-    func accessoryRequestsPickerLaunch(accessory:IAAccessoryVC!)
+    func accessoryRequestsPickerLaunch(accessory:IAAccessoryVC!, pickerName:String)
     
     func accessoryUpdatedDefaultIntensity(accessory:IAAccessoryVC!, withValue value:Int)
     
