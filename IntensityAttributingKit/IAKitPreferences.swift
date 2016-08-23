@@ -211,6 +211,9 @@ public class IAKitPreferences:NSObject {
             NSUserDefaults.standardUserDefaults().setObject(newValue.convertToArchive(), forKey: Keys.visualPreferences)
         }
     }
+    
+    public static var videoAttachmentQuality:UIImagePickerControllerQualityType = .TypeMedium
+    public static var videoAttachmentMaxDuration:NSTimeInterval = 12.0
 }
 
 

@@ -25,6 +25,8 @@
 		C01FFFA61CC6A97400AFD366 /* IACompositeBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01FFFA51CC6A97400AFD366 /* IACompositeBase.swift */; };
 		C01FFFAC1CC6B1C400AFD366 /* IACTE+IAKeyboardPresenting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01FFFAB1CC6B1C400AFD366 /* IACTE+IAKeyboardPresenting.swift */; };
 		C01FFFAE1CC6B38900AFD366 /* IACTE+UITextInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01FFFAD1CC6B38900AFD366 /* IACTE+UITextInput.swift */; };
+		C0304B121D6B8BB600E5FD73 /* IntensityAttributingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C031CBC61BDB094800521393 /* IntensityAttributingKit.framework */; };
+		C0304B131D6B8BB600E5FD73 /* IntensityAttributingKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C031CBC61BDB094800521393 /* IntensityAttributingKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C031CBCA1BDB094800521393 /* IntensityAttributingKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C031CBC91BDB094800521393 /* IntensityAttributingKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C031CBD11BDB094800521393 /* IntensityAttributingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C031CBC61BDB094800521393 /* IntensityAttributingKit.framework */; };
 		C031CBD61BDB094800521393 /* IntensityAttributingKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBD51BDB094800521393 /* IntensityAttributingKitTests.swift */; };
@@ -52,7 +54,6 @@
 		C06079FA1D5BC2FA0027A72F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06079F91D5BC2FA0027A72F /* ViewController.swift */; };
 		C06079FF1D5BC2FA0027A72F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C06079FE1D5BC2FA0027A72F /* Assets.xcassets */; };
 		C0607A021D5BC2FA0027A72F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0607A001D5BC2FA0027A72F /* LaunchScreen.storyboard */; };
-		C0607A071D5BC3820027A72F /* IntensityAttributingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C031CBC61BDB094800521393 /* IntensityAttributingKit.framework */; };
 		C0607A0D1D5BC4B30027A72F /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0607A081D5BC4B30027A72F /* MessageCell.swift */; };
 		C0607A0E1D5BC4B30027A72F /* ImageViewerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0607A091D5BC4B30027A72F /* ImageViewerVC.swift */; };
 		C0607A0F1D5BC4B30027A72F /* MessageThreadTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0607A0A1D5BC4B30027A72F /* MessageThreadTableVC.swift */; };
@@ -110,6 +111,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C0304B141D6B8BB600E5FD73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C031CBBD1BDB094800521393 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C031CBC51BDB094800521393;
+			remoteInfo = IntensityAttributingKit;
+		};
 		C031CBD21BDB094800521393 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C031CBBD1BDB094800521393 /* Project object */;
@@ -118,6 +126,20 @@
 			remoteInfo = IntensityAttributingKit;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C0304B161D6B8BB600E5FD73 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C0304B131D6B8BB600E5FD73 /* IntensityAttributingKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		C002E1F11CB334B1008E78A1 /* IATextRange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextRange.swift; sourceTree = "<group>"; };
@@ -246,7 +268,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C0607A071D5BC3820027A72F /* IntensityAttributingKit.framework in Frameworks */,
+				C0304B121D6B8BB600E5FD73 /* IntensityAttributingKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,7 +350,7 @@
 				C002E1F11CB334B1008E78A1 /* IATextRange.swift */,
 				C08B42FE1CD282F7002F2840 /* IATextSelectionRect.swift */,
 				C01E0F4C1D53D47C00C5471B /* IATextContainer.swift */,
-				C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */,
+				C0304B171D6D080B00E5FD73 /* IAKitTextAttachment */,
 			);
 			name = "TextKit subclasses";
 			sourceTree = "<group>";
@@ -353,6 +375,14 @@
 				C0F42CFA1C5FE13700FA7BB0 /* IATEPhotoPicking.swift */,
 			);
 			name = IACompositeTextEditor;
+			sourceTree = "<group>";
+		};
+		C0304B171D6D080B00E5FD73 /* IAKitTextAttachment */ = {
+			isa = PBXGroup;
+			children = (
+				C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */,
+			);
+			name = IAKitTextAttachment;
 			sourceTree = "<group>";
 		};
 		C031CBBC1BDB094800521393 = {
@@ -637,10 +667,12 @@
 				C06079F11D5BC2FA0027A72F /* Sources */,
 				C06079F21D5BC2FA0027A72F /* Frameworks */,
 				C06079F31D5BC2FA0027A72F /* Resources */,
+				C0304B161D6B8BB600E5FD73 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				C0304B151D6B8BB600E5FD73 /* PBXTargetDependency */,
 			);
 			name = IAKitSampleProject;
 			productName = SampleProject;
@@ -659,7 +691,6 @@
 				TargetAttributes = {
 					C031CBC51BDB094800521393 = {
 						CreatedOnToolsVersion = 7.1;
-						DevelopmentTeam = H2TACJ74Y9;
 					};
 					C031CBCF1BDB094800521393 = {
 						CreatedOnToolsVersion = 7.1;
@@ -835,6 +866,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		C0304B151D6B8BB600E5FD73 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C031CBC51BDB094800521393 /* IntensityAttributingKit */;
+			targetProxy = C0304B141D6B8BB600E5FD73 /* PBXContainerItemProxy */;
+		};
 		C031CBD31BDB094800521393 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C031CBC51BDB094800521393 /* IntensityAttributingKit */;
@@ -1016,6 +1052,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = SampleProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.McKeeMaKer.IAKitSampleProject;
@@ -1029,6 +1067,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = SampleProject/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.McKeeMaKer.IAKitSampleProject;

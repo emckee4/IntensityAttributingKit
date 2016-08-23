@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MobileCoreServices
 
 
 ///Image picker extension. This handles the presentation and aftermath of a UIImagePickerController.
@@ -14,13 +15,18 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
     
     public func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         picker.dismissViewControllerAnimated(true, completion: nil)
+        if let mediaType = info[UIImagePickerControllerMediaType] as? String where mediaType == kUTTypeMovie as String, let videoURL = info[UIImagePickerControllerMediaURL] as? NSURL {
+            videoChosen(videoURL)
+            return
+        }
         if let image = info[UIImagePickerControllerEditedImage] as? UIImage{
             self.imageChosen(image)
+            return
         } else if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             self.imageChosen(image)
-        } else {
-            self.imageChosen(nil)
+            return
         }
+        self.imageChosen(nil) //called so that first responder is restored on dismissal
     }
     
     public func imagePickerControllerDidCancel(picker: UIImagePickerController) {
@@ -57,20 +63,67 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
             imagePicker.allowsEditing = true
             imagePicker.delegate = self
             imagePicker.sourceType = .SavedPhotosAlbum
-            imagePicker.sourceType = .SavedPhotosAlbum
             self.window?.rootViewController?.presentViewController(imagePicker, animated: true, completion: nil)
         }
     }
     
+    func launchVideoPicker(){
+        guard self.delegate?.iaTextEditorRequestsPresentationOfContentPicker?(self) == true else {return}
+        let picker = UIImagePickerController()
+        picker.mediaTypes = [kUTTypeMovie as String]
+        picker.videoQuality = IAKitPreferences.videoAttachmentQuality
+        picker.videoMaximumDuration = IAKitPreferences.videoAttachmentMaxDuration
+        if UIImagePickerController.isCameraDeviceAvailable(.Rear) {
+            let alert = UIAlertController(title: "Insert Video", message: "Choose source", preferredStyle: .ActionSheet)
+            alert.addAction(UIAlertAction(title: "Video Library", style: .Default, handler: { (action) -> Void in
+                guard  NSThread.isMainThread() else {fatalError()}
+                picker.allowsEditing = true
+                picker.delegate = self
+                picker.sourceType = .SavedPhotosAlbum
+                self.window?.rootViewController?.presentViewController(picker, animated: true, completion: nil)
+            }))
+            alert.addAction(UIAlertAction(title: "Camera", style: .Default, handler: { (action) -> Void in
+                guard  NSThread.isMainThread() else {fatalError()}
+                picker.allowsEditing = true
+                picker.delegate = self
+                picker.sourceType = .Camera
+                self.window?.rootViewController?.presentViewController(picker, animated: true, completion: nil)
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+            self.window?.rootViewController?.presentViewController(alert, animated: true, completion: nil)
+        } else {
+            guard  NSThread.isMainThread() else {fatalError()}
+            picker.allowsEditing = true
+            picker.delegate = self
+            picker.sourceType = .SavedPhotosAlbum
+            self.window?.rootViewController?.presentViewController(picker, animated: true, completion: nil)
+        }
+    }
+    
     func imageChosen(image:UIImage!){
-        guard let image = image else {self.becomeFirstResponder();return}
-        guard let selectedRange = selectedRange else {return}
+        guard image != nil && selectedRange != nil else {self.becomeFirstResponder();return}
         let ta = IATextAttachment()
         ta.image = image.resizeImageToFit(maxSize: IAKitPreferences.maxSavedImageDimensions)
         //let insertionLoc = self.selectedRange.location
         let newIA = self.iaString!.emptyCopy()
         newIA.insertAttachmentAtPosition(ta, position: 0, intensity: self.currentIntensity, attributes: baseAttributes)
-        replaceIAStringRange(newIA, range: selectedRange)
+        replaceIAStringRange(newIA, range: selectedRange!)
+        self.becomeFirstResponder()
+    }
+    
+
+    func videoChosen(videoURL:NSURL!){
+        guard videoURL != nil && selectedRange != nil else {self.becomeFirstResponder();return}
+        
+        print(videoURL)
+        //let ta = IATextAttachment()
+            //TODO:assign url instead of image
+            //ta.image = image.resizeImageToFit(maxSize: IAKitPreferences.maxSavedImageDimensions)
+
+        //let newIA = self.iaString!.emptyCopy()
+        //newIA.insertAttachmentAtPosition(ta, position: 0, intensity: self.currentIntensity, attributes: baseAttributes)
+        //replaceIAStringRange(newIA, range: selectedRange!)
+        
         self.becomeFirstResponder()
     }
     

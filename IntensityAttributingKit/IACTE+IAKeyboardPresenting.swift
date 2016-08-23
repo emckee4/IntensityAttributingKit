@@ -103,7 +103,7 @@ extension IACompositeTextEditor: IAAccessoryDelegate {
         case "photo":
             launchPhotoPicker()
         case "video":
-            print("video pciker should launch")
+            launchVideoPicker()
         case "location":
             print("location picker should launch")
         default:
