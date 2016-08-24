@@ -196,13 +196,6 @@ extension IATextAttachment {
     }
 }
 
-public enum IAAttachmentType:String {
-    case image = "image",
-    video = "video",
-    location = "location",
-    unknown = "unknown"
-    
-}
 
 
 
