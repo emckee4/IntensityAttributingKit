@@ -15,8 +15,8 @@ class IAImageLayerView: UIView {
 
     var imageViewForId:[String:UIImageView] = [:]
     
-    ///The IAImageLayerView will use one size (determined here using the ThumbSize enum) for drawing all attachments and their placeholders in the IA view. This greatly simplifies the sizing calculations for the view while also simplifying caching.
-    var useThumbSize:ThumbSize = .Medium
+    ///The IAImageLayerView will use one size (determined here using the IAThumbSize enum) for drawing all attachments and their placeholders in the IA view. This greatly simplifies the sizing calculations for the view while also simplifying caching.
+    var useThumbSize:IAThumbSize = .Medium
 
     
     ///Called after the layout manager has processed changes, this will check the iaString for changes in the number, position, or id of attachments associated with the IAString, adding, removing, and repositioning them as necessary.

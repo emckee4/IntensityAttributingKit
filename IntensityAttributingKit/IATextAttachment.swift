@@ -107,7 +107,7 @@ public class IATextAttachment:NSTextAttachment {
         
     }
     
-    func imageForThumbSize(thumbSize:ThumbSize)->UIImage{
+    func imageForThumbSize(thumbSize:IAThumbSize)->UIImage{
         return image?.resizeImageToFit(maxSize: thumbSize.size) ?? thumbSize.imagePlaceholder
     }
     
@@ -118,7 +118,7 @@ public class IATextAttachment:NSTextAttachment {
         if let iaContainer = textContainer as? IATextContainer {
             return CGRect(origin:CGPointZero,size:iaContainer.preferedThumbSize.size)
         } else {
-            return CGRect(origin:CGPointZero,size:ThumbSize.Tiny.size)
+            return CGRect(origin:CGPointZero,size:IAThumbSize.Tiny.size)
         }
         //return CGRect(origin:CGPointZero,size:self.thumbSize.size)
     }
@@ -198,55 +198,6 @@ extension IATextAttachment {
 }
 
 
-
-///The thumbsize enum contains the rects for thumbnail sizes in the IAComposite views as well as accessors for the placeholders of each size.
-public enum ThumbSize:String {
-    case Tiny = "Tiny",
-    Small = "Small",
-    Medium = "Medium"
-    
-    public var size: CGSize {
-        switch self {
-        case .Tiny: return CGSizeMake(32, 32)
-        case .Small: return CGSizeMake(64, 64)
-        case .Medium: return CGSizeMake(160, 160)
-        }
-    }
-    
-    
-    
-    var imagePlaceholder:UIImage!{
-        guard NSThread.isMainThread() else {return nil}
-        switch self {
-        case .Tiny: return ThumbSize.Placeholders.ImageBoxedTiny
-        case .Small: return ThumbSize.Placeholders.ImageBoxedSmall
-        case .Medium: return ThumbSize.Placeholders.ImageBoxedMedium
-        }
-    }
-    
-    
-    struct Placeholders {
-        static let ImageBoxedTiny = {
-            return UIImage(named: "imagePlaceholderBoxedTiny", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
-        }()
-        static let ImageBoxedSmall = {
-            return UIImage(named: "imagePlaceholderBoxedSmall", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
-        }()
-        static let ImageBoxedMedium = {
-            return UIImage(named: "imagePlaceholderBoxedMedium", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
-        }()
-    }
-
-    
-    init?(rawOptional:String?){
-        if let raw = rawOptional {
-            self.init(rawValue:raw)
-        } else {
-            return nil
-        }
-    }
-    
-}
 
 
 

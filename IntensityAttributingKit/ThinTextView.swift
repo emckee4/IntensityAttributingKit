@@ -15,7 +15,7 @@ final public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDe
     let textContainer:IATextContainer
     let layoutManager:NSLayoutManager
     let textStorage:NSTextStorage
-    var thumbSize:ThumbSize {
+    var thumbSize:IAThumbSize {
         get{return textContainer.preferedThumbSize}
         set{textContainer.preferedThumbSize = newValue}
     }

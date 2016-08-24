@@ -69,7 +69,7 @@ public class IACompositeBase:UIView {
         return (topTV.layer.animationForKey("opacity") != nil) || (bottomTV.layer.animationForKey("opacity") != nil)
     }
     
-    public var thumbSizesForAttachments: ThumbSize = .Medium {
+    public var thumbSizesForAttachments: IAThumbSize = .Medium {
         didSet{
             topTV.thumbSize = thumbSizesForAttachments
             bottomTV.thumbSize = thumbSizesForAttachments
@@ -324,7 +324,7 @@ public class IACompositeBase:UIView {
         setupIATV()
         
         
-        if let ts = ThumbSize(rawOptional: (aDecoder.decodeObjectForKey("thumbSizes") as? String)) {
+        if let ts = IAThumbSize(rawOptional: (aDecoder.decodeObjectForKey("thumbSizes") as? String)) {
             thumbSizesForAttachments = ts
         }
         if let insetArray = aDecoder.decodeObjectForKey("textContainerInsetArray") as? [CGFloat] where insetArray.count == 4 {

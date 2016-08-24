@@ -13,7 +13,7 @@ import Foundation
 final public class IATextContainer:NSTextContainer {
     ///This flag can be used to indicate to the IATextAttachments that they should return nil from imageForBounds because the image will be drawn by in another layer. This is the standard behavior for the IAKit
     var shouldPresentEmptyImageContainers:Bool = true
-    var preferedThumbSize:ThumbSize = .Medium {
+    var preferedThumbSize:IAThumbSize = .Medium {
         didSet{
             if preferedThumbSize != oldValue {layoutManager?.textContainerChangedGeometry(self)}
         }
@@ -28,7 +28,7 @@ final public class IATextContainer:NSTextContainer {
     required public init?(coder: NSCoder) {
         super.init(coder: coder)
         if let tsname = coder.decodeObjectForKey("thumbsize") as? String {
-            if let ts = ThumbSize(rawValue: tsname) {
+            if let ts = IAThumbSize(rawValue: tsname) {
                 preferedThumbSize = ts
             }
         }
