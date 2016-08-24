@@ -25,31 +25,6 @@ public enum IAThumbSize:String {
         }
     }
     
-    
-    
-    var imagePlaceholder:UIImage!{
-        guard NSThread.isMainThread() else {return nil}
-        switch self {
-        case .Tiny: return IAThumbSize.Placeholders.ImageBoxedTiny
-        case .Small: return IAThumbSize.Placeholders.ImageBoxedSmall
-        case .Medium: return IAThumbSize.Placeholders.ImageBoxedMedium
-        }
-    }
-    
-    
-    struct Placeholders {
-        static let ImageBoxedTiny = {
-            return UIImage(named: "imagePlaceholderBoxedTiny", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
-        }()
-        static let ImageBoxedSmall = {
-            return UIImage(named: "imagePlaceholderBoxedSmall", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
-        }()
-        static let ImageBoxedMedium = {
-            return UIImage(named: "imagePlaceholderBoxedMedium", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
-        }()
-    }
-    
-    
     init?(rawOptional:String?){
         if let raw = rawOptional {
             self.init(rawValue:raw)
@@ -57,5 +32,4 @@ public enum IAThumbSize:String {
             return nil
         }
     }
-    
 }

@@ -28,6 +28,7 @@
 		C0304B121D6B8BB600E5FD73 /* IntensityAttributingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C031CBC61BDB094800521393 /* IntensityAttributingKit.framework */; };
 		C0304B131D6B8BB600E5FD73 /* IntensityAttributingKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C031CBC61BDB094800521393 /* IntensityAttributingKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C0304B1E1D6E29D100E5FD73 /* IAThumbSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0304B1D1D6E29D100E5FD73 /* IAThumbSize.swift */; };
+		C0304B201D6E368900E5FD73 /* IAPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0304B1F1D6E368900E5FD73 /* IAPlaceholder.swift */; };
 		C031CBCA1BDB094800521393 /* IntensityAttributingKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C031CBC91BDB094800521393 /* IntensityAttributingKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C031CBD11BDB094800521393 /* IntensityAttributingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C031CBC61BDB094800521393 /* IntensityAttributingKit.framework */; };
 		C031CBD61BDB094800521393 /* IntensityAttributingKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031CBD51BDB094800521393 /* IntensityAttributingKitTests.swift */; };
@@ -162,6 +163,7 @@
 		C01FFFAB1CC6B1C400AFD366 /* IACTE+IAKeyboardPresenting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IACTE+IAKeyboardPresenting.swift"; sourceTree = "<group>"; };
 		C01FFFAD1CC6B38900AFD366 /* IACTE+UITextInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "IACTE+UITextInput.swift"; sourceTree = "<group>"; };
 		C0304B1D1D6E29D100E5FD73 /* IAThumbSize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAThumbSize.swift; sourceTree = "<group>"; };
+		C0304B1F1D6E368900E5FD73 /* IAPlaceholder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAPlaceholder.swift; sourceTree = "<group>"; };
 		C031CBC61BDB094800521393 /* IntensityAttributingKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = IntensityAttributingKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C031CBC91BDB094800521393 /* IntensityAttributingKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IntensityAttributingKit.h; sourceTree = "<group>"; };
 		C031CBCB1BDB094800521393 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -384,6 +386,7 @@
 			children = (
 				C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */,
 				C0304B1D1D6E29D100E5FD73 /* IAThumbSize.swift */,
+				C0304B1F1D6E368900E5FD73 /* IAPlaceholder.swift */,
 			);
 			name = IAKitTextAttachment;
 			sourceTree = "<group>";
@@ -802,6 +805,7 @@
 				C01E0F481D4BD5FB00C5471B /* IAKitVisualPreferences.swift in Sources */,
 				C084E9111CDE56E7009D387D /* IAMagnifyingLoup.swift in Sources */,
 				C014A4851CA3265600D6312C /* Range+Extensions.swift in Sources */,
+				C0304B201D6E368900E5FD73 /* IAPlaceholder.swift in Sources */,
 				C0A258CF1C9200EC003287AB /* TouchInterpreters-DurationBased.swift in Sources */,
 				C031CBE91BDB097600521393 /* IntensityTransformers.swift in Sources */,
 				C01FFFA61CC6A97400AFD366 /* IACompositeBase.swift in Sources */,

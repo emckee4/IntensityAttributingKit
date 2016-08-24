@@ -108,9 +108,8 @@ public class IATextAttachment:NSTextAttachment {
     }
     
     func imageForThumbSize(thumbSize:IAThumbSize)->UIImage{
-        return image?.resizeImageToFit(maxSize: thumbSize.size) ?? thumbSize.imagePlaceholder
+        return image?.resizeImageToFit(maxSize: thumbSize.size) ?? IAPlaceholder.forSize(thumbSize, attachType: .image)
     }
-    
     
     
     override public func attachmentBoundsForTextContainer(textContainer: NSTextContainer?, proposedLineFragment lineFrag: CGRect, glyphPosition position: CGPoint, characterIndex charIndex: Int) -> CGRect {
@@ -197,7 +196,13 @@ extension IATextAttachment {
     }
 }
 
-
+public enum IAAttachmentType:String {
+    case image = "image",
+    video = "video",
+    location = "location",
+    unknown = "unknown"
+    
+}
 
 
 
