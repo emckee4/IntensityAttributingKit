@@ -9,7 +9,7 @@
 import Foundation
 
 ///This typealias for IAThumbSize should be eventually removed; Use IAThumbSize instead.
-typealias ThumbSize = IAThumbSize
+public typealias ThumbSize = IAThumbSize
 
 ///The IAThumbSize enum contains the rects for thumbnail sizes in the IAComposite views as well as accessors for the placeholders of each size.
 public enum IAThumbSize:String {

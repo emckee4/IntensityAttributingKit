@@ -134,7 +134,7 @@ class MessageThreadTableVC: UITableViewController, IATextViewDelegate {
         let extraAttachWidth = (10 * attachCount)
         let baseLineCount:Int = Int(ceil(Float(charCount + extraAttachWidth) / (Float(self.tableView.bounds.width) / 15.0)))
         let adjustedLineCount:Int = max(baseLineCount - attachCount, 0)
-        let tvEstimate:CGFloat = 14 + (CGFloat(adjustedLineCount) * 24) + (CGFloat(attachCount) * ThumbSize.Medium.size.height) + (2 * MessageCell.kVerticalInsets)
+        let tvEstimate:CGFloat = 14 + (CGFloat(adjustedLineCount) * 24) + (CGFloat(attachCount) * IAThumbSize.Medium.size.height) + (2 * MessageCell.kVerticalInsets)
         return tvEstimate
     }
     
