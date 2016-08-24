@@ -77,8 +77,12 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         attachmentButton.setSelector(self, selector: "attachmentButtonPressed:")
         let cameraImage = UIImage(named: "camera", inBundle: bundle, compatibleWithTraitCollection: nil)!.imageWithRenderingMode(.AlwaysTemplate)
         attachmentButton.addKey(image: cameraImage, actionName: "photo", contentMode: .ScaleAspectFit, edgeInsets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
-        attachmentButton.addKey(withTextLabel: "Vid", actionName: "video")
-        attachmentButton.addKey(withTextLabel: "Loc", actionName: "location")
+        let videoImage = UIImage(named: "video", inBundle: bundle, compatibleWithTraitCollection: nil)!.imageWithRenderingMode(.AlwaysTemplate)
+        attachmentButton.addKey(image: videoImage, actionName: "video", contentMode: .ScaleAspectFit, edgeInsets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
+
+        let locationImage = UIImage(named: "locationPin", inBundle: bundle, compatibleWithTraitCollection: nil)!.imageWithRenderingMode(.AlwaysTemplate)
+        attachmentButton.addKey(image: locationImage, actionName: "location", contentMode: .ScaleAspectFit, edgeInsets: UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5))
+
         attachmentButton.backgroundColor = kButtonBackgroundColor
         attachmentButton.cornerRadius = kButtonCornerRadius
         attachmentButton.widthAnchor.constraintEqualToAnchor(attachmentButton.heightAnchor, multiplier: 1.0).activateWithPriority(999, identifier: "iaAccessory.attachmentButton: W = H")
