@@ -17,7 +17,6 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
     var kbSwitchButton:UIButton!
     var attachmentButton:ExpandingKeyControl!
     var intensityButton:PressureKey!
-    var intensityLabel:UILabel!
     var intensitySlider:UISlider!
     
     var tokenizerButton:ExpandingKeyControl!
@@ -36,8 +35,6 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
     let kButtonBorderThickness:CGFloat = IAKitPreferences.visualPreferences.accessoryButtonBorderWidth
     let kButtonBorderColor:CGColor = IAKitPreferences.visualPreferences.accessoryButtonBorderColor.CGColor
     let kButtonBackgroundColor:UIColor = IAKitPreferences.visualPreferences.accessoryButtonBackgroundColor
-    //let kButtonTextColor = UIColor.darkGrayColor()
-    
     
     
     //MARK:- init and setup
@@ -59,20 +56,24 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         inputView!.layer.shouldRasterize = true
         inputView!.tintColor = IAKitPreferences.visualPreferences.accessoryTintColor
         
+        //MARK: Keyboard switch setup
+        
         kbSwitchButton = UIButton(type: .System)
         kbSwitchButton.setImage(UIImage(named: "Keyboard", inBundle: bundle, compatibleWithTraitCollection: nil)!.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal )
         kbSwitchButton.imageView?.contentMode = .ScaleAspectFit
         kbSwitchButton.backgroundColor = kButtonBackgroundColor
         kbSwitchButton.imageEdgeInsets = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
         kbSwitchButton.widthAnchor.constraintLessThanOrEqualToAnchor(kbSwitchButton.heightAnchor, multiplier: 1.2).activateWithPriority(998, identifier: "kbSwitchButton W <= H*1.2")
-        kbSwitchButton.addTarget(self, action: "kbSwitchButtonPressed:", forControlEvents: .TouchUpInside)
+        kbSwitchButton.addTarget(self, action: #selector(IAAccessoryVC.kbSwitchButtonPressed(_:)), forControlEvents: .TouchUpInside)
         kbSwitchButton.translatesAutoresizingMaskIntoConstraints = false
         kbSwitchButton.layer.cornerRadius = kButtonCornerRadius
         kbSwitchButton.layer.borderColor = kButtonBorderColor
         kbSwitchButton.layer.borderWidth = kButtonBorderThickness
         kbSwitchButton.clipsToBounds = true
         
-
+        
+        //MARK: Attachment insertion expanding key setup
+        
         attachmentButton = ExpandingKeyControl(expansionDirection: .Up)
         attachmentButton.setSelector(self, selector: "attachmentButtonPressed:")
         let cameraImage = UIImage(named: "camera", inBundle: bundle, compatibleWithTraitCollection: nil)!.imageWithRenderingMode(.AlwaysTemplate)
@@ -89,10 +90,7 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         attachmentButton.layer.borderColor = kButtonBorderColor
         attachmentButton.layer.borderWidth = kButtonBorderThickness
         
-        intensityLabel = UILabel()
-        intensityLabel.translatesAutoresizingMaskIntoConstraints = false
-        intensityLabel.backgroundColor = kButtonBackgroundColor
-        
+        //MARK: Intensity button setup
         
         intensityButton = PressureKey()
         intensityButton.translatesAutoresizingMaskIntoConstraints = false
@@ -106,54 +104,38 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         intensityButton.textColor = IAKitPreferences.visualPreferences.accessoryTintColor
         intensityButton.delegate = self
         
-        
+        //MARK: Intensity slider setup
         
         intensitySlider = UISlider()
         intensitySlider.minimumValue = 0.0
         intensitySlider.maximumValue = 100.0
-        intensitySlider.addTarget(self, action: "sliderValueChanged:", forControlEvents: .ValueChanged)
-        //fix this
+        intensitySlider.addTarget(self, action: #selector(IAAccessoryVC.sliderValueChanged(_:)), forControlEvents: .ValueChanged)
         intensitySlider.translatesAutoresizingMaskIntoConstraints = false
         
         
+        //MARK: Tokenizer selecting expanding key setup
+        
         tokenizerButton = ExpandingKeyControl(expansionDirection: .Up)
         tokenizerButton.setSelector(self, selector: "tokenizerButtonPressed:")
-
         let charIcon = UIImage(named: "charTok", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: self.traitCollection)!.imageWithRenderingMode(.AlwaysTemplate)
-//        let charIV = UIImageView(image: charIcon)
-//        charIV.contentMode = .ScaleAspectFit
-//        tokenizerButton.addKey(charIV, actionName: IAStringTokenizing.Char.shortLabel)
         tokenizerButton.addKey(image: charIcon, actionName: IAStringTokenizing.Char.shortLabel, contentMode: .ScaleAspectFit)
-        
         let wordIcon = UIImage(named: "word", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: self.traitCollection)!.imageWithRenderingMode(.AlwaysTemplate)
-//        let wordIV = UIImageView(image: wordIcon)
-//        wordIV.contentMode = .ScaleAspectFit
-//        tokenizerButton.addKey(wordIV, actionName: IAStringTokenizing.Word.shortLabel)
         tokenizerButton.addKey(image: wordIcon, actionName: IAStringTokenizing.Word.shortLabel, contentMode: .ScaleAspectFit)
-        
         let sentenceIcon = UIImage(named: "sentence", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: self.traitCollection)!.imageWithRenderingMode(.AlwaysTemplate)
-//        let sentenceIV = UIImageView(image: sentenceIcon)
-//        sentenceIV.contentMode = .ScaleAspectFit
-//        tokenizerButton.addKey(sentenceIV, actionName: IAStringTokenizing.Sentence.shortLabel)
         tokenizerButton.addKey(image: sentenceIcon, actionName: IAStringTokenizing.Sentence.shortLabel, contentMode: .ScaleAspectFit)
-        
         let messageIcon = UIImage(named: "message", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: self.traitCollection)!.imageWithRenderingMode(.AlwaysTemplate)
-//        let messageIV = UIImageView(image: messageIcon)
-//        messageIV.contentMode = .ScaleAspectFit
-//        tokenizerButton.addKey(messageIV, actionName: IAStringTokenizing.Message.shortLabel)
         tokenizerButton.addKey(image: messageIcon, actionName: IAStringTokenizing.Message.shortLabel, contentMode: .ScaleAspectFit)
-        
         tokenizerButton.backgroundColor = kButtonBackgroundColor
         tokenizerButton.cornerRadius = kButtonCornerRadius
         //tokenizerButton.widthAnchor.constraintGreaterThanOrEqualToConstant(transformButton.intrinsicContentSize().width + 10.0).active = true
         tokenizerButton.widthAnchor.constraintGreaterThanOrEqualToAnchor(tokenizerButton.heightAnchor).activateWithPriority(999, identifier: "iaAccessory.tokenizerEK: W >= H")
         tokenizerButton.widthAnchor.constraintEqualToAnchor(tokenizerButton.heightAnchor, multiplier: 1.33).activateWithPriority(800, identifier: "iaAccessory.tokenizerEK: W = H*1.25")
-        
         tokenizerButton.layer.borderColor = kButtonBorderColor
         tokenizerButton.layer.borderWidth = kButtonBorderThickness
         tokenizerButton.translatesAutoresizingMaskIntoConstraints = false
 
-
+        //MARK: Transformer selecting ExpandingKey setup
+        
         transformButton = ExpandingKeyControl(expansionDirection: .Up)
         transformButton.setSelector(self, selector: "transformButtonPressed:")
         let weightSample = IntensityTransformers.WeightScheme.transformer.generateStaticSampleFromText("abc", size: 20.0)
@@ -172,14 +154,14 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         transformButton.widthAnchor.constraintEqualToAnchor(transformButton.heightAnchor, multiplier: 1.33).activateWithPriority(800, identifier: "iaAccessory.transformEK: W = H*1.33")
         transformButton.layer.borderColor = kButtonBorderColor
         transformButton.layer.borderWidth = kButtonBorderThickness
-        //add config here
-        
+    
+        //MARK: OptionButton (cog) setup
         
         optionButton = UIButton(type: .Custom)
         optionButton.backgroundColor = kButtonBackgroundColor
         let gear = UIImage(named: "optionsGear", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: self.traitCollection)!.imageWithRenderingMode(.AlwaysTemplate)
         optionButton.setImage(gear.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
-        optionButton.addTarget(self, action: "optionButtonPressed", forControlEvents: .TouchUpInside)
+        optionButton.addTarget(self, action: #selector(IAAccessoryVC.optionButtonPressed), forControlEvents: .TouchUpInside)
         optionButton.layer.cornerRadius = kButtonCornerRadius
         optionButton.layer.borderColor = kButtonBorderColor
         optionButton.layer.borderWidth = kButtonBorderThickness
@@ -187,7 +169,7 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         optionButton.setContentCompressionResistancePriority(400, forAxis: .Horizontal)
         optionButton.widthAnchor.constraintEqualToAnchor(optionButton.heightAnchor).activateWithPriority(500, identifier: "iaAccessory.optionButton: W = H")
          
-        
+        //MARK: stackview setup
 
         stackView = UIStackView(arrangedSubviews: [kbSwitchButton, attachmentButton, intensityButton, intensitySlider, tokenizerButton, transformButton,optionButton])
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -201,7 +183,6 @@ class IAAccessoryVC: UIInputViewController,  UIImagePickerControllerDelegate, UI
         
         //setup constraints now that all views have been added
 
-        
         stackView.topAnchor.constraintEqualToAnchor(view.topAnchor).activateWithPriority(999, identifier: "iaAccessory.stackView.top")
         stackView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor).activateWithPriority(999, identifier: "iaAccessory.stackView.bottom")
         stackView.leftAnchor.constraintEqualToAnchor(view.leftAnchor).activateWithPriority(1000, identifier: "iaAccessory.stackView.left")
