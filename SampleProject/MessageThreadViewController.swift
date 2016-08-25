@@ -165,7 +165,7 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
                 beginInteractiveKBDismissal()
                 
             }
-            let offset = -(self.view.bounds.height - loc.y)
+            let offset = -(self.view.window!.frame.height - loc.y)
             self.composerBottomConstraint.constant = offset
         }
         
@@ -179,7 +179,7 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
         if kbIsInInteractiveDismissal{
             endInteractiveKBDismissal()
         }
-        let offset = -(self.view.bounds.height - frameEnd.origin.y)
+        let offset = -(self.view.window!.frame.height - frameEnd.origin.y)
         self.composerBottomConstraint.constant = offset
         lastOffset = offset
         
