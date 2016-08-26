@@ -298,8 +298,7 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
                 newIA = IAString(text: plainText, intensity: currentIntensity, attributes: baseAttributes)
             } else if let image = pb.image {
                 newIA = IAString()
-                let attachment = IATextAttachment()
-                attachment.image = image
+                let attachment = IAImageAttachment(withImage: image)
                 newIA!.insertAttachmentAtPosition(attachment, position: 0, intensity: currentIntensity, attributes: baseAttributes)
             } else if let url = pb.URL {
                 newIA = IAString(text: String(url), intensity: currentIntensity, attributes: baseAttributes)

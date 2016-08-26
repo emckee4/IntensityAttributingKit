@@ -178,7 +178,8 @@ class MessageThreadTableVC: UITableViewController, IATextViewDelegate {
     }
     
     func iaTextView(atTextView: IACompositeTextView, userInteractedWithAttachment attachment: IATextAttachment, inRange: NSRange) {
-        if let navController = self.navigationController, image = attachment.image {
+        guard let navController = self.navigationController else {print("image viewer should be presented by nav controller"); return}
+        if attachment.attachmentType == .image, let image = attachment.image {
             let imageViewer = ImageViewerVC()
             imageViewer.image = image
             navController.pushViewController(imageViewer, animated: true)

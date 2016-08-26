@@ -110,6 +110,7 @@
 		C0E5D7C81BDEA52C00A0A814 /* OtherExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E5D7C71BDEA52C00A0A814 /* OtherExtensions.swift */; };
 		C0E68E6D1C10C1AF005162F7 /* EKDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E68E6C1C10C1AF005162F7 /* EKDirection.swift */; };
 		C0E68E6F1C10C1D5005162F7 /* EPKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E68E6E1C10C1D5005162F7 /* EPKey.swift */; };
+		C0F3502F1D70CE1F00FDE724 /* IAImageAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F3502E1D70CE1F00FDE724 /* IAImageAttachment.swift */; };
 		C0F42CFB1C5FE13700FA7BB0 /* IATEPhotoPicking.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F42CFA1C5FE13700FA7BB0 /* IATEPhotoPicking.swift */; };
 /* End PBXBuildFile section */
 
@@ -251,6 +252,7 @@
 		C0E5D7C71BDEA52C00A0A814 /* OtherExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OtherExtensions.swift; sourceTree = "<group>"; };
 		C0E68E6C1C10C1AF005162F7 /* EKDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EKDirection.swift; sourceTree = "<group>"; };
 		C0E68E6E1C10C1D5005162F7 /* EPKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EPKey.swift; sourceTree = "<group>"; };
+		C0F3502E1D70CE1F00FDE724 /* IAImageAttachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAImageAttachment.swift; sourceTree = "<group>"; };
 		C0F42CFA1C5FE13700FA7BB0 /* IATEPhotoPicking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATEPhotoPicking.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -387,6 +389,7 @@
 			isa = PBXGroup;
 			children = (
 				C054D99D1C3DAB9100D852DE /* IATextAttachment.swift */,
+				C0F3502E1D70CE1F00FDE724 /* IAImageAttachment.swift */,
 				C0304B1D1D6E29D100E5FD73 /* IAThumbSize.swift */,
 				C0304B1F1D6E368900E5FD73 /* IAPlaceholder.swift */,
 				C0304B211D6E37E700E5FD73 /* IAAttachmentType.swift */,
@@ -827,6 +830,7 @@
 				C080B54F1C99EAB900DEC424 /* ModalContainerViewController.swift in Sources */,
 				C0E5D7C81BDEA52C00A0A814 /* OtherExtensions.swift in Sources */,
 				C038B3EC1C69311200069F9C /* ExpandingKeyBase.swift in Sources */,
+				C0F3502F1D70CE1F00FDE724 /* IAImageAttachment.swift in Sources */,
 				C0D4474A1BE6BC16003204E7 /* RawIntensity.swift in Sources */,
 				C06B1D4E1BED2DCC009F427A /* PressureView.swift in Sources */,
 				C0E5D7C31BDEA47E00A0A814 /* IAAccessoryVC.swift in Sources */,

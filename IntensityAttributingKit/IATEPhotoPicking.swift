@@ -102,8 +102,7 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
     
     func imageChosen(image:UIImage!){
         guard image != nil && selectedRange != nil else {self.becomeFirstResponder();return}
-        let ta = IATextAttachment()
-        ta.image = image.resizeImageToFit(maxSize: IAKitPreferences.maxSavedImageDimensions)
+        let ta = IAImageAttachment(withImage: image.resizeImageToFit(maxSize: IAKitPreferences.maxSavedImageDimensions))
         //let insertionLoc = self.selectedRange.location
         let newIA = self.iaString!.emptyCopy()
         newIA.insertAttachmentAtPosition(ta, position: 0, intensity: self.currentIntensity, attributes: baseAttributes)

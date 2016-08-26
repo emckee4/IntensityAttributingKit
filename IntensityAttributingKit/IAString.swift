@@ -38,7 +38,7 @@ public class IAString {
     
     public var hasAttachmentsWithPlaceholders:Bool {
         for (_,attach) in self.attachments {
-            guard !attach.isPlaceholder else {return true}
+            guard !attach.showingPlaceholder else {return true}
         }
         return false
     }
@@ -119,7 +119,8 @@ public class IAString {
             for (loc, attachInfo) in newAttachments {
                 guard let filename = attachInfo["name"] as? String, remoteURLString = attachInfo["url"] as? String else {continue}
                 guard let remoteURL = NSURL(string: remoteURLString) else {continue}
-                let newAttach = IATextAttachment(filename: filename, remoteURL: remoteURL, localURL: nil)
+                let newAttach = IAImageAttachment(filename: filename, remoteURL: remoteURL, localURL: nil)
+                print("IAString 123: fix IAImageAttachment init")
                 self.attachments[loc] = newAttach
             }
         }
