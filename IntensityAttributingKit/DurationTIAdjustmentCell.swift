@@ -20,7 +20,7 @@ final class DurationTIAdjustmentCell:RawIntensityAdjustmentCellBase {
         self.itemDescriptionLabel.text = "Touch intensity is a function of touch duration. Longer touches yield higher intensities."
         durationMultiplierSV = LabeledSliderView(labelText: "DurationMultiplier", sliderMin: 0.0, sliderMax: 4.0, sliderValue: DurationTouchInterpreter.durationMultiplier)
         contentStackView.addArrangedSubview(durationMultiplierSV)
-        durationMultiplierSV.slider.addTarget(self, action: "updateDurationMultiplier:", forControlEvents: .ValueChanged)
+        durationMultiplierSV.slider.addTarget(self, action: #selector(DurationTIAdjustmentCell.updateDurationMultiplier(_:)), forControlEvents: .ValueChanged)
     }
     
     required init?(coder aDecoder: NSCoder) {

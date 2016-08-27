@@ -22,13 +22,13 @@ class SuggestionBarView: UIView, PressureKeyActionDelegate {
     
     var textColor:UIColor? {
         didSet{if textColor != nil {
-            pressureKeys.map({$0.textColor = textColor})
+            _ = pressureKeys.map({$0.textColor = textColor})
             }
         }
     }
     override var backgroundColor: UIColor? {
         didSet {
-            pressureKeys.map({$0.backgroundColor = backgroundColor})
+            _ = pressureKeys.map({$0.backgroundColor = backgroundColor})
         }
     }
     

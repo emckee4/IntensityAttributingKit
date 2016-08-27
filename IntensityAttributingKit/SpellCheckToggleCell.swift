@@ -15,7 +15,7 @@ class SpellCheckToggleCell: ToggleCell {
     override func setupCell(){
         super.setupCell()
         
-        toggleControl.addTarget(self, action: "toggleValueChanged:", forControlEvents: .ValueChanged)
+        toggleControl.addTarget(self, action: #selector(SpellCheckToggleCell.toggleValueChanged(_:)), forControlEvents: .ValueChanged)
         self.textLabel?.text = "Word Suggestions"
         toggleControl.on = IAKitPreferences.spellingSuggestionsEnabled
     }

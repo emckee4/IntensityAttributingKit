@@ -27,7 +27,7 @@ public class AlphaIntensityScheme:AnimatedIntensityTransforming {
     public static func nsAttributesForBinsAndBaseAttributes(bin bin:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
         var baseFont:UIFont = UIFont.systemFontOfSize(baseAttributes.cSize, weight: UIFontWeightMedium)
         
-        var alphaValue:CGFloat = clamp(CGFloat(bin + 1) / CGFloat(stepCount - 1), lowerBound: 0, upperBound: 1)
+        let alphaValue:CGFloat = clamp(CGFloat(bin + 1) / CGFloat(stepCount - 1), lowerBound: 0, upperBound: 1)
         
         if baseAttributes.bold || baseAttributes.italic {
             var symbolicsToMerge = UIFontDescriptorSymbolicTraits()
@@ -64,7 +64,7 @@ public class AlphaIntensityScheme:AnimatedIntensityTransforming {
         
         var baseFont:UIFont = UIFont.systemFontOfSize(baseAttributes.cSize, weight: UIFontWeightMedium)
         
-        var alphaValue:CGFloat = clamp(CGFloat(bin + 1) / CGFloat(stepCount - 1), lowerBound: 0, upperBound: 1)
+        let alphaValue:CGFloat = clamp(CGFloat(bin + 1) / CGFloat(stepCount - 1), lowerBound: 0, upperBound: 1)
         
         if baseAttributes.bold || baseAttributes.italic {
             var symbolicsToMerge = UIFontDescriptorSymbolicTraits()

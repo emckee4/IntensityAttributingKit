@@ -42,8 +42,15 @@ public struct ERMPGenerator<Element:Equatable>: GeneratorType {
         dataItem = 0
     }
     mutating public func next() -> Element? {
-        if nextIndex++ >= data[dataItem].endIndex {
-            guard ++dataItem < self.data.count else {return nil}
+//        if nextIndex++ >= data[dataItem].endIndex {
+//            guard ++dataItem < self.data.count else {return nil}
+//        }
+        if nextIndex >= data[dataItem].endIndex {
+            nextIndex += 1
+            dataItem += 1
+            guard dataItem < self.data.count else {return nil}
+        } else {
+            nextIndex += 1
         }
         return data[dataItem].value
     }

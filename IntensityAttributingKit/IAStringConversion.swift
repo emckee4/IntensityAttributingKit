@@ -138,15 +138,23 @@ extension IAString {
             var endIndex:Int = 0
             if binEnd < attsEnd {
                 endIndex = binEnd
-                currentBin = smoothedBinned.rvp(++binDi)
+                //currentBin = smoothedBinned.rvp(++binDi)
+                binDi += 1
+                currentBin = smoothedBinned.rvp(binDi)
             } else if attsEnd < binEnd {
                 endIndex = attsEnd
-                currentAtts =  baseAttributes.rvp(++attsDi)
+                //currentAtts =  baseAttributes.rvp(++attsDi)
+                attsDi += 1
+                currentAtts =  baseAttributes.rvp(attsDi)
             } else {
                 endIndex = attsEnd
                 if endIndex < textLength {
-                    currentBin = smoothedBinned.rvp(++binDi)
-                    currentAtts =  baseAttributes.rvp(++attsDi)
+//                    currentBin = smoothedBinned.rvp(++binDi)
+//                    currentAtts =  baseAttributes.rvp(++attsDi)
+                    binDi += 1
+                    currentBin = smoothedBinned.rvp(binDi)
+                    attsDi += 1
+                    currentAtts =  baseAttributes.rvp(attsDi)
                 }
             }
             attString.addAttributes(nsAttributes, range: NSRange(location: currentIndex, length: endIndex - currentIndex))

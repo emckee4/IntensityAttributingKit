@@ -82,11 +82,12 @@ public class IACompositeTextView: IACompositeBase {
         if sender?.state == .Began {
             let location = sender.locationInView(topTV)
             guard let touchIndex = topTV.characterIndexAtPoint(location) else {deselect(); return}  //or make this select all/deselect all
-            if let attachment = iaString.attachments[touchIndex] {
+            //if let attachment = iaString.attachments[touchIndex] {
+            if iaString.attachments[touchIndex] != nil{
                 //self.delegate?.iaTextView?(self, userInteractedWithAttachment: attachment, inRange: NSMakeRange(touchIndex, 1))
                 selectedRange = touchIndex..<(touchIndex + 1)
                 presentMenu(nil)
-            } else if let (url, urlRange) = iaString.urlAtIndex(touchIndex) {
+            } else if let (_, urlRange) = iaString.urlAtIndex(touchIndex) {
                 //self.delegate?.iaTextView?(self, userInteractedWithURL: url, inRange: urlRange.nsRange)
                 selectedRange = urlRange
                 presentMenu(nil)

@@ -30,8 +30,8 @@ class LockingKey:UIButton {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.addTarget(self, action: "changeSelected", forControlEvents: .TouchDown)
-        self.addTarget(self, action: "setSelectedLockedOn", forControlEvents: .TouchDownRepeat)
+        self.addTarget(self, action: #selector(LockingKey.changeSelected), forControlEvents: .TouchDown)
+        self.addTarget(self, action: #selector(LockingKey.setSelectedLockedOn), forControlEvents: .TouchDownRepeat)
         self.layer.borderWidth = 1.0
         self.layer.borderColor = cgClear
     }

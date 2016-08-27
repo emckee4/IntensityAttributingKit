@@ -37,7 +37,7 @@ class ModalContainerViewController: UIViewController {
         dismissButton.trailingAnchor.constraintEqualToAnchor(view.trailingAnchor).active = true
         dismissButton.widthAnchor.constraintEqualToConstant(kDismissButtonSize).activateWithPriority(1000)
         dismissButton.heightAnchor.constraintEqualToConstant(kDismissButtonSize).activateWithPriority(1000)
-        dismissButton.addTarget(self, action: "dismissButtonPressed", forControlEvents: .TouchUpInside)
+        dismissButton.addTarget(self, action: #selector(ModalContainerViewController.dismissButtonPressed), forControlEvents: .TouchUpInside)
         
         effectView.topAnchor.constraintEqualToAnchor(dismissButton.topAnchor).active = true
         effectView.trailingAnchor.constraintEqualToAnchor(dismissButton.trailingAnchor).active = true

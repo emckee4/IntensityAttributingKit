@@ -127,7 +127,7 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
         shiftKey.layer.cornerRadius = kKeyCornerRadius
         shiftKey.backgroundColor = keyBackgroundColor
         shiftKey.setImage(UIImage(named: "caps2", inBundle: bundle, compatibleWithTraitCollection: nil), forState: .Selected)
-        shiftKey.addTarget(self, action: "shiftKeyPressed:", forControlEvents: .TouchUpInside)
+        shiftKey.addTarget(self, action: #selector(KeyboardLayoutView.shiftKeyPressed(_:)), forControlEvents: .TouchUpInside)
         shiftKey.tintColor = keyTintColor
         
         zxcvStackView.addArrangedSubview(shiftKey)
@@ -155,7 +155,7 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
         backspace.backgroundColor = keyBackgroundColor
         backspace.layer.cornerRadius = kKeyCornerRadius
         zxcvStackView.addArrangedSubview(backspace)
-        backspace.addTarget(self, action: "backspaceKeyPressed", forControlEvents: .TouchUpInside)
+        backspace.addTarget(self, action: #selector(KeyboardLayoutView.backspaceKeyPressed), forControlEvents: .TouchUpInside)
         backspace.tintColor = keyTintColor
         
         let placeholderWidth = leftPlaceholder.widthAnchor.constraintEqualToAnchor(rightPlaceholder.widthAnchor)  //local placeholders, any orientation
@@ -176,7 +176,7 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
         swapKeysetButton.tintColor = keyTintColor
         swapKeysetButton.backgroundColor = keyBackgroundColor
         swapKeysetButton.layer.cornerRadius = kKeyCornerRadius
-        swapKeysetButton.addTarget(self, action: "swapKeysetPageButtonPressed", forControlEvents: .TouchUpInside)
+        swapKeysetButton.addTarget(self, action: #selector(KeyboardLayoutView.swapKeysetPageButtonPressed), forControlEvents: .TouchUpInside)
         bottomStackView.addArrangedSubview(swapKeysetButton)
         
         //spacebar

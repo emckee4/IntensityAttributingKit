@@ -25,8 +25,8 @@ final class ImpactDurationTIAdjustmentCell:RawIntensityAdjustmentCellBase {
         contentStackView.addArrangedSubview(impactMultiplierSV)
         contentStackView.addArrangedSubview(durationMultiplierSV)
         
-        durationMultiplierSV.slider.addTarget(self, action: "updateDurationMultiplier:", forControlEvents: .ValueChanged)
-        impactMultiplierSV.slider.addTarget(self, action: "updateImpactMultiplier:", forControlEvents: .ValueChanged)
+        durationMultiplierSV.slider.addTarget(self, action: #selector(ImpactDurationTIAdjustmentCell.updateDurationMultiplier(_:)), forControlEvents: .ValueChanged)
+        impactMultiplierSV.slider.addTarget(self, action: #selector(ImpactDurationTIAdjustmentCell.updateImpactMultiplier(_:)), forControlEvents: .ValueChanged)
     }
 
     required init?(coder aDecoder: NSCoder) {
