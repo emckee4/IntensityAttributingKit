@@ -1,5 +1,5 @@
 //
-//  IAImageAttachment.swift
+//  IALocationAttachment.swift
 //  IntensityAttributingKit
 //
 //  Created by Evan Mckee on 8/26/16.
@@ -10,9 +10,9 @@ import Foundation
 
 
 
-/** Concrete subclass of IATextAttachment for handling image attachments. See discussion in comments of IATextAttachment for more info on why this is constructed this way.
+/** Concrete subclass of IATextAttachment for handling location attachments. See discussion in comments of IATextAttachment for more info on why this is constructed this way.
  */
-public class IAImageAttachment:IATextAttachment {
+public class IALocationAttachment:IATextAttachment {} /*
     
     ///Either filename or random alpha string (if no filename exists) used for identifying attachments and images with or without filenames
     private lazy var _localID:String = {return self.filename ?? String.randomAlphaString(8)}()
@@ -60,7 +60,6 @@ public class IAImageAttachment:IATextAttachment {
         
     }
     
-    ///Does not attempt to store image blob. 
     public override func encodeWithCoder(aCoder: NSCoder) {
         super.encodeWithCoder(aCoder)
         aCoder.encodeObject(localID, forKey: "localID")
@@ -170,3 +169,4 @@ public class IAImageAttachment:IATextAttachment {
     }
     
 }
+ */

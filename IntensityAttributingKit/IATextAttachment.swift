@@ -12,6 +12,8 @@ import UIKit
  IATextAttachment is a subclass of NSTextAttachment and is intended to be used as an abstract superclass to other IAAttachment subclasses (like IAImageAttachment). In order to use TextKit for layout management, attachments must be packaged in NSTextAttachment subclasses; merely conforming to the NSTextAttachmentContainer protocol is not enough. Using these custom subclasses let us handle more attachment types and allow for some modifications which greatly improve performance.
  Some of the biggest performance improvements come from using a preset IAThumbSize determined by the displaying view. When the NSLayoutManager of the IACompositeBased view requests the attachmentBoundsForTextContainer, the text container it passes in is an IATextContainer which will convey the desired thumbsize of the view. By using one of a few preset thumb sizes, sizing calculations are greatly sped up since the underlying attachment data needn't be accessed. Furthermore we can more easily provide placeholder thumbnails for attachments which are not yet available while also providing for easier calculation and caching of thumbnails once ready.
  The actual drawing of the text can likewise occur more quickly since imageForBounds will return nil, causing the ThinTextView layers to draw empty rects over which the IAImageLayerView will later (and possibly asynchronously) draw the image. This not only allows us to animate the opacity of the text layers without affecting the images, but it also improves drawing performance immensely compared to the conventional out of the box methods.
+ 
+ Note NSCoding encode/decode will not attempt to encode image/video BLOBs. Either a permenant reference should be established or the file should be written to a temporary location on disk before attempting to encode/store.
 */
 
 ///Abstract base class for IATextAttachments
@@ -20,7 +22,7 @@ public class IATextAttachment:NSTextAttachment {
     ///Either filename or random alpha string (if no filename exists) used for identifying attachments and images with or without filenames
     public lazy var localID:String = {return String.randomAlphaString(8)}()
     
-    var showingPlaceholder:Bool {
+    var showingPlaceholder:Bool {  //TODO: Could make this be set by most recent call of imageForBounds -- whether it yields an image or a placeholder
         return true
     }
     
@@ -91,11 +93,12 @@ public class IATextAttachment:NSTextAttachment {
     }
     
     required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+        //super.init(coder: aDecoder)
+        self.init()
     }
     
     public override func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
+        //super.encodeWithCoder(aCoder)
     }
 
     ///The app can call this after completing the download and processing of an item to update teh item and ensure it's ready
@@ -107,10 +110,34 @@ public class IATextAttachment:NSTextAttachment {
         return "\(localID)**\(thumbSize.rawValue)"
     }
     
+//    ///Takes a dictionary with JSON format and returns an IATextAttachment subclass of the appropriate type.
+//    public static func generateFromDict(dict:[String:AnyObject])->IATextAttachment!{
+//        guard let attachTypeString = dict["attachType"] as? String, attachType = IAAttachmentType(rawValue: attachTypeString) else {return nil}
+//        switch attachType {
+//        case .image:
+//            
+//        default:
+//            return IATextAttachment() //unknown object. This will result in an unknown placeholder being shown.
+//        }
+//    }
+    
+    
 }
 
 
-
+/*
+ notifications:
+    
+    download needed
+    itemWithID/filename is available
+ 
+ 
+ for eager upload:
+    insertedButNotFinalized
+    canceledUnfinalized
+ 
+ 
+ */
 
 
 

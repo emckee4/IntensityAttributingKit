@@ -183,6 +183,8 @@ class MessageThreadTableVC: UITableViewController, IATextViewDelegate {
             let imageViewer = ImageViewerVC()
             imageViewer.image = image
             navController.pushViewController(imageViewer, animated: true)
+        } else {
+            print(attachment)
         }
     }
     

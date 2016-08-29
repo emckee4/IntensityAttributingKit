@@ -213,7 +213,7 @@ public class IAKitPreferences:NSObject {
     }
     
     public static var videoAttachmentQuality:UIImagePickerControllerQualityType = .TypeMedium
-    public static var videoAttachmentMaxDuration:NSTimeInterval = 12.0
+    public static var videoAttachmentMaxDuration:NSTimeInterval = 10.0
 }
 
 

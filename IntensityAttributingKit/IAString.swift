@@ -117,11 +117,13 @@ public class IAString {
             }
         } else if let newAttachments = dict[IAStringKeys.attachments] as? [Int:AnyObject]{
             for (loc, attachInfo) in newAttachments {
-                guard let filename = attachInfo["name"] as? String, remoteURLString = attachInfo["url"] as? String else {continue}
-                guard let remoteURL = NSURL(string: remoteURLString) else {continue}
-                let newAttach = IAImageAttachment(filename: filename, remoteURL: remoteURL, localURL: nil)
-                print("IAString 123: fix IAImageAttachment init")
-                self.attachments[loc] = newAttach
+                print("IAString.init(dict:) received attachment \(newAttachments) in non IATA form")
+//                guard let attachTypeString = attachInfo["attachType"] as? String, attachType =
+//                guard let filename = attachInfo["name"] as? String, remoteURLString = attachInfo["url"] as? String else {continue}
+//                guard let remoteURL = NSURL(string: remoteURLString) else {continue}
+//                let newAttach = IAImageAttachment(filename: filename, remoteURL: remoteURL, localURL: nil)
+//                print("IAString 123: fix IAImageAttachment init")
+//                self.attachments[loc] = newAttach
             }
         }
         
@@ -191,6 +193,18 @@ public class IAString {
         self.baseOptions = baseOptions
         guard length == self.baseAttributes.count && length == self.intensities.count && self.attachments.lastLoc <= length else {return nil}
     }
+    
+    ///Initializes an IAString with a length of 1 consisting of an attachment.
+    init!(withAttachment:IATextAttachment,intensity:Int,baseAtts:IABaseAttributes, baseOptions:IAStringOptions = IAKitPreferences.iaStringDefaultBaseOptions){
+        self.text = "\u{FFFC}"
+        self.length = text.utf16.count
+        self.intensities = [intensity]
+        self.baseAttributes = CollapsingArray<IABaseAttributes>(arrayLiteral: baseAtts)
+        self.attachments.insertAttachment(withAttachment, atLoc: 0)
+        self.baseOptions = baseOptions
+        guard length == self.baseAttributes.count && length == self.intensities.count && self.attachments.lastLoc <= length else {return nil}
+    }
+    
     
     func urlAtIndex(index:Int)->(url:NSURL, urlRange:Range<Int>)?{
         if let rvpIndex = links.indexOf({$0.range.contains(index)}){

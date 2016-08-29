@@ -104,8 +104,9 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
         guard image != nil && selectedRange != nil else {self.becomeFirstResponder();return}
         let ta = IAImageAttachment(withImage: image.resizeImageToFit(maxSize: IAKitPreferences.maxSavedImageDimensions))
         //let insertionLoc = self.selectedRange.location
-        let newIA = self.iaString!.emptyCopy()
-        newIA.insertAttachmentAtPosition(ta, position: 0, intensity: self.currentIntensity, attributes: baseAttributes)
+//        let newIA = self.iaString!.emptyCopy()
+//        newIA.insertAttachmentAtPosition(ta, position: 0, intensity: self.currentIntensity, attributes: baseAttributes)
+        let newIA = IAString(withAttachment: ta, intensity: self.currentIntensity, baseAtts: baseAttributes, baseOptions: self.iaString.baseOptions)
         replaceIAStringRange(newIA, range: selectedRange!)
         self.becomeFirstResponder()
     }
@@ -113,16 +114,9 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
 
     func videoChosen(videoURL:NSURL!){
         guard videoURL != nil && selectedRange != nil else {self.becomeFirstResponder();return}
-        
-        print(videoURL)
-        //let ta = IATextAttachment()
-            //TODO:assign url instead of image
-            //ta.image = image.resizeImageToFit(maxSize: IAKitPreferences.maxSavedImageDimensions)
-
-        //let newIA = self.iaString!.emptyCopy()
-        //newIA.insertAttachmentAtPosition(ta, position: 0, intensity: self.currentIntensity, attributes: baseAttributes)
-        //replaceIAStringRange(newIA, range: selectedRange!)
-        
+        let ta = IAVideoAttachment(withTemporaryFileLocation: videoURL)
+        let newIA = IAString(withAttachment: ta, intensity: self.currentIntensity, baseAtts: baseAttributes, baseOptions: self.iaString.baseOptions)
+        replaceIAStringRange(newIA, range: selectedRange!)
         self.becomeFirstResponder()
     }
     
