@@ -58,7 +58,6 @@
 		C06079FF1D5BC2FA0027A72F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C06079FE1D5BC2FA0027A72F /* Assets.xcassets */; };
 		C0607A021D5BC2FA0027A72F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0607A001D5BC2FA0027A72F /* LaunchScreen.storyboard */; };
 		C0607A0D1D5BC4B30027A72F /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0607A081D5BC4B30027A72F /* MessageCell.swift */; };
-		C0607A0E1D5BC4B30027A72F /* ImageViewerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0607A091D5BC4B30027A72F /* ImageViewerVC.swift */; };
 		C0607A0F1D5BC4B30027A72F /* MessageThreadTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0607A0A1D5BC4B30027A72F /* MessageThreadTableVC.swift */; };
 		C0607A101D5BC4B30027A72F /* MessageThreadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0607A0B1D5BC4B30027A72F /* MessageThreadViewController.swift */; };
 		C0607A111D5BC4B30027A72F /* ComposerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0607A0C1D5BC4B30027A72F /* ComposerBar.swift */; };
@@ -113,6 +112,7 @@
 		C0F3502F1D70CE1F00FDE724 /* IAImageAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F3502E1D70CE1F00FDE724 /* IAImageAttachment.swift */; };
 		C0F350311D713E9300FDE724 /* IAVideoAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F350301D713E9300FDE724 /* IAVideoAttachment.swift */; };
 		C0F350331D713EAE00FDE724 /* IALocationAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F350321D713EAE00FDE724 /* IALocationAttachment.swift */; };
+		C0F350351D73C34900FDE724 /* IAImageViewerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F350341D73C34900FDE724 /* IAImageViewerVC.swift */; };
 		C0F42CFB1C5FE13700FA7BB0 /* IATEPhotoPicking.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F42CFA1C5FE13700FA7BB0 /* IATEPhotoPicking.swift */; };
 /* End PBXBuildFile section */
 
@@ -202,7 +202,6 @@
 		C0607A011D5BC2FA0027A72F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C0607A031D5BC2FA0027A72F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C0607A081D5BC4B30027A72F /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
-		C0607A091D5BC4B30027A72F /* ImageViewerVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageViewerVC.swift; sourceTree = "<group>"; };
 		C0607A0A1D5BC4B30027A72F /* MessageThreadTableVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageThreadTableVC.swift; sourceTree = "<group>"; };
 		C0607A0B1D5BC4B30027A72F /* MessageThreadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageThreadViewController.swift; sourceTree = "<group>"; };
 		C0607A0C1D5BC4B30027A72F /* ComposerBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposerBar.swift; sourceTree = "<group>"; };
@@ -257,6 +256,7 @@
 		C0F3502E1D70CE1F00FDE724 /* IAImageAttachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAImageAttachment.swift; sourceTree = "<group>"; };
 		C0F350301D713E9300FDE724 /* IAVideoAttachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAVideoAttachment.swift; sourceTree = "<group>"; };
 		C0F350321D713EAE00FDE724 /* IALocationAttachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IALocationAttachment.swift; sourceTree = "<group>"; };
+		C0F350341D73C34900FDE724 /* IAImageViewerVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAImageViewerVC.swift; sourceTree = "<group>"; };
 		C0F42CFA1C5FE13700FA7BB0 /* IATEPhotoPicking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATEPhotoPicking.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -399,6 +399,7 @@
 				C0304B1D1D6E29D100E5FD73 /* IAThumbSize.swift */,
 				C0304B1F1D6E368900E5FD73 /* IAPlaceholder.swift */,
 				C0304B211D6E37E700E5FD73 /* IAAttachmentType.swift */,
+				C0F350361D73D1A500FDE724 /* AttachViewers */,
 			);
 			name = IAKitTextAttachment;
 			sourceTree = "<group>";
@@ -466,7 +467,6 @@
 			children = (
 				C06079F71D5BC2FA0027A72F /* AppDelegate.swift */,
 				C0607A081D5BC4B30027A72F /* MessageCell.swift */,
-				C0607A091D5BC4B30027A72F /* ImageViewerVC.swift */,
 				C0607A0A1D5BC4B30027A72F /* MessageThreadTableVC.swift */,
 				C0607A0B1D5BC4B30027A72F /* MessageThreadViewController.swift */,
 				C0607A0C1D5BC4B30027A72F /* ComposerBar.swift */,
@@ -628,6 +628,14 @@
 			name = ExpandingKeys;
 			sourceTree = "<group>";
 		};
+		C0F350361D73D1A500FDE724 /* AttachViewers */ = {
+			isa = PBXGroup;
+			children = (
+				C0F350341D73C34900FDE724 /* IAImageViewerVC.swift */,
+			);
+			name = AttachViewers;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -787,6 +795,7 @@
 				C080B5491C9895D700DEC424 /* LinearRIMAdjustmentCell.swift in Sources */,
 				C00E94791C5BF94000551D39 /* AttachmentArray.swift in Sources */,
 				C080B5401C98842F00DEC424 /* LabeledSliderView.swift in Sources */,
+				C0F350351D73C34900FDE724 /* IAImageViewerVC.swift in Sources */,
 				C045339E1CA4794600B374D0 /* LabeledStepperAdjusterCell.swift in Sources */,
 				C0AE06141C6E64490096F042 /* PressureKey.swift in Sources */,
 				C0479E641CBED6D10032A5C6 /* ThinTextView.swift in Sources */,
@@ -876,7 +885,6 @@
 			files = (
 				C0607A0F1D5BC4B30027A72F /* MessageThreadTableVC.swift in Sources */,
 				C0607A111D5BC4B30027A72F /* ComposerBar.swift in Sources */,
-				C0607A0E1D5BC4B30027A72F /* ImageViewerVC.swift in Sources */,
 				C0607A101D5BC4B30027A72F /* MessageThreadViewController.swift in Sources */,
 				C06079FA1D5BC2FA0027A72F /* ViewController.swift in Sources */,
 				C0607A171D5BC8B80027A72F /* Extensions.swift in Sources */,

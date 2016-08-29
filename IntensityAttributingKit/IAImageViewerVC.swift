@@ -1,23 +1,27 @@
 //
-//  ImageViewerVC.swift
-//  IntensityMessaging
+//  IAImageViewerVC.swift
+//  IntensityAttributingKit
 //
-//  Created by Evan Mckee on 12/21/15.
-//  Copyright © 2015 McKeeMaKer. All rights reserved.
+//  Created by Evan Mckee on 8/28/16.
+//  Copyright © 2016 McKeeMaKer. All rights reserved.
 //
 
+import Foundation
 import UIKit
 
-class ImageViewerVC: UIViewController {
-
-    var imageView:UIImageView!
-    var image:UIImage!
-    var tapRecogniser:UITapGestureRecognizer!
+/**
+ IAImageViewerVC provides a convenient prebuilt method for viewing IAImageAttachments.
+ */
+public class IAImageViewerVC: UIViewController {
     
-    override func viewDidLoad() {
+    public var imageView:UIImageView!
+    public var attachment:IAImageAttachment!
+    public var tapRecogniser:UITapGestureRecognizer!
+    
+    public override func viewDidLoad() {
         super.viewDidLoad()
-        
-        imageView = UIImageView(image: image)
+
+        imageView = UIImageView(image: attachment.image)
         imageView.contentMode = .ScaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(imageView)
@@ -28,29 +32,30 @@ class ImageViewerVC: UIViewController {
         imageView.userInteractionEnabled = true
         self.view.backgroundColor = UIColor(white: 0.0, alpha: 1.0)
         
-        tapRecogniser = UITapGestureRecognizer(target: self, action: #selector(ImageViewerVC.imageTapped(_:)))
+        tapRecogniser = UITapGestureRecognizer(target: self, action: #selector(IAImageViewerVC.imageTapped(_:)))
         imageView.addGestureRecognizer(tapRecogniser)
     }
-
-    override func didReceiveMemoryWarning() {
+    
+    public override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-    func imageTapped(recognizer:UITapGestureRecognizer!){
+    
+    public func imageTapped(recognizer:UITapGestureRecognizer!){
+        guard let image = attachment.image else {return}
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
         let copyAction = UIAlertAction(title: "Copy image", style: .Default) { (action) -> Void in
             let pb = UIPasteboard.generalPasteboard()
-            pb.image = self.image
+            pb.image = image
         }
         alert.addAction(copyAction)
         let saveAction = UIAlertAction(title: "Save to Photoroll", style: .Default) { (action) -> Void in
-            UIImageWriteToSavedPhotosAlbum(self.image, nil, nil, nil)
+            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
         }
         alert.addAction(saveAction)
         alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
         
         self.presentViewController(alert, animated: true, completion: nil)
     }
-
+    
 }
