@@ -183,6 +183,10 @@ class MessageThreadTableVC: UITableViewController, IATextViewDelegate {
             let imageViewer = IAImageViewerVC()
             imageViewer.attachment = imageAttachment
             navController.pushViewController(imageViewer, animated: true)
+        } else if let videoAttachment = attachment as? IAVideoAttachment {
+            let videoViewer = IAVideoViewerVC()
+            videoViewer.attachment = videoAttachment
+            navController.pushViewController(videoViewer, animated: true)
         } else {
             print(attachment)
         }

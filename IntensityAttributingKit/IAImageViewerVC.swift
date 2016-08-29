@@ -41,6 +41,10 @@ public class IAImageViewerVC: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    public override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
+    
     public func imageTapped(recognizer:UITapGestureRecognizer!){
         guard let image = attachment.image else {return}
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)

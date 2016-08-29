@@ -113,6 +113,7 @@
 		C0F350311D713E9300FDE724 /* IAVideoAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F350301D713E9300FDE724 /* IAVideoAttachment.swift */; };
 		C0F350331D713EAE00FDE724 /* IALocationAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F350321D713EAE00FDE724 /* IALocationAttachment.swift */; };
 		C0F350351D73C34900FDE724 /* IAImageViewerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F350341D73C34900FDE724 /* IAImageViewerVC.swift */; };
+		C0F350381D73D91000FDE724 /* IAVideoViewerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F350371D73D91000FDE724 /* IAVideoViewerVC.swift */; };
 		C0F42CFB1C5FE13700FA7BB0 /* IATEPhotoPicking.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F42CFA1C5FE13700FA7BB0 /* IATEPhotoPicking.swift */; };
 /* End PBXBuildFile section */
 
@@ -257,6 +258,7 @@
 		C0F350301D713E9300FDE724 /* IAVideoAttachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAVideoAttachment.swift; sourceTree = "<group>"; };
 		C0F350321D713EAE00FDE724 /* IALocationAttachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IALocationAttachment.swift; sourceTree = "<group>"; };
 		C0F350341D73C34900FDE724 /* IAImageViewerVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAImageViewerVC.swift; sourceTree = "<group>"; };
+		C0F350371D73D91000FDE724 /* IAVideoViewerVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAVideoViewerVC.swift; sourceTree = "<group>"; };
 		C0F42CFA1C5FE13700FA7BB0 /* IATEPhotoPicking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATEPhotoPicking.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -632,6 +634,7 @@
 			isa = PBXGroup;
 			children = (
 				C0F350341D73C34900FDE724 /* IAImageViewerVC.swift */,
+				C0F350371D73D91000FDE724 /* IAVideoViewerVC.swift */,
 			);
 			name = AttachViewers;
 			sourceTree = "<group>";
@@ -794,6 +797,7 @@
 				C01FFFAC1CC6B1C400AFD366 /* IACTE+IAKeyboardPresenting.swift in Sources */,
 				C080B5491C9895D700DEC424 /* LinearRIMAdjustmentCell.swift in Sources */,
 				C00E94791C5BF94000551D39 /* AttachmentArray.swift in Sources */,
+				C0F350381D73D91000FDE724 /* IAVideoViewerVC.swift in Sources */,
 				C080B5401C98842F00DEC424 /* LabeledSliderView.swift in Sources */,
 				C0F350351D73C34900FDE724 /* IAImageViewerVC.swift in Sources */,
 				C045339E1CA4794600B374D0 /* LabeledStepperAdjusterCell.swift in Sources */,
