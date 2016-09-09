@@ -110,20 +110,6 @@ public class IAVideoAttachment:IATextAttachment {
         }
     }
     
-    public override func imageForBounds(imageBounds: CGRect, textContainer: NSTextContainer?, characterIndex charIndex: Int) -> UIImage? {
-        if let iaContainer = textContainer as? IATextContainer {
-            if iaContainer.shouldPresentEmptyImageContainers == true {
-                return nil
-            } else {
-                return imageForThumbSize(iaContainer.preferedThumbSize)
-            }
-        } else {
-            //image is being requested by a non IATextContainer, so presumably something outside of the IAKit. This isn't recomended.
-            return super.imageForBounds(imageBounds, textContainer: textContainer, characterIndex: charIndex)
-        }
-        
-    }
-    
     override func imageForThumbSize(thumbSize:IAThumbSize)->UIImage{
         let cachingName = thumbCatchName(forSize: thumbSize)
         if let thumb = IATextAttachment.thumbCache.objectForKey(cachingName) as? UIImage {
@@ -138,14 +124,6 @@ public class IAVideoAttachment:IATextAttachment {
         }
     }
     
-    
-    override public func attachmentBoundsForTextContainer(textContainer: NSTextContainer?, proposedLineFragment lineFrag: CGRect, glyphPosition position: CGPoint, characterIndex charIndex: Int) -> CGRect {
-        if let iaContainer = textContainer as? IATextContainer {
-            return CGRect(origin:CGPointZero,size:iaContainer.preferedThumbSize.size)
-        } else {
-            return CGRect(origin:CGPointZero,size:IAThumbSize.Tiny.size)
-        }
-    }
 
     ///Generates a screen shot from the start of the video. This should also set the storedContentSize with the appropriate transform applied.
     func generatePreview(videoURL:NSURL)->UIImage{

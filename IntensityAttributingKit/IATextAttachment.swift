@@ -18,9 +18,12 @@ import UIKit
 
 ///Abstract base class for IATextAttachments
 public class IATextAttachment:NSTextAttachment {
-
+    
+    private lazy var _localID:String = {return String.randomAlphaString(8)}()
     ///Either filename or random alpha string (if no filename exists) used for identifying attachments and images with or without filenames
-    public lazy var localID:String = {return String.randomAlphaString(8)}()
+    public var localID: String {
+        get{return _localID}
+    }
     
     var showingPlaceholder:Bool {  //TODO: Could make this be set by most recent call of imageForBounds -- whether it yields an image or a placeholder
         return true
@@ -110,18 +113,24 @@ public class IATextAttachment:NSTextAttachment {
         return "\(localID)**\(thumbSize.rawValue)"
     }
     
-//    ///Takes a dictionary with JSON format and returns an IATextAttachment subclass of the appropriate type.
-//    public static func generateFromDict(dict:[String:AnyObject])->IATextAttachment!{
-//        guard let attachTypeString = dict["attachType"] as? String, attachType = IAAttachmentType(rawValue: attachTypeString) else {return nil}
-//        switch attachType {
-//        case .image:
-//            
-//        default:
-//            return IATextAttachment() //unknown object. This will result in an unknown placeholder being shown.
-//        }
-//    }
     
+    public class var contentReadyNotificationName:String {return "IntensityAttributingKit.IATextAttachment.ContentReady"}
     
+    ///Posts a notification with the class specific contentReadyNotificationName to the default NSNotificationCenter
+    func emitContentReadyNotification(userInfo:[String:AnyObject]?){
+        var updatedInfo:[String:AnyObject] = userInfo ?? [:]
+        updatedInfo["attachmentType"] = self.attachmentType.rawValue
+        updatedInfo["localID"] = self.localID
+        let postNotification:Void->Void = {
+            let notification = NSNotification(name: self.dynamicType.contentReadyNotificationName, object: self, userInfo: updatedInfo)
+            NSNotificationCenter.defaultCenter().postNotification(notification)
+        }
+        if NSThread.isMainThread() {
+            postNotification()
+        } else {
+            dispatch_async(dispatch_get_main_queue(), postNotification)
+        }
+    }
 }
 
 

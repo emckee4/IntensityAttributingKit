@@ -49,6 +49,13 @@ class IAImageLayerView: UIView {
         }
     }
     
+    ///Redraws the thumbnail for the attachment if it has already been layed out. If an image view hasn't yet been created for the attachment then the ordinary layout process should use the newest image data when it draws its content.
+    func redrawImage(inAttachment attachment:IATextAttachment){
+        if imageViewForId.keys.contains(attachment.localID) {
+            imageViewForId[attachment.localID]?.image = attachment.imageForThumbSize(self.useThumbSize)
+        }
+    }
+    
     ///Called to redraw a specfic attachment at a specific character index in the IAString. This would typically be called when new data becomes available (e.g. an image download has completed) that should replace the prior content of that attachment view (possibly a placeholder).
     func redrawImage(imageCharIndex:Int, iaString:IAString, layoutManager:NSLayoutManager){
         //relate the index to a localID,

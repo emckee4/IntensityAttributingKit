@@ -152,9 +152,18 @@ public class IACompositeBase:UIView {
         setupGestureRecognizers()
         setupConstraints()
         super.backgroundColor = UIColor.clearColor()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(IACompositeBase.handleContentReadyNotification(_:)), name: IATextAttachment.contentReadyNotificationName, object: nil)
+    }
+    
+    deinit{
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     
+    func handleContentReadyNotification(notification:NSNotification!){
+        guard let attachment = notification.object as? IATextAttachment where self.iaString.attachments.attachment(withLocalID: attachment.localID) != nil else {return}
+        imageLayerView.redrawImage(inAttachment: attachment)
+    }
 
     
     

@@ -196,9 +196,9 @@ public struct IAAttachmentArray:CustomStringConvertible, SequenceType {
         return results
     }
     
-//    public func setThumbSizes(thumbSize:ThumbSize){
-//        for (_,attach) in self.data {
-//            attach.thumbSize = thumbSize
-//        }
-//    }
+    
+    public func attachment(withLocalID localID:String)->LocAttach?{
+        guard let index = data.indexOf({$0.attach.localID == localID}) else {return nil}
+        return data[index]
+    }
 }
