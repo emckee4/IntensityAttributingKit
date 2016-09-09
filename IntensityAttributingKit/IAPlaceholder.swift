@@ -79,23 +79,23 @@ struct IAPlaceholder {
     }()
     
     static let videoBoxedTiny = {
-        return UIImage(named: "imagePlaceholderBoxedTiny", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
+        return UIImage(named: "videoPlaceholderTiny", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
     }()
     static let videoBoxedSmall = {
-        return UIImage(named: "imagePlaceholderBoxedSmall", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
+        return UIImage(named: "videoPlaceholderSmall", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
     }()
     static let videoBoxedMedium = {
-        return UIImage(named: "imagePlaceholderBoxedMedium", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
+        return UIImage(named: "videoPlaceholderMedium", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
     }()
     
     static let locationBoxedTiny = {
-        return UIImage(named: "imagePlaceholderBoxedTiny", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
+        return UIImage(named: "locationPlaceholderTiny", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
     }()
     static let locationBoxedSmall = {
-        return UIImage(named: "imagePlaceholderBoxedSmall", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
+        return UIImage(named: "locationPlaceholderSmall", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
     }()
     static let locationBoxedMedium = {
-        return UIImage(named: "imagePlaceholderBoxedMedium", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
+        return UIImage(named: "locationPlaceholderMedium", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: UIScreen.mainScreen().traitCollection)!
     }()
     
     static let unknownBoxedTiny = {
