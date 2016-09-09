@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import CoreLocation
 
 /**
 IAKitPreferences contains most persisted options that need to be exposed to the outside world along with some purely internal stuff. Putting as many of the configurable options as possible in one place seems preferable while the organization and features of this project is still in such flux. Preferences are stored in the NSUserDefaults.standardUserDefaults of the app.
@@ -29,6 +29,8 @@ public class IAKitPreferences:NSObject {
         return IAAccessoryVC.singleton
     }
     
+    ///This is the locationManager used by the IALocationPicker. If the adopting app is planning to use a location manager then it should use this one or replace this before it's ever used. In order for location to work properly, NSLocationWhenInUseUsageDescription or NSLocationAlwaysUsageDescription. If location services authorization is unknown when this framework first attempts to use location services, then the delegate of the locationManager (if it exists) will be replaced by IALocationManagerDelegateShim until the authorization dialog fails or succeeds.
+    static public var locationManager:CLLocationManager = CLLocationManager()
     
     ///Reloads the keyboard and accessory singletons. This will cause any changes in global settings which affect the KB/accessory (like visual theming) to take effect. This will automatically call a global resignFirstResponder.
     public static func resetKBAndAccessory(){

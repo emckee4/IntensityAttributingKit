@@ -105,11 +105,10 @@ extension IACompositeTextEditor: IAAccessoryDelegate {
         case "video":
             launchVideoPicker()
         case "location":
-            print("location picker should launch")
+            launchLocationPicker()
         default:
             print("bad action name for accessoryRequestsPcikerLaunch")
         }
-         //the check of the IATE delegate for whether to present the picker is called in launchPhotoPicker
     }
     
     func accessoryUpdatedDefaultIntensity(accessory:IAAccessoryVC!, withValue value:Int){
