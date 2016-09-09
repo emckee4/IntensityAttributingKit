@@ -187,6 +187,8 @@ class MessageThreadTableVC: UITableViewController, IATextViewDelegate {
             let videoViewer = IAVideoViewerVC()
             videoViewer.attachment = videoAttachment
             navController.pushViewController(videoViewer, animated: true)
+        } else if let locationAttachment = attachment as? IALocationAttachment {
+            locationAttachment.mapItemForLocation().openInMapsWithLaunchOptions(nil)
         } else {
             print(attachment)
         }

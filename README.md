@@ -53,6 +53,14 @@ These protocols make it remarkably easy to add transformers to the IAKit. The on
 
 
 
+### Setup notes:
+In order to support locating the user automatically in the LocationAttachmentPicker, the following should be added to the main app's info.plist:
+```XML
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>Your location is used to show your position in the location picker.</string>
+```
+`
+
 
 ### Readme TODO:
 * Add basics on setup and use.
@@ -65,7 +73,6 @@ These protocols make it remarkably easy to add transformers to the IAKit. The on
 - Multiple keysets
 - eventually make more/all keys potentially expanding if performance is sufficient
 
-- Support additional attachment types, particularly geolocations and video.
 - Some of the data structures in the IAString may be less than optimal since they were in part excuses to learn and practice building data structures using swift generics. It probably doesn't matter enough to be a priority.
 
 - Additional render scheme ideas:
