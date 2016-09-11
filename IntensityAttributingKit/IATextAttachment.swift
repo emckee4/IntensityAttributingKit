@@ -104,8 +104,8 @@ public class IATextAttachment:NSTextAttachment {
         //super.encodeWithCoder(aCoder)
     }
 
-    ///The app can call this after completing the download and processing of an item to update teh item and ensure it's ready
-    public func checkResourceAvailable()->Bool{
+    ///The app can call this after completing the download and processing of an item to update teh item and ensure it's ready. Returns true if the resource is/can be loaded
+    public func attemptToLoadResource()->Bool{
         return false
     }
     
@@ -113,10 +113,10 @@ public class IATextAttachment:NSTextAttachment {
         return "\(localID)**\(thumbSize.rawValue)"
     }
     
+    ///This is used by an IATextAttachment subclass to indicate that it has or can immediately generate a new thumb for the content. IACompositeBase based classes will listen for this and refresh appropriate thumbnails when they receive this.
+    public static let contentReadyNotificationName:String = "IntensityAttributingKit.IATextAttachment.ContentReady"
     
-    public class var contentReadyNotificationName:String {return "IntensityAttributingKit.IATextAttachment.ContentReady"}
-    
-    ///Posts a notification with the class specific contentReadyNotificationName to the default NSNotificationCenter
+    ///Posts a notification with the class specific contentReadyNotificationName to the default NSNotificationCenter. This is used to indicate to the displaying views that the textattachment subclass has or can immediately generate a new thumb for the content.
     func emitContentReadyNotification(userInfo:[String:AnyObject]?){
         var updatedInfo:[String:AnyObject] = userInfo ?? [:]
         updatedInfo["attachmentType"] = self.attachmentType.rawValue
@@ -131,6 +131,14 @@ public class IATextAttachment:NSTextAttachment {
             dispatch_async(dispatch_get_main_queue(), postNotification)
         }
     }
+    
+}
+
+///Used by attachments to request download if needed.
+public protocol IAAttachmentDownloadDelegate {
+    ///Initiates/requests download of the content for the selected attachment.
+    func downloadContentsOf(attachment attachment:IATextAttachment) throws
+    
 }
 
 

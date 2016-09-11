@@ -47,6 +47,9 @@ public class IAVideoAttachment:IATextAttachment {
     ///saves the value so it doesn't need to be repeatedly recalculated
     private(set) public var storedContentSize:CGSize?
     
+    ///When true this object is waiting for content to be downloaded and is observing the notifications for video content
+    private var waitingForDownload:Bool = false
+    
     init!(withTemporaryFileLocation loc: NSURL){
         self.temporaryVideoURL = loc
         super.init(data: nil, ofType: nil)
@@ -146,9 +149,23 @@ public class IAVideoAttachment:IATextAttachment {
     
     
     
-    ///This needs to be properly implemented
-    public override func checkResourceAvailable() -> Bool {
-        return self.localVideoURL != nil
+    ///This only checks/attempts to load the preview.
+    public override func attemptToLoadResource() -> Bool {
+        if self.previewImage != nil {
+            return true
+        } else if let path = localPreviewURL?.path {
+            if let newImage = UIImage(contentsOfFile: path) {
+                self.previewImage = newImage
+                emitContentReadyNotification(nil)
+                return true
+            }
+        }
+        if self.previewFilename != nil {
+            setWaitForDownload()
+            _ = try? IAKitPreferences.contentDownloadDelegate?.downloadContentsOf(attachment: self)
+        }
+        
+        return false
     }
     
     
@@ -160,5 +177,57 @@ public class IAVideoAttachment:IATextAttachment {
         return "<IAVideoAttachment>: videoFilename: \(self.videoFilename ?? "nil"), remoteVideoURL:\(self.remoteVideoURL ?? "nil"), localVideoURL: \(self.localVideoURL ?? "nil"), isPlaceholder:\(self.showingPlaceholder)"
     }
 
+    
+    ///Sent by the app's download manager to the IAVideoAttachments to indicate that preview content has been downloaded. The user info will provide identifying information including resourceName.
+    public static let videoPreviewDownloadedNotificationName:String = "IntensityAttributingKit.IAVideoAttachment.PreviewReady"
+    
+    ///Used by the download manager of the app to indicate that the resource is available or that the download has failed.
+    public static func emitContentDownloadedNotification(videoPreviewFilename:String, localFileLocation:NSURL!, previewImage:UIImage?, downloadError:NSError?){
+        var userInfo:[String:AnyObject] = ["videoPreviewFilename":videoPreviewFilename]
+        if previewImage != nil {
+            userInfo["previewImage"] = previewImage!
+        }
+        if localFileLocation != nil {
+            userInfo["localFileLocation"] = localFileLocation
+        }
+        if downloadError != nil {
+            userInfo["downloadError"] = downloadError!
+        }
+        NSNotificationCenter.defaultCenter().postNotificationName(videoPreviewDownloadedNotificationName, object: nil, userInfo: userInfo)
+    }
+    
+    func handlePreviewDownloadedNotification(notification:NSNotification!){
+        guard let filename = notification.userInfo?["videoPreviewFilename"] as? String where self.previewFilename != nil && filename == self.previewFilename! else {return}
+        NSNotificationCenter.defaultCenter().removeObserver(self, forKeyPath: IAVideoAttachment.videoPreviewDownloadedNotificationName)
+        waitingForDownload = false
+        
+        guard notification.userInfo?["downloadError"] == nil else {return}
+        
+        if self.localPreviewURL == nil {
+            self.localPreviewURL = notification.userInfo?["localFileLocation"] as? NSURL
+        }
+        if let image = notification.userInfo?["previewImage"] as? UIImage {
+            previewImage = image
+            self.emitContentReadyNotification(nil)
+        } else if let path = self.localPreviewURL?.path {
+            if let image = UIImage(contentsOfFile: path){
+                previewImage = image
+                self.emitContentReadyNotification(nil)
+            }
+        }
+        
+    }
+    
+    ///Can be set by the download manager to cause the attachment to begin observing for download completion. This will prevent the attachment from requesting downloads. Filename must not be nil or this will have no effect.
+    func setWaitForDownload(){
+        guard self.previewFilename != nil else {return}
+        if !waitingForDownload {
+            waitingForDownload = true
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(IAVideoAttachment.handlePreviewDownloadedNotification(_:)), name: IAVideoAttachment.videoPreviewDownloadedNotificationName, object: nil)
+        }
+    }
+    
+    deinit{if waitingForDownload {NSNotificationCenter.defaultCenter().removeObserver(self)}}
+    
 }
 

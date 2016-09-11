@@ -188,6 +188,13 @@ public class IALocationAttachment:IATextAttachment {
         return mapitem
     }
     
-    
+    public override func attemptToLoadResource() -> Bool {
+        if self._image != nil {
+            return true
+        } else if isGeneratingSnapshot == false {
+            generateImage()
+        }
+        return false
+    }
 }
 
