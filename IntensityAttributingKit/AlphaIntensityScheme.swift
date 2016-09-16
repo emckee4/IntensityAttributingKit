@@ -39,7 +39,7 @@ public class AlphaIntensityScheme:AnimatedIntensityTransforming {
             }
             let newSymbolicTraits =  baseFont.fontDescriptor().symbolicTraits.union(symbolicsToMerge)
             let newDescriptor = baseFont.fontDescriptor().fontDescriptorWithSymbolicTraits(newSymbolicTraits)
-            baseFont = UIFont(descriptor: newDescriptor, size: baseAttributes.cSize)
+            baseFont = UIFont(descriptor: newDescriptor!, size: baseAttributes.cSize)
         }
         var nsAttributes:[String:AnyObject] = [
             NSFontAttributeName:baseFont,
@@ -76,7 +76,7 @@ public class AlphaIntensityScheme:AnimatedIntensityTransforming {
             }
             let newSymbolicTraits =  baseFont.fontDescriptor().symbolicTraits.union(symbolicsToMerge)
             let newDescriptor = baseFont.fontDescriptor().fontDescriptorWithSymbolicTraits(newSymbolicTraits)
-            baseFont = UIFont(descriptor: newDescriptor, size: baseAttributes.cSize)
+            baseFont = UIFont(descriptor: newDescriptor!, size: baseAttributes.cSize)
         }
         var nsAttributes:[String:AnyObject] = [
             NSFontAttributeName:baseFont

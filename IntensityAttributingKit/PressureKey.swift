@@ -122,7 +122,7 @@ class PressureKey:UILabel, PressureControl {
         //rawIntensity.reset()
     }
     
-    override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
+    override func touchesCancelled(touches: Set<UITouch>, withEvent event: UIEvent?) {
         super.touchesCancelled(touches, withEvent: event)
         self.resetBackground()
         rawIntensity.cancelInteraction()

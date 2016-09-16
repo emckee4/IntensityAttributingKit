@@ -26,7 +26,7 @@ extension UIImage {
         
         let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return scaledImage
+        return scaledImage!
     }
     
     func resizeImageWithScaleAspectFit(targetSize:CGSize, backgroundColor:UIColor? = nil)->UIImage{
@@ -39,12 +39,12 @@ extension UIImage {
         let context = UIGraphicsGetCurrentContext();
         if backgroundColor != nil {
             backgroundColor!.setFill()
-            CGContextFillRect(context, CGRect(origin: CGPointZero,size: targetSize))
+            CGContextFillRect(context!, CGRect(origin: CGPointZero,size: targetSize))
         }
         self.drawInRect(newRect)
         let scaledImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return scaledImage
+        return scaledImage!
     }
     
     

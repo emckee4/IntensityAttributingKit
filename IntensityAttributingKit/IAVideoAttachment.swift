@@ -143,7 +143,7 @@ public class IAVideoAttachment:IATextAttachment {
             UIGraphicsBeginImageContextWithOptions(storedContentSize!, true, 1.0)
             let blankPreview = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext();
-            return blankPreview
+            return blankPreview!
         }
     }
     

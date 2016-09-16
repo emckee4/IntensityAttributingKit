@@ -77,7 +77,7 @@ final class IAMagnifyingLoup:UIView {
         guard magnificationCenter != nil && viewToMagnify != nil else {return}
         UIColor.whiteColor().setFill()
         UIRectFill(self.bounds)
-        let context = UIGraphicsGetCurrentContext()
+        guard let context = UIGraphicsGetCurrentContext() else {return}
         CGContextTranslateCTM(context, -magnificationCenter!.x * magnificationFactor + magnifyerRadius, -magnificationCenter!.y * magnificationFactor + magnifyerRadius )
         CGContextScaleCTM(context, magnificationFactor, magnificationFactor)
         //viewToMagnify!.layer.renderInContext(context!)

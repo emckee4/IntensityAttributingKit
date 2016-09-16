@@ -416,7 +416,7 @@ public class ExpandingKeyBase: UIView {
         selectedEPKey = nil
         shrinkView()
     }
-    override public func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
+    override public func touchesCancelled(touches: Set<UITouch>, withEvent event: UIEvent?) {
         print("touches cancelled")
         keySelectionWillUpdate(withTouch: nil, previousSelection: selectedEPKey, nextSelection: nil)
         selectedEPKey = nil

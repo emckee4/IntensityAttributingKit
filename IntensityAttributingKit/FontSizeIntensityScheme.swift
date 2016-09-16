@@ -28,7 +28,7 @@ public class FontSizeIntensityScheme:IntensityTransforming {
             }
             let newSymbolicTraits =  baseFont.fontDescriptor().symbolicTraits.union(symbolicsToMerge)
             let newDescriptor = baseFont.fontDescriptor().fontDescriptorWithSymbolicTraits(newSymbolicTraits)
-            baseFont = UIFont(descriptor: newDescriptor, size: size)
+            baseFont = UIFont(descriptor: newDescriptor!, size: size)
         }
         var nsAttributes:[String:AnyObject] = [NSFontAttributeName:baseFont]
         

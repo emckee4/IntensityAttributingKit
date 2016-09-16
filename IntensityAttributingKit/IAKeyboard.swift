@@ -52,10 +52,10 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
         keyboardView.translatesAutoresizingMaskIntoConstraints = false
         keyboardView.backgroundColor = self.backgroundColor
         inputView = keyboardView
-        keyboardView.topAnchor.constraintEqualToAnchor(inputView?.topAnchor).active = true
-        keyboardView.bottomAnchor.constraintEqualToAnchor(inputView?.bottomAnchor).active = true
-        keyboardView.leftAnchor.constraintEqualToAnchor(inputView?.leftAnchor).active = true
-        keyboardView.rightAnchor.constraintEqualToAnchor(inputView?.rightAnchor).active = true
+        keyboardView.topAnchor.constraintEqualToAnchor((inputView?.topAnchor)!).active = true
+        keyboardView.bottomAnchor.constraintEqualToAnchor((inputView?.bottomAnchor)!).active = true
+        keyboardView.leftAnchor.constraintEqualToAnchor((inputView?.leftAnchor)!).active = true
+        keyboardView.rightAnchor.constraintEqualToAnchor((inputView?.rightAnchor)!).active = true
         inputView?.translatesAutoresizingMaskIntoConstraints = false
         keyboardView.delegate = self
         

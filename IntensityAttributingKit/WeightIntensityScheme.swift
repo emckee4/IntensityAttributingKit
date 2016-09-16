@@ -35,7 +35,7 @@ public class WeightIntensityScheme:IntensityTransforming {
         if baseAttributes.italic {
             let newSymbolicTraits = font.fontDescriptor().symbolicTraits.union(.TraitItalic)
             let newDescriptor = font.fontDescriptor().fontDescriptorWithSymbolicTraits(newSymbolicTraits)
-            font = UIFont(descriptor: newDescriptor, size: baseAttributes.cSize)
+            font = UIFont(descriptor: newDescriptor!, size: baseAttributes.cSize)
         }
         
         var nsAttributes:[String:AnyObject] = [NSFontAttributeName:font]
