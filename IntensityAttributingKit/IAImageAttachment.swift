@@ -38,7 +38,7 @@ public class IAImageAttachment:IATextAttachment {
     public var temporaryFileURL:NSURL?
     
     ///When true this object is waiting for content to be downloaded and is observing the notifications for image content
-    private var waitingForDownload:Bool = false
+    private(set) public var waitingForDownload:Bool = false
     
     public init(filename:String,remoteURL:NSURL,localURL:NSURL?){
         super.init(data: nil, ofType: nil)
@@ -202,7 +202,7 @@ public class IAImageAttachment:IATextAttachment {
     }
     
     ///Can be set by the download manager to cause the attachment to begin observing for download completion. This will prevent the attachment from requesting downloads. Filename must not be nil or this will have no effect.
-    func setWaitForDownload(){
+    public func setWaitForDownload(){
         guard self.filename != nil else {return}
         if !waitingForDownload {
             waitingForDownload = true

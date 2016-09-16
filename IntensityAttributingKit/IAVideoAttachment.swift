@@ -15,7 +15,7 @@ import AVFoundation
 public class IAVideoAttachment:IATextAttachment {
   
     ///Either filename or random alpha string (if no filename exists) used for identifying attachments and images with or without filenames
-    private lazy var _localID:String = {return self.videoFilename ?? String.randomAlphaString(8)}()
+    private lazy var _localID:String = {return self.videoFilename ?? self.temporaryVideoURL?.lastPathComponent ?? String.randomAlphaString(8)}()
     override public var localID:String {
         get {return _localID}
         set {_localID = newValue}
@@ -48,7 +48,7 @@ public class IAVideoAttachment:IATextAttachment {
     private(set) public var storedContentSize:CGSize?
     
     ///When true this object is waiting for content to be downloaded and is observing the notifications for video content
-    private var waitingForDownload:Bool = false
+    private(set) public var waitingForDownload:Bool = false
     
     init!(withTemporaryFileLocation loc: NSURL){
         self.temporaryVideoURL = loc
@@ -219,7 +219,7 @@ public class IAVideoAttachment:IATextAttachment {
     }
     
     ///Can be set by the download manager to cause the attachment to begin observing for download completion. This will prevent the attachment from requesting downloads. Filename must not be nil or this will have no effect.
-    func setWaitForDownload(){
+    public func setWaitForDownload(){
         guard self.previewFilename != nil else {return}
         if !waitingForDownload {
             waitingForDownload = true
