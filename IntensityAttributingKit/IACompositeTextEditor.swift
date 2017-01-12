@@ -250,18 +250,18 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
     
     public override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
         switch action {
-        case #selector(NSObject.paste(_:)):
+        case #selector(paste(_:)):
             return (_selectedRange != nil && pasteboardHasIACompatibleData())
-        case #selector(NSObject.copy(_:)):
+        case #selector(copy(_:)):
             return (_selectedRange != nil && _selectedRange!.isEmpty == false)
-        case #selector(NSObject.selectAll(_:)):
+        case #selector(selectAll(_:)):
             if _selectedRange != nil && _selectedRange!.count == iaString.length {
                 return false //filter out cases where we've already selected all
             }
             return iaString.length > 0
-        case #selector(NSObject.delete(_:)):
+        case #selector(delete(_:)):
             return false
-        case #selector(NSObject.cut(_:)):
+        case #selector(cut(_:)):
             return (_selectedRange != nil && _selectedRange!.isEmpty == false)
         default:
             return super.canPerformAction(action, withSender: sender)
@@ -271,7 +271,7 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
     ///Tests if the general UIPasteboard has data which can be pasted into the IATextEditor
     func pasteboardHasIACompatibleData()->Bool{
         let pb = UIPasteboard.generalPasteboard()
-        guard let lastItem = pb.items.last as? [String:AnyObject] else {return false}
+        guard let lastItem = pb.items.last else {return false}
         if (lastItem[UTITypes.PlainText] as? String) != nil {
             return true
         } else if pb.image != nil {
@@ -289,7 +289,7 @@ public class IACompositeTextEditor:IACompositeBase, UITextInput {
         guard selectedRange != nil else {return}
         let pb = UIPasteboard.generalPasteboard()
         var newIA:IAString?
-        guard let lastItem = pb.items.last as? [String:AnyObject] else {return}
+        guard let lastItem = pb.items.last else {return}
         if let iaData = lastItem[UTITypes.IAStringArchive] as? NSData {
             newIA = IAStringArchive.unarchive(iaData)
         }

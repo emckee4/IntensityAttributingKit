@@ -25,7 +25,7 @@ final public class IATextContainer:NSTextContainer {
         aCoder.encodeObject(shouldPresentEmptyImageContainers, forKey: "shouldPresentEmptyImages")
     }
     
-    required public init?(coder: NSCoder) {
+    required public init(coder: NSCoder) {
         super.init(coder: coder)
         if let tsname = coder.decodeObjectForKey("thumbsize") as? String {
             if let ts = IAThumbSize(rawValue: tsname) {

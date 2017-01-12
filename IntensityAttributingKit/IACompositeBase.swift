@@ -397,10 +397,10 @@ public class IACompositeBase:UIView {
     }
     
     public override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
-        if action == #selector(NSObject.copy(_:)) && self.selectedRange?.count > 0{
+        if action == #selector(copy(_:)) && self.selectedRange?.count > 0{
             return true
         }
-        if action == #selector(NSObject.selectAll(_:)){
+        if action == #selector(selectAll(_:)){
             if _selectedRange != nil && _selectedRange!.count == iaString.length {
                 return false //filter out cases where we've already selected all
             }

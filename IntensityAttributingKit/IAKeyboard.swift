@@ -220,7 +220,7 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
                     
                     var suggestions:[String]!
                     if rangeOfCurrentWord.nsrange().length > 2 {
-                        suggestions = textChecker.guessesForWordRange(rangeOfCurrentWord.nsrange(),inString: editor.iaString.text, language: lang) as? [String]
+                        suggestions = (textChecker.guessesForWordRange(rangeOfCurrentWord.nsrange(),inString: editor.iaString.text, language: lang) ?? [])
                     }
 //                    if suggestions == nil {
 //                        suggestions = (textChecker.completionsForPartialWordRange(rangeOfCurrentWord.nsrange(), inString: editor.iaString.text, language: lang) as? [String])
@@ -243,7 +243,7 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
                 //check if selected range starts/ends on word boundaries. If so we can make suggestions.
                 if editor.tokenizer.isPosition(editor.selectedIATextRange!.iaStart, atBoundary: .Word, inDirection: 1) &&
                     editor.tokenizer.isPosition(editor.selectedIATextRange!.iaEnd, atBoundary: .Word, inDirection: 0) {
-                    let suggestions:[String] = (textChecker.completionsForPartialWordRange(editor.selectedRange!.nsRange, inString: editor.iaString.text, language: lang) as? [String]) ?? []
+                    let suggestions:[String] = (textChecker.completionsForPartialWordRange(editor.selectedRange!.nsRange, inString: editor.iaString.text, language: lang)) ?? []
                     suggestionsBar.updateSuggestions(suggestions)
                 } else {
                     //we aren't cleanly on boundaries so we won't be making suggestions
