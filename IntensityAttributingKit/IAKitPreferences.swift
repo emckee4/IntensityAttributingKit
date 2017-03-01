@@ -12,11 +12,11 @@ import CoreLocation
 /**
 IAKitPreferences contains most persisted options that need to be exposed to the outside world along with some purely internal stuff. Putting as many of the configurable options as possible in one place seems preferable while the organization and features of this project is still in such flux. Preferences are stored in the NSUserDefaults.standardUserDefaults of the app.
 */
-public class IAKitPreferences:NSObject {
+open class IAKitPreferences:NSObject {
     
-    static let bundle:NSBundle = NSBundle(forClass: IAKitPreferences.self)
+    static let bundle:Bundle = Bundle(for: IAKitPreferences.self)
     
-    static let forceTouchAvailable = (UIScreen.mainScreen().traitCollection.forceTouchCapability == .Available) && (UIDevice.currentDevice().name.rangeOfString("Simulator") == nil)
+    static let forceTouchAvailable = (UIScreen.main.traitCollection.forceTouchCapability == .available) && (UIDevice.current.name.range(of: "Simulator") == nil)
 
     
     static var contentDownloadDelegate:IAAttachmentDownloadDelegate?
@@ -32,22 +32,22 @@ public class IAKitPreferences:NSObject {
     }
     
     ///This is the locationManager used by the IALocationPicker. If the adopting app is planning to use a location manager then it should use this one or replace this before it's ever used. In order for location to work properly, NSLocationWhenInUseUsageDescription or NSLocationAlwaysUsageDescription. If location services authorization is unknown when this framework first attempts to use location services, then the delegate of the locationManager (if it exists) will be replaced by IALocationManagerDelegateShim until the authorization dialog fails or succeeds.
-    static public var locationManager:CLLocationManager = CLLocationManager()
+    static open var locationManager:CLLocationManager = CLLocationManager()
     
     ///Reloads the keyboard and accessory singletons. This will cause any changes in global settings which affect the KB/accessory (like visual theming) to take effect. This will automatically call a global resignFirstResponder.
-    public static func resetKBAndAccessory(){
+    open static func resetKBAndAccessory(){
         //Below don't work for custom input VCs so we use a hack below
         //IAAccessoryVC.singleton.dismissKeyboard()
         //IAKeyboard.singleton.dismissKeyboard()
         //Dismissal hack
-        UIApplication.sharedApplication().sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, forEvent: nil)
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
         
         IAKeyboard.singleton = IAKeyboard(nibName: nil, bundle: nil)
         IAAccessoryVC.singleton = IAAccessoryVC(nibName:nil, bundle: nil)
     }
     
     ///String keys for NSUserDefaults
-    private struct Keys {
+    fileprivate struct Keys {
         static let iakPrefix = "com.McKeeMaKer.IntensityAttributingKit."
         
         static let dIntensity = "IAKitPreferences.defaultIntensity"
@@ -71,63 +71,63 @@ public class IAKitPreferences:NSObject {
     }
     
     
-    private static var _defaultIntensity:Int = {return (NSUserDefaults.standardUserDefaults().objectForKey(Keys.dIntensity) as? Int) ?? 40}()
-    public static var defaultIntensity:Int {
+    fileprivate static var _defaultIntensity:Int = {return (UserDefaults.standard.object(forKey: Keys.dIntensity) as? Int) ?? 40}()
+    open static var defaultIntensity:Int {
         get {return _defaultIntensity}
-        set {_defaultIntensity = newValue; NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: Keys.dIntensity)}
+        set {_defaultIntensity = newValue; UserDefaults.standard.set(newValue, forKey: Keys.dIntensity)}
     }
-    private static var _defaultTextSize:Int = {return (NSUserDefaults.standardUserDefaults().objectForKey(Keys.dTextSize) as? Int) ?? 20}()
-    public static var defaultTextSize:Int {
+    fileprivate static var _defaultTextSize:Int = {return (UserDefaults.standard.object(forKey: Keys.dTextSize) as? Int) ?? 20}()
+    open static var defaultTextSize:Int {
         get {return _defaultTextSize}
-        set {_defaultTextSize = newValue; NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: Keys.dTextSize)}
+        set {_defaultTextSize = newValue; UserDefaults.standard.set(newValue, forKey: Keys.dTextSize)}
     }
     
-    private static var _defaultTransformer:IntensityTransformers = {
-        return IntensityTransformers(rawValue: (NSUserDefaults.standardUserDefaults().objectForKey(Keys.dTransformerName) as? String) ?? "") ?? IntensityTransformers.WeightScheme
+    fileprivate static var _defaultTransformer:IntensityTransformers = {
+        return IntensityTransformers(rawValue: (UserDefaults.standard.object(forKey: Keys.dTransformerName) as? String) ?? "") ?? IntensityTransformers.WeightScheme
     }()
-    public static var defaultTransformer:IntensityTransformers {
+    open static var defaultTransformer:IntensityTransformers {
         get {return _defaultTransformer}
         set {
             _defaultTransformer = newValue
-            NSUserDefaults.standardUserDefaults().setObject(newValue.rawValue, forKey: Keys.dTransformerName)
+            UserDefaults.standard.set(newValue.rawValue, forKey: Keys.dTransformerName)
         }
     }
     
-    private static var _defaultTokenizer:IAStringTokenizing = {
-        return IAStringTokenizing(shortLabel: (NSUserDefaults.standardUserDefaults().objectForKey(Keys.dTokenizerName) as? String) ?? "") ?? IAStringTokenizing.Char
+    fileprivate static var _defaultTokenizer:IAStringTokenizing = {
+        return IAStringTokenizing(shortLabel: (UserDefaults.standard.object(forKey: Keys.dTokenizerName) as? String) ?? "") ?? IAStringTokenizing.Char
     }()
-    public static var defaultTokenizer:IAStringTokenizing{
+    open static var defaultTokenizer:IAStringTokenizing{
         get {return _defaultTokenizer}
-        set {_defaultTokenizer = newValue; NSUserDefaults.standardUserDefaults().setObject(newValue.shortLabel, forKey: Keys.dTokenizerName)}
+        set {_defaultTokenizer = newValue; UserDefaults.standard.set(newValue.shortLabel, forKey: Keys.dTokenizerName)}
     }
     
     
     static let maxSavedImageDimensions:CGSize = CGSize(width: 640, height: 640)
     
 
-    private static var _overridesTransformer:IntensityTransformers? = {
-        guard let transformerName = NSUserDefaults.standardUserDefaults().objectForKey(Keys.oTransformerName) as? String else {return nil}
+    fileprivate static var _overridesTransformer:IntensityTransformers? = {
+        guard let transformerName = UserDefaults.standard.object(forKey: Keys.oTransformerName) as? String else {return nil}
         return IntensityTransformers(rawValue: transformerName)
     }()
-    public static var overridesTransformer:IntensityTransformers? {
+    open static var overridesTransformer:IntensityTransformers? {
         get {return _overridesTransformer}
-        set {_overridesTransformer = newValue; NSUserDefaults.standardUserDefaults().setObject(newValue?.rawValue, forKey: Keys.oTransformerName)}
+        set {_overridesTransformer = newValue; UserDefaults.standard.set(newValue?.rawValue, forKey: Keys.oTransformerName)}
     }
     
-    private static var _overridesTokenizer:IAStringTokenizing? = {
-        guard let tokenizerName = NSUserDefaults.standardUserDefaults().objectForKey(Keys.oTokenizerName) as? String else {return nil}
+    fileprivate static var _overridesTokenizer:IAStringTokenizing? = {
+        guard let tokenizerName = UserDefaults.standard.object(forKey: Keys.oTokenizerName) as? String else {return nil}
         return IAStringTokenizing(shortLabel: tokenizerName)
     }()
-    public static var overridesTokenizer:IAStringTokenizing? {
+    open static var overridesTokenizer:IAStringTokenizing? {
         get {return _overridesTokenizer}
-        set {_overridesTokenizer = newValue; NSUserDefaults.standardUserDefaults().setObject(newValue?.shortLabel, forKey: Keys.oTokenizerName)}
+        set {_overridesTokenizer = newValue; UserDefaults.standard.set(newValue?.shortLabel, forKey: Keys.oTokenizerName)}
     }
 
     //static var forceIntensityMapping:ForceIntensityMappingFunctions.AvailableFunctions?
     
     ///caches instantiated touchInterpreter
-    private static var _touchInterpreter:IATouchInterpreter = {
-        if let tiName = NSUserDefaults.standardUserDefaults().objectForKey(Keys.touchInterpreterName) as? String {
+    fileprivate static var _touchInterpreter:IATouchInterpreter = {
+        if let tiName = UserDefaults.standard.object(forKey: Keys.touchInterpreterName) as? String {
             if let interpreter = IATouchInterpreter(rawValue: tiName) {
                 return interpreter
             }
@@ -142,14 +142,14 @@ public class IAKitPreferences:NSObject {
         get {return _touchInterpreter}
         set {
             _touchInterpreter = newValue
-            NSUserDefaults.standardUserDefaults().setObject(newValue.rawValue, forKey: Keys.touchInterpreterName)
+            UserDefaults.standard.set(newValue.rawValue, forKey: Keys.touchInterpreterName)
             RawIntensity.touchInterpreter = newValue
         }
     }
     
     ///caches current value of rawIntensityMapper in instantiated form
-    private static var _rawIntensityMapper:RawIntensityMapping = {
-        if let rawName = NSUserDefaults.standardUserDefaults().objectForKey(Keys.rawIntensityMapperName) as? String {
+    fileprivate static var _rawIntensityMapper:RawIntensityMapping = {
+        if let rawName = UserDefaults.standard.object(forKey: Keys.rawIntensityMapperName) as? String {
             if let rim = RawIntensityMapping(rawValue:rawName) {
                 return rim
             }
@@ -160,39 +160,39 @@ public class IAKitPreferences:NSObject {
         get{ return _rawIntensityMapper}
         set {
             _rawIntensityMapper = newValue
-            NSUserDefaults.standardUserDefaults().setObject(newValue.rawValue, forKey: Keys.rawIntensityMapperName)
+            UserDefaults.standard.set(newValue.rawValue, forKey: Keys.rawIntensityMapperName)
             RawIntensity.rawIntensityMapping = newValue
         }
     }
     
-    private static var _deviceResourcesLimited:Bool = (NSUserDefaults.standardUserDefaults().objectForKey(Keys.deviceResourcesLimited) as? Bool) ?? (sizeof(Int) == 4)
+    fileprivate static var _deviceResourcesLimited:Bool = (UserDefaults.standard.object(forKey: Keys.deviceResourcesLimited) as? Bool) ?? (MemoryLayout<Int>.size == 4)
     /// This flag determines if the kit should skimp on animations whereever possible. By default this will be true for 32bit devices (32 bit iPhones supporting iOS 9 include 4s,5,5c)
     static var deviceResourcesLimited:Bool {
         get {return _deviceResourcesLimited}
         set {
             _deviceResourcesLimited = newValue
-            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: Keys.deviceResourcesLimited)
+            UserDefaults.standard.set(newValue, forKey: Keys.deviceResourcesLimited)
         }
     }
     
-    private static var _spellingSuggestionsEnabled:Bool = (NSUserDefaults.standardUserDefaults().objectForKey(Keys.spellingSuggestionsEnabled) as? Bool) ?? true
+    fileprivate static var _spellingSuggestionsEnabled:Bool = (UserDefaults.standard.object(forKey: Keys.spellingSuggestionsEnabled) as? Bool) ?? true
     /// Determines if the IAKeyboard show the suggestions bar.
     static var spellingSuggestionsEnabled:Bool {
         get {return _spellingSuggestionsEnabled}
         set {
             _spellingSuggestionsEnabled = newValue
-            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: Keys.spellingSuggestionsEnabled)
+            UserDefaults.standard.set(newValue, forKey: Keys.spellingSuggestionsEnabled)
             keyboard.suggestionBarActive = newValue
         }
     }
     
-    private static var _animationEnabled:Bool = (NSUserDefaults.standardUserDefaults().objectForKey(Keys.animationEnabled) as? Bool) ?? true
+    fileprivate static var _animationEnabled:Bool = (UserDefaults.standard.object(forKey: Keys.animationEnabled) as? Bool) ?? true
     /// Determines if the IAKeyboard show the suggestions bar.
     static var animationEnabled:Bool {
         get {return _animationEnabled}
         set {
             _animationEnabled = newValue
-            NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: Keys.animationEnabled)
+            UserDefaults.standard.set(newValue, forKey: Keys.animationEnabled)
             keyboard.suggestionBarActive = newValue
         }
     }
@@ -206,18 +206,18 @@ public class IAKitPreferences:NSObject {
         return IAStringOptions(renderScheme: overridesTransformer, preferedSmoothing: overridesTokenizer, animates: animationEnabled, animationOptions: nil)
     }
 
-    private static var _visualPreferences:IAKitVisualPreferences = IAKitVisualPreferences(archive: NSUserDefaults.standardUserDefaults().objectForKey(Keys.visualPreferences) as? NSData) ?? IAKitVisualPreferences.Default
+    fileprivate static var _visualPreferences:IAKitVisualPreferences = IAKitVisualPreferences(archive: UserDefaults.standard.object(forKey: Keys.visualPreferences) as? Data) ?? IAKitVisualPreferences.Default
     ///Keyboard and accessory visual characteristics. Note: changes made after IAKeyboard/IAAccessory have been instantiated won't be reflected until IAKitPreferences.resetKBAndAccessory() is called.
-    public static var visualPreferences:IAKitVisualPreferences {
+    open static var visualPreferences:IAKitVisualPreferences {
         get{return _visualPreferences}
         set{
             _visualPreferences = newValue
-            NSUserDefaults.standardUserDefaults().setObject(newValue.convertToArchive(), forKey: Keys.visualPreferences)
+            UserDefaults.standard.set(newValue.convertToArchive(), forKey: Keys.visualPreferences)
         }
     }
     
-    public static var videoAttachmentQuality:UIImagePickerControllerQualityType = .TypeMedium
-    public static var videoAttachmentMaxDuration:NSTimeInterval = 10.0
+    open static var videoAttachmentQuality:UIImagePickerControllerQualityType = .typeMedium
+    open static var videoAttachmentMaxDuration:TimeInterval = 10.0
 }
 
 

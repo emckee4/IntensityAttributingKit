@@ -12,7 +12,7 @@ import IntensityAttributingKit
 struct Message {
     let messageID:String
     let iaStringArchive:IAStringArchive
-    let createdAt:NSDate
+    let createdAt:Date
     let isSender:Bool
     
     var iaString:IAString {
@@ -22,7 +22,7 @@ struct Message {
     init(iaString:IAString, isSender:Bool){
         self.iaStringArchive = IAStringArchive(iaString: iaString)
         self.isSender = isSender
-        self.createdAt = NSDate()
+        self.createdAt = NSDate() as Date
         self.messageID = String.randomAlphaString(8)
     }
 }

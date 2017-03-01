@@ -10,9 +10,9 @@ import Foundation
 import UIKit
 
 public extension String {
-    func stringByReplacingFirstOccurrenceOfString(target: String, withString replaceString: String) -> String {
-        if let range = self.rangeOfString(target) {
-            return self.stringByReplacingCharactersInRange(range, withString: replaceString)
+    func stringByReplacingFirstOccurrenceOfString(_ target: String, withString replaceString: String) -> String {
+        if let range = self.range(of: target) {
+            return self.replacingCharacters(in: range, with: replaceString)
         }
         return self
     }
@@ -23,7 +23,7 @@ public extension String {
 
 extension NSLayoutConstraint {
     ///Modifies priority of self inplace and returns self. Useful for one-liner init and config.
-    func withPriority(priority:Float)->NSLayoutConstraint{
+    func withPriority(_ priority:Float)->NSLayoutConstraint{
         self.priority = priority
         return self
     }
@@ -36,7 +36,7 @@ extension UIView {
         UIGraphicsBeginImageContextWithOptions(imageSize, false, 0.0)
         guard let context = UIGraphicsGetCurrentContext() else {return nil}
         
-        self.layer.renderInContext(context)
+        self.layer.render(in: context)
         let image = UIGraphicsGetImageFromCurrentImageContext()
         
         UIGraphicsEndImageContext()

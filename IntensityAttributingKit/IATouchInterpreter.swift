@@ -17,7 +17,7 @@ public enum IATouchInterpreter:String{
     
     
     
-    var newInstance:IATouchInterpretingProtocol! {
+    func newInstance()->IATouchInterpretingProtocol! {
         switch self {
         case .Duration: return DurationTouchInterpreter()
         case .Force: return ForceTouchInterpreter()

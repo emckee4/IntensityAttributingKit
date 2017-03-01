@@ -25,27 +25,27 @@ class MessageThreadTableVC: UITableViewController, IATextViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.registerClass(MessageCell.self, forCellReuseIdentifier: "MessageCell")
+        tableView.register(MessageCell.self, forCellReuseIdentifier: "MessageCell")
         
-        self.tableView.separatorStyle = .None
-        self.tableView.keyboardDismissMode = .Interactive
-        self.tableView.panGestureRecognizer.addTarget(self.parentViewController!, action: #selector(MessageThreadViewController.pan(_:)))
+        self.tableView.separatorStyle = .none
+        self.tableView.keyboardDismissMode = .interactive
+        self.tableView.panGestureRecognizer.addTarget(self.parent!, action: #selector(MessageThreadViewController.pan(_:)))
         
         gv = UIView(frame: tableView.bounds)
         gradientLayer = CAGradientLayer()
-        gradientLayer.frame = CGRect(origin: CGPointZero, size: UIScreen.mainScreen().bounds.size)
-        gradientLayer.colors = [UIColor.darkGrayColor().CGColor,UIColor.purpleColor().CGColor]
+        gradientLayer.frame = CGRect(origin: CGPoint.zero, size: UIScreen.main.bounds.size)
+        gradientLayer.colors = [UIColor.darkGray.cgColor,UIColor.purple.cgColor]
         gradientLayer.locations = [0.0,1.0]
-        gv.layer.insertSublayer(gradientLayer, atIndex: 0)
-        self.tableView.backgroundColor = UIColor.clearColor()
+        gv.layer.insertSublayer(gradientLayer, at: 0)
+        self.tableView.backgroundColor = UIColor.clear
         self.tableView.backgroundView = gv
-        gv.widthAnchor.constraintEqualToAnchor(tableView.widthAnchor).active = true
-        gv.heightAnchor.constraintEqualToAnchor(tableView.heightAnchor).active = true
-        gv.topAnchor.constraintEqualToAnchor(tableView.topAnchor).active = true
-        gv.leftAnchor.constraintEqualToAnchor(tableView.leftAnchor).active = true
+        gv.widthAnchor.constraint(equalTo: tableView.widthAnchor).isActive = true
+        gv.heightAnchor.constraint(equalTo: tableView.heightAnchor).isActive = true
+        gv.topAnchor.constraint(equalTo: tableView.topAnchor).isActive = true
+        gv.leftAnchor.constraint(equalTo: tableView.leftAnchor).isActive = true
         gv.translatesAutoresizingMaskIntoConstraints = false
         
-        self.view.backgroundColor = UIColor.darkGrayColor()
+        self.view.backgroundColor = UIColor.darkGray
     }
 
     override func didReceiveMemoryWarning() {
@@ -53,35 +53,35 @@ class MessageThreadTableVC: UITableViewController, IATextViewDelegate {
         // Dispose of any resources that can be recreated.
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
     }
     
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return messages.count
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("MessageCell", forIndexPath: indexPath) as! MessageCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MessageCell", for: indexPath) as! MessageCell
         cell.iaTextView.delegate = self
         let message = messages[indexPath.row]
         configureCell(cell, message: message)
         cell.layer.shouldRasterize = true
-        cell.layer.rasterizationScale = UIScreen.mainScreen().scale
+        cell.layer.rasterizationScale = UIScreen.main.scale
         return cell
     }
     
-    func configureCell(cell:MessageCell, message:Message){
+    func configureCell(_ cell:MessageCell, message:Message){
         cell.iaTextView.delegate = self
         if reloadingToWidth != nil {
             cell.iaTextView.preferedMaxLayoutWidth = MessageCell.textViewWidthForCellWidth(reloadingToWidth!)
@@ -90,20 +90,20 @@ class MessageThreadTableVC: UITableViewController, IATextViewDelegate {
 
         }
         if message.isSender {
-            cell.displayMode = MessageCell.DisplayMode.Sending
+            cell.displayMode = MessageCell.DisplayMode.sending
         } else {
-            cell.displayMode = MessageCell.DisplayMode.Receiving
+            cell.displayMode = MessageCell.DisplayMode.receiving
         }
 
         cell.dateLabel.text = DateConversion.adaptiveDTString(message.createdAt)
 
         cell.dateLabel.numberOfLines = 2
-        cell.dateLabel.font = UIFont.systemFontOfSize(13.0)
+        cell.dateLabel.font = UIFont.systemFont(ofSize: 13.0)
         cell.iaTextView.setIAString(message.iaString, withCacheIdentifier: message.messageID)
     }
     
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let message = messages[indexPath.row]
         let cachedName = message.messageID + "-\(reloadingToWidth ?? tableView.bounds.width)"
         if let height = heightCache[cachedName] {
@@ -117,7 +117,7 @@ class MessageThreadTableVC: UITableViewController, IATextViewDelegate {
         }
     }
     
-    override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         let message = messages[indexPath.row]
         let cachedName = message.messageID + "-\(tableView.bounds.width)"
         if let height = heightCache[cachedName] {
@@ -128,7 +128,7 @@ class MessageThreadTableVC: UITableViewController, IATextViewDelegate {
     }
     
     ///Estimates cell height using basic math rather than calling autolayout engine
-    func calculateHeightEstimate(message:Message)->CGFloat{
+    func calculateHeightEstimate(_ message:Message)->CGFloat{
         let charCount:Int = message.iaString.length
         let attachCount:Int = message.iaString.attachmentCount
         let extraAttachWidth = (10 * attachCount)
@@ -139,47 +139,47 @@ class MessageThreadTableVC: UITableViewController, IATextViewDelegate {
     }
     
     ///Calculates the exact height of the message cell using current tableview width
-    func calculateCellHeightUsingAutoLayout(forMessage:Message)->CGFloat{
-        let cell = tableView.dequeueReusableCellWithIdentifier("MessageCell") as! MessageCell
+    func calculateCellHeightUsingAutoLayout(_ forMessage:Message)->CGFloat{
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MessageCell") as! MessageCell
         configureCell(cell, message: forMessage)
         cell.iaTextView.preferedMaxLayoutWidth = tableView.bounds.width * 0.74
-        return cell.contentView.systemLayoutSizeFittingSize(CGSizeMake(tableView.bounds.width, 1000), withHorizontalFittingPriority: UILayoutPriorityRequired, verticalFittingPriority: 200).height
+        return cell.contentView.systemLayoutSizeFitting(CGSize(width: tableView.bounds.width, height: 1000), withHorizontalFittingPriority: UILayoutPriorityRequired, verticalFittingPriority: 200).height
     }
     
-    override func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         return nil
     }
     
     
-    func scrollToBottom(animated:Bool){
-        guard let lastSection = tableView.numberOfSections - 1 as Int? where lastSection >= 0 else {return}
-        guard let lastRow = tableView.numberOfRowsInSection(lastSection) - 1 as Int? where lastRow >= 0 else {return}
-        tableView.scrollToRowAtIndexPath(NSIndexPath(forRow: lastRow, inSection: lastSection), atScrollPosition: .None, animated: animated)
+    func scrollToBottom(_ animated:Bool){
+        guard let lastSection = tableView.numberOfSections - 1 as Int?, lastSection >= 0 else {return}
+        guard let lastRow = tableView.numberOfRows(inSection: lastSection) - 1 as Int?, lastRow >= 0 else {return}
+        tableView.scrollToRow(at: IndexPath(row: lastRow, section: lastSection), at: .none, animated: animated)
     }
 
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         //tableView.
-        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+        super.viewWillTransition(to: size, with: coordinator)
         reloadingToWidth = size.width
         let maxDimension = max(size.width + 30,size.height + 30)
-        self.gradientLayer.frame = CGRect(origin: CGPointZero,size: CGSize(width:maxDimension, height: maxDimension))
+        self.gradientLayer.frame = CGRect(origin: CGPoint.zero,size: CGSize(width:maxDimension, height: maxDimension))
         
-        coordinator.animateAlongsideTransition(nil) { (context) in
+        coordinator.animate(alongsideTransition: nil) { (context) in
             self.reloadingToWidth = nil
             self.scrollToBottom(true)
-            self.gradientLayer.frame = CGRect(origin: CGPointZero,size: CGSize(width: size.width + 40, height: size.height + 40))
+            self.gradientLayer.frame = CGRect(origin: CGPoint.zero,size: CGSize(width: size.width + 40, height: size.height + 40))
         }
         tableView.reloadData()
         
     }
     
-    func iaTextView(atTextView: IACompositeTextView, userInteractedWithURL URL: NSURL, inRange characterRange: NSRange) {
-        UIApplication.sharedApplication().openURL(URL)
+    func iaTextView(_ atTextView: IACompositeTextView, userInteractedWithURL URL: Foundation.URL, inRange characterRange: NSRange) {
+        UIApplication.shared.openURL(URL)
     }
     
-    func iaTextView(atTextView: IACompositeTextView, userInteractedWithAttachment attachment: IATextAttachment, inRange: NSRange) {
+    func iaTextView(_ atTextView: IACompositeTextView, userInteractedWithAttachment attachment: IATextAttachment, inRange: NSRange) {
         guard let navController = self.navigationController else {print("image viewer should be presented by nav controller"); return}
-        if let imageAttachment = attachment as? IAImageAttachment where imageAttachment.image != nil {
+        if let imageAttachment = attachment as? IAImageAttachment, imageAttachment.image != nil {
             let imageViewer = IAImageViewerVC()
             imageViewer.attachment = imageAttachment
             navController.pushViewController(imageViewer, animated: true)
@@ -188,15 +188,15 @@ class MessageThreadTableVC: UITableViewController, IATextViewDelegate {
             videoViewer.attachment = videoAttachment
             navController.pushViewController(videoViewer, animated: true)
         } else if let locationAttachment = attachment as? IALocationAttachment {
-            locationAttachment.mapItemForLocation().openInMapsWithLaunchOptions(nil)
+            locationAttachment.mapItemForLocation().openInMaps(launchOptions: nil)
         } else {
             print(attachment)
         }
     }
     
-    func appendMessage(message:Message){
+    func appendMessage(_ message:Message){
         messages.append(message)
-        tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: messages.count - 1, inSection: 0)], withRowAnimation: .Automatic)
+        tableView.insertRows(at: [IndexPath(row: messages.count - 1, section: 0)], with: .automatic)
     }
     
 }

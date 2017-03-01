@@ -12,35 +12,35 @@ import Foundation
 
 /** Concrete subclass of IATextAttachment for handling image attachments. See discussion in comments of IATextAttachment for more info on why this is constructed this way.
  */
-public class IAImageAttachment:IATextAttachment {
+open class IAImageAttachment:IATextAttachment {
     
     ///Either filename or random alpha string (if no filename exists) used for identifying attachments and images with or without filenames
-    private lazy var _localID:String = {return self.filename ?? String.randomAlphaString(8)}()
-    override public var localID:String {
+    fileprivate lazy var _localID:String = {return self.filename ?? String.randomAlphaString(8)}()
+    override open var localID:String {
         get {return _localID}
         set {_localID = newValue}
     }
     
-    override public var attachmentType:IAAttachmentType {
+    override open var attachmentType:IAAttachmentType {
         return .image
     }
     
-    override public var showingPlaceholder:Bool {
+    override open var showingPlaceholder:Bool {
         return self._image == nil
     }
     
     
-    public var filename:String?
+    open var filename:String?
     ///We retain the reference to the remote location but leave management of the download to the app adopting the framework
-    public var remoteFileURL:NSURL?
+    open var remoteFileURL:URL?
     ///It's expected that the localFileURL will be fully determined by the filename, i.e. the url will be <some constant path> + <filename>. The localFileURL does not need to be valid yet, but it should point to the eventual location of the downloaded file
-    public var localFileURL:NSURL?
-    public var temporaryFileURL:NSURL?
+    open var localFileURL:URL?
+    open var temporaryFileURL:URL?
     
     ///When true this object is waiting for content to be downloaded and is observing the notifications for image content
-    private(set) public var waitingForDownload:Bool = false
+    fileprivate(set) open var waitingForDownload:Bool = false
     
-    public init(filename:String,remoteURL:NSURL,localURL:NSURL?){
+    public init(filename:String,remoteURL:URL,localURL:URL?){
         super.init(data: nil, ofType: nil)
         self.filename = filename
         self.remoteFileURL = remoteURL
@@ -49,38 +49,38 @@ public class IAImageAttachment:IATextAttachment {
     
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder:aDecoder)
-        if let localID = aDecoder.decodeObjectForKey("localID") as? String {
+        if let localID = aDecoder.decodeObject(forKey: "localID") as? String {
             self.localID = localID
         }
         
-        if let height = aDecoder.decodeObjectForKey("storedHeight") as? Float, width = aDecoder.decodeObjectForKey("storedWidth") as? Float{
+        if let height = aDecoder.decodeObject(forKey: "storedHeight") as? Float, let width = aDecoder.decodeObject(forKey: "storedWidth") as? Float{
             self._storedContentSize = CGSize(width: CGFloat(width), height: CGFloat(height))
         }
         
-        if let fn = aDecoder.decodeObjectForKey("filename") as? String {self.filename = fn}
-        if let localURL = aDecoder.decodeObjectForKey("localURL") as? NSURL {self.localFileURL = localURL}
-        if let remoteURL = aDecoder.decodeObjectForKey("remoteURL") as? NSURL {self.remoteFileURL = remoteURL}
+        if let fn = aDecoder.decodeObject(forKey: "filename") as? String {self.filename = fn}
+        if let localURL = aDecoder.decodeObject(forKey: "localURL") as? URL {self.localFileURL = localURL}
+        if let remoteURL = aDecoder.decodeObject(forKey: "remoteURL") as? URL {self.remoteFileURL = remoteURL}
         
     }
     
     ///Does not attempt to store image blob. 
-    public override func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(localID, forKey: "localID")
+    open override func encode(with aCoder: NSCoder) {
+        super.encode(with: aCoder)
+        aCoder.encode(localID, forKey: "localID")
         if let siSize = self._storedContentSize {
             
-            aCoder.encodeFloat(Float(siSize.height), forKey: "storedHeight")
-            aCoder.encodeFloat(Float(siSize.width), forKey: "storedWidth")
+            aCoder.encode(Float(siSize.height), forKey: "storedHeight")
+            aCoder.encode(Float(siSize.width), forKey: "storedWidth")
         }
-        aCoder.encodeObject(self.filename, forKey: "filename")
-        aCoder.encodeObject(self.remoteFileURL, forKey: "remoteURL")
-        aCoder.encodeObject(self.localFileURL, forKey: "localFileURL")
+        aCoder.encode(self.filename, forKey: "filename")
+        aCoder.encode(self.remoteFileURL, forKey: "remoteURL")
+        aCoder.encode(self.localFileURL, forKey: "localFileURL")
         
         
     }
     
-    private var _image:UIImage?
-    public override var image:UIImage? {
+    fileprivate var _image:UIImage?
+    open override var image:UIImage? {
         get{
             if _image != nil {
                 return _image
@@ -98,8 +98,8 @@ public class IAImageAttachment:IATextAttachment {
     }
     
     ///saves the value so it doesn't need to be repeatedly recalculated
-    private var _storedContentSize:CGSize?
-    public var storedContentSize:CGSize? {
+    fileprivate var _storedContentSize:CGSize?
+    open var storedContentSize:CGSize? {
         if let existing = _storedContentSize {
             return existing
         } else if let size = self._image?.size {
@@ -109,13 +109,13 @@ public class IAImageAttachment:IATextAttachment {
         return nil
     }
     
-    override func imageForThumbSize(thumbSize:IAThumbSize)->UIImage{
+    override func imageForThumbSize(_ thumbSize:IAThumbSize)->UIImage{
         let cachingName = thumbCatchName(forSize: thumbSize)
-        if let thumb = IATextAttachment.thumbCache.objectForKey(cachingName) as? UIImage {
+        if let thumb = IATextAttachment.thumbCache.object(forKey: cachingName as AnyObject) as? UIImage {
             return thumb
         } else if image != nil {
             let thumb = image!.resizeImageToFit(maxSize: thumbSize.size)
-            IATextAttachment.thumbCache.setObject(thumb, forKey: cachingName)
+            IATextAttachment.thumbCache.setObject(thumb, forKey: cachingName as AnyObject)
             return thumb
         } else {
             return IAPlaceholder.forSize(thumbSize, attachType: .image)
@@ -128,15 +128,15 @@ public class IAImageAttachment:IATextAttachment {
         self.image = image
     }
     
-    init!(withTemporaryFileLocation loc: NSURL){
-        guard let localPath = loc.path else {return nil}
+    init!(withTemporaryFileLocation loc: URL!){
+        guard let localPath = loc?.path else {return nil}
         guard let rawImage = UIImage(contentsOfFile: localPath) else {return nil}
         self.temporaryFileURL = loc
         super.init(data: nil, ofType: nil)
         self.image = rawImage
     }
     
-    public override func attemptToLoadResource() -> Bool {
+    open override func attemptToLoadResource() -> Bool {
         if self._image != nil {
             return true
         } else if let path = localFileURL?.path {
@@ -153,41 +153,41 @@ public class IAImageAttachment:IATextAttachment {
         return false
     }
     
-    override public var description: String {
+    override open var description: String {
         return "<IAImageAttachment>: id \(localID), imageLoaded? \(_image != nil)"
     }
     
-    override public var debugDescription:String {
-        return "<IAImageAttachment>: filename: \(self.filename ?? "nil"), remoteFileURL:\(self.remoteFileURL ?? "nil"), localFileURL: \(self.localFileURL ?? "nil"), isPlaceholder:\(self.showingPlaceholder)"
+    override open var debugDescription:String {
+        return "<IAImageAttachment>: filename: \(self.filename ?? "nil"), remoteFileURL:\(self.remoteFileURL?.absoluteString ?? "nil"), localFileURL: \(self.localFileURL?.absoluteString ?? "nil"), isPlaceholder:\(self.showingPlaceholder)"
     }
     
     ///Sent by the app's download manager to the IImageAttachments to indicate that image content has been downloaded. The user info will provide identifying information including resourceName.
-    public static let imageDownloadedNotificationName:String = "IntensityAttributingKit.IAImageAttachment.ImageReady"
+    open static let imageDownloadedNotificationName:String = "IntensityAttributingKit.IAImageAttachment.ImageReady"
     
     ///Used by the download manager of the app to indicate that the resource is available or that the download has failed. We use NSNotificationCenter since one filename could correspond to multiple instances of an attachment.
-    public static func emitContentDownloadedNotification(imageFilename:String, localFileLocation:NSURL!, image:UIImage?, downloadError:NSError?){
-        var userInfo:[String:AnyObject] = ["imageFilename":imageFilename]
+    open static func emitContentDownloadedNotification(_ imageFilename:String, localFileLocation:URL!, image:UIImage?, downloadError:NSError?){
+        var userInfo:[String:AnyObject] = ["imageFilename":imageFilename as AnyObject]
         if image != nil {
             userInfo["image"] = image!
         }
         if localFileLocation != nil {
-            userInfo["localFileLocation"] = localFileLocation
+            userInfo["localFileLocation"] = localFileLocation as AnyObject?
         }
         if downloadError != nil {
             userInfo["downloadError"] = downloadError!
         }
-        NSNotificationCenter.defaultCenter().postNotificationName(imageDownloadedNotificationName, object: nil, userInfo: userInfo)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: imageDownloadedNotificationName), object: nil, userInfo: userInfo)
     }
     
-    func handlePreviewDownloadedNotification(notification:NSNotification!){
-        guard let dlFilename = notification.userInfo?["imageFilename"] as? String where self.filename != nil && self.filename! == dlFilename else {return}
-        NSNotificationCenter.defaultCenter().removeObserver(self, forKeyPath: IAImageAttachment.imageDownloadedNotificationName)
+    func handlePreviewDownloadedNotification(_ notification:Notification!){
+        guard let dlFilename = notification.userInfo?["imageFilename"] as? String, self.filename != nil && self.filename! == dlFilename else {return}
+        NotificationCenter.default.removeObserver(self, forKeyPath: IAImageAttachment.imageDownloadedNotificationName)
         waitingForDownload = false
         
         guard notification.userInfo?["downloadError"] == nil else {return}
         
         if self.localFileURL == nil {
-            self.localFileURL = notification.userInfo?["localFileLocation"] as? NSURL
+            self.localFileURL = notification.userInfo?["localFileLocation"] as? URL
         }
         if let dlImage = notification.userInfo?["image"] as? UIImage {
             self._image = dlImage
@@ -202,14 +202,14 @@ public class IAImageAttachment:IATextAttachment {
     }
     
     ///Can be set by the download manager to cause the attachment to begin observing for download completion. This will prevent the attachment from requesting downloads. Filename must not be nil or this will have no effect.
-    public func setWaitForDownload(){
+    open func setWaitForDownload(){
         guard self.filename != nil else {return}
         if !waitingForDownload {
             waitingForDownload = true
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(IAImageAttachment.handlePreviewDownloadedNotification(_:)), name: IAImageAttachment.imageDownloadedNotificationName, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(IAImageAttachment.handlePreviewDownloadedNotification(_:)), name: NSNotification.Name(rawValue: IAImageAttachment.imageDownloadedNotificationName), object: nil)
         }
     }
     
-    deinit{if waitingForDownload {NSNotificationCenter.defaultCenter().removeObserver(self)}}
+    deinit{if waitingForDownload {NotificationCenter.default.removeObserver(self)}}
     
 }

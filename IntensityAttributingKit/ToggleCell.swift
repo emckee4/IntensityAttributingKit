@@ -15,7 +15,7 @@ class ToggleCell:UITableViewCell {
     var toggleControl:UISwitch!
     
     init(reuseIdentifier:String? = nil){
-        super.init(style: .Default, reuseIdentifier: reuseIdentifier)
+        super.init(style: .default, reuseIdentifier: reuseIdentifier)
         setupCell()
         
     }
@@ -25,12 +25,12 @@ class ToggleCell:UITableViewCell {
     }
     
     func setupCell(){
-        toggleControl = UISwitch(frame: CGRectZero)
+        toggleControl = UISwitch(frame: CGRect.zero)
         toggleControl.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(toggleControl)
         
-        toggleControl.centerYAnchor.constraintEqualToAnchor(contentView.centerYAnchor).active = true
-        toggleControl.trailingAnchor.constraintEqualToAnchor(contentView.trailingAnchor, constant: -8).active = true
+        toggleControl.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        toggleControl.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8).isActive = true
         
     }
     

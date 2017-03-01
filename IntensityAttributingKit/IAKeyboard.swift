@@ -21,7 +21,7 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
     }
     
     var shiftKeyIsSelected:Bool {
-        return shiftKey?.selected ?? false
+        return shiftKey?.isSelected ?? false
     }
     
     var currentKeyset = AvailableIAKeysets.BasicEnglish {
@@ -36,66 +36,66 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
 
     
     var textChecker:UITextChecker!
-    private let puncCharset = NSCharacterSet(charactersInString: ".?!")
+    fileprivate let puncCharset = CharacterSet(charactersIn: ".?!")
     
     ///If the last space inserted was inserted as a result of a suggestion insertion then we will remove it when inserting certain punctuation
-    private var softSpace:Bool = false
+    fileprivate var softSpace:Bool = false
     ///Value is set true by textWillChange, causing selectionDidChange to be ignored until textDidChange fires.
-    private var textChangeInProgress = false
+    fileprivate var textChangeInProgress = false
     //MARK:- View lifecyle functions
     
     override func viewDidLoad() {
         super.viewDidLoad()
         textChecker = UITextChecker()
         
-        keyboardView = KeyboardLayoutView(frame: CGRectZero, inputViewStyle: .Keyboard)
+        keyboardView = KeyboardLayoutView(frame: CGRect.zero, inputViewStyle: .keyboard)
         keyboardView.translatesAutoresizingMaskIntoConstraints = false
         keyboardView.backgroundColor = self.backgroundColor
         inputView = keyboardView
-        keyboardView.topAnchor.constraintEqualToAnchor((inputView?.topAnchor)!).active = true
-        keyboardView.bottomAnchor.constraintEqualToAnchor((inputView?.bottomAnchor)!).active = true
-        keyboardView.leftAnchor.constraintEqualToAnchor((inputView?.leftAnchor)!).active = true
-        keyboardView.rightAnchor.constraintEqualToAnchor((inputView?.rightAnchor)!).active = true
+        keyboardView.topAnchor.constraint(equalTo: (inputView?.topAnchor)!).isActive = true
+        keyboardView.bottomAnchor.constraint(equalTo: (inputView?.bottomAnchor)!).isActive = true
+        keyboardView.leftAnchor.constraint(equalTo: (inputView?.leftAnchor)!).isActive = true
+        keyboardView.rightAnchor.constraint(equalTo: (inputView?.rightAnchor)!).isActive = true
         inputView?.translatesAutoresizingMaskIntoConstraints = false
         keyboardView.delegate = self
         
-        self.inputView?.layer.rasterizationScale = UIScreen.mainScreen().scale
+        self.inputView?.layer.rasterizationScale = UIScreen.main.scale
         self.inputView?.layer.shouldRasterize = true
         updateKeyMapping()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         //if verticalStackView.hidden {verticalStackView.hidden = false}
-        if UIScreen.mainScreen().bounds.width > UIScreen.mainScreen().bounds.height {
-            keyboardView.setConstraintsForOrientation(.LandscapeRight)
+        if UIScreen.main.bounds.width > UIScreen.main.bounds.height {
+            keyboardView.setConstraintsForOrientation(.landscapeRight)
         } else {
-            keyboardView.setConstraintsForOrientation(.Portrait)
+            keyboardView.setConstraintsForOrientation(.portrait)
         }
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         prepareKeyboardForAppearance()
     }
     
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         if size.width > size.height {
-            keyboardView.setConstraintsForOrientation(.LandscapeRight)
+            keyboardView.setConstraintsForOrientation(.landscapeRight)
         } else {
-            keyboardView.setConstraintsForOrientation(.Portrait)
+            keyboardView.setConstraintsForOrientation(.portrait)
         }
-        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+        super.viewWillTransition(to: size, with: coordinator)
     }
 
-    private var disableRasterizationUntil: NSTimeInterval = 0
-    func preventRasterizationForDuration(duration:Double){
-        let until = NSProcessInfo.processInfo().systemUptime + duration
+    fileprivate var disableRasterizationUntil: TimeInterval = 0
+    func preventRasterizationForDuration(_ duration:Double){
+        let until = ProcessInfo.processInfo.systemUptime + duration
         guard until > disableRasterizationUntil else {return}  //check if we don't need to do anything because we're already rasterizing for the duration
         let ms:Int64 = Int64(duration * 1000) + 10
         self.inputView!.layer.shouldRasterize = false
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, ms * Int64(NSEC_PER_MSEC)), dispatch_get_main_queue(), {
-            guard NSProcessInfo.processInfo().systemUptime >= self.disableRasterizationUntil else {return}
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(ms * Int64(NSEC_PER_MSEC)) / Double(NSEC_PER_SEC), execute: {
+            guard ProcessInfo.processInfo.systemUptime >= self.disableRasterizationUntil else {return}
             self.inputView?.layer.shouldRasterize = true
         })
     }
@@ -113,26 +113,26 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
     }
     
     ///All control elements adopting the KeyControl protocol deliver their user interaction events through this function
-    func pressureKeyPressed(sender: PressureControl, actionName: String, intensity: Int) {
+    func pressureKeyPressed(_ sender: PressureControl, actionName: String, intensity: Int) {
         //self.intensity = intensity
         preventRasterizationForDuration(5.0)
-        UIDevice.currentDevice().playInputClick()
+        UIDevice.current.playInputClick()
         var insertionText:String!
-        if shiftKey?.selected == true{
+        if shiftKey?.isSelected == true{
             shiftKey?.deselect(overrideSelectedLock: false)
             updateKeyMapping()
             //self.textDocumentProxy.insertText(actionName.uppercaseString)
-            insertionText = actionName.uppercaseString
+            insertionText = actionName.uppercased()
         } else {
             insertionText = actionName
         }
         
         
-        if softSpace == true && actionName.utf16.count == 1 && puncCharset.characterIsMember(actionName.utf16.first!) {
+        if softSpace == true && actionName.utf16.count == 1 && puncCharset.contains(UnicodeScalar(actionName.utf16.first!)!) {
             ///replace the softSpace with the punctuation
             if let iaTE = delegate as? IACompositeTextEditor {
-                if iaTE.selectedRange?.isEmpty == true && iaTE.selectedRange!.startIndex > 0{
-                    let newIndex = iaTE.selectedRange!.startIndex - 1
+                if iaTE.selectedRange?.isEmpty == true && iaTE.selectedRange!.lowerBound > 0{
+                    let newIndex = iaTE.selectedRange!.lowerBound - 1
                     iaTE.selectedRange = newIndex..<newIndex
                     insertionText = insertionText + " "
                 }
@@ -142,18 +142,18 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
     }
     
     
-    override func textWillChange(textInput: UITextInput?) {
+    override func textWillChange(_ textInput: UITextInput?) {
         textChangeInProgress = true
     }
     
-    override func selectionDidChange(textInput: UITextInput?) {
+    override func selectionDidChange(_ textInput: UITextInput?) {
         softSpace = false
         guard textChangeInProgress == false else {return}
         updateSuggestionBar()
         autoCapsIfNeeded()
     }
     
-    override func textDidChange(textInput: UITextInput?) {
+    override func textDidChange(_ textInput: UITextInput?) {
         guard delegate?.keyboardIsIAKeyboard ?? false else {return}
         updateSuggestionBar()
         autoCapsIfNeeded()
@@ -170,21 +170,21 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
     
     
     func autoCapsIfNeeded(){
-        guard let editor = delegate as? IACompositeTextEditor where editor.selectedRange != nil else {return}
-        guard editor.hasText() && editor.selectedRange!.startIndex > 0 else {
-            self.shiftKey?.selected = true; updateKeyMapping();return
+        guard let editor = delegate as? IACompositeTextEditor, editor.selectedRange != nil else {return}
+        guard editor.hasText && editor.selectedRange!.lowerBound > 0 else {
+            self.shiftKey?.isSelected = true; updateKeyMapping();return
         }
-        let preceedingTextStart = max(editor.selectedRange!.startIndex - 4, 0)
-        let preceedingText = editor.textInRange(IATextRange(range: preceedingTextStart..<editor.selectedRange!.startIndex))!
+        let preceedingTextStart = max(editor.selectedRange!.lowerBound - 4, 0)
+        let preceedingText = editor.text(in: IATextRange(range: preceedingTextStart..<editor.selectedRange!.lowerBound))!
         
         ///Returns true if the reversed text begins with whitespace characters, then is followed by puncuation, false otherwise. (e.g. "X. " would return true while "sfs", "s  ", or "X." would return false.
-        func easierThanRegex(text:String)->Bool{
+        func easierThanRegex(_ text:String)->Bool{
             guard text.isEmpty == false else {return false}
-            guard NSCharacterSet.whitespaceAndNewlineCharacterSet().characterIsMember(text.utf16.last!) else {return false}
-            for rChar in preceedingText.utf16.reverse() {
-                if NSCharacterSet.whitespaceAndNewlineCharacterSet().characterIsMember(rChar) {
+            guard CharacterSet.whitespacesAndNewlines.contains(UnicodeScalar(text.utf16.last!)!) else {return false}
+            for rChar in preceedingText.utf16.reversed() {
+                if CharacterSet.whitespacesAndNewlines.contains(UnicodeScalar(rChar)!) {
                     continue
-                } else if puncCharset.characterIsMember(rChar) {
+                } else if puncCharset.contains(UnicodeScalar(rChar)!) {
                     return true
                 } else {
                     return false
@@ -193,7 +193,7 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
             return false
         }
         if  easierThanRegex(preceedingText){
-            self.shiftKey?.selected = true
+            self.shiftKey?.isSelected = true
             updateKeyMapping()
         } else {
             self.shiftKey?.deselect(overrideSelectedLock: false)
@@ -205,22 +205,22 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
     func updateSuggestionBar(){
         guard suggestionBarActive else {return}
         let suggestionsBar = keyboardView.suggestionsBar
-        if let editor = delegate as? IACompositeTextEditor where editor.selectedRange != nil {
-            let lang = self.textInputMode?.primaryLanguage ?? NSLocale.preferredLanguages().first!
+        if let editor = delegate as? IACompositeTextEditor, editor.selectedRange != nil {
+            let lang = self.textInputMode?.primaryLanguage ?? Locale.preferredLanguages.first!
             if editor.selectedRange!.isEmpty {
                 //get range and text for correction
                 let iaPosition = editor.selectedIATextRange!.iaStart
                 
-                if editor.tokenizer.isPosition(iaPosition, withinTextUnit: .Word, inDirection: 0) {
+                if editor.tokenizer.isPosition(iaPosition, withinTextUnit: .word, inDirection: 0) {
                     //we're inside of a word but not at its end. Consider trying corrections
-                    suggestionsBar.updateSuggestions([])
+                    suggestionsBar?.updateSuggestions([])
                     editor.unmarkText()
-                } else if let rangeOfCurrentWord = editor.tokenizer.rangeEnclosingPosition(iaPosition, withGranularity: .Word, inDirection: 1) as? IATextRange { //editor.tokenizer.isPosition(iaPosition, withinTextUnit: .Word, inDirection: 1)
+                } else if let rangeOfCurrentWord = editor.tokenizer.rangeEnclosingPosition(iaPosition, with: .word, inDirection: 1) as? IATextRange { //editor.tokenizer.isPosition(iaPosition, withinTextUnit: .Word, inDirection: 1)
                     //the pos should be within a text unit and at its end --- we will highlight here
                     
                     var suggestions:[String]!
                     if rangeOfCurrentWord.nsrange().length > 2 {
-                        suggestions = (textChecker.guessesForWordRange(rangeOfCurrentWord.nsrange(),inString: editor.iaString.text, language: lang) ?? [])
+                        suggestions = (textChecker.guesses(forWordRange: rangeOfCurrentWord.nsrange(),in: editor.iaString.text, language: lang) ?? [])
                     }
 //                    if suggestions == nil {
 //                        suggestions = (textChecker.completionsForPartialWordRange(rangeOfCurrentWord.nsrange(), inString: editor.iaString.text, language: lang) as? [String])
@@ -228,50 +228,50 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
                     
                     if suggestions?.isEmpty == false {
                         editor.markedTextRange = rangeOfCurrentWord
-                        suggestionsBar.updateSuggestions(suggestions)
+                        suggestionsBar?.updateSuggestions(suggestions)
                     } else {
-                        suggestionsBar.updateSuggestions([])
+                        suggestionsBar?.updateSuggestions([])
                         editor.unmarkText()
                     }
                 } else {
                     //we should be in some whitespace, so no highlighting
-                    suggestionsBar.updateSuggestions([])
+                    suggestionsBar?.updateSuggestions([])
                     editor.unmarkText()
                 }
                 
             } else { //selected range is non empty
                 //check if selected range starts/ends on word boundaries. If so we can make suggestions.
-                if editor.tokenizer.isPosition(editor.selectedIATextRange!.iaStart, atBoundary: .Word, inDirection: 1) &&
-                    editor.tokenizer.isPosition(editor.selectedIATextRange!.iaEnd, atBoundary: .Word, inDirection: 0) {
-                    let suggestions:[String] = (textChecker.completionsForPartialWordRange(editor.selectedRange!.nsRange, inString: editor.iaString.text, language: lang)) ?? []
-                    suggestionsBar.updateSuggestions(suggestions)
+                if editor.tokenizer.isPosition(editor.selectedIATextRange!.iaStart, atBoundary: .word, inDirection: 1) &&
+                    editor.tokenizer.isPosition(editor.selectedIATextRange!.iaEnd, atBoundary: .word, inDirection: 0) {
+                    let suggestions:[String] = (textChecker.completions(forPartialWordRange: editor.selectedRange!.nsRange, in: editor.iaString.text, language: lang)) ?? []
+                    suggestionsBar?.updateSuggestions(suggestions)
                 } else {
                     //we aren't cleanly on boundaries so we won't be making suggestions
-                    suggestionsBar.updateSuggestions([])
+                    suggestionsBar?.updateSuggestions([])
                 }
                 editor.unmarkText()
             }
         } else {
             //we either have a nil delegate or nil selectedRange on the editor
-            suggestionsBar.updateSuggestions([])
+            suggestionsBar?.updateSuggestions([])
         }
     }
     
-    func shiftKeyPressed(sender:LockingKey!){
+    func shiftKeyPressed(_ sender:LockingKey!){
         updateKeyMapping()
     }
 
-    private func updateKeyMapping(){
-        keyboardView.setKeyset(currentKeyset, pageNumber: currentKeyPageNumber, shiftSelected: shiftKey?.selected ?? false)
+    fileprivate func updateKeyMapping(){
+        keyboardView.setKeyset(currentKeyset, pageNumber: currentKeyPageNumber, shiftSelected: shiftKey?.isSelected ?? false)
     }
     
-    func suggestionSelected(suggestionBar: SuggestionBarView!, suggestionString: String, intensity: Int) {
+    func suggestionSelected(_ suggestionBar: SuggestionBarView!, suggestionString: String, intensity: Int) {
         softSpace = delegate?.iaKeyboard(self, suggestionSelected: suggestionString, intensity: intensity) ?? false
     }
     
     var suggestionBarActive:Bool {
-        get{return !keyboardView.suggestionsBar.hidden}
-        set{keyboardView.suggestionsBar.hidden = !newValue}
+        get{return !keyboardView.suggestionsBar.isHidden}
+        set{keyboardView.suggestionsBar.isHidden = !newValue}
     }
     
 }

@@ -9,7 +9,7 @@
 import UIKit
 
 ///Prebaked tableview cell for adjusting the RawIntensity parameters within the keyboard options menu or otherwise.
-public class SmootherOverrideAdjusterCell:LabeledStepperAdjusterCell{
+open class SmootherOverrideAdjusterCell:LabeledStepperAdjusterCell{
     
     let adjustmentOptions:[(optionTitle:String,option:IAStringTokenizing?)] = [(optionTitle: "Message Default" ,option: nil ),(optionTitle: "By Character" ,option: IAStringTokenizing.Char ),(optionTitle: "By Word" ,option: IAStringTokenizing.Word ),(optionTitle: "By Sentence" ,option: IAStringTokenizing.Sentence ),(optionTitle: "By Message" ,option: IAStringTokenizing.Message )]
 
@@ -19,20 +19,20 @@ public class SmootherOverrideAdjusterCell:LabeledStepperAdjusterCell{
         
         stepper.minimumValue = 0
         stepper.maximumValue = Double(adjustmentOptions.count - 1)
-        stepper.continuous = false
+        stepper.isContinuous = false
         stepper.stepValue = 1.0
         
         
         let currentValue = IAKitPreferences.overridesTokenizer
         
-        let aoIndex = adjustmentOptions.indexOf({$0.option == currentValue}) ?? 0
+        let aoIndex = adjustmentOptions.index(where: {$0.option == currentValue}) ?? 0
         stepper.value = Double(aoIndex)
         resultLabel.text = adjustmentOptions[aoIndex].optionTitle
         
         titleLabel.text = "Smoother Override:"
     }
     
-    override func stepperValueChanged(sender: UIStepper!) {
+    override func stepperValueChanged(_ sender: UIStepper!) {
         let val = clamp(Int(stepper.value), lowerBound: 0, upperBound: adjustmentOptions.count - 1)
         
         resultLabel.text = adjustmentOptions[val].optionTitle

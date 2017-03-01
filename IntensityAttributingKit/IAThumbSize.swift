@@ -19,9 +19,9 @@ public enum IAThumbSize:String {
     
     public var size: CGSize {
         switch self {
-        case .Tiny: return CGSizeMake(32, 32)
-        case .Small: return CGSizeMake(64, 64)
-        case .Medium: return CGSizeMake(160, 160)
+        case .Tiny: return CGSize(width: 32, height: 32)
+        case .Small: return CGSize(width: 64, height: 64)
+        case .Medium: return CGSize(width: 160, height: 160)
         }
     }
     

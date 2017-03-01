@@ -17,11 +17,11 @@ import UIKit
 */
 
 ///Abstract base class for IATextAttachments
-public class IATextAttachment:NSTextAttachment {
+open class IATextAttachment:NSTextAttachment {
     
-    private lazy var _localID:String = {return String.randomAlphaString(8)}()
+    fileprivate lazy var _localID:String = {return String.randomAlphaString(8)}()
     ///Either filename or random alpha string (if no filename exists) used for identifying attachments and images with or without filenames
-    public var localID: String {
+    open var localID: String {
         get{return _localID}
     }
     
@@ -29,42 +29,42 @@ public class IATextAttachment:NSTextAttachment {
         return true
     }
     
-    public var attachmentType:IAAttachmentType{
+    open var attachmentType:IAAttachmentType{
         return .unknown
     }
     
     
-    static let thumbCache = NSCache()
+    static let thumbCache = NSCache<AnyObject, AnyObject>()
 
-    override public var image:UIImage? {
+    override open var image:UIImage? {
         get{return nil}
         set{
             print("Set image in IAImageAttachment instead")
         }
     }
     
-    override public var contents: NSData? {
+    override open var contents: Data? {
         get{return nil}
         set{
         print("Set contents in IATextAttachment subclass instead")
         }
     }
     
-    override public var fileType: String?{
+    override open var fileType: String?{
         get{return nil}
         set{
             print("Set fileType in IATextAttachment subclass instead")
         }
     }
     
-    override public var fileWrapper: NSFileWrapper? {
+    override open var fileWrapper: FileWrapper? {
         get{return nil}
         set{
             print("Set file location in IATextAttachment subclass instead of using fileWrapper")
         }
     }
     
-    override public func imageForBounds(imageBounds: CGRect, textContainer: NSTextContainer?, characterIndex charIndex: Int) -> UIImage? {
+    override open func image(forBounds imageBounds: CGRect, textContainer: NSTextContainer?, characterIndex charIndex: Int) -> UIImage? {
         if let iaContainer = textContainer as? IATextContainer {
             if iaContainer.shouldPresentEmptyImageContainers == true {
                 return nil
@@ -73,25 +73,25 @@ public class IATextAttachment:NSTextAttachment {
             }
         } else {
             //image is being requested by a non IATextContainer, so presumably something outside of the IAKit
-            return super.imageForBounds(imageBounds, textContainer: textContainer, characterIndex: charIndex)
+            return super.image(forBounds: imageBounds, textContainer: textContainer, characterIndex: charIndex)
         }
     }
     
-    func imageForThumbSize(thumbSize:IAThumbSize)->UIImage{
+    func imageForThumbSize(_ thumbSize:IAThumbSize)->UIImage{
         return IAPlaceholder.forSize(thumbSize, attachType: .unknown)
     }
     
     
-    override public func attachmentBoundsForTextContainer(textContainer: NSTextContainer?, proposedLineFragment lineFrag: CGRect, glyphPosition position: CGPoint, characterIndex charIndex: Int) -> CGRect {
+    override open func attachmentBounds(for textContainer: NSTextContainer?, proposedLineFragment lineFrag: CGRect, glyphPosition position: CGPoint, characterIndex charIndex: Int) -> CGRect {
         if let iaContainer = textContainer as? IATextContainer {
-            return CGRect(origin:CGPointZero,size:iaContainer.preferedThumbSize.size)
+            return CGRect(origin:CGPoint.zero,size:iaContainer.preferedThumbSize.size)
         } else {
-            return CGRect(origin:CGPointZero,size:IAThumbSize.Tiny.size)
+            return CGRect(origin:CGPoint.zero,size:IAThumbSize.Tiny.size)
         }
     }
     
     
-    override init(data contentData: NSData?, ofType uti: String?) {
+    override init(data contentData: Data?, ofType uti: String?) {
         super.init(data: nil, ofType: nil)
     }
     
@@ -100,12 +100,12 @@ public class IATextAttachment:NSTextAttachment {
         self.init()
     }
     
-    public override func encodeWithCoder(aCoder: NSCoder) {
+    open override func encode(with aCoder: NSCoder) {
         //super.encodeWithCoder(aCoder)
     }
 
     ///The app can call this after completing the download and processing of an item to update teh item and ensure it's ready. Returns true if the resource is/can be loaded
-    public func attemptToLoadResource()->Bool{
+    open func attemptToLoadResource()->Bool{
         return false
     }
     
@@ -114,21 +114,21 @@ public class IATextAttachment:NSTextAttachment {
     }
     
     ///This is used by an IATextAttachment subclass to indicate that it has or can immediately generate a new thumb for the content. IACompositeBase based classes will listen for this and refresh appropriate thumbnails when they receive this.
-    public static let contentReadyNotificationName:String = "IntensityAttributingKit.IATextAttachment.ContentReady"
+    open static let contentReadyNotificationName:String = "IntensityAttributingKit.IATextAttachment.ContentReady"
     
     ///Posts a notification with the class specific contentReadyNotificationName to the default NSNotificationCenter. This is used to indicate to the displaying views that the textattachment subclass has or can immediately generate a new thumb for the content.
-    func emitContentReadyNotification(userInfo:[String:AnyObject]?){
+    func emitContentReadyNotification(_ userInfo:[String:AnyObject]?){
         var updatedInfo:[String:AnyObject] = userInfo ?? [:]
-        updatedInfo["attachmentType"] = self.attachmentType.rawValue
-        updatedInfo["localID"] = self.localID
-        let postNotification:Void->Void = {
-            let notification = NSNotification(name: self.dynamicType.contentReadyNotificationName, object: self, userInfo: updatedInfo)
-            NSNotificationCenter.defaultCenter().postNotification(notification)
+        updatedInfo["attachmentType"] = self.attachmentType.rawValue as AnyObject?
+        updatedInfo["localID"] = self.localID as AnyObject?
+        let postNotification:(Void)->Void = {
+            let notification = Notification(name: Notification.Name(rawValue: type(of: self).contentReadyNotificationName), object: self, userInfo: updatedInfo)
+            NotificationCenter.default.post(notification)
         }
-        if NSThread.isMainThread() {
+        if Thread.isMainThread {
             postNotification()
         } else {
-            dispatch_async(dispatch_get_main_queue(), postNotification)
+            DispatchQueue.main.async(execute: postNotification)
         }
     }
     
@@ -137,7 +137,7 @@ public class IATextAttachment:NSTextAttachment {
 ///Used by attachments to request download if needed.
 public protocol IAAttachmentDownloadDelegate {
     ///Initiates/requests download of the content for the selected attachment.
-    func downloadContentsOf(attachment attachment:IATextAttachment) throws
+    func downloadContentsOf(attachment:IATextAttachment) throws
     
 }
 

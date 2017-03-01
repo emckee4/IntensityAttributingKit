@@ -31,11 +31,11 @@ final public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDe
     var thinTVIsSlave:Bool = false
     
     ///systemLayoutSizeFittingSize sets this true so that didCompleteLayoutForTextContainer doesn't redraw the layer while other sizing calculations are in progress.
-    private var isCalculatingSize:Bool = false
+    fileprivate var isCalculatingSize:Bool = false
     ///When calling systemLayoutSizeFittingSize with empty textStorage, the layout engine will be provided with an empty character in this font size for the purposes of calculating its needed size. This lets dynamic resizing cells built around ThinTextView start with the desired size.
-    var sizeForFontWhenEmpty:UIFont? = UIFont.systemFontOfSize(20)
+    var sizeForFontWhenEmpty:UIFont? = UIFont.systemFont(ofSize: 20)
     
-    private var cachedICS:CGSize?
+    fileprivate var cachedICS:CGSize?
     
     public override init(frame: CGRect) {
         textContainer = IATextContainer()
@@ -51,18 +51,18 @@ final public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDe
     }
     
     public required init?(coder aDecoder: NSCoder) {
-        textContainer = (aDecoder.decodeObjectForKey("textContainer") as? IATextContainer) ?? IATextContainer()
-        layoutManager = (aDecoder.decodeObjectForKey("layoutManager") as? NSLayoutManager) ?? NSLayoutManager()
-        textStorage = (aDecoder.decodeObjectForKey("textStorage") as? NSTextStorage) ?? NSTextStorage()
+        textContainer = (aDecoder.decodeObject(forKey: "textContainer") as? IATextContainer) ?? IATextContainer()
+        layoutManager = (aDecoder.decodeObject(forKey: "layoutManager") as? NSLayoutManager) ?? NSLayoutManager()
+        textStorage = (aDecoder.decodeObject(forKey: "textStorage") as? NSTextStorage) ?? NSTextStorage()
         super.init(coder: aDecoder)
         setupSTV()
     }
     
-    public override func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(textContainer, forKey: "textContainer")
-        aCoder.encodeObject(layoutManager, forKey: "layoutManager")
-        aCoder.encodeObject(textStorage, forKey: "textStorage")
+    public override func encode(with aCoder: NSCoder) {
+        super.encode(with: aCoder)
+        aCoder.encode(textContainer, forKey: "textContainer")
+        aCoder.encode(layoutManager, forKey: "layoutManager")
+        aCoder.encode(textStorage, forKey: "textStorage")
     }
     
     func setupSTV(){
@@ -71,10 +71,10 @@ final public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDe
         //textContainer.size = self.bounds.size
         textContainer.heightTracksTextView = false
         textContainer.widthTracksTextView = true
-        textContainer.size = CGSizeMake(self.bounds.size.width, 10000000.0)
+        textContainer.size = CGSize(width: self.bounds.size.width, height: 10000000.0)
         layoutManager.delegate = self
         textStorage.delegate = self
-        textContainer.lineBreakMode = .ByWordWrapping
+        textContainer.lineBreakMode = .byWordWrapping
     }
     
     //Doesn't get called in normal IA stack (frame-didSet gets called instead) but should be included in case thin viewer is used elsewhere
@@ -102,17 +102,17 @@ final public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDe
         }
     }
     
-    public override func drawRect(rect: CGRect) {
+    public override func draw(_ rect: CGRect) {
         if let bgColor = self.backgroundColor {
             bgColor.setFill()
             UIRectFill(rect)
         }
-        let glyphRange = layoutManager.glyphRangeForTextContainer(textContainer)
-        layoutManager.drawBackgroundForGlyphRange(glyphRange, atPoint: self.bounds.origin)
-        layoutManager.drawGlyphsForGlyphRange(glyphRange, atPoint: self.bounds.origin)
+        let glyphRange = layoutManager.glyphRange(for: textContainer)
+        layoutManager.drawBackground(forGlyphRange: glyphRange, at: self.bounds.origin)
+        layoutManager.drawGlyphs(forGlyphRange: glyphRange, at: self.bounds.origin)
     }
     
-    public func layoutManager(layoutManager: NSLayoutManager, didCompleteLayoutForTextContainer textContainer: NSTextContainer?, atEnd layoutFinishedFlag: Bool) {
+    public func layoutManager(_ layoutManager: NSLayoutManager, didCompleteLayoutFor textContainer: NSTextContainer?, atEnd layoutFinishedFlag: Bool) {
         if isCalculatingSize == false {
             self.setNeedsDisplay()
         }
@@ -123,56 +123,56 @@ final public class ThinTextView:UIView, NSLayoutManagerDelegate, NSTextStorageDe
 //    }
     
     ///Convenience function which returns the character index of the character at the provided point. If the point is not in a boundingRect of a glyph then this returns nil. The point is relative to this view.
-    func characterIndexAtPoint(point:CGPoint)->Int?{
-        let glyphIndex = layoutManager.glyphIndexForPoint(point, inTextContainer: self.textContainer)
-        let boundingRect = layoutManager.boundingRectForGlyphRange(NSMakeRange(glyphIndex, 1), inTextContainer: self.textContainer)
+    func characterIndexAtPoint(_ point:CGPoint)->Int?{
+        let glyphIndex = layoutManager.glyphIndex(for: point, in: self.textContainer)
+        let boundingRect = layoutManager.boundingRect(forGlyphRange: NSMakeRange(glyphIndex, 1), in: self.textContainer)
         if boundingRect.contains(point) {
-            return layoutManager.characterIndexForGlyphAtIndex(glyphIndex)
+            return layoutManager.characterIndexForGlyph(at: glyphIndex)
         } else {
             return nil
         }
     }
     
     ///This performs text layout as need to fit the size. This will ignore preferedMaxLayoutWidth
-    public override func sizeThatFits(size: CGSize) -> CGSize {
+    public override func sizeThatFits(_ size: CGSize) -> CGSize {
         let useEmptyAttString = textStorage.length == 0 && sizeForFontWhenEmpty != nil
         let currentTCSize = textContainer.size
         isCalculatingSize = true
         if useEmptyAttString {
             textStorage.beginEditing()
-            textStorage.replaceCharactersInRange(NSMakeRange(0,0), withString: "\u{200B}")
+            textStorage.replaceCharacters(in: NSMakeRange(0,0), with: "\u{200B}")
             textStorage.setAttributes([NSFontAttributeName:sizeForFontWhenEmpty!], range: NSMakeRange(0,1))
             textStorage.endEditing()
         }
         textContainer.size = size
-        let result = layoutManager.usedRectForTextContainer(textContainer).size
+        let result = layoutManager.usedRect(for: textContainer).size
         if useEmptyAttString {
-            textStorage.replaceCharactersInRange(NSMakeRange(0,1), withString: "")
+            textStorage.replaceCharacters(in: NSMakeRange(0,1), with: "")
         }
         textContainer.size = currentTCSize
         isCalculatingSize = false
         return result
     }
     
-    public override func intrinsicContentSize() -> CGSize {
-        guard thinTVIsSlave == false else {return CGSizeMake(UIViewNoIntrinsicMetric, UIViewNoIntrinsicMetric)}
+    public override var intrinsicContentSize : CGSize {
+        guard thinTVIsSlave == false else {return CGSize(width: UIViewNoIntrinsicMetric, height: UIViewNoIntrinsicMetric)}
         guard cachedICS == nil else {return cachedICS!}
         if let pmlw = preferedMaxLayoutWidth {
-            var ics = sizeThatFits(CGSizeMake(floor(pmlw), 1000000))
+            var ics = sizeThatFits(CGSize(width: floor(pmlw), height: 1000000))
             ics.height = ceil(ics.height)
             ics.width = ceil(ics.width)
             cachedICS = ics
             return ics
-        } else if self.bounds.size == CGSizeZero {
+        } else if self.bounds.size == CGSize.zero {
             //let s = systemLayoutSizeFittingSize(CGSizeMake(10000000, 1000000))
-            var ics = sizeThatFits(CGSizeMake(10000000, 1000000))
+            var ics = sizeThatFits(CGSize(width: 10000000, height: 1000000))
             ics.height = ceil(ics.height)
             ics.width = ceil(ics.width)
             cachedICS = ics
             return ics
         } else {
-            let gr = layoutManager.glyphRangeForTextContainer(self.textContainer)
-            var ics = layoutManager.boundingRectForGlyphRange(gr, inTextContainer: textContainer).size
+            let gr = layoutManager.glyphRange(for: self.textContainer)
+            var ics = layoutManager.boundingRect(forGlyphRange: gr, in: textContainer).size
             ics.height = ceil(ics.height)
             ics.width = ceil(ics.width)
             cachedICS = ics

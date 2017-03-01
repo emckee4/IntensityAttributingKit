@@ -7,12 +7,36 @@
 //
 
 import UIKit
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func <= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l <= r
+  default:
+    return !(rhs < lhs)
+  }
+}
+
 
 /**The IAString is the core data structure at the heart of the IntensityAttributingKit. It's similar in concept to an NSAttributedString except that it's designed to more abstractly represent the data that may be displayed via varying schemes.
 */
-public class IAString {
+open class IAString {
     
-    internal(set) public var text:String {
+    internal(set) open var text:String {
         didSet{self.length = self.text.utf16.count}
     }
     internal(set) var intensities:[Int] = []
@@ -20,23 +44,23 @@ public class IAString {
     internal(set) var baseAttributes:CollapsingArray<IABaseAttributes>
     
     
-    internal(set) var links:[RangeValuePair<NSURL>] = []
+    internal(set) var links:[RangeValuePair<URL>] = []
 
-    public internal(set) var attachments: IAAttachmentArray = IAAttachmentArray()
-    public var attachmentCount:Int {
+    open internal(set) var attachments: IAAttachmentArray = IAAttachmentArray()
+    open var attachmentCount:Int {
         return attachments.count
     }
 
-    public var baseOptions:IAStringOptions!
+    open var baseOptions:IAStringOptions!
     
     ///Based on UTF16 count of text. All other counts should stay in sync with this.
-    private(set) public var length:Int
+    fileprivate(set) open var length:Int
     
     //////////////////////////////////////
     
-    public var avgIntensity:Int {return intensities.reduce(0, combine: +) / intensities.count}
+    open var avgIntensity:Int {return intensities.reduce(0, +) / intensities.count}
     
-    public var hasAttachmentsWithPlaceholders:Bool {
+    open var hasAttachmentsWithPlaceholders:Bool {
         for (_,attach) in self.attachments {
             guard !attach.showingPlaceholder else {return true}
         }
@@ -44,40 +68,40 @@ public class IAString {
     }
     
     ///Converts the iaString to a dictionary which is ready for direct coversion to JSON except for containing an iaTextAttachments key which needs to be stripped out and handled separately when uploading.
-    public func convertToAlmostJSONReadyDict(useStringURLs useStringURLs:Bool = false)->[String:AnyObject]{
-        var dict:[String:AnyObject] = [:]
-        dict[IAStringKeys.text] = self.text
-        dict[IAStringKeys.intensities] = self.intensities
+    open func convertToAlmostJSONReadyDict(useStringURLs:Bool = false)->[String:Any]{
+        var dict:[String:Any] = [:]
+        dict[IAStringKeys.text] = self.text as Any?
+        dict[IAStringKeys.intensities] = self.intensities as Any?
         
-        dict[IAStringKeys.baseAttributes] = self.baseAttributes.asRVPArray
+        dict[IAStringKeys.baseAttributes] = self.baseAttributes.asRVPArray as Any?
         let urlRVPs = self.links.map({$0.asArray})
         if useStringURLs {
-            var stringRVPs:[[AnyObject]] = []
+            var stringRVPs:[[Any]] = []
             for rvp in urlRVPs {
                 guard rvp.count == 3 else {continue}
-                guard let urlString = (rvp[2] as? NSURL)?.absoluteString else {continue}
+                guard let urlString = (rvp[2] as? URL)?.absoluteString else {continue}
                 stringRVPs.append([rvp[0],rvp[1],urlString])
             }
-            dict[IAStringKeys.linkRVPs] = stringRVPs
+            dict[IAStringKeys.linkRVPs] = stringRVPs as Any?
         } else {
             dict[IAStringKeys.nsurlRVPs] = urlRVPs
         }
         
         
-        dict[IAStringKeys.options] = baseOptions.asOptionsDict()
+        dict[IAStringKeys.options] = baseOptions.asOptionsDict() as Any?
         
         
         var attachDict:[Int:IATextAttachment] = [:]
         for (loc,attach) in self.attachments {
             attachDict[loc] = attach
         }
-        dict[IAStringKeys.iaTextAttachments] = attachDict
+        dict[IAStringKeys.iaTextAttachments] = attachDict as Any?
         return dict
     }
     
     ///This functions as an inverse of convertToAlmostJSONReadyDict but it can accept attachments in IAStringKeys.attachments format (for which it will insert placeholders) or in .iaTextAttachments format. If preferedSmoothing and/or renderScheme are embeded in the renderOptions dictionary then this will pull them out automatically.
     public init!(dict:[String:AnyObject]){
-        guard let newText = dict[IAStringKeys.text] as? String, newIntensities = dict[IAStringKeys.intensities] as? [Int], rawBaseAtts = dict[IAStringKeys.baseAttributes] as? [[Int]] else {
+        guard let newText = dict[IAStringKeys.text] as? String, let newIntensities = dict[IAStringKeys.intensities] as? [Int], let rawBaseAtts = dict[IAStringKeys.baseAttributes] as? [[Int]] else {
             print("IAIntermediate received incomplete data"); self.text = ""; self.length = 0; self.baseAttributes = []; return nil
         }
         //string
@@ -94,15 +118,15 @@ public class IAString {
         
         if let newLinks = dict[IAStringKeys.linkRVPs] as? [[AnyObject]]{
             for textRVP in newLinks {
-                if let urlString = textRVP[2] as? String, start = textRVP[0] as? Int, end = textRVP[1] as? Int {
-                    if let url = NSURL(string: urlString) {
+                if let urlString = textRVP[2] as? String, let start = textRVP[0] as? Int, let end = textRVP[1] as? Int {
+                    if let url = URL(string: urlString) {
                         self.links.append(RangeValuePair(value: url, startIndex: start, endIndex: end))
                     }
                 }
             }
         } else if let newURLs = dict[IAStringKeys.nsurlRVPs] as? [[AnyObject]] {
             for urlRVP in newURLs {
-                if let url = (urlRVP[2] as? NSURL), start = urlRVP[0] as? Int, end = urlRVP[1] as? Int {
+                if let url = (urlRVP[2] as? URL), let start = urlRVP[0] as? Int, let end = urlRVP[1] as? Int {
                     self.links.append(RangeValuePair(value: url, startIndex: start, endIndex: end))
                 }
             }
@@ -112,11 +136,12 @@ public class IAString {
         }
         
         if let iaAttachments = dict[IAStringKeys.iaTextAttachments] as? [Int:IATextAttachment] {
-            for (key, attach) in iaAttachments.sort({$0.0 < $1.0}) {
+            for (key, attach) in iaAttachments.sorted(by: {$0.0 < $1.0}) {
                 self.attachments[key] = attach
             }
         } else if let newAttachments = dict[IAStringKeys.attachments] as? [Int:AnyObject]{
-            for (loc, attachInfo) in newAttachments {
+            //(loc, attachInfo)
+            for (_) in newAttachments {
                 print("IAString.init(dict:) received attachment \(newAttachments) in non IATA form")
 //                guard let attachTypeString = attachInfo["attachType"] as? String, attachType =
 //                guard let filename = attachInfo["name"] as? String, remoteURLString = attachInfo["url"] as? String else {continue}
@@ -136,7 +161,7 @@ public class IAString {
     }
     
     ///This is intended for initialization of IAIntermediate within the module. It provides only minimal sanity checks.
-    private init!(text:String, intensities:[Int], attributes:IABaseAttributes, baseOptions:IAStringOptions = IAKitPreferences.iaStringDefaultBaseOptions){
+    fileprivate init!(text:String, intensities:[Int], attributes:IABaseAttributes, baseOptions:IAStringOptions = IAKitPreferences.iaStringDefaultBaseOptions){
         self.text = text
         self.length = self.text.utf16.count
         guard intensities.count == self.length else {baseAttributes = [];return nil}
@@ -148,7 +173,7 @@ public class IAString {
     init(text:String, intensity:Int, attributes:IABaseAttributes, baseOptions:IAStringOptions = IAKitPreferences.iaStringDefaultBaseOptions){
         self.text = text
         self.length = self.text.utf16.count
-        self.intensities = Array<Int>(count:self.length,repeatedValue:intensity)
+        self.intensities = Array<Int>(repeating: intensity,count: self.length)
         self.baseAttributes = CollapsingArray.init(repeatedValue: attributes, count: self.length)
         self.baseOptions = baseOptions
     }
@@ -166,11 +191,11 @@ public class IAString {
     func scanLinks(){
         invalidateLinks()
         let detector = try! NSDataDetector(types: 8191)
-        detector.enumerateMatchesInString(self.text, options: .WithTransparentBounds, range: NSRange(location: 0, length: self.length)) { (result, flags, stop) -> Void in
+        detector.enumerateMatches(in: self.text, options: .withTransparentBounds, range: NSRange(location: 0, length: self.length)) { (result, flags, stop) -> Void in
             if let result = result {
                 print("result: \(result.resultType)")
-                if let url = result.URL {
-                    print("url result: \(result.URL!)")
+                if let url = result.url {
+                    print("url result: \(result.url!)")
                     self.links.append(RangeValuePair(value: url, range: result.range))
                     //TODO: might want to check if there's already a url in any of the given range.
                 }
@@ -206,8 +231,8 @@ public class IAString {
     }
     
     
-    func urlAtIndex(index:Int)->(url:NSURL, urlRange:Range<Int>)?{
-        if let rvpIndex = links.indexOf({$0.range.contains(index)}){
+    func urlAtIndex(_ index:Int)->(url:URL, urlRange:CountableRange<Int>)?{
+        if let rvpIndex = links.index(where: {$0.range.contains(index)}){
             let rvp = links[rvpIndex] 
             return (url:rvp.value, urlRange:rvp.range)
         } else {

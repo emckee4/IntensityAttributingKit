@@ -9,27 +9,59 @@
 import Foundation
 
 
-extension Range where Element:Comparable {
-    ///Returns true if there's any overlap between the two ranges, false otherwise.
-    func intersects(range:Range<Element>)->Bool {
-        //cases: contains, is contained in, bottom half overlaps, top half overlaps
-        if self.startIndex >= range.endIndex || self.endIndex <= range.startIndex {
-            return false
-        }
-        return true
+//extension Range {
+////    ///Returns true if there's any overlap between the two ranges, false otherwise.
+////    func intersects(_ range:Range<Element>)->Bool {
+////        //cases: contains, is contained in, bottom half overlaps, top half overlaps
+////        if self.lowerBound >= range.upperBound || self.upperBound <= range.lowerBound {
+////            return false
+////        }
+////        return true
+////    }
+//    
+//    ///Returns true if this range wholly contains the provided range, false otherwise. A range with zero length will not be contained in anything.
+//    func whollyContains(_ range:Range<Element>)->Bool {
+//        return range.lowerBound >= self.lowerBound && range.upperBound <= self.upperBound
+//    }
+//    
+//}
+//
+//extension ClosedRange {
+//    ///Returns true if this range wholly contains the provided range, false otherwise. A range with zero length will not be contained in anything.
+//    func whollyContains(_ range:Range<Element>)->Bool {
+//        return range.lowerBound >= self.lowerBound && range.upperBound <= self.upperBound
+//    }
+//}
+
+extension CountableRange {
+    var nsRange:NSRange {
+        let start = self.lowerBound as! Int
+        let end = self.upperBound as! Int
+        return NSRange(location: start, length: end - start)
     }
     
     ///Returns true if this range wholly contains the provided range, false otherwise. A range with zero length will not be contained in anything.
-    func contains(range:Range<Element>)->Bool {
-        return range.startIndex >= self.startIndex && range.endIndex <= self.endIndex
+    func whollyContains(_ range:CountableRange<Element>)->Bool {
+        return range.lowerBound >= self.lowerBound && range.upperBound <= self.upperBound
     }
-    
 }
 
-extension Range where Element:SignedIntegerType {
-    var nsRange:NSRange {
-        let start = self.startIndex as! Int
-        let end = self.endIndex as! Int
-        return NSRange(location: start, length: end - start)
+//extension CountableClosedRange {
+//    var nsRange:NSRange {
+//        let start = self.lowerBound as! Int
+//        let end = self.upperBound as! Int
+//        return NSRange(location: start, length: end + 1 - start)
+//    }
+//    
+//    ///Returns true if this range wholly contains the provided range, false otherwise. A range with zero length will not be contained in anything.
+//    func whollyContains(_ range:Range<Element>)->Bool {
+//        return range.lowerBound >= self.lowerBound && range.upperBound <= self.upperBound
+//    }
+//}
+
+extension NSRange {
+    func toCountableRange() -> CountableRange<Int>!{
+        guard length >= 0 else {return nil}
+        return (self.location)..<(self.location + self.length)
     }
 }

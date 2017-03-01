@@ -11,24 +11,24 @@ import MapKit
 
 ///Typealias of IAPlacemark for MKPlacemark to allow for future differention of IAPlacemark as a subclass
 //public typealias IAPlacemark = MKPlacemark
-public class IAPlacemark:MKPlacemark {
+open class IAPlacemark:MKPlacemark {
     ///User defined placename
-    public let placename:String?
-    private var _region:CLRegion?
-    override public var region: CLRegion?{
+    open let placename:String?
+    fileprivate var _region:CLRegion?
+    override open var region: CLRegion?{
         return _region
     }
     
     required public init?(coder aDecoder: NSCoder) {
-        self.placename = aDecoder.decodeObjectForKey("placename") as? String
+        self.placename = aDecoder.decodeObject(forKey: "placename") as? String
         super.init(coder: aDecoder)
-        self._region = (aDecoder.decodeObjectForKey("_region") as? CLCircularRegion) ?? super.region
+        self._region = (aDecoder.decodeObject(forKey: "_region") as? CLCircularRegion) ?? super.region
     }
     
-    public override func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(placename, forKey: "placename")
-        aCoder.encodeObject(_region, forKey: "_region")
+    open override func encode(with aCoder: NSCoder) {
+        super.encode(with: aCoder)
+        aCoder.encode(placename, forKey: "placename")
+        aCoder.encode(_region, forKey: "_region")
     }
     
     override init(placemark: CLPlacemark) {
@@ -55,7 +55,7 @@ public class IAPlacemark:MKPlacemark {
         self._region = region ?? super.region
     }
     
-    override init(coordinate: CLLocationCoordinate2D, addressDictionary: [String : AnyObject]?) {
+    override init(coordinate: CLLocationCoordinate2D, addressDictionary: [String : Any]?) {
         self.placename = nil
         super.init(coordinate: coordinate, addressDictionary: addressDictionary)
         self._region = super.region

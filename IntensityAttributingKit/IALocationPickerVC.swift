@@ -13,7 +13,7 @@ class IALocationPickerVC:UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     var mapView:MKMapView!
     var geocoder:CLGeocoder!
-    private var locationManagerDelegateShim:IALocationManagerDelegateShim!
+    fileprivate var locationManagerDelegateShim:IALocationManagerDelegateShim!
     var delegate:IALocationPickerDelegate?
 
     var longPressGestureRecognizer:UILongPressGestureRecognizer!
@@ -36,10 +36,10 @@ class IALocationPickerVC:UIViewController, MKMapViewDelegate, CLLocationManagerD
     }
     
     ///This will become true the first time a geolocation for the user is found. This is used to indicate whether the camera should adjust to the newly found position.
-    private var hasZoomedToUser:Bool = false
+    fileprivate var hasZoomedToUser:Bool = false
     
     ///Since MKUserLocation is immutable but required to get the system to use the private MKModernUserLocationView, we attach this label to said view in the detailCalloutAccessoryView to enable a display of location data in the user callout in the position where a subtitle would display text.
-    private var userDetailLabel:UILabel!
+    fileprivate var userDetailLabel:UILabel!
     
     var toolbar:UIToolbar!
     var confirmButton:UIBarButtonItem!
@@ -56,10 +56,10 @@ class IALocationPickerVC:UIViewController, MKMapViewDelegate, CLLocationManagerD
         mapView.delegate = self
         
         
-        mapView.topAnchor.constraintEqualToAnchor(view.topAnchor).active = true
-        mapView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor).active = true
-        mapView.leftAnchor.constraintEqualToAnchor(view.leftAnchor).active = true
-        mapView.rightAnchor.constraintEqualToAnchor(view.rightAnchor).active = true
+        mapView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        mapView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        mapView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        mapView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
 
         geocoder = CLGeocoder()
 
@@ -79,32 +79,32 @@ class IALocationPickerVC:UIViewController, MKMapViewDelegate, CLLocationManagerD
         checkAuthStatus()
         
         userDetailLabel = UILabel()
-        userDetailLabel.font = UIFont.systemFontOfSize(12)
+        userDetailLabel.font = UIFont.systemFont(ofSize: 12)
     }
     
     func setupToolbar(){
         toolbar = UIToolbar()
         view.addSubview(toolbar)
         toolbar.translatesAutoresizingMaskIntoConstraints = false
-        toolbar.heightAnchor.constraintEqualToConstant(44.0).active = true
-        toolbar.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor).active = true
-        toolbar.leftAnchor.constraintEqualToAnchor(view.leftAnchor).active = true
-        toolbar.rightAnchor.constraintEqualToAnchor(view.rightAnchor).active = true
+        toolbar.heightAnchor.constraint(equalToConstant: 44.0).isActive = true
+        toolbar.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        toolbar.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        toolbar.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         
-        cancelButton = UIBarButtonItem(barButtonSystemItem: .Cancel, target: self, action: #selector(IALocationPickerVC.cancelAndDismiss(_:)))
-        confirmButton = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: #selector(IALocationPickerVC.confirmSelection(_:)))
-        confirmButton.enabled = false
-        let flexSpace = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
+        cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(IALocationPickerVC.cancelAndDismiss(_:)))
+        confirmButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(IALocationPickerVC.confirmSelection(_:)))
+        confirmButton.isEnabled = false
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         toolbar.setItems([cancelButton, flexSpace, confirmButton], animated: false)
     }
     
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         IAKitPreferences.locationManager.delegate = locationManagerDelegateShim.previousDelegate
         geocoder.cancelGeocode()
@@ -114,12 +114,12 @@ class IALocationPickerVC:UIViewController, MKMapViewDelegate, CLLocationManagerD
     //MARK:-GestureRecognizers
 
     
-    func longPressDetected(sender:UILongPressGestureRecognizer!){
-        guard sender.state == .Began else {return}
+    func longPressDetected(_ sender:UILongPressGestureRecognizer!){
+        guard sender.state == .began else {return}
         print("longpress detected")
-        let locPoint = sender.locationInView(mapView)
+        let locPoint = sender.location(in: mapView)
         if selectedLocation == nil {
-            let loc = mapView.convertPoint(locPoint, toCoordinateFromView: mapView)
+            let loc = mapView.convert(locPoint, toCoordinateFrom: mapView)
             selectedLocation = MKPointAnnotation()
             selectedLocation!.coordinate = loc
             selectedLocation!.title = "Selected Location"
@@ -130,11 +130,11 @@ class IALocationPickerVC:UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     //MARK:- MapView delegate functions
     
-    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         print("view for annotation")
         guard !(annotation is MKUserLocation) else {return nil}
         var pin:MKPinAnnotationView!
-        if let oldPin = mapView.dequeueReusableAnnotationViewWithIdentifier("pin") as? MKPinAnnotationView {
+        if let oldPin = mapView.dequeueReusableAnnotationView(withIdentifier: "pin") as? MKPinAnnotationView {
             pin = oldPin
             pin.annotation = annotation
         } else {
@@ -142,31 +142,31 @@ class IALocationPickerVC:UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
 
         pin.canShowCallout = true
-        pin.draggable = true
+        pin.isDraggable = true
         
         return pin
     }
     
-    func mapView(mapView: MKMapView, didSelectAnnotationView view: MKAnnotationView) {
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
         print("did select \(view)")
-        confirmButton.enabled = true
+        confirmButton.isEnabled = true
     }
     
-    func mapView(mapView: MKMapView, didDeselectAnnotationView view: MKAnnotationView) {
+    func mapView(_ mapView: MKMapView, didDeselect view: MKAnnotationView) {
         print("didDeselect")
-        confirmButton.enabled = false
+        confirmButton.isEnabled = false
     }
     
-    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, didChangeDragState newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, didChange newState: MKAnnotationViewDragState, fromOldState oldState: MKAnnotationViewDragState) {
         print("didChangeDragState")
-        if newState == .Ending && view.annotation != nil{
+        if newState == .ending && view.annotation != nil{
             selectedPlacemark = nil
             reverseGeocode(view.annotation!)
         }
         
     }
     
-    func mapView(mapView: MKMapView, didAddAnnotationViews views: [MKAnnotationView]) {
+    func mapView(_ mapView: MKMapView, didAdd views: [MKAnnotationView]) {
         print("didAddAnnotationViews")
         for item in views where item.annotation is MKUserLocation{
             //item.rightCalloutAccessoryView = userCheckButton
@@ -174,12 +174,12 @@ class IALocationPickerVC:UIViewController, MKMapViewDelegate, CLLocationManagerD
         }
     }
     
-    func mapView(mapView: MKMapView, didUpdateUserLocation userLocation: MKUserLocation) {
+    func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
         userPlacemark = nil
         reverseGeocode(userLocation)
     }
     
-    func reverseGeocode(annotation: MKAnnotation){
+    func reverseGeocode(_ annotation: MKAnnotation){
         
         geocoder.reverseGeocodeLocation(CLLocation(latitude: annotation.coordinate.latitude,longitude: annotation.coordinate.longitude)) { (placemarkArray, error) in
         
@@ -209,22 +209,22 @@ class IALocationPickerVC:UIViewController, MKMapViewDelegate, CLLocationManagerD
     
     //MARK:- LocationManagerDelegate and AuthCheck
     
-    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         checkAuthStatus()
     }
  
     func checkAuthStatus(){
         switch CLLocationManager.authorizationStatus() {
-        case .AuthorizedAlways,.AuthorizedWhenInUse:
+        case .authorizedAlways,.authorizedWhenInUse:
             mapView.showsUserLocation = true
-        case .NotDetermined:
+        case .notDetermined:
             IAKitPreferences.locationManager.requestWhenInUseAuthorization()
         default:
             break //Location not authorized
         }
     }
     
-    func confirmSelection(sender:AnyObject!){
+    func confirmSelection(_ sender:AnyObject!){
         guard let selection = mapView.selectedAnnotations.first else {return}
         var finalPlacemark:IAPlacemark!
         //var isUser:Bool = false
@@ -246,7 +246,7 @@ class IALocationPickerVC:UIViewController, MKMapViewDelegate, CLLocationManagerD
         delegate?.locationPickerController(self, location: finalPlacemark)
     }
     
-    func cancelAndDismiss(sender:AnyObject!){
+    func cancelAndDismiss(_ sender:AnyObject!){
         delegate?.locationPickerControllerDidCancel(self)
     }
 
@@ -256,15 +256,15 @@ class IALocationPickerVC:UIViewController, MKMapViewDelegate, CLLocationManagerD
 
 
 protocol IALocationPickerDelegate:class {
-    func locationPickerController(picker: IALocationPickerVC, location:IAPlacemark)
-    func locationPickerControllerDidCancel(picker: IALocationPickerVC)->Void
+    func locationPickerController(_ picker: IALocationPickerVC, location:IAPlacemark)
+    func locationPickerControllerDidCancel(_ picker: IALocationPickerVC)->Void
     
 }
 
 
 extension CLLocationCoordinate2D {
     ///Default epsilon is around 2.2 meters
-    func isEqualTo(location location:CLLocationCoordinate2D, withEpsilon epsilon:CLLocationDegrees = 0.00002)->Bool{
+    func isEqualTo(location:CLLocationCoordinate2D, withEpsilon epsilon:CLLocationDegrees = 0.00002)->Bool{
         return abs(self.latitude - location.latitude) < epsilon && abs(self.longitude - location.longitude) < epsilon
     }
 }

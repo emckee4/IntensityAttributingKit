@@ -11,9 +11,9 @@ import UIKit
 
 
 extension NSLayoutConstraint {
-    func activateWithPriority(priority:Float, identifier:String? = nil)->NSLayoutConstraint{
+    @discardableResult func activateWithPriority(_ priority:Float, identifier:String? = nil)->NSLayoutConstraint{
         self.priority = priority
-        self.active = true
+        self.isActive = true
         if identifier != nil {
             self.identifier = identifier
         }
@@ -24,7 +24,7 @@ extension NSLayoutConstraint {
 
 extension CGSize {
     ///Returns the largest CGSize that will fit in the provided container size without changing the aspect ratio
-    func sizeThatFitsMaintainingAspect(containerSize containerSize:CGSize, expandIfRoom:Bool = false)->CGSize{
+    func sizeThatFitsMaintainingAspect(containerSize:CGSize, expandIfRoom:Bool = false)->CGSize{
         let widthScaleFactor =  containerSize.width / self.width
         let heightScaleFactor = containerSize.height / self.height
         if widthScaleFactor >= 1.0 && heightScaleFactor >= 1.0 {
@@ -32,11 +32,11 @@ extension CGSize {
                 return self
             }else {
                 let newScale = min(widthScaleFactor,heightScaleFactor)
-                return CGSizeApplyAffineTransform(self, CGAffineTransformMakeScale(newScale, newScale))
+                return self.applying(CGAffineTransform(scaleX: newScale, y: newScale))
             }
         } else {
             let newScale = min(widthScaleFactor,heightScaleFactor)
-            return CGSizeApplyAffineTransform(self, CGAffineTransformMakeScale(newScale, newScale))
+            return self.applying(CGAffineTransform(scaleX: newScale, y: newScale))
         }
     }
 }
@@ -44,19 +44,19 @@ extension CGSize {
 extension UIGestureRecognizerState: CustomDebugStringConvertible{
     public var debugDescription:String {
         switch self {
-        case .Possible: return "Possible"
-        case .Began: return "Began"
-        case .Changed: return "Changed"
-        case .Ended: return "Ended"
-        case .Cancelled: return "Cancelled"
-        case .Failed: return "Failed"
+        case .possible: return "Possible"
+        case .began: return "Began"
+        case .changed: return "Changed"
+        case .ended: return "Ended"
+        case .cancelled: return "Cancelled"
+        case .failed: return "Failed"
         }
     }
 }
 
 extension CGRect {
     ///calculates the distance of a point to the closest edge of the calling rect if it's outside the rect, or 0 if inside.
-    func distanceToPoint(point:CGPoint)->CGFloat{
+    func distanceToPoint(_ point:CGPoint)->CGFloat{
         if point.x < self.origin.x {
             if point.y < self.origin.y {
                 return sqrt(pow(point.x - self.origin.x, 2) + pow(point.y - self.origin.y, 2))

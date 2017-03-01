@@ -12,54 +12,54 @@ import UIKit
 /**
  IAImageViewerVC provides a convenient prebuilt method for viewing IAImageAttachments.
  */
-public class IAImageViewerVC: UIViewController {
+open class IAImageViewerVC: UIViewController {
     
-    public var imageView:UIImageView!
-    public var attachment:IAImageAttachment!
-    public var tapRecogniser:UITapGestureRecognizer!
+    open var imageView:UIImageView!
+    open var attachment:IAImageAttachment!
+    open var tapRecogniser:UITapGestureRecognizer!
     
-    public override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
 
         imageView = UIImageView(image: attachment.image)
-        imageView.contentMode = .ScaleAspectFit
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(imageView)
-        imageView.topAnchor.constraintEqualToAnchor(self.view.topAnchor).active = true
-        imageView.bottomAnchor.constraintEqualToAnchor(self.view.bottomAnchor).active = true
-        imageView.leftAnchor.constraintEqualToAnchor(self.view.leftAnchor).active = true
-        imageView.rightAnchor.constraintEqualToAnchor(self.view.rightAnchor).active = true
-        imageView.userInteractionEnabled = true
+        imageView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+        imageView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+        imageView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        imageView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        imageView.isUserInteractionEnabled = true
         self.view.backgroundColor = UIColor(white: 0.0, alpha: 1.0)
         
         tapRecogniser = UITapGestureRecognizer(target: self, action: #selector(IAImageViewerVC.imageTapped(_:)))
         imageView.addGestureRecognizer(tapRecogniser)
     }
     
-    public override func didReceiveMemoryWarning() {
+    open override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-    public override func prefersStatusBarHidden() -> Bool {
+    open override var prefersStatusBarHidden : Bool {
         return true
     }
     
-    public func imageTapped(recognizer:UITapGestureRecognizer!){
+    open func imageTapped(_ recognizer:UITapGestureRecognizer!){
         guard let image = attachment.image else {return}
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        let copyAction = UIAlertAction(title: "Copy image", style: .Default) { (action) -> Void in
-            let pb = UIPasteboard.generalPasteboard()
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let copyAction = UIAlertAction(title: "Copy image", style: .default) { (action) -> Void in
+            let pb = UIPasteboard.general
             pb.image = image
         }
         alert.addAction(copyAction)
-        let saveAction = UIAlertAction(title: "Save to Photoroll", style: .Default) { (action) -> Void in
+        let saveAction = UIAlertAction(title: "Save to Photoroll", style: .default) { (action) -> Void in
             UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
         }
         alert.addAction(saveAction)
-        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
-        self.presentViewController(alert, animated: true, completion: nil)
+        self.present(alert, animated: true, completion: nil)
     }
     
 }

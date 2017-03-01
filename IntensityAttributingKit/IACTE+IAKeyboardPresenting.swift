@@ -13,14 +13,14 @@ import Foundation
 ///IAKeyboardDelegate conformance. Most of these are self explanatory. The keyboard uses the UIKeyInput deleteBackwards function for backspace while using its custom iaKeyboard:insertTextAtCursor: function here for insertion.
 extension IACompositeTextEditor:IAKeyboardDelegate {
     
-    func iaKeyboard(iaKeyboard:IAKeyboard, insertTextAtCursor text:String, intensity:Int){
+    func iaKeyboard(_ iaKeyboard:IAKeyboard, insertTextAtCursor text:String, intensity:Int){
         guard selectedTextRange != nil else {return}
         let insertionIAString = IAString(text: text, intensity: intensity, attributes: baseAttributes)
         replaceIAStringRange(insertionIAString, range: selectedRange!)
     }
     
     ///Handles replacement of marked text after a suggestion is chosen from the IAKeyboard SuggestionView
-    func iaKeyboard(iaKeyboard:IAKeyboard, suggestionSelected text:String, intensity:Int)->Bool{
+    func iaKeyboard(_ iaKeyboard:IAKeyboard, suggestionSelected text:String, intensity:Int)->Bool{
         if markedRange != nil {
             let rep = IAString(text: text + " ", intensity: intensity, attributes: iaString.getBaseAttributesForRange(markedRange!))
             replaceIAStringRange(rep, range: markedRange!, closeSelectedRange: true)
@@ -36,7 +36,7 @@ extension IACompositeTextEditor:IAKeyboardDelegate {
     
     ///returns true if IAKeyboard is presented by this, false if system keyboard, and nil if this is not first responder
     var keyboardIsIAKeyboard:Bool?{
-        guard self.isFirstResponder() else {return nil}
+        guard self.isFirstResponder else {return nil}
         return inputViewController == IAKitPreferences.keyboard
     }
     
@@ -62,7 +62,7 @@ extension IACompositeTextEditor:IAKeyboardDelegate {
         iaKeyboard.delegate = self
         iaAccessory.delegate = self
         if selectedTextRange == nil {
-            selectedTextRange = textRangeFromPosition(endOfDocument, toPosition: endOfDocument)
+            selectedTextRange = textRange(from: endOfDocument, to: endOfDocument)
         }
         
         if selectedRange?.isEmpty == true {
@@ -85,20 +85,20 @@ extension IACompositeTextEditor:IAKeyboardDelegate {
 ///IAAccessory delegate conformance. Most of these are pretty self explanatory.
 extension IACompositeTextEditor: IAAccessoryDelegate {
     
-    func accessoryKeyboardChangeButtonPressed(accessory:IAAccessoryVC!){
+    func accessoryKeyboardChangeButtonPressed(_ accessory:IAAccessoryVC!){
         swapKB()
     }
     
-    func accessoryOptionButtonPressed(accessory:IAAccessoryVC!){
+    func accessoryOptionButtonPressed(_ accessory:IAAccessoryVC!){
         guard delegate?.iaTextEditorRequestsPresentationOfOptionsVC?(self) == true else {return}
         let optionsVC = IAKitSettingsTableViewController()
         let modalContainer = ModalContainerViewController()
         modalContainer.addChildViewController(optionsVC)
-        modalContainer.dismissalCompletionBlock = {self.becomeFirstResponder()}
-        self.window?.rootViewController?.presentViewController(modalContainer, animated: true, completion: nil)
+        modalContainer.dismissalCompletionBlock = {_ = self.becomeFirstResponder()}
+        self.window?.rootViewController?.present(modalContainer, animated: true, completion: nil)
     }
     
-    func accessoryRequestsPickerLaunch(accessory:IAAccessoryVC!,pickerName:String){
+    func accessoryRequestsPickerLaunch(_ accessory:IAAccessoryVC!,pickerName:String){
         switch pickerName{
         case "photo":
             launchPhotoPicker()
@@ -111,7 +111,7 @@ extension IACompositeTextEditor: IAAccessoryDelegate {
         }
     }
     
-    func accessoryUpdatedDefaultIntensity(accessory:IAAccessoryVC!, withValue value:Int){
+    func accessoryUpdatedDefaultIntensity(_ accessory:IAAccessoryVC!, withValue value:Int){
         self.currentIntensity = value
         ///modify the intensities in the selected range
         if selectedRange != nil && self.selectedRange?.isEmpty == false {
@@ -123,7 +123,7 @@ extension IACompositeTextEditor: IAAccessoryDelegate {
     }
     
     ///Return true to inform the iaAccessory that it should center the button associated with the transformer.
-    func accessoryRequestsTransformerChange(accessory:IAAccessoryVC!, toTransformer:IntensityTransformers)->Bool{
+    func accessoryRequestsTransformerChange(_ accessory:IAAccessoryVC!, toTransformer:IntensityTransformers)->Bool{
         guard toTransformer != iaString.baseOptions.renderScheme else {return true}
         self.iaString.baseOptions.renderScheme = toTransformer
         rerenderIAString(recalculateStrings: true)
@@ -133,7 +133,7 @@ extension IACompositeTextEditor: IAAccessoryDelegate {
         return true
     }
     
-    func accessoryRequestsSmoothingChange(accessory:IAAccessoryVC!, toValue:IAStringTokenizing)->Bool{
+    func accessoryRequestsSmoothingChange(_ accessory:IAAccessoryVC!, toValue:IAStringTokenizing)->Bool{
         guard toValue != iaString.baseOptions.preferedSmoothing else {return true}
         self.iaString.baseOptions.preferedSmoothing = toValue
         rerenderIAString(recalculateStrings: true)

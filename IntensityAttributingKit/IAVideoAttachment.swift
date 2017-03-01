@@ -12,51 +12,51 @@ import AVFoundation
 
 /** Concrete subclass of IATextAttachment for handling video attachments. See discussion in comments of IATextAttachment for more info on why this is constructed this way.
  */
-public class IAVideoAttachment:IATextAttachment {
+open class IAVideoAttachment:IATextAttachment {
   
     ///Either filename or random alpha string (if no filename exists) used for identifying attachments and images with or without filenames
-    private lazy var _localID:String = {return self.videoFilename ?? self.temporaryVideoURL?.lastPathComponent ?? String.randomAlphaString(8)}()
-    override public var localID:String {
+    fileprivate lazy var _localID:String = {return self.videoFilename ?? self.temporaryVideoURL?.lastPathComponent ?? String.randomAlphaString(8)}()
+    override open var localID:String {
         get {return _localID}
         set {_localID = newValue}
     }
     
-    override public var attachmentType:IAAttachmentType {
+    override open var attachmentType:IAAttachmentType {
         return .video
     }
     
-    override public var showingPlaceholder:Bool {
+    override open var showingPlaceholder:Bool {
         return self.previewImage == nil
     }
     
     
-    public var videoFilename:String?
+    open var videoFilename:String?
     ///We retain the reference to the remote location but leave management of the download to the app adopting the framework
-    public var remoteVideoURL:NSURL?
+    open var remoteVideoURL:URL?
     ///It's expected that the localFileURL will be fully determined by the filename, i.e. the url will be <some constant path> + <filename>. The localFileURL does not need to be valid yet, but it should point to the eventual location of the downloaded file
-    public var localVideoURL:NSURL?
-    public var temporaryVideoURL:NSURL?
+    open var localVideoURL:URL?
+    open var temporaryVideoURL:URL?
     
-    public var previewFilename:String?
-    public var remotePreviewURL:NSURL?
-    public var localPreviewURL:NSURL?
+    open var previewFilename:String?
+    open var remotePreviewURL:URL?
+    open var localPreviewURL:URL?
     
-    public var temporaryPreviewURL:NSURL?
+    open var temporaryPreviewURL:URL?
     
-    private(set) public var previewImage:UIImage?
+    fileprivate(set) open var previewImage:UIImage?
     ///saves the value so it doesn't need to be repeatedly recalculated
-    private(set) public var storedContentSize:CGSize?
+    fileprivate(set) open var storedContentSize:CGSize?
     
     ///When true this object is waiting for content to be downloaded and is observing the notifications for video content
-    private(set) public var waitingForDownload:Bool = false
+    fileprivate(set) open var waitingForDownload:Bool = false
     
-    init!(withTemporaryFileLocation loc: NSURL){
+    init!(withTemporaryFileLocation loc: URL){
         self.temporaryVideoURL = loc
         super.init(data: nil, ofType: nil)
         self.previewImage = generatePreview(temporaryVideoURL!)
     }
     
-    public init(videoFilename:String,remoteVideoURL:NSURL,localVideoURL:NSURL?,previewFilename:String,remotePreviewURL:NSURL,localPreviewURL:NSURL?){
+    public init(videoFilename:String,remoteVideoURL:URL,localVideoURL:URL?,previewFilename:String,remotePreviewURL:URL,localPreviewURL:URL?){
         super.init(data: nil, ofType: nil)
         self.videoFilename = videoFilename
         self.remoteVideoURL = remoteVideoURL
@@ -70,57 +70,57 @@ public class IAVideoAttachment:IATextAttachment {
     
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder:aDecoder)
-        if let localID = aDecoder.decodeObjectForKey("localID") as? String {
+        if let localID = aDecoder.decodeObject(forKey: "localID") as? String {
             self.localID = localID
         }
         
-        if let height = aDecoder.decodeObjectForKey("storedHeight") as? Float, width = aDecoder.decodeObjectForKey("storedWidth") as? Float{
+        if let height = aDecoder.decodeObject(forKey: "storedHeight") as? Float, let width = aDecoder.decodeObject(forKey: "storedWidth") as? Float{
             self.storedContentSize = CGSize(width: CGFloat(width), height: CGFloat(height))
         }
         
-        if let vfn = aDecoder.decodeObjectForKey("videoFilename") as? String {self.videoFilename = vfn}
-        if let localVidURL = aDecoder.decodeObjectForKey("localVideoURL") as? NSURL {self.localVideoURL = localVidURL}
-        if let remoteVidURL = aDecoder.decodeObjectForKey("remoteVideoURL") as? NSURL {self.remoteVideoURL = remoteVidURL}
+        if let vfn = aDecoder.decodeObject(forKey: "videoFilename") as? String {self.videoFilename = vfn}
+        if let localVidURL = aDecoder.decodeObject(forKey: "localVideoURL") as? URL {self.localVideoURL = localVidURL}
+        if let remoteVidURL = aDecoder.decodeObject(forKey: "remoteVideoURL") as? URL {self.remoteVideoURL = remoteVidURL}
         
-        if let previewfn = aDecoder.decodeObjectForKey("previewFilename") as? String {self.previewFilename = previewfn}
-        if let localPreviewURL = aDecoder.decodeObjectForKey("localPreviewURL") as? NSURL {self.localPreviewURL = localPreviewURL}
-        if let remotePreviewURL = aDecoder.decodeObjectForKey("remotePreviewURL") as? NSURL {self.remotePreviewURL = remotePreviewURL}
+        if let previewfn = aDecoder.decodeObject(forKey: "previewFilename") as? String {self.previewFilename = previewfn}
+        if let localPreviewURL = aDecoder.decodeObject(forKey: "localPreviewURL") as? URL {self.localPreviewURL = localPreviewURL}
+        if let remotePreviewURL = aDecoder.decodeObject(forKey: "remotePreviewURL") as? URL {self.remotePreviewURL = remotePreviewURL}
         
-        if localVideoURL == nil, let tempVideoURL = aDecoder.decodeObjectForKey("temporaryVideoURL") as? NSURL {self.temporaryVideoURL = tempVideoURL}
-        if localPreviewURL == nil, let tempPreviewURL = aDecoder.decodeObjectForKey("temporaryPreviewURL") as? NSURL {self.temporaryPreviewURL = tempPreviewURL}
+        if localVideoURL == nil, let tempVideoURL = aDecoder.decodeObject(forKey: "temporaryVideoURL") as? URL {self.temporaryVideoURL = tempVideoURL}
+        if localPreviewURL == nil, let tempPreviewURL = aDecoder.decodeObject(forKey: "temporaryPreviewURL") as? URL {self.temporaryPreviewURL = tempPreviewURL}
     }
     
-    public override func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(localID, forKey: "localID")
+    open override func encode(with aCoder: NSCoder) {
+        super.encode(with: aCoder)
+        aCoder.encode(localID, forKey: "localID")
         if let siSize = self.storedContentSize {
-            aCoder.encodeFloat(Float(siSize.height), forKey: "storedHeight")
-            aCoder.encodeFloat(Float(siSize.width), forKey: "storedWidth")
+            aCoder.encode(Float(siSize.height), forKey: "storedHeight")
+            aCoder.encode(Float(siSize.width), forKey: "storedWidth")
         }
-        aCoder.encodeObject(self.videoFilename, forKey: "videoFilename")
-        aCoder.encodeObject(self.remoteVideoURL, forKey: "remoteVideoURL")
-        aCoder.encodeObject(self.localVideoURL, forKey: "localVideoURL")
+        aCoder.encode(self.videoFilename, forKey: "videoFilename")
+        aCoder.encode(self.remoteVideoURL, forKey: "remoteVideoURL")
+        aCoder.encode(self.localVideoURL, forKey: "localVideoURL")
         
-        aCoder.encodeObject(self.previewFilename, forKey: "previewFilename")
-        aCoder.encodeObject(self.remotePreviewURL, forKey: "remotePreviewURL")
-        aCoder.encodeObject(self.localPreviewURL, forKey: "localPreviewURL")
+        aCoder.encode(self.previewFilename, forKey: "previewFilename")
+        aCoder.encode(self.remotePreviewURL, forKey: "remotePreviewURL")
+        aCoder.encode(self.localPreviewURL, forKey: "localPreviewURL")
         
         if self.localVideoURL == nil {
-            aCoder.encodeObject(self.temporaryVideoURL, forKey: "temporaryVideoURL")
+            aCoder.encode(self.temporaryVideoURL, forKey: "temporaryVideoURL")
         }
         if self.localPreviewURL == nil {
-            aCoder.encodeObject(self.temporaryPreviewURL, forKey: "temporaryPreviewURL")
+            aCoder.encode(self.temporaryPreviewURL, forKey: "temporaryPreviewURL")
         }
     }
     
-    override func imageForThumbSize(thumbSize:IAThumbSize)->UIImage{
+    override func imageForThumbSize(_ thumbSize:IAThumbSize)->UIImage{
         let cachingName = thumbCatchName(forSize: thumbSize)
-        if let thumb = IATextAttachment.thumbCache.objectForKey(cachingName) as? UIImage {
+        if let thumb = IATextAttachment.thumbCache.object(forKey: cachingName as AnyObject) as? UIImage {
             return thumb
         } else if previewImage != nil {
             //let thumb = previewImage!.resizeImageToFit(maxSize: thumbSize.size)
-            let thumb = previewImage!.resizeImageWithScaleAspectFit(thumbSize.size,backgroundColor: UIColor.blackColor())
-            IATextAttachment.thumbCache.setObject(thumb, forKey: cachingName)
+            let thumb = previewImage!.resizeImageWithScaleAspectFit(thumbSize.size,backgroundColor: UIColor.black)
+            IATextAttachment.thumbCache.setObject(thumb, forKey: cachingName as AnyObject)
             return thumb
         } else {
             return IAPlaceholder.forSize(thumbSize, attachType: .video)
@@ -129,17 +129,17 @@ public class IAVideoAttachment:IATextAttachment {
     
 
     ///Generates a screen shot from the start of the video. This should also set the storedContentSize with the appropriate transform applied.
-    func generatePreview(videoURL:NSURL)->UIImage{
-        let asset = AVAsset(URL: videoURL)
+    func generatePreview(_ videoURL:URL)->UIImage{
+        let asset = AVAsset(url: videoURL)
         let assetGenerator = AVAssetImageGenerator(asset: asset)
         assetGenerator.appliesPreferredTrackTransform = true
         
-        if let preview = try? assetGenerator.copyCGImageAtTime(CMTimeMake(1, 4), actualTime: nil){
-            let uiPreview = UIImage(CGImage: preview)
-            storedContentSize = CGSizeMake(uiPreview.size.width * uiPreview.scale, uiPreview.size.height * uiPreview.scale)
+        if let preview = try? assetGenerator.copyCGImage(at: CMTimeMake(1, 4), actualTime: nil){
+            let uiPreview = UIImage(cgImage: preview)
+            storedContentSize = CGSize(width: uiPreview.size.width * uiPreview.scale, height: uiPreview.size.height * uiPreview.scale)
             return uiPreview
         } else {
-            storedContentSize = asset.tracks.first?.naturalSize ?? CGSizeMake(320, 320)
+            storedContentSize = asset.tracks.first?.naturalSize ?? CGSize(width: 320, height: 320)
             UIGraphicsBeginImageContextWithOptions(storedContentSize!, true, 1.0)
             let blankPreview = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext();
@@ -150,7 +150,7 @@ public class IAVideoAttachment:IATextAttachment {
     
     
     ///This only checks/attempts to load the preview.
-    public override func attemptToLoadResource() -> Bool {
+    open override func attemptToLoadResource() -> Bool {
         if self.previewImage != nil {
             return true
         } else if let path = localPreviewURL?.path {
@@ -169,42 +169,42 @@ public class IAVideoAttachment:IATextAttachment {
     }
     
     
-    override public var description: String {
+    override open var description: String {
         return "<IAVideoAttachment>: id \(localID)"
     }
     
-    override public var debugDescription:String {
-        return "<IAVideoAttachment>: videoFilename: \(self.videoFilename ?? "nil"), remoteVideoURL:\(self.remoteVideoURL ?? "nil"), localVideoURL: \(self.localVideoURL ?? "nil"), isPlaceholder:\(self.showingPlaceholder)"
+    override open var debugDescription:String {
+        return "<IAVideoAttachment>: videoFilename: \(self.videoFilename ?? "nil"), remoteVideoURL:\(self.remoteVideoURL?.absoluteString ?? "nil"), localVideoURL: \(self.localVideoURL?.absoluteString ?? "nil"), isPlaceholder:\(self.showingPlaceholder)"
     }
 
     
     ///Sent by the app's download manager to the IAVideoAttachments to indicate that preview content has been downloaded. The user info will provide identifying information including resourceName.
-    public static let videoPreviewDownloadedNotificationName:String = "IntensityAttributingKit.IAVideoAttachment.PreviewReady"
+    open static let videoPreviewDownloadedNotificationName:String = "IntensityAttributingKit.IAVideoAttachment.PreviewReady"
     
     ///Used by the download manager of the app to indicate that the resource is available or that the download has failed.
-    public static func emitContentDownloadedNotification(videoPreviewFilename:String, localFileLocation:NSURL!, previewImage:UIImage?, downloadError:NSError?){
-        var userInfo:[String:AnyObject] = ["videoPreviewFilename":videoPreviewFilename]
+    open static func emitContentDownloadedNotification(_ videoPreviewFilename:String, localFileLocation:URL!, previewImage:UIImage?, downloadError:NSError?){
+        var userInfo:[String:AnyObject] = ["videoPreviewFilename":videoPreviewFilename as AnyObject]
         if previewImage != nil {
             userInfo["previewImage"] = previewImage!
         }
         if localFileLocation != nil {
-            userInfo["localFileLocation"] = localFileLocation
+            userInfo["localFileLocation"] = localFileLocation as AnyObject?
         }
         if downloadError != nil {
             userInfo["downloadError"] = downloadError!
         }
-        NSNotificationCenter.defaultCenter().postNotificationName(videoPreviewDownloadedNotificationName, object: nil, userInfo: userInfo)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: videoPreviewDownloadedNotificationName), object: nil, userInfo: userInfo)
     }
     
-    func handlePreviewDownloadedNotification(notification:NSNotification!){
-        guard let filename = notification.userInfo?["videoPreviewFilename"] as? String where self.previewFilename != nil && filename == self.previewFilename! else {return}
-        NSNotificationCenter.defaultCenter().removeObserver(self, forKeyPath: IAVideoAttachment.videoPreviewDownloadedNotificationName)
+    func handlePreviewDownloadedNotification(_ notification:Notification!){
+        guard let filename = notification.userInfo?["videoPreviewFilename"] as? String, self.previewFilename != nil && filename == self.previewFilename! else {return}
+        NotificationCenter.default.removeObserver(self, forKeyPath: IAVideoAttachment.videoPreviewDownloadedNotificationName)
         waitingForDownload = false
         
         guard notification.userInfo?["downloadError"] == nil else {return}
         
         if self.localPreviewURL == nil {
-            self.localPreviewURL = notification.userInfo?["localFileLocation"] as? NSURL
+            self.localPreviewURL = notification.userInfo?["localFileLocation"] as? URL
         }
         if let image = notification.userInfo?["previewImage"] as? UIImage {
             previewImage = image
@@ -219,15 +219,15 @@ public class IAVideoAttachment:IATextAttachment {
     }
     
     ///Can be set by the download manager to cause the attachment to begin observing for download completion. This will prevent the attachment from requesting downloads. Filename must not be nil or this will have no effect.
-    public func setWaitForDownload(){
+    open func setWaitForDownload(){
         guard self.previewFilename != nil else {return}
         if !waitingForDownload {
             waitingForDownload = true
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(IAVideoAttachment.handlePreviewDownloadedNotification(_:)), name: IAVideoAttachment.videoPreviewDownloadedNotificationName, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(IAVideoAttachment.handlePreviewDownloadedNotification(_:)), name: NSNotification.Name(rawValue: IAVideoAttachment.videoPreviewDownloadedNotificationName), object: nil)
         }
     }
     
-    deinit{if waitingForDownload {NSNotificationCenter.defaultCenter().removeObserver(self)}}
+    deinit{if waitingForDownload {NotificationCenter.default.removeObserver(self)}}
     
 }
 

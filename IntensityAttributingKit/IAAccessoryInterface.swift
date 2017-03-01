@@ -18,11 +18,11 @@ extension IAAccessoryVC: PressureKeyActionDelegate {
     
     //MARK:- user interface actions
     
-    func kbSwitchButtonPressed(sender:UIButton!){
+    func kbSwitchButtonPressed(_ sender:UIButton!){
         delegate?.accessoryKeyboardChangeButtonPressed(self)
     }
     
-    func attachmentButtonPressed(actionName:String!){
+    func attachmentButtonPressed(_ actionName:String!){
         self.delegate?.accessoryRequestsPickerLaunch(self, pickerName: actionName)
     }
     
@@ -31,40 +31,40 @@ extension IAAccessoryVC: PressureKeyActionDelegate {
         delegate?.accessoryOptionButtonPressed(self)
     }
     
-    func tokenizerButtonPressed(actionName:String!){
+    func tokenizerButtonPressed(_ actionName:String!){
         guard let tokenizer = IAStringTokenizing(shortLabel: actionName) else {return}
         if self.delegate?.accessoryRequestsSmoothingChange(self, toValue: tokenizer) ?? false {
             tokenizerButton.centerKeyWithActionName(actionName)
         }
     }
     
-    func transformButtonPressed(actionName:String!){
+    func transformButtonPressed(_ actionName:String!){
         guard let transformer = IntensityTransformers(rawOptional: actionName) else {return}
         if self.delegate?.accessoryRequestsTransformerChange(self, toTransformer:transformer) ?? false {
             self.transformButton.centerKeyWithActionName(actionName)
         }
     }
     
-    func sliderValueChanged(slider:UISlider!){
+    func sliderValueChanged(_ slider:UISlider!){
         let value = clamp(Int(round(slider.value)), lowerBound: 0, upperBound: 100)
         self.delegate?.accessoryUpdatedDefaultIntensity(self ,withValue: value)
     }
     
-    func updateDisplayedIntensity(toValue:Int){
+    func updateDisplayedIntensity(_ toValue:Int){
         self.intensityButton.text = "\(toValue)"
         self.intensitySlider.value = Float(toValue)
     }
     
-    func pressureKeyPressed(sender: PressureControl, actionName: String, intensity: Int) {
+    func pressureKeyPressed(_ sender: PressureControl, actionName: String, intensity: Int) {
         guard actionName == "intensityButtonPressed" else {assertionFailure(); return}
         self.delegate?.accessoryUpdatedDefaultIntensity(self, withValue: intensity)
     }
     
-    func setTransformKeyForScheme(transformerScheme:IntensityTransformers){
+    func setTransformKeyForScheme(_ transformerScheme:IntensityTransformers){
         self.transformButton.centerKeyWithActionName(transformerScheme.rawValue)
     }
     
-    func setTokenizerKeyValue(value:IAStringTokenizing){
+    func setTokenizerKeyValue(_ value:IAStringTokenizing){
         tokenizerButton.centerKeyWithActionName(value.shortLabel)
     }
     

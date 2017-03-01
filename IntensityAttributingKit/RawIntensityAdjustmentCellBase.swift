@@ -23,7 +23,7 @@ class RawIntensityAdjustmentCellBase: UITableViewCell {
 
 
     init(){
-        super.init(style: .Default, reuseIdentifier: nil)
+        super.init(style: .default, reuseIdentifier: nil)
         setup()
     }
 
@@ -32,23 +32,23 @@ class RawIntensityAdjustmentCellBase: UITableViewCell {
     }
     
     func setup(){
-        itemDescriptionLabel = UILabel(frame: CGRectZero)
+        itemDescriptionLabel = UILabel(frame: CGRect.zero)
         itemDescriptionLabel.numberOfLines = 0
 
         itemDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
 
         contentView.layoutMargins = UIEdgeInsetsMake(4.0, 8.0, 8.0, 4.0)
         contentStackView = UIStackView(arrangedSubviews: [itemDescriptionLabel])
-        contentStackView.frame = CGRectMake(0, 0, 300, 20)
+        contentStackView.frame = CGRect(x: 0, y: 0, width: 300, height: 20)
         contentStackView.spacing = 5.0
         contentStackView.translatesAutoresizingMaskIntoConstraints = false
-        contentStackView.axis = .Vertical
+        contentStackView.axis = .vertical
         self.contentView.addSubview(contentStackView)
         
-        contentStackView.topAnchor.constraintEqualToAnchor(contentView.layoutMarginsGuide.topAnchor, constant: 0).active = true
-        contentStackView.leadingAnchor.constraintEqualToAnchor(contentView.layoutMarginsGuide.leadingAnchor).active = true
-        contentStackView.trailingAnchor.constraintEqualToAnchor(contentView.layoutMarginsGuide.trailingAnchor).active = true
-        contentStackView.bottomAnchor.constraintEqualToAnchor(contentView.layoutMarginsGuide.bottomAnchor).active = true
+        contentStackView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor, constant: 0).isActive = true
+        contentStackView.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor).isActive = true
+        contentStackView.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor).isActive = true
+        contentStackView.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor).isActive = true
 
     }
     

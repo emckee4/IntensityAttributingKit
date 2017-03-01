@@ -13,17 +13,17 @@ import UIKit
 Uses PressureKeyActionDelegate to pass conforming class the actionName and intensity values for a touchUpInside.
 This is now a subclass of ExpandingKeyBase.
 */
-@IBDesignable public class ExpandingPressureKey: ExpandingKeyBase, PressureControl {
+@IBDesignable open class ExpandingPressureKey: ExpandingKeyBase, PressureControl {
     
-    public weak var delegate:PressureKeyActionDelegate?
+    open weak var delegate:PressureKeyActionDelegate?
     
-    private var touchIntensity: RawIntensity = RawIntensity()
+    fileprivate var touchIntensity: RawIntensity = RawIntensity()
     
     
     //MARK:- Selection and highlighting effect helpers
     
     override func bgColorForSelection() -> UIColor {
-        guard backgroundColor != nil && IAKitPreferences.forceTouchAvailable else {return selectionColor ?? UIColor.blackColor()}
+        guard backgroundColor != nil && IAKitPreferences.forceTouchAvailable else {return selectionColor ?? UIColor.black}
         //TODO: add different blending methods for non-grayscale color options
         var white:CGFloat = 0.0
         var alpha:CGFloat = 1.0
@@ -53,7 +53,7 @@ This is now a subclass of ExpandingKeyBase.
         }
     }
     
-    override func handleKeySelection(selectedKey: EPKey, finalTouch:UITouch?) {
+    override func handleKeySelection(_ selectedKey: EPKey, finalTouch:UITouch?) {
         self.delegate?.pressureKeyPressed(self, actionName: selectedKey.actionName, intensity: touchIntensity.endInteraction(withTouch: finalTouch))
     }
     

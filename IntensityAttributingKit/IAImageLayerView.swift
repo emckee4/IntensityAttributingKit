@@ -25,12 +25,12 @@ class IAImageLayerView: UIView {
         let newImageIDs = Set<String>(iaString.attachments.map({$0.attach.localID}))
 
         //need to remove unused imageViews
-        let ntr = oldImageIDs.subtract(newImageIDs)
+        let ntr = oldImageIDs.subtracting(newImageIDs)
         for name in ntr {
             self.removeImage(name)
         }
             
-        let nta = newImageIDs.subtract(oldImageIDs)
+        let nta = newImageIDs.subtracting(oldImageIDs)
         for name in nta {
             var index:Int!
             for (loc,attach) in iaString.attachments{
@@ -43,7 +43,7 @@ class IAImageLayerView: UIView {
         }
         
 
-        if newImageIDs.subtract(nta).isEmpty == false{
+        if newImageIDs.subtracting(nta).isEmpty == false{
             repositionImageViews(iaString, layoutManager: layoutManager)
             return
         }
@@ -57,31 +57,31 @@ class IAImageLayerView: UIView {
     }
     
     ///Called to redraw a specfic attachment at a specific character index in the IAString. This would typically be called when new data becomes available (e.g. an image download has completed) that should replace the prior content of that attachment view (possibly a placeholder).
-    func redrawImage(imageCharIndex:Int, iaString:IAString, layoutManager:NSLayoutManager){
+    func redrawImage(_ imageCharIndex:Int, iaString:IAString, layoutManager:NSLayoutManager){
         //relate the index to a localID,
         guard let attachment = iaString.attachments[imageCharIndex] else {print("IAImageLayerView. redrawImage: couldnt find attachment at charIndex \(imageCharIndex)");return}
         guard let iv = imageViewForId[attachment.localID] else {print("IAImageLayerView. redrawImage: couldnt find iv for localID \(attachment.localID)");return}
         iv.image = attachment.imageForThumbSize(self.useThumbSize)
-        let gr = layoutManager.glyphRangeForCharacterRange(NSMakeRange(imageCharIndex, 1), actualCharacterRange: nil)
-        iv.frame = layoutManager.boundingRectForGlyphRange(gr, inTextContainer: layoutManager.textContainers.first!)
+        let gr = layoutManager.glyphRange(forCharacterRange: NSMakeRange(imageCharIndex, 1), actualCharacterRange: nil)
+        iv.frame = layoutManager.boundingRect(forGlyphRange: gr, in: layoutManager.textContainers.first!)
     }
     
     ///Called when the layout of images may have changed but the number and content haven't. This will move their frames around as needed.
-    func repositionImageViews(iaString:IAString, layoutManager:NSLayoutManager){
+    func repositionImageViews(_ iaString:IAString, layoutManager:NSLayoutManager){
         for (charIndex,attachment) in iaString.attachments {
             if let iv = imageViewForId[attachment.localID] {
-                let gr = layoutManager.glyphRangeForCharacterRange(NSMakeRange(charIndex, 1), actualCharacterRange: nil)
-                iv.frame = layoutManager.boundingRectForGlyphRange(gr, inTextContainer: layoutManager.textContainers.first!)
+                let gr = layoutManager.glyphRange(forCharacterRange: NSMakeRange(charIndex, 1), actualCharacterRange: nil)
+                iv.frame = layoutManager.boundingRect(forGlyphRange: gr, in: layoutManager.textContainers.first!)
             }
         }
     }
     
     
-    private func addImage(atIAStringIndex:Int, iaString:IAString, layoutManager:NSLayoutManager){
+    fileprivate func addImage(_ atIAStringIndex:Int, iaString:IAString, layoutManager:NSLayoutManager){
         guard let attachment = iaString.attachments[atIAStringIndex] else {print("IAImageLayerView. addImage: couldnt find attachment at charIndex \(atIAStringIndex)");return}
-        let gr = layoutManager.glyphRangeForCharacterRange(NSMakeRange(atIAStringIndex, 1), actualCharacterRange: nil)
+        let gr = layoutManager.glyphRange(forCharacterRange: NSMakeRange(atIAStringIndex, 1), actualCharacterRange: nil)
 
-        let iv = UIImageView(frame: layoutManager.boundingRectForGlyphRange(gr, inTextContainer: layoutManager.textContainers.first!))
+        let iv = UIImageView(frame: layoutManager.boundingRect(forGlyphRange: gr, in: layoutManager.textContainers.first!))
         iv.image = attachment.imageForThumbSize(self.useThumbSize)
         imageViewForId[attachment.localID] = iv
         self.addSubview(iv)
@@ -89,8 +89,8 @@ class IAImageLayerView: UIView {
     }
     
     
-    private func removeImage(imageLocalID:String){
-        guard let iv = imageViewForId.removeValueForKey(imageLocalID) else {print("IAImageLayerView. removeImage: couldnt find iv for localID \(imageLocalID)");return}
+    fileprivate func removeImage(_ imageLocalID:String){
+        guard let iv = imageViewForId.removeValue(forKey: imageLocalID) else {print("IAImageLayerView. removeImage: couldnt find iv for localID \(imageLocalID)");return}
         iv.removeFromSuperview()
         
     }

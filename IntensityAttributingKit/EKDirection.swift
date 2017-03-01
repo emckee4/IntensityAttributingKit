@@ -11,13 +11,13 @@ import Foundation
 
 ///The direction in which an ExpandingPressureKey grows on selection. It's helper computed variables are used by other layout functions.
 public enum EKDirection {
-    case Up,Down,Left,Right
+    case up,down,left,right
     
     var hasForwardLayoutDirection:Bool
-        {return self == .Down || self == .Right}
+        {return self == .down || self == .right}
     
     var axis:UILayoutConstraintAxis {
-        return (self == .Up || self == .Down) ? .Vertical : .Horizontal
+        return (self == .up || self == .down) ? .vertical : .horizontal
     }
     
 }

@@ -13,68 +13,68 @@ import AVFoundation
 /**
  IAVideoViewerVC provides a convenient prebuilt method for viewing IAImageAttachments.
  */
-public class IAVideoViewerVC: UIViewController {
+open class IAVideoViewerVC: UIViewController {
     
-    public var playerController:AVPlayerViewController!
-    public var attachment:IAVideoAttachment!
+    open var playerController:AVPlayerViewController!
+    open var attachment:IAVideoAttachment!
     
-    private var previousNavTranslucency:Bool?
-    private var previousNavBackgroundImage:UIImage?
-    private var previousNavShadowImage: UIImage?
+    fileprivate var previousNavTranslucency:Bool?
+    fileprivate var previousNavBackgroundImage:UIImage?
+    fileprivate var previousNavShadowImage: UIImage?
     
-    public override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
         
         //TODO: provide better handling of different locations of the candidate video, either here or in the attachment itself
         
-        let vidURL = attachment.temporaryVideoURL ?? attachment.localVideoURL ?? attachment.remoteVideoURL ?? NSURL()
+        let vidURL = attachment.temporaryVideoURL ?? attachment.localVideoURL ?? attachment.remoteVideoURL ?? URL(string: "")!
         
-        let avPlayer = AVPlayer(URL:vidURL)
+        let avPlayer = AVPlayer(url:vidURL)
         playerController = AVPlayerViewController()
         playerController.player = avPlayer
         self.addChildViewController(playerController)
         self.view.addSubview(playerController.view)
         playerController.view.translatesAutoresizingMaskIntoConstraints = false
-        playerController.didMoveToParentViewController(self)
+        playerController.didMove(toParentViewController: self)
         
         
-        playerController.view.topAnchor.constraintEqualToAnchor(self.view.topAnchor).activateWithPriority(999)
-        playerController.view.bottomAnchor.constraintEqualToAnchor(self.view.bottomAnchor).activateWithPriority(999)
-        playerController.view.leftAnchor.constraintEqualToAnchor(self.view.leftAnchor).activateWithPriority(999)
-        playerController.view.rightAnchor.constraintEqualToAnchor(self.view.rightAnchor).activateWithPriority(999)
+        playerController.view.topAnchor.constraint(equalTo: self.view.topAnchor).activateWithPriority(999)
+        playerController.view.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).activateWithPriority(999)
+        playerController.view.leftAnchor.constraint(equalTo: self.view.leftAnchor).activateWithPriority(999)
+        playerController.view.rightAnchor.constraint(equalTo: self.view.rightAnchor).activateWithPriority(999)
         
         setNavbarBackgroundClear()
     }
     
-    public override func viewWillDisappear(animated: Bool) {
+    open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         revertNavbarBackground()
     }
     
-    public override func didReceiveMemoryWarning() {
+    open override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-    public override func prefersStatusBarHidden() -> Bool {
+    open override var prefersStatusBarHidden : Bool {
         return true
     }
     
     func setNavbarBackgroundClear(){
         guard let navBar = navigationController?.navigationBar else {return}
-        previousNavTranslucency = navBar.translucent
-        previousNavBackgroundImage = navBar.backgroundImageForBarMetrics(.Default)
+        previousNavTranslucency = navBar.isTranslucent
+        previousNavBackgroundImage = navBar.backgroundImage(for: .default)
         previousNavShadowImage = navBar.shadowImage
         
-        navBar.translucent = true
-        navBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
+        navBar.isTranslucent = true
+        navBar.setBackgroundImage(UIImage(), for: .default)
         navBar.shadowImage = UIImage()
     }
     
     func revertNavbarBackground(){
         guard let navBar = navigationController?.navigationBar else {return}
-        navBar.translucent = previousNavTranslucency ?? true
-        navBar.setBackgroundImage(previousNavBackgroundImage, forBarMetrics: .Default)
+        navBar.isTranslucent = previousNavTranslucency ?? true
+        navBar.setBackgroundImage(previousNavBackgroundImage, for: .default)
         navBar.shadowImage = previousNavShadowImage 
     }
     

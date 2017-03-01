@@ -9,35 +9,35 @@
 import UIKit
 
 ///A custom subclass of the UITextSelectionRect is needed in order to more fully reimplement the UITextInput protocol.
-public class IATextSelectionRect: UITextSelectionRect {
+open class IATextSelectionRect: UITextSelectionRect {
     
-    private let _rect: CGRect
-    public override var rect: CGRect {
+    fileprivate let _rect: CGRect
+    open override var rect: CGRect {
         return _rect
     }
-    private let _writingDirection:UITextWritingDirection
-    public override var writingDirection: UITextWritingDirection{
+    fileprivate let _writingDirection:UITextWritingDirection
+    open override var writingDirection: UITextWritingDirection{
         return _writingDirection
     }
 
-    private let _isVertical: Bool
-    public override var isVertical: Bool {
+    fileprivate let _isVertical: Bool
+    open override var isVertical: Bool {
         return _isVertical
     }
     
-    private let _containsStart:Bool
-    public override var containsStart: Bool {
+    fileprivate let _containsStart:Bool
+    open override var containsStart: Bool {
         return _containsStart
     }
     
-    private let _containsEnd:Bool
-    public override var containsEnd: Bool {
+    fileprivate let _containsEnd:Bool
+    open override var containsEnd: Bool {
         return _containsEnd
     }
     
     
     
-    public init(rect:CGRect, writingDirection:UITextWritingDirection = .Natural, isVertical:Bool = false, containsStart:Bool, containsEnd:Bool) {
+    public init(rect:CGRect, writingDirection:UITextWritingDirection = .natural, isVertical:Bool = false, containsStart:Bool, containsEnd:Bool) {
         _rect = rect
         _writingDirection = writingDirection
         _isVertical = isVertical
@@ -45,7 +45,7 @@ public class IATextSelectionRect: UITextSelectionRect {
         _containsEnd = containsEnd
     }
     ///Takes an array of raw selection rects, ordered first to last, and returns an array IATextSelectionRects with first and last components set if markEnds is true.
-    class func generateSelectionArray(rects:[CGRect], writingDirection:UITextWritingDirection = .LeftToRight, isVertical:Bool = false, markEnds:Bool = true)->[IATextSelectionRect]{
+    class func generateSelectionArray(_ rects:[CGRect], writingDirection:UITextWritingDirection = .leftToRight, isVertical:Bool = false, markEnds:Bool = true)->[IATextSelectionRect]{
         guard rects.isEmpty == false else {return []}
         var selectionRects = rects.map({(rect:CGRect)->IATextSelectionRect in
             return IATextSelectionRect(rect: rect, writingDirection: writingDirection, isVertical: isVertical,
@@ -54,10 +54,10 @@ public class IATextSelectionRect: UITextSelectionRect {
             )
         })
         if markEnds == true {
-            let startRect = CGRectMake(floor(rects.first!.origin.x), rects.first!.origin.y, 0, rects.first!.height + 1.0)
+            let startRect = CGRect(x: floor(rects.first!.origin.x), y: rects.first!.origin.y, width: 0, height: rects.first!.height + 1.0)
             selectionRects.append(IATextSelectionRect(rect: startRect, writingDirection: writingDirection, isVertical: isVertical, containsStart: true, containsEnd: false))
             
-            let endRect = CGRectMake(ceil(rects.last!.origin.x + rects.last!.width), rects.last!.origin.y - 1.0, 0, rects.last!.height + 1.0)
+            let endRect = CGRect(x: ceil(rects.last!.origin.x + rects.last!.width), y: rects.last!.origin.y - 1.0, width: 0, height: rects.last!.height + 1.0)
             selectionRects.append(IATextSelectionRect(rect: endRect, writingDirection: writingDirection, isVertical: isVertical, containsStart: false, containsEnd: true))
         }
         return selectionRects

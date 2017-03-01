@@ -12,9 +12,9 @@ import UIKit
  IACompositeTextView implements very little beyond what is implemented by IACompositeBase. It's intended as a lighter alternative to IACompositeTextEditor for cases where only viewing and basic interaction (copy, view links, attachments) are needed.
  
  */
-public class IACompositeTextView: IACompositeBase {
+open class IACompositeTextView: IACompositeBase {
 
-    public weak var delegate:IATextViewDelegate?
+    open weak var delegate:IATextViewDelegate?
     
     var tapGestureRecognizer:UITapGestureRecognizer!
     var longPressGestureRecognizer:UILongPressGestureRecognizer!
@@ -28,7 +28,7 @@ public class IACompositeTextView: IACompositeBase {
     }
     
     ///This isn't yet implemented differently than the ordinary setIAString, though it's intended to allow for some caching of layout information in situations where an IAString is repeatedly redrawn in IACompositeTextViews (e.g. in a table view).
-    public func setIAString(iaString:IAString!, withCacheIdentifier:String){
+    open func setIAString(_ iaString:IAString!, withCacheIdentifier:String){
         //print("setIAString using cache identifier not yet implemented")
         ///cache should store some rendering info and probably some sizing info, eg previously calculated size for size values. any change to the data or default renderings should invalidate the cache. (Changing global prefs should probably emit a notification of such)
         super.setIAString(iaString)
@@ -37,7 +37,7 @@ public class IACompositeTextView: IACompositeBase {
     
     override func setupIATV() {
         super.setupIATV()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(IACompositeTextView.menuWillHide(_:)), name: UIMenuControllerWillHideMenuNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(IACompositeTextView.menuWillHide(_:)), name: NSNotification.Name.UIMenuControllerWillHideMenu, object: nil)
     }
     
     public override init(frame: CGRect) {
@@ -50,21 +50,21 @@ public class IACompositeTextView: IACompositeBase {
     }
     
     public convenience init(){
-        self.init(frame:CGRectZero)
+        self.init(frame:CGRect.zero)
     }
     
-    public override func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
+    open override func encode(with aCoder: NSCoder) {
+        super.encode(with: aCoder)
     }
     
     deinit{
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     ///Tap on an attachment or url will cause those to be passed to the delegate. Tap elsewhere deselects.
-    func tapDetected(sender:UITapGestureRecognizer!){
-        if sender?.state == .Ended {
-            let location = sender.locationInView(topTV)
+    func tapDetected(_ sender:UITapGestureRecognizer!){
+        if sender?.state == .ended {
+            let location = sender.location(in: topTV)
             guard let touchIndex = topTV.characterIndexAtPoint(location) else {deselect(); return}  //or make this select all/deselect all
             if let attachment = iaString.attachments[touchIndex] {
                 self.delegate?.iaTextView?(self, userInteractedWithAttachment: attachment, inRange: NSMakeRange(touchIndex, 1))
@@ -78,30 +78,30 @@ public class IACompositeTextView: IACompositeBase {
     }
 
     ///A longpress will select all
-    func longPressDetected(sender:UILongPressGestureRecognizer!){
-        if sender?.state == .Began {
-            let location = sender.locationInView(topTV)
+    func longPressDetected(_ sender:UILongPressGestureRecognizer!){
+        if sender?.state == .began {
+            let location = sender.location(in: topTV)
             guard let touchIndex = topTV.characterIndexAtPoint(location) else {deselect(); return}  //or make this select all/deselect all
             //if let attachment = iaString.attachments[touchIndex] {
             if iaString.attachments[touchIndex] != nil{
                 //self.delegate?.iaTextView?(self, userInteractedWithAttachment: attachment, inRange: NSMakeRange(touchIndex, 1))
                 selectedRange = touchIndex..<(touchIndex + 1)
-                presentMenu(nil)
+                _ = presentMenu(nil)
             } else if let (_, urlRange) = iaString.urlAtIndex(touchIndex) {
                 //self.delegate?.iaTextView?(self, userInteractedWithURL: url, inRange: urlRange.nsRange)
                 selectedRange = urlRange
-                presentMenu(nil)
+                _ = presentMenu(nil)
             } else {
                 self.selectAll(sender)
             }
         }
     }
     
-    public override func canBecomeFirstResponder() -> Bool {
+    open override var canBecomeFirstResponder : Bool {
         return true
     }
 
-    func menuWillHide(notification:NSNotification!){
+    func menuWillHide(_ notification:Notification!){
         deselect()
     }
     
@@ -117,8 +117,8 @@ public class IACompositeTextView: IACompositeBase {
     ///Pass in the view controller that will present the UIImagePicker or nil if it shouldn't be presented.
     //optional func iaTextEditorRequestsPresentationOfImagePicker(iaTextEditor:IATextEditor)->UIViewController?
     
-    optional func iaTextView(atTextView: IACompositeTextView, userInteractedWithAttachment attachment:IATextAttachment, inRange: NSRange)
-    optional func iaTextView(atTextView: IACompositeTextView, userInteractedWithURL URL: NSURL, inRange characterRange: NSRange)
+    @objc optional func iaTextView(_ atTextView: IACompositeTextView, userInteractedWithAttachment attachment:IATextAttachment, inRange: NSRange)
+    @objc optional func iaTextView(_ atTextView: IACompositeTextView, userInteractedWithURL URL: URL, inRange characterRange: NSRange)
 }
 
 

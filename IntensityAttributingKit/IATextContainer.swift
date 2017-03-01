@@ -19,26 +19,26 @@ final public class IATextContainer:NSTextContainer {
         }
     }
     
-    public override func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(preferedThumbSize.rawValue, forKey: "thumbsize")
-        aCoder.encodeObject(shouldPresentEmptyImageContainers, forKey: "shouldPresentEmptyImages")
+    public override func encode(with aCoder: NSCoder) {
+        super.encode(with: aCoder)
+        aCoder.encode(preferedThumbSize.rawValue, forKey: "thumbsize")
+        aCoder.encode(shouldPresentEmptyImageContainers, forKey: "shouldPresentEmptyImages")
     }
     
     required public init(coder: NSCoder) {
         super.init(coder: coder)
-        if let tsname = coder.decodeObjectForKey("thumbsize") as? String {
+        if let tsname = coder.decodeObject(forKey: "thumbsize") as? String {
             if let ts = IAThumbSize(rawValue: tsname) {
                 preferedThumbSize = ts
             }
         }
-        if let emptyImages = coder.decodeObjectForKey("shouldPresentEmptyImages") as? Bool {
+        if let emptyImages = coder.decodeObject(forKey: "shouldPresentEmptyImages") as? Bool {
             shouldPresentEmptyImageContainers = emptyImages
         }
     }
     
     init(){
-        super.init(size:CGSizeZero)
+        super.init(size:CGSize.zero)
     }
     
     override init(size:CGSize){

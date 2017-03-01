@@ -15,13 +15,13 @@ class SpellCheckToggleCell: ToggleCell {
     override func setupCell(){
         super.setupCell()
         
-        toggleControl.addTarget(self, action: #selector(SpellCheckToggleCell.toggleValueChanged(_:)), forControlEvents: .ValueChanged)
+        toggleControl.addTarget(self, action: #selector(SpellCheckToggleCell.toggleValueChanged(_:)), for: .valueChanged)
         self.textLabel?.text = "Word Suggestions"
-        toggleControl.on = IAKitPreferences.spellingSuggestionsEnabled
+        toggleControl.isOn = IAKitPreferences.spellingSuggestionsEnabled
     }
 
-    func toggleValueChanged(sender:UISwitch!){
-        IAKitPreferences.spellingSuggestionsEnabled = toggleControl.on
+    func toggleValueChanged(_ sender:UISwitch!){
+        IAKitPreferences.spellingSuggestionsEnabled = toggleControl.isOn
     }
     
 }

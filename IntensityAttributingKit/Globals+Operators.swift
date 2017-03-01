@@ -3,15 +3,15 @@
 import UIKit
 
 
-@warn_unused_result public func clamp<T : Comparable>(value: T, lowerBound lower: T, upperBound upper: T) -> T{
+public func clamp<T : Comparable>(_ value: T, lowerBound lower: T, upperBound upper: T) -> T{
     return min(max(value, lower),upper)
 }
 
 
-@warn_unused_result func ==(lhs:NSRange,rhs:NSRange)->Bool {
+func ==(lhs:NSRange,rhs:NSRange)->Bool {
     return NSEqualRanges(lhs, rhs)
 }
-@warn_unused_result func !=(lhs:NSRange,rhs:NSRange)->Bool {
+func !=(lhs:NSRange,rhs:NSRange)->Bool {
     return !NSEqualRanges(lhs, rhs)
 }
 

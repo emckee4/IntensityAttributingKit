@@ -9,7 +9,7 @@
 import UIKit
 
 ///Prebaked tableview cell for adjusting the RawIntensity parameters within the keyboard options menu or otherwise.
-public class RenderOverrideAdjusterCell:LabeledStepperAdjusterCell{
+open class RenderOverrideAdjusterCell:LabeledStepperAdjusterCell{
     
     let adjustmentOptions:[(optionTitle:String,option:IntensityTransformers?)] = [(optionTitle: "Message Default" ,option: nil ),(optionTitle: "Text Weight" ,option: IntensityTransformers.WeightScheme ),(optionTitle: "Text Color (GYR)" ,option: IntensityTransformers.HueGYRScheme ),(optionTitle: "Text Size" ,option: IntensityTransformers.FontSizeScheme ), (optionTitle: "Text Opacity" ,option: IntensityTransformers.AlphaScheme )]
     
@@ -19,20 +19,20 @@ public class RenderOverrideAdjusterCell:LabeledStepperAdjusterCell{
         
         stepper.minimumValue = 0
         stepper.maximumValue = Double(adjustmentOptions.count - 1)
-        stepper.continuous = false
+        stepper.isContinuous = false
         stepper.stepValue = 1.0
         
         
         let currentValue = IAKitPreferences.overridesTransformer
         
-        let aoIndex = adjustmentOptions.indexOf({$0.option == currentValue}) ?? 0
+        let aoIndex = adjustmentOptions.index(where: {$0.option == currentValue}) ?? 0
         stepper.value = Double(aoIndex)
         resultLabel.text = adjustmentOptions[aoIndex].optionTitle
     
         titleLabel.text = "Render Scheme Override:"
     }
     
-    override func stepperValueChanged(sender: UIStepper!) {
+    override func stepperValueChanged(_ sender: UIStepper!) {
         let val = clamp(Int(stepper.value), lowerBound: 0, upperBound: adjustmentOptions.count - 1)
         
         resultLabel.text = adjustmentOptions[val].optionTitle

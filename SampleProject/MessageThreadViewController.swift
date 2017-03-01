@@ -23,13 +23,13 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
     
     ///If this is set to true before the view appears then the IATextEditor will begin as first responded
     var startInEditorMode:Bool = false
-    private var keyboardIsShowing:Bool = false
+    fileprivate var keyboardIsShowing:Bool = false
         
     ///This gets an image of the composerBar and is attached to the top of the accessory during keyboard transitions, allowing the actual composerBar to be hidden for the duration of the transition. This improves performance slightly and removes the issue of having the composer bar track the top of the accessory bar which is particularly chalenging during an interactive dismissal.
     var tempImageView:UIImageView = UIImageView(image: nil)
     
     ///Indicates when an keyboard interactive dismissal is in progress. When this is true, the actual composerBar will be hidden while an image of it will be displayed in tempImageView which will be attached to the top of the IAAccessory until endInteractiveKBDismissal() is called.
-    private(set) var kbIsInInteractiveDismissal:Bool = false
+    fileprivate(set) var kbIsInInteractiveDismissal:Bool = false
     
     ///Last offset value used to position the composer bar so that it's above the IAAccessory when it's present, or at the bottom of the screen otherwise.
     var lastOffset:CGFloat?
@@ -39,7 +39,7 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
         initialSceneSetup()
         configureSendButton()
         self.navigationItem.title = "Messages"
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "KB Themes", style: .Plain, target: self, action: #selector(MessageThreadViewController.changeKBTheme))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "KB Themes", style: .plain, target: self, action: #selector(MessageThreadViewController.changeKBTheme))
 
     }
 
@@ -49,10 +49,10 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
     }
     
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MessageThreadViewController.kbFrameChange(_:)), name: UIKeyboardWillChangeFrameNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MessageThreadViewController.handleAppBecameActive(_:)), name: UIApplicationDidBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(MessageThreadViewController.kbFrameChange(_:)), name: NSNotification.Name.UIKeyboardWillChangeFrame, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(MessageThreadViewController.handleAppBecameActive(_:)), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
 
 
         messageThreadTableVC.scrollToBottom(false)
@@ -63,7 +63,7 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
         }
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if startInEditorMode {
             composerBar.textEditor.becomeFirstResponder()
@@ -73,7 +73,7 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
         }
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if let currentIAString = composerBar.textEditor.iaString {
             let archive = IAStringArchive(iaString: currentIAString)
@@ -81,9 +81,9 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
         }
     }
     
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
 
     ///instantiates views, sets constraints, etc
@@ -96,31 +96,31 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
         messageThreadView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(messageThreadView)
         
-        messageThreadView.topAnchor.constraintEqualToAnchor(self.view.topAnchor).active = true
-        messageThreadView.leftAnchor.constraintEqualToAnchor(self.view.leftAnchor).active = true
-        messageThreadView.rightAnchor.constraintEqualToAnchor(self.view.rightAnchor).active = true
+        messageThreadView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+        messageThreadView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        messageThreadView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
         
         composerBar = ComposerBar()
         self.view.addSubview(composerBar)
         composerBar.textEditor.delegate = self
         composerBar.delegate = self
         //messageThreadView.bottomAnchor.constraintEqualToAnchor(composerBar.topAnchor).active = true
-        messageThreadView.bottomAnchor.constraintEqualToAnchor(self.view.bottomAnchor).active = true
+        messageThreadView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
         
-        composerBar.leftAnchor.constraintEqualToAnchor(self.view.leftAnchor).active = true
-        composerBar.rightAnchor.constraintEqualToAnchor(self.view.rightAnchor).active = true
-        composerBottomConstraint = composerBar.bottomAnchor.constraintEqualToAnchor(self.view.bottomAnchor, constant: 0)
-        composerBottomConstraint.active = true
-        composerBar.heightAnchor.constraintGreaterThanOrEqualToConstant(30).active = true
+        composerBar.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
+        composerBar.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
+        composerBottomConstraint = composerBar.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0)
+        composerBottomConstraint.isActive = true
+        composerBar.heightAnchor.constraint(greaterThanOrEqualToConstant: 30).isActive = true
         
         //self.view.backgroundColor = UIColor.lightGrayColor()
         
-        composerBar.sendButton.backgroundColor = UIColor.lightGrayColor()
+        composerBar.sendButton.backgroundColor = UIColor.lightGray
         messageThreadTableVC.tableView.contentInset = UIEdgeInsets(top: 6.0, left: 0.0, bottom: 48, right: 0.0)
         composerBar.backgroundColor = UIColor(white: 0.85, alpha: 1.0)
         composerBar.textEditor.backgroundColor = UIColor(white: 0.9, alpha: 1.0)
         composerBar.textEditor.cornerRadius = 5.0
-        composerBar.opaque = true
+        composerBar.isOpaque = true
     }
     
     func configureSendButton(){
@@ -131,7 +131,7 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
     }
     
     
-    func sendMessageButtonPressed(actionName:String!){
+    func sendMessageButtonPressed(_ actionName:String!){
         self.view.endEditing(false)
         guard composerBar.textEditor.iaString!.length > 0 else {return}
         if actionName == "sendNormal" {
@@ -147,7 +147,7 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
     }
     
     
-    func handleAppBecameActive(notification:NSNotification){
+    func handleAppBecameActive(_ notification:Notification){
         composerBar.textEditor.delegate = self
     }
     
@@ -155,11 +155,11 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
     /**We want to use the keyboardDismissModeInteractive to handle dismisals of the keyboard when editing. This works fine except that the composerBar doesn't track the top of the accessory by default since it's in a different view hierarchy than the input views. Instead it uses notifications to animate its apparant tracking of the top of the input accessory.
      In order to make this work properly we need to determine when we're in mid interactive dismissal (we can consider when this pan's location drags below the top of the accessory's last position as given by the keyboard notifications). Once we've crossed that threshhold we call beginInteractiveKBDismissal() which renders the composerBar as an image, attaches that image to the top of the accessory (using tempImageView), then hides the composerBar and sets kbIsInInteractiveDismissal to true until the next keyboard frame change notification, which will occur at the end of the gesture, regardless of its results.
      */
-    func pan(sender:UIPanGestureRecognizer!){
-        guard sender.state == UIGestureRecognizerState.Changed else {return}
-        guard composerBar?.textEditor?.inputAccessoryViewController?.inputView != nil && composerBar!.textEditor!.isFirstResponder() else {return}
+    func pan(_ sender:UIPanGestureRecognizer!){
+        guard sender.state == UIGestureRecognizerState.changed else {return}
+        guard composerBar?.textEditor?.inputAccessoryViewController?.inputView != nil && composerBar!.textEditor!.isFirstResponder else {return}
         guard lastOffset != nil else {return}
-        let loc = sender.locationInView(self.view)
+        let loc = sender.location(in: self.view)
         if loc.y > (lastOffset! + self.view.bounds.height) {
             if kbIsInInteractiveDismissal == false {
                 beginInteractiveKBDismissal()
@@ -171,10 +171,10 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
         
     }
 
-    func kbFrameChange(notification:NSNotification!){
+    func kbFrameChange(_ notification:Notification!){
         //print(notification.name, notification.userInfo!)
-        guard notification.name == UIKeyboardWillChangeFrameNotification else {return}
-        guard let frameEnd = notification?.userInfo?[UIKeyboardFrameEndUserInfoKey]?.CGRectValue, duration = notification?.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? NSTimeInterval, curve = notification.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? Int else {return}
+        guard notification.name == NSNotification.Name.UIKeyboardWillChangeFrame else {return}
+        guard let frameEnd = (notification?.userInfo?[UIKeyboardFrameEndUserInfoKey] as AnyObject).cgRectValue, let duration = notification?.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? TimeInterval, let curve = notification.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? Int else {return}
 
         if kbIsInInteractiveDismissal{
             endInteractiveKBDismissal()
@@ -186,7 +186,7 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
         //should check that this isn't a case where a drag to dismiss just ended, in which case we dont need to animate
         
         //also need to check if we should scroll the tableview to the bottom
-        let newKeyboardIsShowing = notification.userInfo?[UIKeyboardFrameBeginUserInfoKey]?.CGRectValue?.origin.y == self.view.bounds.height
+        let newKeyboardIsShowing = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as AnyObject).cgRectValue?.origin.y == self.view.bounds.height
         messageThreadTableVC.tableView.contentInset.bottom = self.view.bounds.height - composerBar.frame.origin.y
         
         /* We need to use the old style animation code because animateWithDuration lacks a direct way to match the animation curve supplied by the notification. */
@@ -198,7 +198,7 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
         UIView.commitAnimations()
 
         if newKeyboardIsShowing {
-            dispatch_async(dispatch_get_main_queue(), { 
+            DispatchQueue.main.async(execute: { 
                 self.messageThreadTableVC.scrollToBottom(true)
             })
         }
@@ -208,25 +208,25 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
     ///This causes the composerBar to be rendered as an image and then hidden. This image will then be displayed in tempImageView at the top of the IAAccessory until endInteractiveKBDismissal is called to reverse it. This is used to ensure that the composerBar appears to track the top of the IAAccessory during interactive dismissals
     func beginInteractiveKBDismissal(){
         guard let acc = composerBar.textEditor.inputAccessoryViewController else {return}
-        let image = composerBar.imageFromView()
+        let image = composerBar.imageFromView()!
         tempImageView.image = image
         acc.view.addSubview(tempImageView)
-        tempImageView.frame = CGRectMake(0, -image.size.height, image.size.width, image.size.height)
-        composerBar.hidden = true
+        tempImageView.frame = CGRect(x: 0, y: -image.size.height, width: image.size.width, height: image.size.height)
+        composerBar.isHidden = true
         kbIsInInteractiveDismissal = true
     }
     
     ///Reverses the effects of beginInteractiveKBDismissal by removing the tempImageView and unhiding the composerBar
     func endInteractiveKBDismissal(){
-        composerBar.hidden = false
+        composerBar.isHidden = false
         tempImageView.removeFromSuperview()
         kbIsInInteractiveDismissal = false
     }
     
-    func iaTextEditorRequestsPresentationOfOptionsVC(iaTextEditor: IACompositeTextEditor) -> Bool {
+    func iaTextEditorRequestsPresentationOfOptionsVC(_ iaTextEditor: IACompositeTextEditor) -> Bool {
         return true
     }
-    func iaTextEditorRequestsPresentationOfContentPicker(iaTextEditor: IACompositeTextEditor) -> Bool {
+    func iaTextEditorRequestsPresentationOfContentPicker(_ iaTextEditor: IACompositeTextEditor) -> Bool {
         return true
     }
     

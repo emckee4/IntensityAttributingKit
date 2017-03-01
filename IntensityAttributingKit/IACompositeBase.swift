@@ -7,10 +7,56 @@
 //
 
 import UIKit
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l > r
+  default:
+    return rhs < lhs
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func >= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l >= r
+  default:
+    return !(lhs < rhs)
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func <= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l <= r
+  default:
+    return !(rhs < lhs)
+  }
+}
+
 /**
 Abstract parent class for IACompositeTextEditor and IACompositeTextView. 
 */
-public class IACompositeBase:UIView {
+open class IACompositeBase:UIView {
     
     var containerView:UIView
     var selectionView:IASelectionView
@@ -20,11 +66,11 @@ public class IACompositeBase:UIView {
     ///The imageLayer view holds the actual rendered textAttachments. This allows us to show them opaquely regardless of where the textViews are in their animation cycles. This also allows us to render these asynchronously if necessary.
     var imageLayerView:IAImageLayerView
     ///Use the setIAString function to set the value
-    internal(set) public var iaString:IAString!
+    internal(set) open var iaString:IAString!
 
-    public var selectable:Bool = false
+    open var selectable:Bool = false
     
-    public var preferedMaxLayoutWidth:CGFloat? {
+    open var preferedMaxLayoutWidth:CGFloat? {
         get{
             if let val = topTV.preferedMaxLayoutWidth {
                 return val + textContainerInset.left + textContainerInset.right
@@ -42,8 +88,8 @@ public class IACompositeBase:UIView {
     }
     
     ///backing store for selectedRange. We use this so that we can change the selectedRange without calling an update when needed.
-    var _selectedRange:Range<Int>?
-    internal(set) public var selectedRange:Range<Int>? {
+    var _selectedRange:CountableRange<Int>?
+    internal(set) open var selectedRange:CountableRange<Int>? {
         get{return _selectedRange}
         set{
             let selectedRangeDidChange = _selectedRange != newValue
@@ -54,22 +100,22 @@ public class IACompositeBase:UIView {
         }
     }
     
-    public var maximumNumberOfLines:Int = 0 {
+    open var maximumNumberOfLines:Int = 0 {
         didSet{
             topTV.textContainer.maximumNumberOfLines = maximumNumberOfLines
             bottomTV.textContainer.maximumNumberOfLines = maximumNumberOfLines
         }
     }
     
-    var markedRange:Range<Int>? {
+    var markedRange:CountableRange<Int>? {
         didSet{if markedRange != oldValue{updateSelectionLayer()}}
     }
     
-    public var isAnimating:Bool {
-        return (topTV.layer.animationForKey("opacity") != nil) || (bottomTV.layer.animationForKey("opacity") != nil)
+    open var isAnimating:Bool {
+        return (topTV.layer.animation(forKey: "opacity") != nil) || (bottomTV.layer.animation(forKey: "opacity") != nil)
     }
     
-    public var thumbSizesForAttachments: IAThumbSize = .Medium {
+    open var thumbSizesForAttachments: IAThumbSize = .Medium {
         didSet{
             topTV.thumbSize = thumbSizesForAttachments
             bottomTV.thumbSize = thumbSizesForAttachments
@@ -85,8 +131,8 @@ public class IACompositeBase:UIView {
     var topTVBottomConstraint:NSLayoutConstraint!
     var topTVTrailingConstraint:NSLayoutConstraint!
     
-    private var insetConstraintsNeedUpdating = false
-    public var textContainerInset:UIEdgeInsets = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0) {
+    fileprivate var insetConstraintsNeedUpdating = false
+    open var textContainerInset:UIEdgeInsets = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0) {
         didSet {
             if textContainerInset != oldValue {
                 insetConstraintsNeedUpdating = true
@@ -96,29 +142,29 @@ public class IACompositeBase:UIView {
     }
     
     var menu:UIMenuController {
-        return UIMenuController.sharedMenuController()
+        return UIMenuController.shared
     }
     
-    override public var bounds: CGRect{
+    override open var bounds: CGRect{
         didSet{if bounds != oldValue {self.rerenderIAString()}}
     }
     
     //define constraints
     
     /// if non nil then the corners of the internal container view are set with this value. We interface with the container view instead of this view itself sinc
-    public var cornerRadius:CGFloat {
+    open var cornerRadius:CGFloat {
         get{return self.containerView.layer.cornerRadius}
         set{self.containerView.layer.cornerRadius = newValue}
     }
     
-    public override var backgroundColor: UIColor? {
+    open override var backgroundColor: UIColor? {
         get{return containerView.backgroundColor}
         set{containerView.backgroundColor = newValue}
     }
     
     
     
-    public override func updateConstraints() {
+    open override func updateConstraints() {
         if insetConstraintsNeedUpdating{
             insetConstraintsNeedUpdating = false
             topTVTopConstraint.constant = textContainerInset.top
@@ -133,14 +179,14 @@ public class IACompositeBase:UIView {
     func setupIATV(){
         containerView.clipsToBounds = true
         
-        selectionView.backgroundColor = UIColor.clearColor()
-        selectionView.hidden = true
+        selectionView.backgroundColor = UIColor.clear
+        selectionView.isHidden = true
         
-        topTV.backgroundColor = UIColor.clearColor()
+        topTV.backgroundColor = UIColor.clear
         
-        bottomTV.backgroundColor = UIColor.clearColor()
+        bottomTV.backgroundColor = UIColor.clear
         bottomTV.thinTVIsSlave = true
-        bottomTV.hidden = true
+        bottomTV.isHidden = true
         
         imageLayerView.layer.drawsAsynchronously = false
         
@@ -151,17 +197,17 @@ public class IACompositeBase:UIView {
         self.addSubview(containerView)
         setupGestureRecognizers()
         setupConstraints()
-        super.backgroundColor = UIColor.clearColor()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(IACompositeBase.handleContentReadyNotification(_:)), name: IATextAttachment.contentReadyNotificationName, object: nil)
+        super.backgroundColor = UIColor.clear
+        NotificationCenter.default.addObserver(self, selector: #selector(IACompositeBase.handleContentReadyNotification(_:)), name: NSNotification.Name(rawValue: IATextAttachment.contentReadyNotificationName), object: nil)
     }
     
     deinit{
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
     
     
-    func handleContentReadyNotification(notification:NSNotification!){
-        guard let attachment = notification.object as? IATextAttachment where self.iaString.attachments.attachment(withLocalID: attachment.localID) != nil else {return}
+    func handleContentReadyNotification(_ notification:Notification!){
+        guard let attachment = notification.object as? IATextAttachment, self.iaString.attachments.attachment(withLocalID: attachment.localID) != nil else {return}
         imageLayerView.redrawImage(inAttachment: attachment)
     }
 
@@ -175,37 +221,37 @@ public class IACompositeBase:UIView {
         imageLayerView.translatesAutoresizingMaskIntoConstraints = false
         
         
-        topTVTopConstraint = topTV.topAnchor.constraintEqualToAnchor(self.topAnchor, constant: textContainerInset.top).activateWithPriority(1000, identifier: "topTVTopConstraint")
-        topTVLeadingConstraint =  topTV.leadingAnchor.constraintEqualToAnchor(self.leadingAnchor, constant: textContainerInset.left).activateWithPriority(1000, identifier: "topTVLeadingConstraint")
+        topTVTopConstraint = topTV.topAnchor.constraint(equalTo: self.topAnchor, constant: textContainerInset.top).activateWithPriority(1000, identifier: "topTVTopConstraint")
+        topTVLeadingConstraint =  topTV.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: textContainerInset.left).activateWithPriority(1000, identifier: "topTVLeadingConstraint")
         
-        topTV.setContentCompressionResistancePriority(751, forAxis: .Horizontal)
-        topTV.setContentCompressionResistancePriority(750, forAxis: .Vertical)
+        topTV.setContentCompressionResistancePriority(751, for: .horizontal)
+        topTV.setContentCompressionResistancePriority(750, for: .vertical)
         
-        topTVBottomConstraint = topTV.bottomAnchor.constraintEqualToAnchor(self.bottomAnchor, constant: -textContainerInset.bottom).activateWithPriority(1000, identifier: "topTVBottomConstraint")
-        topTVTrailingConstraint = topTV.trailingAnchor.constraintEqualToAnchor(self.trailingAnchor, constant: -textContainerInset.right).activateWithPriority(1000, identifier: "topTVTrailingConstraint")
+        topTVBottomConstraint = topTV.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -textContainerInset.bottom).activateWithPriority(1000, identifier: "topTVBottomConstraint")
+        topTVTrailingConstraint = topTV.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -textContainerInset.right).activateWithPriority(1000, identifier: "topTVTrailingConstraint")
 
         //container and selection view match own bounds
-        containerView.topAnchor.constraintEqualToAnchor(self.topAnchor, constant: 0).activateWithPriority(1000)
-        containerView.leadingAnchor.constraintEqualToAnchor(self.leadingAnchor, constant: 0).activateWithPriority(1000)
-        containerView.trailingAnchor.constraintEqualToAnchor(self.trailingAnchor, constant: 0).activateWithPriority(1000)
-        containerView.bottomAnchor.constraintEqualToAnchor(self.bottomAnchor, constant: 0).activateWithPriority(1000)
+        containerView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).activateWithPriority(1000)
+        containerView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).activateWithPriority(1000)
+        containerView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).activateWithPriority(1000)
+        containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).activateWithPriority(1000)
         
-        selectionView.topAnchor.constraintEqualToAnchor(self.topAnchor, constant: 0).activateWithPriority(1000)
-        selectionView.leadingAnchor.constraintEqualToAnchor(self.leadingAnchor, constant: 0).activateWithPriority(1000)
-        selectionView.trailingAnchor.constraintEqualToAnchor(self.trailingAnchor, constant: 0).activateWithPriority(1000)
-        selectionView.bottomAnchor.constraintEqualToAnchor(self.bottomAnchor, constant: 0).activateWithPriority(1000)
+        selectionView.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).activateWithPriority(1000)
+        selectionView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0).activateWithPriority(1000)
+        selectionView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0).activateWithPriority(1000)
+        selectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 0).activateWithPriority(1000)
         
         //bottomTV and imagelayer match topTV bounds
         
-        bottomTV.topAnchor.constraintEqualToAnchor(topTV.topAnchor, constant: 0).activateWithPriority(1000)
-        bottomTV.leadingAnchor.constraintEqualToAnchor(topTV.leadingAnchor, constant: 0).activateWithPriority(1000)
-        bottomTV.trailingAnchor.constraintEqualToAnchor(topTV.trailingAnchor, constant: 0).activateWithPriority(1000)
-        bottomTV.bottomAnchor.constraintEqualToAnchor(topTV.bottomAnchor, constant: 0).activateWithPriority(1000)
+        bottomTV.topAnchor.constraint(equalTo: topTV.topAnchor, constant: 0).activateWithPriority(1000)
+        bottomTV.leadingAnchor.constraint(equalTo: topTV.leadingAnchor, constant: 0).activateWithPriority(1000)
+        bottomTV.trailingAnchor.constraint(equalTo: topTV.trailingAnchor, constant: 0).activateWithPriority(1000)
+        bottomTV.bottomAnchor.constraint(equalTo: topTV.bottomAnchor, constant: 0).activateWithPriority(1000)
         
-        imageLayerView.topAnchor.constraintEqualToAnchor(topTV.topAnchor, constant: 0).activateWithPriority(1000)
-        imageLayerView.leadingAnchor.constraintEqualToAnchor(topTV.leadingAnchor, constant: 0).activateWithPriority(1000)
-        imageLayerView.trailingAnchor.constraintEqualToAnchor(topTV.trailingAnchor, constant: 0).activateWithPriority(1000)
-        imageLayerView.bottomAnchor.constraintEqualToAnchor(topTV.bottomAnchor, constant: 0).activateWithPriority(1000)
+        imageLayerView.topAnchor.constraint(equalTo: topTV.topAnchor, constant: 0).activateWithPriority(1000)
+        imageLayerView.leadingAnchor.constraint(equalTo: topTV.leadingAnchor, constant: 0).activateWithPriority(1000)
+        imageLayerView.trailingAnchor.constraint(equalTo: topTV.trailingAnchor, constant: 0).activateWithPriority(1000)
+        imageLayerView.bottomAnchor.constraint(equalTo: topTV.bottomAnchor, constant: 0).activateWithPriority(1000)
     }
     
     
@@ -219,7 +265,7 @@ public class IACompositeBase:UIView {
     
     
     ///Prefered method for setting stored IAText for display. By default this assumes text has been prerendered and only needs bounds set on its images. If needsRendering is set as true then this will render according to whatever its included schemeName is.
-    public func setIAString(iaString:IAString!){
+    open func setIAString(_ iaString:IAString!){
         if iaString != nil {
             self.iaString = iaString
         } else {
@@ -235,14 +281,14 @@ public class IACompositeBase:UIView {
         
         let attStrings = self.iaString.convertToNSAttributedStringsForLayeredDisplay(withOverridingOptions: options)
         let attStringLength = attStrings.top.length
-        topTV.textStorage.replaceCharactersInRange(NSMakeRange(0, topTV.textStorage.length), withAttributedString: attStrings.top)
+        topTV.textStorage.replaceCharacters(in: NSMakeRange(0, topTV.textStorage.length), with: attStrings.top)
         
         if attStrings.bottom?.length == attStringLength {
-            bottomTV.hidden = false
-            bottomTV.textStorage.replaceCharactersInRange(NSMakeRange(0, bottomTV.textStorage.length), withAttributedString: attStrings.bottom!)
+            bottomTV.isHidden = false
+            bottomTV.textStorage.replaceCharacters(in: NSMakeRange(0, bottomTV.textStorage.length), with: attStrings.bottom!)
         } else {
-            bottomTV.hidden = true
-            bottomTV.textStorage.replaceCharactersInRange(NSMakeRange(0, bottomTV.textStorage.length), withAttributedString: NSAttributedString())
+            bottomTV.isHidden = true
+            bottomTV.textStorage.replaceCharacters(in: NSMakeRange(0, bottomTV.textStorage.length), with: NSAttributedString())
         }
         
         invalidateIntrinsicContentSize()
@@ -258,18 +304,18 @@ public class IACompositeBase:UIView {
     }
     
     ///Forces layout and drawing of IAString. If recalculate option is true, then this recalculates entire range of iaString, similar to what would happen calling setIAString(self.iaString) but keeps selection intact. This function is typically called without the recalculatStrings option when bounds change or with recalculateStrings after changes in states that affect the display of the entire string, like changing the smoother or transformer (current values or global overrides).
-    func rerenderIAString(recalculateStrings recalculateStrings:Bool = false){
+    func rerenderIAString(recalculateStrings:Bool = false){
         guard iaString != nil else {return}
-        if recalculateStrings || (bottomTV.hidden == false && bottomTV.textStorage.length != topTV.textStorage.length){
+        if recalculateStrings || (bottomTV.isHidden == false && bottomTV.textStorage.length != topTV.textStorage.length){
             let options = iaString.baseOptions.optionsWithOverridesApplied(IAKitPreferences.iaStringOverridingOptions)
             let attStrings = self.iaString.convertToNSAttributedStringsForLayeredDisplay(withOverridingOptions: options)
             let attStringLength = attStrings.top.length
-            topTV.textStorage.replaceCharactersInRange(NSMakeRange(0, topTV.textStorage.length), withAttributedString: attStrings.top)
+            topTV.textStorage.replaceCharacters(in: NSMakeRange(0, topTV.textStorage.length), with: attStrings.top)
             if attStrings.bottom?.length == attStringLength {
-                bottomTV.hidden = false
-                bottomTV.textStorage.replaceCharactersInRange(NSMakeRange(0, bottomTV.textStorage.length), withAttributedString: attStrings.bottom!)
+                bottomTV.isHidden = false
+                bottomTV.textStorage.replaceCharacters(in: NSMakeRange(0, bottomTV.textStorage.length), with: attStrings.bottom!)
             } else {
-                bottomTV.hidden = true
+                bottomTV.isHidden = true
             }
         } else {
             self.setNeedsLayout()
@@ -292,22 +338,22 @@ public class IACompositeBase:UIView {
     }
     
 //    ///The intrinsicContentSize incorporates insets if the topTV ics is non-zero
-    public override func intrinsicContentSize() -> CGSize {
+    open override var intrinsicContentSize : CGSize {
         //return super.intrinsicContentSize()
             //topTV.intrinsicContentSize()
-        var val = topTV.intrinsicContentSize()
+        var val = topTV.intrinsicContentSize
         
         val.width += textContainerInset.left + textContainerInset.right
         val.height += textContainerInset.top + textContainerInset.bottom
         return val
     }
     
-    public override func sizeThatFits(size: CGSize) -> CGSize {
+    open override func sizeThatFits(_ size: CGSize) -> CGSize {
         let insetHor = textContainerInset.left + textContainerInset.right
         let insetVert = textContainerInset.top + textContainerInset.bottom
-        let sizeMinusInsets = CGSizeMake(size.width - insetHor, size.height - insetVert)
+        let sizeMinusInsets = CGSize(width: size.width - insetHor, height: size.height - insetVert)
         let topTVSize = topTV.sizeThatFits(sizeMinusInsets)
-        return CGSizeMake(topTVSize.width + insetHor, topTVSize.height + insetVert)
+        return CGSize(width: topTVSize.width + insetHor, height: topTVSize.height + insetVert)
     }
     
     
@@ -324,65 +370,65 @@ public class IACompositeBase:UIView {
     }
     
     required public init?(coder aDecoder: NSCoder) {
-        containerView = (aDecoder.decodeObjectForKey("containerView") as?  UIView) ?? UIView()
-        topTV = (aDecoder.decodeObjectForKey("topTV") as?  ThinTextView) ?? ThinTextView()
-        bottomTV = (aDecoder.decodeObjectForKey("bottomTV") as?  ThinTextView) ?? ThinTextView()
-        selectionView = (aDecoder.decodeObjectForKey("selectionView") as?  IASelectionView) ?? IASelectionView()
-        imageLayerView = (aDecoder.decodeObjectForKey("imageLayerView") as?  IAImageLayerView) ?? IAImageLayerView()
+        containerView = (aDecoder.decodeObject(forKey: "containerView") as?  UIView) ?? UIView()
+        topTV = (aDecoder.decodeObject(forKey: "topTV") as?  ThinTextView) ?? ThinTextView()
+        bottomTV = (aDecoder.decodeObject(forKey: "bottomTV") as?  ThinTextView) ?? ThinTextView()
+        selectionView = (aDecoder.decodeObject(forKey: "selectionView") as?  IASelectionView) ?? IASelectionView()
+        imageLayerView = (aDecoder.decodeObject(forKey: "imageLayerView") as?  IAImageLayerView) ?? IAImageLayerView()
         super.init(coder: aDecoder)
         setupIATV()
         
         
-        if let ts = IAThumbSize(rawOptional: (aDecoder.decodeObjectForKey("thumbSizes") as? String)) {
+        if let ts = IAThumbSize(rawOptional: (aDecoder.decodeObject(forKey: "thumbSizes") as? String)) {
             thumbSizesForAttachments = ts
         }
-        if let insetArray = aDecoder.decodeObjectForKey("textContainerInsetArray") as? [CGFloat] where insetArray.count == 4 {
+        if let insetArray = aDecoder.decodeObject(forKey: "textContainerInsetArray") as? [CGFloat], insetArray.count == 4 {
             self.textContainerInset = UIEdgeInsets(top: insetArray[0], left: insetArray[1], bottom: insetArray[2], right: insetArray[3])
         }
-        if let iasArch = aDecoder.decodeObjectForKey("iaStringArchive") as? IAStringArchive {
+        if let iasArch = aDecoder.decodeObject(forKey: "iaStringArchive") as? IAStringArchive {
             setIAString(iasArch.iaString)
         }
-        if let selectableOption = aDecoder.decodeObjectForKey("selectable") as? Bool {
+        if let selectableOption = aDecoder.decodeObject(forKey: "selectable") as? Bool {
             self.selectable = selectableOption
         }
     }
     
     public convenience init(){
-        self.init(frame:CGRectZero)
+        self.init(frame:CGRect.zero)
     }
     
-    public override func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(containerView, forKey: "containerView")
-        aCoder.encodeObject(topTV, forKey: "topTV")
-        aCoder.encodeObject(bottomTV, forKey: "bottomTV")
-        aCoder.encodeObject(imageLayerView, forKey: "imageLayerView")
-        aCoder.encodeObject(selectionView, forKey: "selectionView")
+    open override func encode(with aCoder: NSCoder) {
+        super.encode(with: aCoder)
+        aCoder.encode(containerView, forKey: "containerView")
+        aCoder.encode(topTV, forKey: "topTV")
+        aCoder.encode(bottomTV, forKey: "bottomTV")
+        aCoder.encode(imageLayerView, forKey: "imageLayerView")
+        aCoder.encode(selectionView, forKey: "selectionView")
         
         
         //want thumbsize, insets, iaString, etc
-        aCoder.encodeObject(thumbSizesForAttachments.rawValue, forKey: "thumbSizes")
+        aCoder.encode(thumbSizesForAttachments.rawValue, forKey: "thumbSizes")
         let insets = [textContainerInset.top,textContainerInset.left,textContainerInset.bottom,textContainerInset.right]
-        aCoder.encodeObject(insets, forKey: "textContainerInsetArray")
+        aCoder.encode(insets, forKey: "textContainerInsetArray")
         if iaString != nil {
-            aCoder.encodeObject(IAStringArchive(iaString: iaString), forKey: "iaStringArchive")
+            aCoder.encode(IAStringArchive(iaString: iaString), forKey: "iaStringArchive")
         }
-        aCoder.encodeObject(selectable, forKey: "selectable")
+        aCoder.encode(selectable, forKey: "selectable")
     }
     
     
-    public override func canBecomeFirstResponder() -> Bool {
+    open override var canBecomeFirstResponder : Bool {
         return true
     }
     
 
-    public override func selectAll(sender: AnyObject?) {
+    open override func selectAll(_ sender: Any?) {
         guard selectable == true else {return}
         selectedRange = 0..<self.iaString.length
         self.becomeFirstResponder()
         // present menu
         //if sender is UILongPressGestureRecognizer {
-            presentMenu(nil)
+            _ = presentMenu(nil)
         //}
     }
     
@@ -390,13 +436,13 @@ public class IACompositeBase:UIView {
         if selectedRange != nil {
             selectedRange = nil
             selectionView.clearSelection()
-            if menu.menuVisible {
+            if menu.isMenuVisible {
                 menu.setMenuVisible(false, animated: true)
             }
         }
     }
     
-    public override func canPerformAction(action: Selector, withSender sender: AnyObject?) -> Bool {
+    open override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         if action == #selector(copy(_:)) && self.selectedRange?.count > 0{
             return true
         }
@@ -410,24 +456,24 @@ public class IACompositeBase:UIView {
     }
     
     ///Attachments are not being deep copied as is
-    public override func copy(sender: AnyObject?) {
-        defer{UIMenuController.sharedMenuController().setMenuVisible(false, animated: true)}
-        guard iaString != nil && _selectedRange?.count > 0 && _selectedRange?.startIndex >= 0 && _selectedRange?.endIndex <= iaString.length else {return}
+    open override func copy(_ sender: Any?) {
+        defer{UIMenuController.shared.setMenuVisible(false, animated: true)}
+        guard iaString != nil && _selectedRange?.count > 0 && _selectedRange?.lowerBound >= 0 && _selectedRange?.upperBound <= iaString.length else {return}
         
-        let pb = UIPasteboard.generalPasteboard()
+        let pb = UIPasteboard.general
         let copyOfSelected = iaString.iaSubstringFromRange(selectedRange!)
         //let copiedText = iaString.text.subStringFromRange(selectedRange!)
         //let iaArchive = IAStringArchive.archive(iaString.copy(true))
         let iaArchive = IAStringArchive.archive(copyOfSelected)
         var pbItem:[String:AnyObject] = [:]
-        pbItem[UTITypes.PlainText] = copyOfSelected.text
-        pbItem[UTITypes.IAStringArchive] = iaArchive
+        pbItem[UTITypes.PlainText] = copyOfSelected.text as AnyObject?
+        pbItem[UTITypes.IAStringArchive] = iaArchive as AnyObject?
         pb.items = [pbItem]
     }
     
     ///Called internally by a didSet on selectedRange. Calls updateSelectionLayer. In editing subclasses this should also update the current/next text properties.
     func selectedRangeChanged(){
-        if menu.menuVisible {
+        if menu.isMenuVisible {
             menu.setMenuVisible(false, animated: true)
         }
         updateSelectionLayer()
@@ -438,62 +484,62 @@ public class IACompositeBase:UIView {
         if selectedRange == nil { // changed from selectedRange == nil && markedRange == nil
             markedRange = nil
             selectionView.clearSelection()
-        } else if self.isFirstResponder() && selectedRange!.count == 0 {
+        } else if self.isFirstResponder && selectedRange!.count == 0 {
             //selectionView.updateSelections([], caretRect: caretRectForIntPosition(selectedRange!.startIndex))
             let markedRect:CGRect? = {
                 guard markedRange != nil else {return nil}
-                let gr = topTV.layoutManager.glyphRangeForCharacterRange(markedRange!.nsRange, actualCharacterRange: nil)
-                let rect = topTV.layoutManager.boundingRectForGlyphRange(gr, inTextContainer: topTV.textContainer)
-                return topTV.convertRect(rect, toView: self)
+                let gr = topTV.layoutManager.glyphRange(forCharacterRange: markedRange!.nsRange, actualCharacterRange: nil)
+                let rect = topTV.layoutManager.boundingRect(forGlyphRange: gr, in: topTV.textContainer)
+                return topTV.convert(rect, to: self)
             }()
-            selectionView.setTextMarking(markedRect, caretRect: caretRectForIntPosition(selectedRange!.startIndex))
+            selectionView.setTextMarking(markedRect, caretRect: caretRectForIntPosition(selectedRange!.lowerBound))
         } else {
             let selectionRects = selectionRectsForIntRange(selectedRange!)
-            let caretRect = caretRectForIntPosition(selectedRange!.endIndex)
+            let caretRect = caretRectForIntPosition(selectedRange!.upperBound)
             selectionView.updateSelections(selectionRects, caretRect: caretRect )
         }
     }
     
     ///Presents a UIMenuController using the provided targetRect or in the middle of the view if none is provided
-    func presentMenu(targetRect:CGRect?)->UIMenuController{
-        let targetRect = CGRectMake(self.bounds.midX, self.bounds.midY, 10, 10)
-        let menu = UIMenuController.sharedMenuController()
+    func presentMenu(_ targetRect:CGRect?)->UIMenuController{
+        let targetRect = CGRect(x: self.bounds.midX, y: self.bounds.midY, width: 10, height: 10)
+        let menu = UIMenuController.shared
         menu.update()
-        menu.setTargetRect(targetRect, inView: selectionView)
+        menu.setTargetRect(targetRect, in: selectionView)
         menu.setMenuVisible(true, animated: true)
         return menu
     }
     
     ///Note: This assumes forward layout direction with left-to-right writing. Caret width is fixed at 2 points. Caret will be increased in size (height increased) if it's too small (as a result of an empty field).
-    func caretRectForIntPosition(position: Int) -> CGRect {
+    func caretRectForIntPosition(_ position: Int) -> CGRect {
         let caretWidth:CGFloat = 2
-        let glyphRange = topTV.layoutManager.glyphRangeForCharacterRange(NSMakeRange(position, 0), actualCharacterRange: nil)
+        let glyphRange = topTV.layoutManager.glyphRange(forCharacterRange: NSMakeRange(position, 0), actualCharacterRange: nil)
         var baseRect:CGRect!
 
-        baseRect = topTV.layoutManager.boundingRectForGlyphRange(glyphRange, inTextContainer: topTV.textContainer)
+        baseRect = topTV.layoutManager.boundingRect(forGlyphRange: glyphRange, in: topTV.textContainer)
         if baseRect == nil {
-            baseRect = topTV.layoutManager.lineFragmentRectForGlyphAtIndex(glyphRange.location, effectiveRange: nil)
+            baseRect = topTV.layoutManager.lineFragmentRect(forGlyphAt: glyphRange.location, effectiveRange: nil)
         }
         
         let caretHeight:CGFloat = max(baseRect.size.height, 22.0) //establish minimum caret height
         //rect in topTV coordinate space
-        let tvRect = CGRectMake(baseRect.origin.x + baseRect.size.width, baseRect.origin.y, caretWidth, caretHeight)
-        return self.convertRect(tvRect, fromView: topTV)
+        let tvRect = CGRect(x: baseRect.origin.x + baseRect.size.width, y: baseRect.origin.y, width: caretWidth, height: caretHeight)
+        return self.convert(tvRect, from: topTV)
     }
     
     /// Writing Direction and isVertical are hardcoded in this to .Natural and false, respectively.
-    func selectionRectsForIntRange(range: Range<Int>) -> [IATextSelectionRect]{
-        let glyphRange = topTV.layoutManager.glyphRangeForCharacterRange(range.nsRange, actualCharacterRange: nil)
+    func selectionRectsForIntRange(_ range: CountableRange<Int>) -> [IATextSelectionRect]{
+        let glyphRange = topTV.layoutManager.glyphRange(forCharacterRange: range.nsRange, actualCharacterRange: nil)
         var rawEnclosingRects:[CGRect] = []
-        topTV.layoutManager.enumerateEnclosingRectsForGlyphRange(glyphRange, withinSelectedGlyphRange: NSMakeRange(NSNotFound, 0), inTextContainer: topTV.textContainer) { (rect, stop) in
+        topTV.layoutManager.enumerateEnclosingRects(forGlyphRange: glyphRange, withinSelectedGlyphRange: NSMakeRange(NSNotFound, 0), in: topTV.textContainer) { (rect, stop) in
             rawEnclosingRects.append(rect)
         }
-        let convertedRects = rawEnclosingRects.map({self.convertRect($0, fromView: topTV)})
+        let convertedRects = rawEnclosingRects.map({self.convert($0, from: topTV)})
 
         if convertedRects.isEmpty == false {
             return IATextSelectionRect.generateSelectionArray(convertedRects)
         } else {
-            let rect = caretRectForIntPosition(range.startIndex)
+            let rect = caretRectForIntPosition(range.lowerBound)
             return [IATextSelectionRect(rect: rect, containsStart: false, containsEnd: false)]
         }
     }

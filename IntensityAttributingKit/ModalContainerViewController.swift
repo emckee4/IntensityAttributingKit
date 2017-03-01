@@ -14,7 +14,7 @@ class ModalContainerViewController: UIViewController {
     var dismissButton:UIButton!
     var effectView:UIVisualEffectView!
     
-    var dismissalCompletionBlock:(Void->Void)?
+    var dismissalCompletionBlock:((Void)->Void)?
     let kDismissButtonSize:CGFloat = 26
     
     ///If true then the dismissButton will overlay the trailing top corner. Otherwise it will be placed above it.
@@ -23,44 +23,44 @@ class ModalContainerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let blur = UIBlurEffect(style: UIBlurEffectStyle.Light)
+        let blur = UIBlurEffect(style: UIBlurEffectStyle.light)
         effectView = UIVisualEffectView(effect: blur)
         effectView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(effectView)
         
-        dismissButton = UIButton(type: .System)
-        let xImage = UIImage(named: "circleX", inBundle: IAKitPreferences.bundle, compatibleWithTraitCollection: self.traitCollection)!
-        dismissButton.setImage(xImage, forState: .Normal)
+        dismissButton = UIButton(type: .system)
+        let xImage = UIImage(named: "circleX", in: IAKitPreferences.bundle, compatibleWith: self.traitCollection)!
+        dismissButton.setImage(xImage, for: UIControlState())
         dismissButton.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(dismissButton)
-        dismissButton.topAnchor.constraintEqualToAnchor(self.topLayoutGuide.bottomAnchor).active = true
-        dismissButton.trailingAnchor.constraintEqualToAnchor(view.trailingAnchor).active = true
-        dismissButton.widthAnchor.constraintEqualToConstant(kDismissButtonSize).activateWithPriority(1000)
-        dismissButton.heightAnchor.constraintEqualToConstant(kDismissButtonSize).activateWithPriority(1000)
-        dismissButton.addTarget(self, action: #selector(ModalContainerViewController.dismissButtonPressed), forControlEvents: .TouchUpInside)
+        dismissButton.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor).isActive = true
+        dismissButton.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        dismissButton.widthAnchor.constraint(equalToConstant: kDismissButtonSize).activateWithPriority(1000)
+        dismissButton.heightAnchor.constraint(equalToConstant: kDismissButtonSize).activateWithPriority(1000)
+        dismissButton.addTarget(self, action: #selector(ModalContainerViewController.dismissButtonPressed), for: .touchUpInside)
         
-        effectView.topAnchor.constraintEqualToAnchor(dismissButton.topAnchor).active = true
-        effectView.trailingAnchor.constraintEqualToAnchor(dismissButton.trailingAnchor).active = true
-        effectView.widthAnchor.constraintEqualToConstant(kDismissButtonSize).activateWithPriority(1000)
-        effectView.heightAnchor.constraintEqualToConstant(kDismissButtonSize).activateWithPriority(1000)
+        effectView.topAnchor.constraint(equalTo: dismissButton.topAnchor).isActive = true
+        effectView.trailingAnchor.constraint(equalTo: dismissButton.trailingAnchor).isActive = true
+        effectView.widthAnchor.constraint(equalToConstant: kDismissButtonSize).activateWithPriority(1000)
+        effectView.heightAnchor.constraint(equalToConstant: kDismissButtonSize).activateWithPriority(1000)
         
         
         guard let child = childViewControllers.first else {return}
         self.view.addSubview(child.view)
         child.view.translatesAutoresizingMaskIntoConstraints = false
-        child.view.leftAnchor.constraintEqualToAnchor(self.view.leftAnchor).activateWithPriority(1000)
-        child.view.rightAnchor.constraintEqualToAnchor(self.view.rightAnchor).activateWithPriority(1000)
-        child.view.bottomAnchor.constraintEqualToAnchor(self.bottomLayoutGuide.topAnchor).activateWithPriority(1000)
+        child.view.leftAnchor.constraint(equalTo: self.view.leftAnchor).activateWithPriority(1000)
+        child.view.rightAnchor.constraint(equalTo: self.view.rightAnchor).activateWithPriority(1000)
+        child.view.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor).activateWithPriority(1000)
         
         if dismissButtonOverlays {
-            child.view.topAnchor.constraintEqualToAnchor(self.topLayoutGuide.bottomAnchor).activateWithPriority(1000)
-            self.view.bringSubviewToFront(effectView)
-            self.view.bringSubviewToFront(dismissButton)
+            child.view.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor).activateWithPriority(1000)
+            self.view.bringSubview(toFront: effectView)
+            self.view.bringSubview(toFront: dismissButton)
         } else {
-            child.view.topAnchor.constraintEqualToAnchor(self.dismissButton.bottomAnchor).activateWithPriority(1000)
+            child.view.topAnchor.constraint(equalTo: self.dismissButton.bottomAnchor).activateWithPriority(1000)
         }
         if self.view.backgroundColor == nil {
-            self.view.backgroundColor = UIColor.lightGrayColor()
+            self.view.backgroundColor = UIColor.lightGray
         }
         
         
@@ -74,7 +74,7 @@ class ModalContainerViewController: UIViewController {
     }
     
     func dismissButtonPressed(){
-        self.dismissViewControllerAnimated(true, completion: dismissalCompletionBlock)
+        self.dismiss(animated: true, completion: dismissalCompletionBlock)
     }
 
 }

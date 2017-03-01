@@ -10,69 +10,69 @@ import Foundation
 
 class DateConversion {
     
-    static let parseUTCDateFormatter:NSDateFormatter = {
-        let dateFormatter = NSDateFormatter()
+    static let parseUTCDateFormatter:DateFormatter = {
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-        dateFormatter.timeZone = NSTimeZone(name: "UTC")!
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")!
         return dateFormatter
     }()
     
-    static let shortTimeFormatter:NSDateFormatter = {
-        let formatter = NSDateFormatter()
-        formatter.dateStyle = .NoStyle
-        formatter.timeStyle = .ShortStyle
+    static let shortTimeFormatter:DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
         return formatter
     }()
     
-    static let shortDateFormatter:NSDateFormatter = {
-        let formatter = NSDateFormatter()
-        formatter.dateStyle = .ShortStyle
-        formatter.timeStyle = .NoStyle
+    static let shortDateFormatter:DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .none
         return formatter
     }()
     
-    static let dayOfWeekAndTimeFormatter:NSDateFormatter = {
-        let formatter = NSDateFormatter()
-        formatter.locale = NSLocale.autoupdatingCurrentLocale()
+    static let dayOfWeekAndTimeFormatter:DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale.autoupdatingCurrent
         formatter.setLocalizedDateFormatFromTemplate("HH:mm EEEE")
         return formatter
     }()
     
-    static let shortDTFormatter:NSDateFormatter = {
-        let formatter = NSDateFormatter()
-        formatter.dateStyle = .ShortStyle
-        formatter.timeStyle = .ShortStyle
+    static let shortDTFormatter:DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .short
         return formatter
     }()
     
     
     ///Converts the parse date string (iso 8601 string) to an NSDate. Returns nil if it fails or is provided a nil value.
-    class func convertParseUTCStringToNSDate(dateString:String?)->NSDate?{
+    class func convertParseUTCStringToNSDate(_ dateString:String?)->Date?{
         if let dateString = dateString {
-            return parseUTCDateFormatter.dateFromString(dateString)
+            return parseUTCDateFormatter.date(from: dateString)
         }
         return nil
     }
     
-    class func convertNSDateUTCToString(date:NSDate)->String{
-        return parseUTCDateFormatter.stringFromDate(date)
+    class func convertNSDateUTCToString(_ date:Date)->String{
+        return parseUTCDateFormatter.string(from: date)
     }
     
-    class func convertNSDateToParseTimestampObject(date:NSDate)->[String:String]{
+    class func convertNSDateToParseTimestampObject(_ date:Date)->[String:String]{
         return ["__type":"Date","iso":convertNSDateUTCToString(date)]
     }
     
     ///Returns a user friendly string representing the date and time of a message which varies depending on how recent it was
-    class func adaptiveDTString(date:NSDate)->String{
-        let age = NSDate().timeIntervalSinceDate(date)
+    class func adaptiveDTString(_ date:Date)->String{
+        let age = Date().timeIntervalSince(date)
         if age < 86400.0 {
-            return shortTimeFormatter.stringFromDate(date)
+            return shortTimeFormatter.string(from: date)
         } else if age < 172800 {
-            return "Yesterday\n\(shortTimeFormatter.stringFromDate(date))"
+            return "Yesterday\n\(shortTimeFormatter.string(from: date))"
         } else if age < 518400{
-            return dayOfWeekAndTimeFormatter.stringFromDate(date).stringByReplacingFirstOccurrenceOfString(" ", withString: "\n")
+            return dayOfWeekAndTimeFormatter.string(from: date).stringByReplacingFirstOccurrenceOfString(" ", withString: "\n")
         } else {
-            return shortDTFormatter.stringFromDate(date).stringByReplacingFirstOccurrenceOfString(" ", withString: "\n")
+            return shortDTFormatter.string(from: date).stringByReplacingFirstOccurrenceOfString(" ", withString: "\n")
         }
     }
     

@@ -11,22 +11,22 @@ import Foundation
 /**
 Provides an NSCoding complient wrapper for iaString, allowing IAString itself to remain pleasently non-objective C.
  */
-public class IAStringArchive:NSObject, NSCoding {
+open class IAStringArchive:NSObject, NSCoding {
     
-    public let iaString:IAString
+    open let iaString:IAString
     
     
     required public init?(coder aDecoder: NSCoder) {
         
-        guard let dict = aDecoder.decodeObjectForKey("iaStringDictArchive") as? [String:AnyObject] else {self.iaString = IAString();super.init();return nil}
+        guard let dict = aDecoder.decodeObject(forKey: "iaStringDictArchive") as? [String:AnyObject] else {self.iaString = IAString();super.init();return nil}
         guard let newIAString = IAString(dict: dict) else {self.iaString = IAString();super.init();return nil}
         self.iaString = newIAString
         super.init()
     }
     
     
-    public func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(iaString.convertToAlmostJSONReadyDict(), forKey: "iaStringDictArchive")
+    open func encode(with aCoder: NSCoder) {
+        aCoder.encode(iaString.convertToAlmostJSONReadyDict(), forKey: "iaStringDictArchive")
     }
     
     public init(iaString:IAString){
@@ -35,13 +35,13 @@ public class IAStringArchive:NSObject, NSCoding {
     }
     
     
-    public static func archive(iaString:IAString)->NSData{
+    open static func archive(_ iaString:IAString)->Data{
         let archive = IAStringArchive(iaString: iaString)
-        return NSKeyedArchiver.archivedDataWithRootObject(archive)
+        return NSKeyedArchiver.archivedData(withRootObject: archive)
     }
     
-    public static func unarchive(data:NSData)->IAString?{
-        guard let archive = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? IAStringArchive else { return nil}
+    open static func unarchive(_ data:Data)->IAString?{
+        guard let archive = NSKeyedUnarchiver.unarchiveObject(with: data) as? IAStringArchive else { return nil}
         return archive.iaString
     }
     

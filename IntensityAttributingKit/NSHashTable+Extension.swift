@@ -9,8 +9,8 @@
 import Foundation
 
 
-extension NSHashTable: SequenceType {
-    public func generate() -> NSFastGenerator {
-        return NSFastGenerator(self)
-    }
-}
+//extension NSHashTable: Sequence {
+//    public func makeIterator() -> NSFastEnumerationIterator {
+//        return NSFastEnumerationIterator(self)
+//    }
+//}
