@@ -194,6 +194,7 @@ class IALocationPickerVC:UIViewController, MKMapViewDelegate, CLLocationManagerD
                     self.hasZoomedToUser = true
                 }
             } else {
+                guard placemark.location?.coordinate != nil else {return}
                 self.selectedPlacemark = placemark
                 if let name = placemark.name {
                     if Int(name) != nil {
@@ -237,10 +238,11 @@ class IALocationPickerVC:UIViewController, MKMapViewDelegate, CLLocationManagerD
             }
         } else if selection is MKPointAnnotation {
             //isUser = false
-            if selection.coordinate.isEqualTo(location: selectedPlacemark?.location?.coordinate ?? CLLocationCoordinate2D()) {
+            if selectedPlacemark?.location?.coordinate != nil && selection.coordinate.isEqualTo(location: selectedPlacemark!.location!.coordinate, withEpsilon: 0.00008) {
                 finalPlacemark = IAPlacemark(placemark: selectedPlacemark!)
             } else {
-                finalPlacemark = IAPlacemark(coordinate: selection.coordinate, addressDictionary: nil)
+                let addressDict = selectedPlacemark?.addressDictionary as? [String:Any]
+                finalPlacemark = IAPlacemark(coordinate: selection.coordinate, addressDictionary: addressDict)
             }
         }
         delegate?.locationPickerController(self, location: finalPlacemark)

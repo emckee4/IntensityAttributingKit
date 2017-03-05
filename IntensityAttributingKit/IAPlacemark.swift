@@ -58,7 +58,11 @@ open class IAPlacemark:MKPlacemark {
     override init(coordinate: CLLocationCoordinate2D, addressDictionary: [String : Any]?) {
         self.placename = nil
         super.init(coordinate: coordinate, addressDictionary: addressDictionary)
-        self._region = super.region
+        if super.region == nil {
+            self._region = CLCircularRegion(center: coordinate, radius: 10, identifier: "IAPlacemark Region")
+        } else {
+            self._region = super.region
+        }
     }
     
     public init(coordinate: CLLocationCoordinate2D, addressDictionary: [String : AnyObject]?, placename:String?, radius:CLLocationDistance?) {

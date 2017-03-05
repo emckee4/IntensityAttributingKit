@@ -131,7 +131,7 @@ open class IALocationAttachment:IATextAttachment {
         }
         
         self.snapshotter = MKMapSnapshotter(options: snapshotOptions)
-        self.snapshotter!.start(with: DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default)) { snapshot, error in
+        self.snapshotter!.start(with:DispatchQueue.global(qos: .default)) { snapshot, error in
             guard let snapshot = snapshot else {
                 DispatchQueue.main.async(execute: { 
                     defer{self.snapshotter = nil}
