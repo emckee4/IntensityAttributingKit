@@ -66,7 +66,7 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if startInEditorMode {
-            composerBar.textEditor.becomeFirstResponder()
+            _ = composerBar.textEditor.becomeFirstResponder()
             startInEditorMode = false
         } else {
             messageThreadTableVC.scrollToBottom(true) //this is handled in the keyboard will appear code if we start as first responder

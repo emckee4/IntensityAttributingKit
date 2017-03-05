@@ -2,8 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>Granting access to your photo library allows the sending of images contained therein.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This lets you take and send photos in app.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This lets you send photos from your library.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your location is used to show your position in the location picker.</string>
 	<key>CFBundleDevelopmentRegion</key>

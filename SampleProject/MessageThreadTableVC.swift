@@ -174,7 +174,7 @@ class MessageThreadTableVC: UITableViewController, IATextViewDelegate {
     }
     
     func iaTextView(_ atTextView: IACompositeTextView, userInteractedWithURL URL: Foundation.URL, inRange characterRange: NSRange) {
-        UIApplication.shared.openURL(URL)
+        UIApplication.shared.open(URL, options: [UIApplicationOpenURLOptionUniversalLinksOnly: false], completionHandler: nil)
     }
     
     func iaTextView(_ atTextView: IACompositeTextView, userInteractedWithAttachment attachment: IATextAttachment, inRange: NSRange) {
