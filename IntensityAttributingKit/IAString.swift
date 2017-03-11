@@ -100,7 +100,7 @@ open class IAString {
     }
     
     ///This functions as an inverse of convertToAlmostJSONReadyDict but it can accept attachments in IAStringKeys.attachments format (for which it will insert placeholders) or in .iaTextAttachments format. If preferedSmoothing and/or renderScheme are embeded in the renderOptions dictionary then this will pull them out automatically.
-    public init!(dict:[String:AnyObject]){
+    public init!(dict:[String:Any]){
         guard let newText = dict[IAStringKeys.text] as? String, let newIntensities = dict[IAStringKeys.intensities] as? [Int], let rawBaseAtts = dict[IAStringKeys.baseAttributes] as? [[Int]] else {
             print("IAIntermediate received incomplete data"); self.text = ""; self.length = 0; self.baseAttributes = []; return nil
         }
