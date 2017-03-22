@@ -65,7 +65,7 @@ open class IAPlacemark:MKPlacemark {
         }
     }
     
-    public init(coordinate: CLLocationCoordinate2D, addressDictionary: [String : AnyObject]?, placename:String?, radius:CLLocationDistance?) {
+    public init(coordinate: CLLocationCoordinate2D, addressDictionary: [String : Any]?, placename:String?, radius:CLLocationDistance?) {
         self.placename = placename
         super.init(coordinate: coordinate, addressDictionary: addressDictionary)
         if radius != nil {

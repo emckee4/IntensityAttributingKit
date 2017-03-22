@@ -298,7 +298,7 @@
 		C002E1F01CB303F5008E78A1 /* CompositeTextViews */ = {
 			isa = PBXGroup;
 			children = (
-				C0304B171D6D080B00E5FD73 /* Attachments */,
+				C0F350361D73D1A500FDE724 /* AttachmentVCs */,
 				C01E0F4B1D51390900C5471B /* TextKit subclasses */,
 				C01FFFAF1CC6B3DF00AFD366 /* IACompositeBase */,
 				C04533B11CAAF2FC00B374D0 /* IACompositeTextView.swift */,
@@ -408,7 +408,6 @@
 				C0304B1F1D6E368900E5FD73 /* IAPlaceholder.swift */,
 				C0304B211D6E37E700E5FD73 /* IAAttachmentType.swift */,
 				C089D29E1D761E2E009AEF7D /* LocationAttachmentRelated */,
-				C0F350361D73D1A500FDE724 /* AttachViewers */,
 			);
 			name = Attachments;
 			sourceTree = "<group>";
@@ -439,6 +438,7 @@
 			children = (
 				C040C5071C0E4283007C1685 /* IAKitPreferences.swift */,
 				C01E0F471D4BD5FB00C5471B /* IAKitVisualPreferences.swift */,
+				C0304B171D6D080B00E5FD73 /* Attachments */,
 				C002E1F01CB303F5008E78A1 /* CompositeTextViews */,
 				C08253B31BE571E00017AC14 /* KB+Accessory */,
 				C06B1D541BEE9BDA009F427A /* RawIntensity */,
@@ -587,7 +587,6 @@
 			isa = PBXGroup;
 			children = (
 				C089D29F1D761E6D009AEF7D /* IALocationManagerDelegateShim.swift */,
-				C089D2A11D761EF2009AEF7D /* IALocationPickerVC.swift */,
 				C0E669B11D82478D005A9EF3 /* IAPlacemark.swift */,
 			);
 			name = LocationAttachmentRelated;
@@ -647,13 +646,14 @@
 			name = ExpandingKeys;
 			sourceTree = "<group>";
 		};
-		C0F350361D73D1A500FDE724 /* AttachViewers */ = {
+		C0F350361D73D1A500FDE724 /* AttachmentVCs */ = {
 			isa = PBXGroup;
 			children = (
+				C089D2A11D761EF2009AEF7D /* IALocationPickerVC.swift */,
 				C0F350341D73C34900FDE724 /* IAImageViewerVC.swift */,
 				C0F350371D73D91000FDE724 /* IAVideoViewerVC.swift */,
 			);
-			name = AttachViewers;
+			name = AttachmentVCs;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -16,7 +16,7 @@ open class IALocationAttachment:IATextAttachment {
     
     
     override open var localID: String {
-        get{return "lat\(placemark.coordinate.latitude)lon\(placemark.coordinate.longitude)"}
+        get{return "lat:\(String(format: "%0.8f",placemark.coordinate.latitude)) lon:\(String(format: "%0.8f",placemark.coordinate.longitude)) placename:\(self.placename ?? "")"}
     }
     
     override open var attachmentType:IAAttachmentType {
@@ -27,11 +27,19 @@ open class IALocationAttachment:IATextAttachment {
         return self._image == nil
     }
 
-    var latitude:CLLocationDegrees {
+    public var latitude:CLLocationDegrees {
         return placemark.coordinate.latitude
     }
-    var longitude:CLLocationDegrees {
+    public var longitude:CLLocationDegrees {
         return placemark.coordinate.longitude
+    }
+    
+    public var placename:String! {
+        return self.placemark.placename
+    }
+    
+    public var radius:Double? {
+        return (placemark.region as? CLCircularRegion)?.radius
     }
 
     open let placemark:IAPlacemark
@@ -66,8 +74,26 @@ open class IALocationAttachment:IATextAttachment {
         aCoder.encode(placemark, forKey: "placemark")
     }
     
-    public init!(portableDict:[String:AnyObject]){
-        guard let addressDict = portableDict["addressDictionary"] as? [String:AnyObject], let lat = portableDict["coordinate"]?["latitude"] as? Double, let lon = portableDict["coordinate"]?["longitude"] as? Double, let radius = portableDict["radius"] as? Double else {return nil}
+    ///returns all elements of the placemark's address dict that conform to [String:Any] as opposed to its own [AnyHashable:Any]
+    public var friendlyAddressDict:[String:Any]!{
+        guard let addressDict = placemark.addressDictionary else {return nil}
+        var fad:[String:Any] = [:]
+        for (key,value) in addressDict {
+            if let sKey = key as? String {
+                fad[sKey] = value
+            }
+        }
+        return fad
+    }
+    
+    public init!(portableDict:[String:Any]){
+        
+        guard let coord = portableDict["coordinate"] as? [String:Any],
+            let lat = coord["latitude"] as? Double,
+            let lon = coord["longitude"] as? Double,
+            let radius = portableDict["radius"] as? Double
+            else {return nil}
+        let addressDict = portableDict["addressDictionary"] as? [String:Any]
         
         self.placemark = IAPlacemark(coordinate: CLLocationCoordinate2D(latitude: lat,longitude: lon),
             addressDictionary: addressDict,
@@ -84,24 +110,17 @@ open class IALocationAttachment:IATextAttachment {
     }
     
     ///The portable dict format is intended to be easily convertable to JSON for transfer.
-    func convertToPortableDict()->[String:AnyObject]!{
-        guard let addressDictionary = placemark.addressDictionary, let region = placemark.region as? CLCircularRegion else {print("IALocationAttachment.convertToPortableDict found nil addressDictionary or region in placemark");return nil} //This check should be superfulous since we dont allow an init without these values being set
-        var dict:[String:AnyObject] = [:]
-        var ad:[String:AnyObject] = [:]
-        for (key,value) in addressDictionary {
-            if let sKey = key as? String {
-                ad[sKey] = value as AnyObject?
-            }
-        }
-        dict["addressDictionary"] = ad as AnyObject?
-        var coord:[String:AnyObject] = [:]
-        coord["latitude"] = placemark.coordinate.latitude as AnyObject?
-        coord["longitude"] = placemark.coordinate.longitude as AnyObject?
-        dict["coordinate"] = coord as AnyObject?
-        
-        dict["radius"] = region.radius as AnyObject?
+    public func convertToPortableDict()->[String:Any]!{
+        guard let ad = friendlyAddressDict, let region = placemark.region as? CLCircularRegion else {print("IALocationAttachment.convertToPortableDict found nil addressDictionary or region in placemark");return nil} //This check should be superfulous since we dont allow an init without these values being set
+        var dict:[String:Any] = [:]
+        dict["addressDictionary"] = ad
+        var coord:[String:Any] = [:]
+        coord["latitude"] = placemark.coordinate.latitude
+        coord["longitude"] = placemark.coordinate.longitude
+        dict["coordinate"] = coord
+        dict["radius"] = region.radius
         if let pm = placemark.placename {
-            dict["placename"] = pm as AnyObject?
+            dict["placename"] = pm
         }
         
         return dict
