@@ -198,7 +198,8 @@ class IALocationPickerVC:UIViewController, MKMapViewDelegate, CLLocationManagerD
                 self.selectedPlacemark = placemark
                 if let name = placemark.name {
                     if Int(name) != nil {
-                        self.selectedLocation?.title = (placemark.subAdministrativeArea != nil ? "\(placemark.subAdministrativeArea!), " : "") + (placemark.administrativeArea != nil ? "\(placemark.administrativeArea!), " : "") + (placemark.country != nil ? "\(placemark.country!), " : "")
+                        let title:String = (placemark.subAdministrativeArea != nil ? "\(placemark.subAdministrativeArea!), " : "") + (placemark.administrativeArea != nil ? "\(placemark.administrativeArea!), " : "") + (placemark.country != nil ? "\(placemark.country!), " : "")
+                        self.selectedLocation?.title = title
                     } else {
                         self.selectedLocation?.title = name
                     }
