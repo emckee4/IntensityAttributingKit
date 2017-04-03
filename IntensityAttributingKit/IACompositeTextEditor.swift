@@ -82,7 +82,14 @@ open class IACompositeTextEditor:IACompositeBase, UITextInput {
     //UITextInput functions are in a separate file.
     open var inputDelegate: UITextInputDelegate?
 
-    open var tokenizer: UITextInputTokenizer!
+    public var tokenizer: UITextInputTokenizer {
+        get {return _tokenizer}
+        set {guard let newTok = newValue as? UITextInputStringTokenizer else {return}
+            _tokenizer = newTok}
+    }
+    //The compiler is no longer accepting tokenizer as a lazy var so we do this workaround with it as a computed variable with a lazy backing
+    lazy var _tokenizer:UITextInputStringTokenizer = UITextInputStringTokenizer(textInput: self)
+    
     open var beginningOfDocument: UITextPosition  {
         get{return IATextPosition(0)}
     }
@@ -135,7 +142,7 @@ open class IACompositeTextEditor:IACompositeBase, UITextInput {
     }
     
     open var markedTextStyle: [AnyHashable: Any]? {
-        didSet{print("markedTextStyle was set to value: \(markedTextStyle). ")
+        didSet{print("markedTextStyle was set to value: \(String(describing: markedTextStyle)). ")
             
         }
     }
@@ -149,7 +156,7 @@ open class IACompositeTextEditor:IACompositeBase, UITextInput {
     
     override func setupIATV(){
         super.setupIATV()
-        tokenizer = UITextInputStringTokenizer(textInput: self)
+        //tokenizer = UITextInputStringTokenizer(textInput: self)
         if magnifyingLoup == nil {
             magnifyingLoup = IAMagnifyingLoup(viewToMagnify:containerView)
             self.addSubview(magnifyingLoup)
