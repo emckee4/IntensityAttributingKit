@@ -204,6 +204,37 @@ public struct CollapsingArray<Element:Equatable>: ExclusiveRangeMappingProtocol,
     }
     
     
+    /// Accesses a contiguous subrange of the collection's elements.
+    ///
+    /// The accessed slice uses the same indices for the same elements as the
+    /// original collection. Always use the slice's `startIndex` property
+    /// instead of assuming that its indices start at a particular value.
+    ///
+    /// This example demonstrates getting a slice of an array of strings, finding
+    /// the index of one of the strings in the slice, and then using that index
+    /// in the original array.
+    ///
+    ///     let streets = ["Adams", "Bryant", "Channing", "Douglas", "Evarts"]
+    ///     let streetsSlice = streets[2 ..< streets.endIndex]
+    ///     print(streetsSlice)
+    ///     // Prints "["Channing", "Douglas", "Evarts"]"
+    ///
+    ///     let index = streetsSlice.index(of: "Evarts")    // 4
+    ///     streets[index!] = "Eustace"
+    ///     print(streets[index!])
+    ///     // Prints "Eustace"
+    ///
+    /// - Parameter bounds: A range of the collection's indices. The bounds of
+    ///   the range must be valid indices of the collection.
+    public subscript(bounds: Range<Int>) -> RangeReplaceableSlice<CollapsingArray<Element>> {
+        get {
+            return RangeReplaceableSlice.init(base: self, bounds: bounds)
+        }
+        set(newValue) {
+            self.replaceSubrange(bounds, with: newValue)
+        }
+    }
+    
     //should cleanup removerange, insertContentsOf, append, etc for performance
     
     mutating public func insert(_ newElement: Iterator.Element, at i: Index) {
