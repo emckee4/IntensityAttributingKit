@@ -24,10 +24,10 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
     fileprivate let suggestionBarScaleFactor:CGFloat = IAKitPreferences.visualPreferences.kbSuggestionBarScaleFactor//0.75
     
     fileprivate var verticalStackView:UIStackView!
-    fileprivate var qwertyStackView:UIStackView!
-    fileprivate var asdfStackView:UIStackView!
-    fileprivate var zxcvStackView:UIStackView!
-    fileprivate var bottomStackView:UIStackView!
+    fileprivate var qwertyStackView:EmbeddableStackView!
+    fileprivate var asdfStackView:EmbeddableStackView!
+    fileprivate var zxcvStackView:EmbeddableStackView!
+    fileprivate var bottomStackView:EmbeddableStackView!
     
     //MARK:- Retained Constraints
     fileprivate var portraitOnlyConstraints:[NSLayoutConstraint] = []
@@ -301,8 +301,8 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
     
     //MARK:- Setup helpers
     
-    fileprivate func generateHorizontalStackView()->UIStackView{
-        let stackview = UIStackView()
+    fileprivate func generateHorizontalStackView()->EmbeddableStackView{
+        let stackview = EmbeddableStackView()
         stackview.axis = UILayoutConstraintAxis.horizontal
         stackview.translatesAutoresizingMaskIntoConstraints = true
         stackview.isLayoutMarginsRelativeArrangement = true

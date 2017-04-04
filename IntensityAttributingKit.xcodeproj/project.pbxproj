@@ -42,6 +42,7 @@
 		C0326E231CF27C2700E6161F /* IAImageLayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0326E221CF27C2700E6161F /* IAImageLayerView.swift */; };
 		C038B3EA1C69310400069F9C /* ExpandingKeyControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C038B3E91C69310400069F9C /* ExpandingKeyControl.swift */; };
 		C038B3EC1C69311200069F9C /* ExpandingKeyBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C038B3EB1C69311200069F9C /* ExpandingKeyBase.swift */; };
+		C03B97871E9420D8005127A5 /* EmbeddableStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03B97861E9420D8005127A5 /* EmbeddableStackView.swift */; };
 		C040C5081C0E4283007C1685 /* IAKitPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C040C5071C0E4283007C1685 /* IAKitPreferences.swift */; };
 		C045339E1CA4794600B374D0 /* LabeledStepperAdjusterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C045339D1CA4794600B374D0 /* LabeledStepperAdjusterCell.swift */; };
 		C04533A01CA47BB200B374D0 /* SmootherOverrideAdjusterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C045339F1CA47BB200B374D0 /* SmootherOverrideAdjusterCell.swift */; };
@@ -188,6 +189,7 @@
 		C0326E221CF27C2700E6161F /* IAImageLayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAImageLayerView.swift; sourceTree = "<group>"; };
 		C038B3E91C69310400069F9C /* ExpandingKeyControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandingKeyControl.swift; sourceTree = "<group>"; };
 		C038B3EB1C69311200069F9C /* ExpandingKeyBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpandingKeyBase.swift; sourceTree = "<group>"; };
+		C03B97861E9420D8005127A5 /* EmbeddableStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmbeddableStackView.swift; sourceTree = "<group>"; };
 		C040C5071C0E4283007C1685 /* IAKitPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAKitPreferences.swift; sourceTree = "<group>"; };
 		C045339D1CA4794600B374D0 /* LabeledStepperAdjusterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabeledStepperAdjusterCell.swift; sourceTree = "<group>"; };
 		C045339F1CA47BB200B374D0 /* SmootherOverrideAdjusterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmootherOverrideAdjusterCell.swift; sourceTree = "<group>"; };
@@ -596,6 +598,7 @@
 			isa = PBXGroup;
 			children = (
 				C031CC051BDD948700521393 /* IAKeyboard.swift */,
+				C03B97861E9420D8005127A5 /* EmbeddableStackView.swift */,
 				C08EE1041CB846600030FC3E /* IAKeyboardDelegateProtocol.swift */,
 				C0CCA1231CEBA9340042CCF7 /* KeyboardLayoutView.swift */,
 			);
@@ -821,6 +824,7 @@
 				C0F350381D73D91000FDE724 /* IAVideoViewerVC.swift in Sources */,
 				C080B5401C98842F00DEC424 /* LabeledSliderView.swift in Sources */,
 				C089D2A21D761EF2009AEF7D /* IALocationPickerVC.swift in Sources */,
+				C03B97871E9420D8005127A5 /* EmbeddableStackView.swift in Sources */,
 				C0F350351D73C34900FDE724 /* IAImageViewerVC.swift in Sources */,
 				C045339E1CA4794600B374D0 /* LabeledStepperAdjusterCell.swift in Sources */,
 				C0AE06141C6E64490096F042 /* PressureKey.swift in Sources */,
