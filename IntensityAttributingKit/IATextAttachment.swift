@@ -96,8 +96,7 @@ open class IATextAttachment:NSTextAttachment {
     }
     
     required public init?(coder aDecoder: NSCoder) {
-        //super.init(coder: aDecoder)
-        self.init()
+        super.init(data: nil, ofType: nil)  
     }
     
     open override func encode(with aCoder: NSCoder) {
