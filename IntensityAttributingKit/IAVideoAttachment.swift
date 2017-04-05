@@ -64,8 +64,6 @@ open class IAVideoAttachment:IATextAttachment {
         self.previewFilename = previewFilename
         self.remotePreviewURL = remotePreviewURL
         self.localPreviewURL = localPreviewURL
-        
-        
     }
     
     required public init?(coder aDecoder: NSCoder) {

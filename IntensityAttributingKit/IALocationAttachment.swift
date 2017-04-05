@@ -16,7 +16,7 @@ open class IALocationAttachment:IATextAttachment {
     
     
     override open var localID: String {
-        get{return "lat:\(String(format: "%0.8f",placemark.coordinate.latitude)) lon:\(String(format: "%0.8f",placemark.coordinate.longitude)) placename:\(self.placename ?? "")"}
+        get{return "lat:\(String(format: "%0.8f",placemark.coordinate.latitude)) lon:\(String(format: "%0.8f",placemark.coordinate.longitude)) placename:\(self.placename)"}
     }
     
     override open var attachmentType:IAAttachmentType {
@@ -34,8 +34,8 @@ open class IALocationAttachment:IATextAttachment {
         return placemark.coordinate.longitude
     }
     
-    public var placename:String! {
-        return self.placemark.placename
+    public var placename:String {
+        return self.placemark.placename ?? (self.placemark.name ?? "")
     }
     
     public var radius:Double? {
@@ -54,7 +54,6 @@ open class IALocationAttachment:IATextAttachment {
         get {return _image}
         set {_image = newValue}
     }
-    
 
     init!(placemark:IAPlacemark){
         guard placemark.addressDictionary != nil && placemark.region != nil else {return nil}
