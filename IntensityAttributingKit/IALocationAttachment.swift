@@ -186,7 +186,7 @@ open class IALocationAttachment:IATextAttachment {
     }
     
     
-    override func imageForThumbSize(_ thumbSize:IAThumbSize)->UIImage{
+    override func imageForThumbSize(_ thumbSize:IAThumbSize)->UIImage?{
         let cachingName = thumbCatchName(forSize: thumbSize)
         if let thumb = IATextAttachment.thumbCache.object(forKey: cachingName as AnyObject) as? UIImage {
             return thumb
@@ -196,7 +196,7 @@ open class IALocationAttachment:IATextAttachment {
             return thumb
         } else {
             generateImage()
-            return IAPlaceholder.forSize(thumbSize, attachType: .image)
+            return nil
         }
     }
     

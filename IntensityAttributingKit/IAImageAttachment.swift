@@ -109,7 +109,7 @@ open class IAImageAttachment:IATextAttachment {
         return nil
     }
     
-    override func imageForThumbSize(_ thumbSize:IAThumbSize)->UIImage{
+    override func imageForThumbSize(_ thumbSize:IAThumbSize)->UIImage?{
         let cachingName = thumbCatchName(forSize: thumbSize)
         if let thumb = IATextAttachment.thumbCache.object(forKey: cachingName as AnyObject) as? UIImage {
             return thumb
@@ -118,7 +118,7 @@ open class IAImageAttachment:IATextAttachment {
             IATextAttachment.thumbCache.setObject(thumb, forKey: cachingName as AnyObject)
             return thumb
         } else {
-            return IAPlaceholder.forSize(thumbSize, attachType: .image)
+            return nil
         }
     }
     

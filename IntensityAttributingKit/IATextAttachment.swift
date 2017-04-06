@@ -77,7 +77,7 @@ open class IATextAttachment:NSTextAttachment {
         }
     }
     
-    func imageForThumbSize(_ thumbSize:IAThumbSize)->UIImage{
+    func imageForThumbSize(_ thumbSize:IAThumbSize)->UIImage?{
         return IAPlaceholder.forSize(thumbSize, attachType: .unknown)
     }
     

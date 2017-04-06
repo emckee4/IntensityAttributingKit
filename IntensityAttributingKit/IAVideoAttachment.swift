@@ -111,7 +111,7 @@ open class IAVideoAttachment:IATextAttachment {
         }
     }
     
-    override func imageForThumbSize(_ thumbSize:IAThumbSize)->UIImage{
+    override func imageForThumbSize(_ thumbSize:IAThumbSize)->UIImage?{
         let cachingName = thumbCatchName(forSize: thumbSize)
         if let thumb = IATextAttachment.thumbCache.object(forKey: cachingName as AnyObject) as? UIImage {
             return thumb
@@ -120,9 +120,8 @@ open class IAVideoAttachment:IATextAttachment {
             let thumb = previewImage!.resizeImageWithScaleAspectFit(thumbSize.size,backgroundColor: UIColor.black)
             IATextAttachment.thumbCache.setObject(thumb, forKey: cachingName as AnyObject)
             return thumb
-        } else {
-            return IAPlaceholder.forSize(thumbSize, attachType: .video)
         }
+        return nil
     }
     
 

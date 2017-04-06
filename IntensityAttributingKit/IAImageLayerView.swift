@@ -52,7 +52,7 @@ class IAImageLayerView: UIView {
     ///Redraws the thumbnail for the attachment if it has already been layed out. If an image view hasn't yet been created for the attachment then the ordinary layout process should use the newest image data when it draws its content.
     func redrawImage(inAttachment attachment:IATextAttachment){
         if imageViewForId.keys.contains(attachment.localID) {
-            imageViewForId[attachment.localID]?.image = attachment.imageForThumbSize(self.useThumbSize)
+            imageViewForId[attachment.localID]?.image = attachment.imageForThumbSize(self.useThumbSize) ?? IAPlaceholder.forSize(self.useThumbSize, attachType: attachment.attachmentType)
         }
     }
     
@@ -61,7 +61,7 @@ class IAImageLayerView: UIView {
         //relate the index to a localID,
         guard let attachment = iaString.attachments[imageCharIndex] else {print("IAImageLayerView. redrawImage: couldnt find attachment at charIndex \(imageCharIndex)");return}
         guard let iv = imageViewForId[attachment.localID] else {print("IAImageLayerView. redrawImage: couldnt find iv for localID \(attachment.localID)");return}
-        iv.image = attachment.imageForThumbSize(self.useThumbSize)
+        iv.image = attachment.imageForThumbSize(self.useThumbSize) ?? IAPlaceholder.forSize(self.useThumbSize, attachType: attachment.attachmentType)
         let gr = layoutManager.glyphRange(forCharacterRange: NSMakeRange(imageCharIndex, 1), actualCharacterRange: nil)
         iv.frame = layoutManager.boundingRect(forGlyphRange: gr, in: layoutManager.textContainers.first!)
     }
@@ -82,7 +82,12 @@ class IAImageLayerView: UIView {
         let gr = layoutManager.glyphRange(forCharacterRange: NSMakeRange(atIAStringIndex, 1), actualCharacterRange: nil)
 
         let iv = UIImageView(frame: layoutManager.boundingRect(forGlyphRange: gr, in: layoutManager.textContainers.first!))
-        iv.image = attachment.imageForThumbSize(self.useThumbSize)
+        if let thumb = attachment.imageForThumbSize(self.useThumbSize) {
+            iv.image = thumb
+        } else {
+            iv.image = IAPlaceholder.forSize(self.useThumbSize, attachType: attachment.attachmentType)
+            _ = attachment.attemptToLoadResource()
+        }
         imageViewForId[attachment.localID] = iv
         self.addSubview(iv)
         
