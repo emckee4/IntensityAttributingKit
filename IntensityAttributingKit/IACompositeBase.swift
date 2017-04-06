@@ -119,6 +119,7 @@ open class IACompositeBase:UIView {
         didSet{
             topTV.thumbSize = thumbSizesForAttachments
             bottomTV.thumbSize = thumbSizesForAttachments
+            imageLayerView.useThumbSize = thumbSizesForAttachments
             if iaString?.attachmentCount > 0 && thumbSizesForAttachments != oldValue {
                 //trigger layout from scratch
                 setIAString(iaString)
