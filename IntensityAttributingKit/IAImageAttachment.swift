@@ -58,7 +58,7 @@ open class IAImageAttachment:IATextAttachment {
         }
         
         if let fn = aDecoder.decodeObject(forKey: "filename") as? String {self.filename = fn}
-        if let localURL = aDecoder.decodeObject(forKey: "localURL") as? URL {self.localFileURL = localURL}
+        if let localURL = aDecoder.decodeObject(forKey: "localFileURL") as? URL {self.localFileURL = localURL}
         if let remoteURL = aDecoder.decodeObject(forKey: "remoteURL") as? URL {self.remoteFileURL = remoteURL}
         
     }
