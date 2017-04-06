@@ -176,28 +176,25 @@ open class IAVideoAttachment:IATextAttachment {
 
     
     ///Sent by the app's download manager to the IAVideoAttachments to indicate that preview content has been downloaded. The user info will provide identifying information including resourceName.
-    open static let videoPreviewDownloadedNotificationName:String = "IntensityAttributingKit.IAVideoAttachment.PreviewReady"
+    open static let videoPreviewDownloadedNotificationName:NSNotification.Name = NSNotification.Name(rawValue:"IntensityAttributingKit.IAVideoAttachment.PreviewReady")
     
     ///Used by the download manager of the app to indicate that the resource is available or that the download has failed.
     open static func emitContentDownloadedNotification(_ videoPreviewFilename:String, localFileLocation:URL!, previewImage:UIImage?, downloadError:NSError?){
-        var userInfo:[String:AnyObject] = ["videoPreviewFilename":videoPreviewFilename as AnyObject]
+        var userInfo:[String:Any] = ["videoPreviewFilename":videoPreviewFilename]
         if previewImage != nil {
             userInfo["previewImage"] = previewImage!
         }
         if localFileLocation != nil {
-            userInfo["localFileLocation"] = localFileLocation as AnyObject?
+            userInfo["localFileLocation"] = localFileLocation
         }
         if downloadError != nil {
             userInfo["downloadError"] = downloadError!
         }
-        NotificationCenter.default.post(name: Notification.Name(rawValue: videoPreviewDownloadedNotificationName), object: nil, userInfo: userInfo)
+        NotificationCenter.default.post(name: videoPreviewDownloadedNotificationName, object: nil, userInfo: userInfo)
     }
     
     func handlePreviewDownloadedNotification(_ notification:Notification!){
         guard let filename = notification.userInfo?["videoPreviewFilename"] as? String, self.previewFilename != nil && filename == self.previewFilename! else {return}
-        NotificationCenter.default.removeObserver(self, forKeyPath: IAVideoAttachment.videoPreviewDownloadedNotificationName)
-        waitingForDownload = false
-        
         guard notification.userInfo?["downloadError"] == nil else {return}
         
         if self.localPreviewURL == nil {
@@ -206,10 +203,14 @@ open class IAVideoAttachment:IATextAttachment {
         if let image = notification.userInfo?["previewImage"] as? UIImage {
             previewImage = image
             self.emitContentReadyNotification(nil)
+            NotificationCenter.default.removeObserver(self, name: IAVideoAttachment.videoPreviewDownloadedNotificationName, object: nil)
+            waitingForDownload = false
         } else if let path = self.localPreviewURL?.path {
             if let image = UIImage(contentsOfFile: path){
                 previewImage = image
                 self.emitContentReadyNotification(nil)
+                NotificationCenter.default.removeObserver(self, name: IAVideoAttachment.videoPreviewDownloadedNotificationName, object: nil)
+                waitingForDownload = false
             }
         }
         
@@ -220,7 +221,7 @@ open class IAVideoAttachment:IATextAttachment {
         guard self.previewFilename != nil else {return}
         if !waitingForDownload {
             waitingForDownload = true
-            NotificationCenter.default.addObserver(self, selector: #selector(IAVideoAttachment.handlePreviewDownloadedNotification(_:)), name: NSNotification.Name(rawValue: IAVideoAttachment.videoPreviewDownloadedNotificationName), object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(IAVideoAttachment.handlePreviewDownloadedNotification(_:)), name: IAVideoAttachment.videoPreviewDownloadedNotificationName, object: nil)
         }
     }
     

@@ -162,28 +162,25 @@ open class IAImageAttachment:IATextAttachment {
     }
     
     ///Sent by the app's download manager to the IImageAttachments to indicate that image content has been downloaded. The user info will provide identifying information including resourceName.
-    open static let imageDownloadedNotificationName:String = "IntensityAttributingKit.IAImageAttachment.ImageReady"
+    open static let imageDownloadedNotificationName:NSNotification.Name = NSNotification.Name(rawValue:"IntensityAttributingKit.IAImageAttachment.ImageReady")
     
     ///Used by the download manager of the app to indicate that the resource is available or that the download has failed. We use NSNotificationCenter since one filename could correspond to multiple instances of an attachment.
-    open static func emitContentDownloadedNotification(_ imageFilename:String, localFileLocation:URL!, image:UIImage?, downloadError:NSError?){
-        var userInfo:[String:AnyObject] = ["imageFilename":imageFilename as AnyObject]
+    open static func emitContentDownloadedNotification(imageFilename:String, localFileLocation:URL!, image:UIImage?, downloadError:NSError?){
+        var userInfo:[String:Any] = ["imageFilename":imageFilename]
         if image != nil {
             userInfo["image"] = image!
         }
         if localFileLocation != nil {
-            userInfo["localFileLocation"] = localFileLocation as AnyObject?
+            userInfo["localFileLocation"] = localFileLocation
         }
         if downloadError != nil {
             userInfo["downloadError"] = downloadError!
         }
-        NotificationCenter.default.post(name: Notification.Name(rawValue: imageDownloadedNotificationName), object: nil, userInfo: userInfo)
+        NotificationCenter.default.post(name: imageDownloadedNotificationName, object: nil, userInfo: userInfo)
     }
     
     func handlePreviewDownloadedNotification(_ notification:Notification!){
         guard let dlFilename = notification.userInfo?["imageFilename"] as? String, self.filename != nil && self.filename! == dlFilename else {return}
-        NotificationCenter.default.removeObserver(self, forKeyPath: IAImageAttachment.imageDownloadedNotificationName)
-        waitingForDownload = false
-        
         guard notification.userInfo?["downloadError"] == nil else {return}
         
         if self.localFileURL == nil {
@@ -192,10 +189,14 @@ open class IAImageAttachment:IATextAttachment {
         if let dlImage = notification.userInfo?["image"] as? UIImage {
             self._image = dlImage
             self.emitContentReadyNotification(nil)
+            waitingForDownload = false
+            NotificationCenter.default.removeObserver(self, name: IAImageAttachment.imageDownloadedNotificationName, object: nil)
         } else if let path = self.localFileURL?.path {
             if let dlImage = UIImage(contentsOfFile: path){
                 self._image = dlImage
                 self.emitContentReadyNotification(nil)
+                waitingForDownload = false
+                NotificationCenter.default.removeObserver(self, name: IAImageAttachment.imageDownloadedNotificationName, object: nil)
             }
         }
         
@@ -206,7 +207,7 @@ open class IAImageAttachment:IATextAttachment {
         guard self.filename != nil else {return}
         if !waitingForDownload {
             waitingForDownload = true
-            NotificationCenter.default.addObserver(self, selector: #selector(IAImageAttachment.handlePreviewDownloadedNotification(_:)), name: NSNotification.Name(rawValue: IAImageAttachment.imageDownloadedNotificationName), object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(IAImageAttachment.handlePreviewDownloadedNotification(_:)), name: IAImageAttachment.imageDownloadedNotificationName, object: nil)
         }
     }
     
