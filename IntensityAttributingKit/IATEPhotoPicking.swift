@@ -24,7 +24,7 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
                 let imagePicker = UIImagePickerController()
                 imagePicker.allowsEditing = true
                 imagePicker.delegate = self
-                imagePicker.sourceType = .savedPhotosAlbum
+                imagePicker.sourceType = .photoLibrary
                 self.window?.rootViewController?.present(imagePicker, animated: true, completion: nil)
             }))
             alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action) -> Void in
@@ -42,7 +42,7 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
             let imagePicker = UIImagePickerController()
             imagePicker.allowsEditing = true
             imagePicker.delegate = self
-            imagePicker.sourceType = .savedPhotosAlbum
+            imagePicker.sourceType = .photoLibrary
             self.window?.rootViewController?.present(imagePicker, animated: true, completion: nil)
         }
     }
@@ -59,7 +59,7 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
                 guard  Thread.isMainThread else {fatalError()}
                 picker.allowsEditing = true
                 picker.delegate = self
-                picker.sourceType = .savedPhotosAlbum
+                picker.sourceType = .photoLibrary
                 self.window?.rootViewController?.present(picker, animated: true, completion: nil)
             }))
             alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action) -> Void in
@@ -75,7 +75,7 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
             guard  Thread.isMainThread else {fatalError()}
             picker.allowsEditing = true
             picker.delegate = self
-            picker.sourceType = .savedPhotosAlbum
+            picker.sourceType = .photoLibrary
             self.window?.rootViewController?.present(picker, animated: true, completion: nil)
         }
     }
