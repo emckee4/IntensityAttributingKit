@@ -11,7 +11,7 @@ import AVFoundation
 
 extension UIImage {
     ///Resizes the image such that it will fit within the maxSize provided. This will not expand the images bounds. By default this will maintain the aspect ratio of the image.
-    func resizeImageToFit(maxSize:CGSize, maintainAspectRatio:Bool = true)->UIImage{
+    public func resizeImageToFit(maxSize:CGSize, maintainAspectRatio:Bool = true)->UIImage{
         var finalSize:CGSize!
         if maintainAspectRatio == false {
             finalSize = CGSize(width: min(self.size.width , maxSize.width ), height: min(self.size.height , maxSize.height ))
