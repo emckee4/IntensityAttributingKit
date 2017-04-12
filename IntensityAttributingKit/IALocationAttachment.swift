@@ -210,6 +210,15 @@ open class IALocationAttachment:IATextAttachment {
         return mapitem
     }
     
+    ///calls MKMapItem.openInMaps with desired launch options preset
+    open func openInMaps(){
+        let region = MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2D(latitude: latitude, longitude: longitude), mapViewDeltaMeters, mapViewDeltaMeters)
+        let launchOptions:[String:Any] = [
+            MKLaunchOptionsMapSpanKey:region.span
+        ]
+        mapItemForLocation().openInMaps(launchOptions: launchOptions)
+    }
+    
     open override func attemptToLoadResource() -> Bool {
         if self._image != nil {
             return true
