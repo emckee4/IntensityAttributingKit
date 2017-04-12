@@ -8,6 +8,7 @@
 
 import UIKit
 import MobileCoreServices
+import CoreLocation
 
 
 ///Image picker extension. This handles the presentation and aftermath of a UIImagePickerController.
@@ -130,8 +131,8 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
         self.window?.rootViewController?.present(lp, animated: true, completion: nil)
     }
     
-    func locationPickerController(_ picker: IALocationPickerVC, location: IAPlacemark) {
-        let ta = IALocationAttachment(placemark: location)
+    func locationPickerController(_ picker: IALocationPickerVC, location: IAPlacemark, mapViewDeltaMeters:CLLocationDistance) {
+        let ta = IALocationAttachment(placemark: location, mapViewDeltaMeters: mapViewDeltaMeters)
         ta?.generateImage()
         picker.dismiss(animated: true, completion: nil)
         let newIA = IAString(withAttachment: ta!, intensity: self.currentIntensity, baseAtts: baseAttributes, baseOptions: self.iaString.baseOptions)!

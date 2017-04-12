@@ -34,6 +34,8 @@ open class IALocationAttachment:IATextAttachment {
         return placemark.coordinate.longitude
     }
     
+    public let mapViewDeltaMeters:CLLocationDistance
+    
     public var placename:String {
         return self.placemark.placename ?? (self.placemark.name ?? "")
     }
@@ -55,9 +57,10 @@ open class IALocationAttachment:IATextAttachment {
         set {_image = newValue}
     }
 
-    init!(placemark:IAPlacemark){
+    init!(placemark:IAPlacemark, mapViewDeltaMeters:CLLocationDistance){
         guard placemark.addressDictionary != nil && placemark.region != nil else {return nil}
         self.placemark = placemark
+        self.mapViewDeltaMeters = mapViewDeltaMeters
         super.init(data: nil, ofType: nil)
         
     }
@@ -65,12 +68,14 @@ open class IALocationAttachment:IATextAttachment {
     required public init?(coder aDecoder: NSCoder) {
         guard let pm = aDecoder.decodeObject(forKey: "placemark") as? IAPlacemark else {return nil}
         self.placemark = pm
+        self.mapViewDeltaMeters = (aDecoder.decodeObject(forKey: "mapViewDeltaMeters") as? CLLocationDistance) ?? 1000
         super.init(coder: aDecoder)
     }
     
     open override func encode(with aCoder: NSCoder) {
         super.encode(with: aCoder)
         aCoder.encode(placemark, forKey: "placemark")
+        aCoder.encode(mapViewDeltaMeters, forKey: "mapViewDeltaMeters")
     }
     
     ///returns all elements of the placemark's address dict that conform to [String:Any] as opposed to its own [AnyHashable:Any]
@@ -98,7 +103,8 @@ open class IALocationAttachment:IATextAttachment {
             addressDictionary: addressDict,
             placename: portableDict["placename"] as? String,
             radius: radius)
-        
+
+        self.mapViewDeltaMeters = portableDict["mapViewDeltaMeters"] as? CLLocationDistance ?? 1000
         super.init(data: nil, ofType: nil)
     }
     
@@ -121,7 +127,7 @@ open class IALocationAttachment:IATextAttachment {
         if let pm = placemark.placename {
             dict["placename"] = pm
         }
-        
+        dict["mapViewDeltaMeters"] = mapViewDeltaMeters
         return dict
     }
     
@@ -130,11 +136,9 @@ open class IALocationAttachment:IATextAttachment {
     func generateImage(){
         guard self._image == nil && self.snapshotter == nil else {return}
         
-        let regionSize:CLLocationDistance = ((placemark.region as? CLCircularRegion)?.radius ?? 1000) * 2.0
-        
         let snapshotOptions:MKMapSnapshotOptions = {
             let options = MKMapSnapshotOptions()
-            options.region = MKCoordinateRegionMakeWithDistance(placemark.coordinate, regionSize, regionSize)
+            options.region = MKCoordinateRegionMakeWithDistance(placemark.coordinate, mapViewDeltaMeters, mapViewDeltaMeters)
             options.size = CGSize(width: 320,height: 320)
             return options
         }()

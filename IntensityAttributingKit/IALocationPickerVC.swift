@@ -230,6 +230,13 @@ class IALocationPickerVC:UIViewController, MKMapViewDelegate, CLLocationManagerD
         guard let selection = mapView.selectedAnnotations.first else {return}
         var finalPlacemark:IAPlacemark!
         //var isUser:Bool = false
+        var mapViewDeltaMeters:CLLocationDistance!
+        if mapView.frame.height > mapView.frame.width {
+            mapViewDeltaMeters = mapView.region.span.latitudeDelta * 111000 * Double(mapView.frame.width / mapView.frame.height)
+        } else {
+            mapViewDeltaMeters = mapView.region.span.latitudeDelta * 111000
+        }
+        
         if selection is MKUserLocation {
             //isUser = true
             if selection.coordinate.isEqualTo(location: userPlacemark?.location?.coordinate ?? CLLocationCoordinate2D()) {
@@ -246,7 +253,7 @@ class IALocationPickerVC:UIViewController, MKMapViewDelegate, CLLocationManagerD
                 finalPlacemark = IAPlacemark(coordinate: selection.coordinate, addressDictionary: addressDict)
             }
         }
-        delegate?.locationPickerController(self, location: finalPlacemark)
+        delegate?.locationPickerController(self, location: finalPlacemark, mapViewDeltaMeters: mapViewDeltaMeters)
     }
     
     func cancelAndDismiss(_ sender:AnyObject!){
@@ -259,7 +266,7 @@ class IALocationPickerVC:UIViewController, MKMapViewDelegate, CLLocationManagerD
 
 
 protocol IALocationPickerDelegate:class {
-    func locationPickerController(_ picker: IALocationPickerVC, location:IAPlacemark)
+    func locationPickerController(_ picker: IALocationPickerVC, location:IAPlacemark, mapViewDeltaMeters:CLLocationDistance)
     func locationPickerControllerDidCancel(_ picker: IALocationPickerVC)->Void
     
 }

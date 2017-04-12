@@ -18,6 +18,8 @@ open class IAPlacemark:MKPlacemark {
     override open var region: CLRegion?{
         return _region
     }
+
+    var mapViewLatitudeDelta:CLLocationDistance?
     
     required public init?(coder aDecoder: NSCoder) {
         self.placename = aDecoder.decodeObject(forKey: "placename") as? String
@@ -74,5 +76,4 @@ open class IAPlacemark:MKPlacemark {
             self._region = super.region
         }
     }
-    
 }
