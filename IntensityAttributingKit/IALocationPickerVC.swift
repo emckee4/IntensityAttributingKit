@@ -125,6 +125,7 @@ class IALocationPickerVC:UIViewController, MKMapViewDelegate, CLLocationManagerD
             selectedLocation!.title = "Selected Location"
             mapView.addAnnotation(selectedLocation!)
             reverseGeocode(selectedLocation!)
+            mapView.selectAnnotation(selectedLocation!, animated: true)
         }
     }
     
