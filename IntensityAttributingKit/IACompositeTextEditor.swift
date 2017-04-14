@@ -230,7 +230,11 @@ open class IACompositeTextEditor:IACompositeBase, UITextInput {
         guard !range.isEmpty else {return}
         inputDelegate?.textWillChange(self)
         let rangeContainedAttachments:Bool = iaString.rangeContainsAttachments(range)
-        
+        if range.lowerBound > 0 && iaString.iaSubstringFromRange((range.startIndex - 1)..<range.startIndex).text == "\n" {
+            //ugly workaround to bug wherein the last character on a line after a newline will not be wiped away even though it's deleted in both the iaString and the topTV.textStorage
+            replaceIAStringRange(iaString.emptyCopy(), range: range)
+            return
+        }
         if iaString.checkRangeIsIndependentInRendering(range, overridingOptions: IAKitPreferences.iaStringOverridingOptions) {
             //range is independent, nothing needs to be recalculated by us.
             iaString.removeRange(range)
@@ -246,6 +250,7 @@ open class IACompositeTextEditor:IACompositeBase, UITextInput {
         topTV.invalidateIntrinsicContentSize()
         if rangeContainedAttachments {
             refreshImageLayer()
+            self.invalidateIntrinsicContentSize()
         } else if iaString.attachmentCount > 0 {
             //this should only run if the imageviews are located after the deletion point
             repositionImageViews()
