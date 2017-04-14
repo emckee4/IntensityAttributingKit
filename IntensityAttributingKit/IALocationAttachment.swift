@@ -140,6 +140,8 @@ open class IALocationAttachment:IATextAttachment {
             let options = MKMapSnapshotOptions()
             options.region = MKCoordinateRegionMakeWithDistance(placemark.coordinate, mapViewDeltaMeters, mapViewDeltaMeters)
             options.size = CGSize(width: 320,height: 320)
+            options.showsBuildings = mapViewDeltaMeters < 2000
+            options.showsPointsOfInterest = true
             return options
         }()
         
@@ -161,7 +163,7 @@ open class IALocationAttachment:IATextAttachment {
                 return
             }
             
-            let pin = MKPinAnnotationView(annotation: nil, reuseIdentifier: nil)
+            let pin = MKPinAnnotationView(annotation: annotation, reuseIdentifier: nil)
             let image = snapshot.image
             
             UIGraphicsBeginImageContextWithOptions(image.size, true, image.scale)
