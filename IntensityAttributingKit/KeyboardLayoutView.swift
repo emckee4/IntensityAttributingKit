@@ -15,32 +15,32 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
 
     //MARK:- UI visual constants
     
-    private let keyBackgroundColor = IAKitPreferences.visualPreferences.kbButtonColor
-    private let keyTintColor = IAKitPreferences.visualPreferences.kbButtonTintColor
-    private let kKeyHeight:CGFloat = 40.0
-    private let kStandardKeySpacing:CGFloat = 4.0
-    private let kStackInset:CGFloat = 2.0
-    private let kKeyCornerRadius:CGFloat = 4.0
-    private let suggestionBarScaleFactor:CGFloat = IAKitPreferences.visualPreferences.kbSuggestionBarScaleFactor//0.75
+    fileprivate let keyBackgroundColor = IAKitPreferences.visualPreferences.kbButtonColor
+    fileprivate let keyTintColor = IAKitPreferences.visualPreferences.kbButtonTintColor
+    fileprivate let kKeyHeight:CGFloat = 40.0
+    fileprivate let kStandardKeySpacing:CGFloat = 4.0
+    fileprivate let kStackInset:CGFloat = 2.0
+    fileprivate let kKeyCornerRadius:CGFloat = 4.0
+    fileprivate let suggestionBarScaleFactor:CGFloat = IAKitPreferences.visualPreferences.kbSuggestionBarScaleFactor//0.75
     
-    private var verticalStackView:UIStackView!
-    private var qwertyStackView:UIStackView!
-    private var asdfStackView:UIStackView!
-    private var zxcvStackView:UIStackView!
-    private var bottomStackView:UIStackView!
+    fileprivate var verticalStackView:UIStackView!
+    fileprivate var qwertyStackView:EmbeddableStackView!
+    fileprivate var asdfStackView:EmbeddableStackView!
+    fileprivate var zxcvStackView:EmbeddableStackView!
+    fileprivate var bottomStackView:EmbeddableStackView!
     
     //MARK:- Retained Constraints
-    private var portraitOnlyConstraints:[NSLayoutConstraint] = []
-    private var landscapeOnlyConstraints:[NSLayoutConstraint] = []
+    fileprivate var portraitOnlyConstraints:[NSLayoutConstraint] = []
+    fileprivate var landscapeOnlyConstraints:[NSLayoutConstraint] = []
     
     //MARK:- Controls
-    private var standardPressureKeys:[PressureKey] = []
+    fileprivate var standardPressureKeys:[PressureKey] = []
     var shiftKey:LockingKey!
-    private var backspace:UIButton!
-    private var swapKeysetButton:UIButton!
-    private var returnKey:PressureView!
-    private var spacebar:PressureKey!
-    private var expandingPuncKey:ExpandingPressureKey!
+    fileprivate var backspace:UIButton!
+    fileprivate var swapKeysetButton:UIButton!
+    fileprivate var returnKey:PressureView!
+    fileprivate var spacebar:PressureKey!
+    fileprivate var expandingPuncKey:ExpandingPressureKey!
     
     var suggestionsBar:SuggestionBarView!
     
@@ -50,7 +50,7 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
     var verticalSpacing:CGFloat = 4
     
     
-    private lazy var bundle:NSBundle = { return NSBundle(forClass: self.dynamicType) }()
+    fileprivate lazy var bundle:Bundle = { return Bundle(for: type(of: self)) }()
     
     
     
@@ -66,7 +66,7 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
     
     func setupView(){
         
-        suggestionsBar = SuggestionBarView(frame: CGRectZero)
+        suggestionsBar = SuggestionBarView(frame: CGRect.zero)
         suggestionsBar.backgroundColor = IAKitPreferences.visualPreferences.kbSuggestionsBackgroundColor
         suggestionsBar.textColor = IAKitPreferences.visualPreferences.kbSuggestionsTextColor
         suggestionsBar.translatesAutoresizingMaskIntoConstraints = true
@@ -82,7 +82,7 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
     
     
     ///MARK:- Keyboard initial layout functions
-    private func setupQwertyRow(){
+    fileprivate func setupQwertyRow(){
         qwertyStackView = generateHorizontalStackView()
         for i in 0..<10 {
             let key = setupPressureKey(i + 1000)
@@ -92,7 +92,7 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
         self.addSubview(qwertyStackView)
     }
     
-    private func setupAsdfRow(){
+    fileprivate func setupAsdfRow(){
         asdfStackView = generateHorizontalStackView()
         
         let leftPlaceholder = UIView()
@@ -106,14 +106,14 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
             standardPressureKeys.append(key)
         }
         asdfStackView.addArrangedSubview(rightPlaceholder)
-        let placeholderWidth = leftPlaceholder.widthAnchor.constraintEqualToAnchor(rightPlaceholder.widthAnchor) //local placeholders, any orientation
+        let placeholderWidth = leftPlaceholder.widthAnchor.constraint(equalTo: rightPlaceholder.widthAnchor) //local placeholders, any orientation
         placeholderWidth.priority = 999
-        placeholderWidth.active = true
+        placeholderWidth.isActive = true
         self.addSubview(asdfStackView)
     }
     
     
-    private func setupZxcvRow(){
+    fileprivate func setupZxcvRow(){
         zxcvStackView = generateHorizontalStackView()
         
         shiftKey = LockingKey()
@@ -121,13 +121,13 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
         
         let imageEdgeInsets = UIEdgeInsets(top: 7.0, left: 7.0, bottom: 7.0, right: 7.0)
         shiftKey.translatesAutoresizingMaskIntoConstraints = false
-        shiftKey.setImage(UIImage(named: "caps1", inBundle: bundle, compatibleWithTraitCollection: nil), forState: .Normal )
+        shiftKey.setImage(UIImage(named: "caps1", in: bundle, compatibleWith: nil), for: UIControlState() )
         shiftKey.imageEdgeInsets = imageEdgeInsets
-        shiftKey.imageView!.contentMode = .ScaleAspectFit
+        shiftKey.imageView!.contentMode = .scaleAspectFit
         shiftKey.layer.cornerRadius = kKeyCornerRadius
         shiftKey.backgroundColor = keyBackgroundColor
-        shiftKey.setImage(UIImage(named: "caps2", inBundle: bundle, compatibleWithTraitCollection: nil), forState: .Selected)
-        shiftKey.addTarget(self, action: "shiftKeyPressed:", forControlEvents: .TouchUpInside)
+        shiftKey.setImage(UIImage(named: "caps2", in: bundle, compatibleWith: nil), for: .selected)
+        shiftKey.addTarget(self, action: #selector(KeyboardLayoutView.shiftKeyPressed(_:)), for: .touchUpInside)
         shiftKey.tintColor = keyTintColor
         
         zxcvStackView.addArrangedSubview(shiftKey)
@@ -149,34 +149,34 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
         backspace = UIButton()
         backspace.tag = 3901
         backspace.translatesAutoresizingMaskIntoConstraints = false
-        backspace.setImage(UIImage(named: "backspace", inBundle: bundle, compatibleWithTraitCollection: nil)?.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal )
+        backspace.setImage(UIImage(named: "backspace", in: bundle, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate), for: UIControlState() )
         backspace.imageEdgeInsets = imageEdgeInsets
-        backspace.imageView!.contentMode = .ScaleAspectFit
+        backspace.imageView!.contentMode = .scaleAspectFit
         backspace.backgroundColor = keyBackgroundColor
         backspace.layer.cornerRadius = kKeyCornerRadius
         zxcvStackView.addArrangedSubview(backspace)
-        backspace.addTarget(self, action: "backspaceKeyPressed", forControlEvents: .TouchUpInside)
+        backspace.addTarget(self, action: #selector(KeyboardLayoutView.backspaceKeyPressed), for: .touchUpInside)
         backspace.tintColor = keyTintColor
         
-        let placeholderWidth = leftPlaceholder.widthAnchor.constraintEqualToAnchor(rightPlaceholder.widthAnchor)  //local placeholders, any orientation
+        let placeholderWidth = leftPlaceholder.widthAnchor.constraint(equalTo: rightPlaceholder.widthAnchor)  //local placeholders, any orientation
         placeholderWidth.priority = 999
-        placeholderWidth.active = true
+        placeholderWidth.isActive = true
         self.addSubview(zxcvStackView)
     }
     
     
-    private func setupBottomRow(){
+    fileprivate func setupBottomRow(){
         bottomStackView = generateHorizontalStackView()
         
-        swapKeysetButton = UIButton(type: .System)
+        swapKeysetButton = UIButton(type: .system)
         swapKeysetButton.tag = 4900
-        swapKeysetButton.setTitle("12/*", forState: .Normal)
+        swapKeysetButton.setTitle("12/*", for: UIControlState())
         swapKeysetButton.titleLabel!.adjustsFontSizeToFitWidth = true
         swapKeysetButton.translatesAutoresizingMaskIntoConstraints = false
         swapKeysetButton.tintColor = keyTintColor
         swapKeysetButton.backgroundColor = keyBackgroundColor
         swapKeysetButton.layer.cornerRadius = kKeyCornerRadius
-        swapKeysetButton.addTarget(self, action: "swapKeysetPageButtonPressed", forControlEvents: .TouchUpInside)
+        swapKeysetButton.addTarget(self, action: #selector(KeyboardLayoutView.swapKeysetPageButtonPressed), for: .touchUpInside)
         bottomStackView.addArrangedSubview(swapKeysetButton)
         
         //spacebar
@@ -192,7 +192,7 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
         
         //expanding punctuation key
         
-        expandingPuncKey = ExpandingPressureKey(frame:CGRectZero)
+        expandingPuncKey = ExpandingPressureKey(frame:CGRect.zero)
         expandingPuncKey.tag = 4900
         expandingPuncKey.delegate = self
         expandingPuncKey.backgroundColor = keyBackgroundColor
@@ -213,7 +213,7 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
         let returnKeyView = UILabel()
         returnKeyView.text = "Return"
         returnKeyView.textColor = keyTintColor
-        returnKeyView.textAlignment = .Center
+        returnKeyView.textAlignment = .center
         returnKey.setAsSpecialKey(returnKeyView, actionName: "\n")
         returnKey.backgroundColor = keyBackgroundColor
         returnKey.layer.cornerRadius = kKeyCornerRadius
@@ -222,77 +222,77 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
     }
 
     
-    private func setupKeyConstraints(){
+    fileprivate func setupKeyConstraints(){
         for key in standardPressureKeys[1..<standardPressureKeys.count]{
-            let widthConstraint = key.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor)
+            let widthConstraint = key.widthAnchor.constraint(equalTo: standardPressureKeys[0].widthAnchor)
             widthConstraint.priority = 999
-            widthConstraint.active = true
+            widthConstraint.isActive = true
         }
         
-        backspace.widthAnchor.constraintEqualToAnchor(shiftKey.widthAnchor).active = true   //any orientation
-        swapKeysetButton.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor).active = true //any orientation
+        backspace.widthAnchor.constraint(equalTo: shiftKey.widthAnchor).isActive = true   //any orientation
+        swapKeysetButton.widthAnchor.constraint(equalTo: standardPressureKeys[0].widthAnchor).isActive = true //any orientation
         
         ///setup portrait constraints
-        portraitOnlyConstraints.append( expandingPuncKey.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 1.5) )
-        portraitOnlyConstraints.append( shiftKey.widthAnchor.constraintGreaterThanOrEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 1.3) )
-        portraitOnlyConstraints.append( shiftKey.widthAnchor.constraintLessThanOrEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 1.5) )
-        portraitOnlyConstraints.append( returnKey.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 2.0) )
+        portraitOnlyConstraints.append( expandingPuncKey.widthAnchor.constraint(equalTo: standardPressureKeys[0].widthAnchor, multiplier: 1.5) )
+        portraitOnlyConstraints.append( shiftKey.widthAnchor.constraint(greaterThanOrEqualTo: standardPressureKeys[0].widthAnchor, multiplier: 1.3) )
+        portraitOnlyConstraints.append( shiftKey.widthAnchor.constraint(lessThanOrEqualTo: standardPressureKeys[0].widthAnchor, multiplier: 1.5) )
+        portraitOnlyConstraints.append( returnKey.widthAnchor.constraint(equalTo: standardPressureKeys[0].widthAnchor, multiplier: 2.0) )
         
         ///setup landscape constraints
-        landscapeOnlyConstraints.append( expandingPuncKey.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 1.0) )
-        landscapeOnlyConstraints.append( shiftKey.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor) )
-        landscapeOnlyConstraints.append( returnKey.widthAnchor.constraintEqualToAnchor(standardPressureKeys[0].widthAnchor, multiplier: 1.0) )
+        landscapeOnlyConstraints.append( expandingPuncKey.widthAnchor.constraint(equalTo: standardPressureKeys[0].widthAnchor, multiplier: 1.0) )
+        landscapeOnlyConstraints.append( shiftKey.widthAnchor.constraint(equalTo: standardPressureKeys[0].widthAnchor) )
+        landscapeOnlyConstraints.append( returnKey.widthAnchor.constraint(equalTo: standardPressureKeys[0].widthAnchor, multiplier: 1.0) )
         
     }
     
     
     //MARK:- Setting/Changing key mappings
-    private func setQRowWithMapping(mapping:[IAKeyType],shift:Bool){
+    fileprivate func setQRowWithMapping(_ mapping:[IAKeyType],shift:Bool){
         for i in 0..<10 {
             if let singleKey = mapping[i] as? IASingleCharKey {
-                let keyText = shift ? singleKey.value.uppercaseString : singleKey.value
+                let keyText = shift ? singleKey.value.uppercased() : singleKey.value
                 (qwertyStackView.arrangedSubviews[i] as! PressureKey).setCharKey(keyText)
             }
         }
     }
     
-    private func setARowWithMapping(mapping:[IAKeyType],shift:Bool){
+    fileprivate func setARowWithMapping(_ mapping:[IAKeyType],shift:Bool){
         let pressureKeys = asdfStackView.arrangedSubviews.filter({($0 is PressureKey)}) as! [PressureKey]
         if mapping.count == 9 {
-            _ = asdfStackView.arrangedSubviews.filter({!($0 is PressureControl)}).map({$0.hidden = false}) //placeholders unhidden
-            pressureKeys.last!.hidden = true //lastKey hidden
+            _ = asdfStackView.arrangedSubviews.filter({!($0 is PressureControl)}).map({$0.isHidden = false}) //placeholders unhidden
+            pressureKeys.last!.isHidden = true //lastKey hidden
         } else {
-            pressureKeys.last!.hidden = false //lastKey unhidden
-            _ = asdfStackView.arrangedSubviews.filter({!($0 is PressureControl)}).map({$0.hidden = true}) //placeholders hidden
+            pressureKeys.last!.isHidden = false //lastKey unhidden
+            _ = asdfStackView.arrangedSubviews.filter({!($0 is PressureControl)}).map({$0.isHidden = true}) //placeholders hidden
         }
         for i in 0..<min(mapping.count,pressureKeys.count){
             if let singleKey = mapping[i] as? IASingleCharKey {
-                let keyText = shift ? singleKey.value.uppercaseString : singleKey.value
+                let keyText = shift ? singleKey.value.uppercased() : singleKey.value
                 pressureKeys[i].setCharKey(keyText)
             }
         }
     }
     
     //start assuming 7 only
-    private func setZRowWithMapping(mapping:[IAKeyType],shift:Bool){
+    fileprivate func setZRowWithMapping(_ mapping:[IAKeyType],shift:Bool){
         let pressureKeys = zxcvStackView.arrangedSubviews.filter({($0 is PressureKey)}) as! [PressureKey]
         if mapping.count <= 7 {
-            pressureKeys.last!.hidden = true //lastKey hidden
-            _ = zxcvStackView.arrangedSubviews.filter({!($0 is PressureControl)}).map({$0.hidden = false}) //placeholders unhidden
+            pressureKeys.last!.isHidden = true //lastKey hidden
+            _ = zxcvStackView.arrangedSubviews.filter({!($0 is PressureControl)}).map({$0.isHidden = false}) //placeholders unhidden
         } else {
-            pressureKeys.last!.hidden = false //lastKey unhidden
-            _ = asdfStackView.arrangedSubviews.filter({!($0 is PressureControl)}).map({$0.hidden = true}) //placeholders hidden
+            pressureKeys.last!.isHidden = false //lastKey unhidden
+            _ = asdfStackView.arrangedSubviews.filter({!($0 is PressureControl)}).map({$0.isHidden = true}) //placeholders hidden
         }
         for i in 0..<min(mapping.count,pressureKeys.count){
             if let singleKey = mapping[i] as? IASingleCharKey {
-                let keyText = shift ? singleKey.value.uppercaseString : singleKey.value
+                let keyText = shift ? singleKey.value.uppercased() : singleKey.value
                 pressureKeys[i].setCharKey(keyText)
             }
         }
         
     }
 
-    func setKeyset(keyset:IAKeyset, pageNumber:Int, shiftSelected:Bool){
+    func setKeyset(_ keyset:IAKeyset, pageNumber:Int, shiftSelected:Bool){
         guard keyset.totalKeyPages > pageNumber else {print("KeyboardLayoutView: setKeyset received invalid page number for keyset"); return}
         self.setQRowWithMapping(keyset.keyPages[pageNumber].qRow,shift:shiftSelected)
         self.setARowWithMapping(keyset.keyPages[pageNumber].aRow,shift:shiftSelected)
@@ -301,18 +301,18 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
     
     //MARK:- Setup helpers
     
-    private func generateHorizontalStackView()->UIStackView{
-        let stackview = UIStackView()
-        stackview.axis = UILayoutConstraintAxis.Horizontal
+    fileprivate func generateHorizontalStackView()->EmbeddableStackView{
+        let stackview = EmbeddableStackView()
+        stackview.axis = UILayoutConstraintAxis.horizontal
         stackview.translatesAutoresizingMaskIntoConstraints = true
-        stackview.layoutMarginsRelativeArrangement = true
-        stackview.alignment = .Fill
-        stackview.distribution = .Fill
+        stackview.isLayoutMarginsRelativeArrangement = true
+        stackview.alignment = .fill
+        stackview.distribution = .fill
         stackview.spacing = kStandardKeySpacing
         return stackview
     }
     
-    private func setupPressureKey(tag:Int)->PressureKey{
+    fileprivate func setupPressureKey(_ tag:Int)->PressureKey{
         let nextKey = PressureKey()
         nextKey.tag = tag
         nextKey.delegate = self
@@ -328,41 +328,41 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        if suggestionsBar.hidden == false {
+        if suggestionsBar.isHidden == false {
             let heightMinusInsetsAndSpacing = self.bounds.height - edgeInsets.top - edgeInsets.bottom - (4 * verticalSpacing)
             //(height - insets - 4*spacing) / 4.75
             let svHeight = floor(heightMinusInsetsAndSpacing / (4.0 + suggestionBarScaleFactor))
             let suggBarHeight = floor(heightMinusInsetsAndSpacing - (4.0 * svHeight))
             let commonWidth = bounds.width - edgeInsets.left - edgeInsets.right
             
-            suggestionsBar.frame = CGRectMake(edgeInsets.left, edgeInsets.top, commonWidth, suggBarHeight)
+            suggestionsBar.frame = CGRect(x: edgeInsets.left, y: edgeInsets.top, width: commonWidth, height: suggBarHeight)
             
             
-            qwertyStackView.frame = CGRectMake(edgeInsets.left, (edgeInsets.top + suggBarHeight + verticalSpacing),commonWidth, svHeight)
-            asdfStackView.frame = CGRectMake(edgeInsets.left, (edgeInsets.top + suggBarHeight + 2 * verticalSpacing + svHeight), commonWidth, svHeight)
-            zxcvStackView.frame = CGRectMake(edgeInsets.left, (edgeInsets.top + suggBarHeight + 3 * verticalSpacing + 2 * svHeight), commonWidth, svHeight)
-            bottomStackView.frame = CGRectMake(edgeInsets.left, (edgeInsets.top + suggBarHeight + 4 * verticalSpacing + 3 * svHeight), commonWidth, svHeight)
+            qwertyStackView.frame = CGRect(x: edgeInsets.left, y: (edgeInsets.top + suggBarHeight + verticalSpacing),width: commonWidth, height: svHeight)
+            asdfStackView.frame = CGRect(x: edgeInsets.left, y: (edgeInsets.top + suggBarHeight + 2 * verticalSpacing + svHeight), width: commonWidth, height: svHeight)
+            zxcvStackView.frame = CGRect(x: edgeInsets.left, y: (edgeInsets.top + suggBarHeight + 3 * verticalSpacing + 2 * svHeight), width: commonWidth, height: svHeight)
+            bottomStackView.frame = CGRect(x: edgeInsets.left, y: (edgeInsets.top + suggBarHeight + 4 * verticalSpacing + 3 * svHeight), width: commonWidth, height: svHeight)
         } else {
             let heightMinusInsetsAndSpacing = self.bounds.height - edgeInsets.top - edgeInsets.bottom - (3 * verticalSpacing)
             //(height - insets - 4*spacing) / 4.75
             let svHeight = floor(heightMinusInsetsAndSpacing / 4.0 )
             let commonWidth = bounds.width - edgeInsets.left - edgeInsets.right
             
-            qwertyStackView.frame = CGRectMake(edgeInsets.left, (edgeInsets.top),commonWidth, svHeight)
-            asdfStackView.frame = CGRectMake(edgeInsets.left, (edgeInsets.top  + 1 * verticalSpacing + svHeight), commonWidth, svHeight)
-            zxcvStackView.frame = CGRectMake(edgeInsets.left, (edgeInsets.top + 2 * verticalSpacing + 2 * svHeight), commonWidth, svHeight)
-            bottomStackView.frame = CGRectMake(edgeInsets.left, (edgeInsets.top + 3 * verticalSpacing + 3 * svHeight), commonWidth, svHeight)
+            qwertyStackView.frame = CGRect(x: edgeInsets.left, y: (edgeInsets.top),width: commonWidth, height: svHeight)
+            asdfStackView.frame = CGRect(x: edgeInsets.left, y: (edgeInsets.top  + 1 * verticalSpacing + svHeight), width: commonWidth, height: svHeight)
+            zxcvStackView.frame = CGRect(x: edgeInsets.left, y: (edgeInsets.top + 2 * verticalSpacing + 2 * svHeight), width: commonWidth, height: svHeight)
+            bottomStackView.frame = CGRect(x: edgeInsets.left, y: (edgeInsets.top + 3 * verticalSpacing + 3 * svHeight), width: commonWidth, height: svHeight)
             
         }
     }
     
-    func setConstraintsForOrientation(orientation:UIInterfaceOrientation){
-        if orientation == .LandscapeLeft || orientation == .LandscapeRight {
-            NSLayoutConstraint.deactivateConstraints(portraitOnlyConstraints)
-            NSLayoutConstraint.activateConstraints(landscapeOnlyConstraints)
+    func setConstraintsForOrientation(_ orientation:UIInterfaceOrientation){
+        if orientation == .landscapeLeft || orientation == .landscapeRight {
+            NSLayoutConstraint.deactivate(portraitOnlyConstraints)
+            NSLayoutConstraint.activate(landscapeOnlyConstraints)
         } else {
-            NSLayoutConstraint.deactivateConstraints(landscapeOnlyConstraints)
-            NSLayoutConstraint.activateConstraints(portraitOnlyConstraints)
+            NSLayoutConstraint.deactivate(landscapeOnlyConstraints)
+            NSLayoutConstraint.activate(portraitOnlyConstraints)
         }
     }
     
@@ -370,7 +370,7 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
     //MARK:-Delegate message forwarding
     
     ///Forwards all presses to the keyDelegate. This lets us set up all the numerous key delegates before we set the view's pk delegate.
-    func pressureKeyPressed(sender: PressureControl, actionName: String, intensity: Int) {
+    func pressureKeyPressed(_ sender: PressureControl, actionName: String, intensity: Int) {
         delegate?.pressureKeyPressed(sender, actionName: actionName, intensity: intensity)
     }
     
@@ -378,7 +378,7 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
         delegate?.backspaceKeyPressed()
     }
     
-    func shiftKeyPressed(sender:LockingKey){
+    func shiftKeyPressed(_ sender:LockingKey){
         delegate?.shiftKeyPressed(sender)
     }
     
@@ -386,7 +386,7 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
         delegate?.swapKeysetPageButtonPressed()
     }
     
-    func suggestionSelected(suggestionBar: SuggestionBarView!, suggestionString: String, intensity: Int) {
+    func suggestionSelected(_ suggestionBar: SuggestionBarView!, suggestionString: String, intensity: Int) {
         delegate?.suggestionSelected(suggestionBar, suggestionString: suggestionString, intensity: intensity)
     }
  
@@ -395,7 +395,7 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
 
 ///Packages all of the delegates along with action targets used in the KeyboardLayoutView to the IAKeyboard
 protocol KeyboardViewDelegate:PressureKeyActionDelegate, SuggestionBarDelegate{
-    func shiftKeyPressed(shiftKey:LockingKey!)
+    func shiftKeyPressed(_ shiftKey:LockingKey!)
     func backspaceKeyPressed()
     func swapKeysetPageButtonPressed()
     

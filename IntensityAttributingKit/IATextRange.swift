@@ -9,7 +9,7 @@
 import UIKit
 
 ///IATextPosition is the UITextPosition subclass necessary for reimplementation of UITextInput. The position is integer is public in the unlike the superclass in which it is private and inaccessable.
-public class IATextPosition:UITextPosition, IntegerLiteralConvertible, Comparable {
+open class IATextPosition:UITextPosition, ExpressibleByIntegerLiteral, Comparable {
     let position:Int
     
     required public init(integerLiteral value: IntegerLiteralType) {
@@ -22,50 +22,50 @@ public class IATextPosition:UITextPosition, IntegerLiteralConvertible, Comparabl
         super.init()
     }
     
-    public override var description: String {
+    open override var description: String {
         return position.description
     }
     
-    public func positionWithOffset(offset:Int)->IATextPosition{
+    open func positionWithOffset(_ offset:Int)->IATextPosition{
         return IATextPosition(self.position + offset)
     }
 }
 
-@warn_unused_result public func ==(lhs:IATextPosition,rhs:IATextPosition)->Bool {
+public func ==(lhs:IATextPosition,rhs:IATextPosition)->Bool {
     return lhs.position == rhs.position
 }
-@warn_unused_result public func !=(lhs:IATextPosition,rhs:IATextPosition)->Bool {
+public func !=(lhs:IATextPosition,rhs:IATextPosition)->Bool {
     return !(lhs == rhs)
 }
-@warn_unused_result public func >=(lhs:IATextPosition,rhs:IATextPosition)->Bool {
+public func >=(lhs:IATextPosition,rhs:IATextPosition)->Bool {
     return lhs.position >= rhs.position
 }
-@warn_unused_result public func <=(lhs:IATextPosition,rhs:IATextPosition)->Bool {
+public func <=(lhs:IATextPosition,rhs:IATextPosition)->Bool {
     return lhs.position <= rhs.position
 }
-@warn_unused_result public func >(lhs:IATextPosition,rhs:IATextPosition)->Bool {
+public func >(lhs:IATextPosition,rhs:IATextPosition)->Bool {
     return lhs.position > rhs.position
 }
-@warn_unused_result public func <(lhs:IATextPosition,rhs:IATextPosition)->Bool {
+public func <(lhs:IATextPosition,rhs:IATextPosition)->Bool {
     return lhs.position < rhs.position
 }
 
-///IATextRange is the UITextRange subclass necessary for reimplementation of UITextInput. It provides convenience functions for converting to/from Range<Int> and NSRange types.
-public class IATextRange:UITextRange {
+///IATextRange is the UITextRange subclass necessary for reimplementation of UITextInput. It provides convenience functions for converting to/from CountableRange<Int> and NSRange types.
+open class IATextRange:UITextRange {
     
     ///iaStart stores the IATextPosition object which is accessed by the start:UITextPosition computed property
     let iaStart:IATextPosition
-    override public var start: UITextPosition {
+    override open var start: UITextPosition {
         return iaStart
     }
     
     ///iaEnd stores the IATextPosition object which is accessed by the end:UITextPosition computed property
     let iaEnd:IATextPosition
-    override public var end:UITextPosition {
+    override open var end:UITextPosition {
         return iaEnd
     }
     
-    override public var empty: Bool {
+    override open var isEmpty: Bool {
         return iaStart == iaEnd
     }
     
@@ -75,9 +75,9 @@ public class IATextRange:UITextRange {
         super.init()
     }
     
-    init(range:Range<Int>){
-        self.iaStart = IATextPosition(range.startIndex)
-        self.iaEnd = IATextPosition(range.endIndex)
+    init(range:CountableRange<Int>){
+        self.iaStart = IATextPosition(range.lowerBound)
+        self.iaEnd = IATextPosition(range.upperBound)
         super.init()
     }
     
@@ -87,27 +87,27 @@ public class IATextRange:UITextRange {
         super.init()
     }
     
-    func range()->Range<Int>{
+    func range()->CountableRange<Int>{
         return iaStart.position..<iaEnd.position
     }
     func nsrange()->NSRange{
         return NSMakeRange(iaStart.position, iaEnd.position - iaStart.position)
     }
 
-    public override var description: String {
+    open override var description: String {
         return "IATextRange(\(iaStart),\(iaEnd))"
     }
     
-    func contains(position:IATextPosition)->Bool{
+    func contains(_ position:IATextPosition)->Bool{
         return position >= iaStart && position < iaEnd
     }
 }
 
-@warn_unused_result public func ==(lhs:IATextRange,rhs:IATextRange)->Bool {
+public func ==(lhs:IATextRange,rhs:IATextRange)->Bool {
     return lhs.iaStart == rhs.iaStart && lhs.iaEnd == rhs.iaEnd
 }
 
-@warn_unused_result public func !=(lhs:IATextRange,rhs:IATextRange)->Bool {
+public func !=(lhs:IATextRange,rhs:IATextRange)->Bool {
     return !(lhs == rhs)
 }
 

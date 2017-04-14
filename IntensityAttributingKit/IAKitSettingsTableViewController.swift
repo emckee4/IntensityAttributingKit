@@ -18,8 +18,8 @@ class IAKitSettingsTableViewController: UITableViewController {
     
     var miscCells:[UITableViewCell]!
     
-    var expandedTIAdjusterIndex:NSIndexPath?
-    var expandedRIMAdjusterIndex:NSIndexPath?
+    var expandedTIAdjusterIndex:IndexPath?
+    var expandedRIMAdjusterIndex:IndexPath?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,7 +40,7 @@ class IAKitSettingsTableViewController: UITableViewController {
         //mark as highlighted/selected those cells that are current in the IAKitPreferences
         
         refreshSelections()
-        tableView.separatorStyle = .None
+        tableView.separatorStyle = .none
         
     }
 
@@ -51,11 +51,11 @@ class IAKitSettingsTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return tiNameCells.count + rimNameCells.count + miscCells.count + 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if expandedTIAdjusterIndex?.section == section || expandedRIMAdjusterIndex?.section == section {
             return 2
         } else if section < 6{
@@ -66,7 +66,7 @@ class IAKitSettingsTableViewController: UITableViewController {
     }
 
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //var cell:UITableViewCell!
         let section = indexPath.section
         let row = indexPath.row
@@ -87,54 +87,54 @@ class IAKitSettingsTableViewController: UITableViewController {
         }
     }
 
-    override func tableView(tableView: UITableView, accessoryButtonTappedForRowWithIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
         tableView.beginUpdates()
         if indexPath.section == expandedTIAdjusterIndex?.section { //closing expanded ti cell
-            tableView.deleteRowsAtIndexPaths([expandedTIAdjusterIndex!], withRowAnimation: .Top)
+            tableView.deleteRows(at: [expandedTIAdjusterIndex!], with: .top)
             expandedTIAdjusterIndex = nil
         } else if indexPath.section == expandedRIMAdjusterIndex?.section { //closing expanded rim cell
-            tableView.deleteRowsAtIndexPaths([expandedRIMAdjusterIndex!], withRowAnimation: .Top)
+            tableView.deleteRows(at: [expandedRIMAdjusterIndex!], with: .top)
             expandedRIMAdjusterIndex = nil
         } else if indexPath.section < 3 {   //opening/changing expanded ti cell
             if expandedTIAdjusterIndex != nil {
-                tableView.deleteRowsAtIndexPaths([expandedTIAdjusterIndex!], withRowAnimation: .Top)
+                tableView.deleteRows(at: [expandedTIAdjusterIndex!], with: .top)
             }
-            expandedTIAdjusterIndex = NSIndexPath(forRow: 1, inSection: indexPath.section)
-            tableView.insertRowsAtIndexPaths([expandedTIAdjusterIndex!], withRowAnimation: .Top)
+            expandedTIAdjusterIndex = IndexPath(row: 1, section: indexPath.section)
+            tableView.insertRows(at: [expandedTIAdjusterIndex!], with: .top)
         } else if indexPath.section >= 3 {  //opening/changing expanded rim cell
             if expandedRIMAdjusterIndex != nil {
-                tableView.deleteRowsAtIndexPaths([expandedRIMAdjusterIndex!], withRowAnimation: .Top)
+                tableView.deleteRows(at: [expandedRIMAdjusterIndex!], with: .top)
             }
-            expandedRIMAdjusterIndex = NSIndexPath(forRow: 1, inSection: indexPath.section)
-            tableView.insertRowsAtIndexPaths([expandedRIMAdjusterIndex!], withRowAnimation: .Top)
+            expandedRIMAdjusterIndex = IndexPath(row: 1, section: indexPath.section)
+            tableView.insertRows(at: [expandedRIMAdjusterIndex!], with: .top)
             
         }
         tableView.endUpdates()
     }
     
 
-    override func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         guard indexPath.row == 0 && indexPath.section < 5 else {return nil}
-        guard let nameCell = tableView.cellForRowAtIndexPath(indexPath) else {return nil}
-        guard nameCell.selected == false else {return nil}
+        guard let nameCell = tableView.cellForRow(at: indexPath) else {return nil}
+        guard nameCell.isSelected == false else {return nil}
         guard IAKitPreferences.forceTouchAvailable || !(nameCell.textLabel!.text! == "ForceTouch") else {return nil}
         //ensure only one cell per section is highlighted
 
         if indexPath.section < 3 {
-            _ = [NSIndexPath(forRow: 0, inSection: 0),NSIndexPath(forRow: 0, inSection: 1),NSIndexPath(forRow: 0, inSection: 2)].map({tableView.deselectRowAtIndexPath($0, animated: true)})
+            _ = [IndexPath(row: 0, section: 0),IndexPath(row: 0, section: 1),IndexPath(row: 0, section: 2)].map({tableView.deselectRow(at: $0, animated: true)})
         } else  { //indexPath.section < 5
-            _ = [NSIndexPath(forRow: 0, inSection: 3),NSIndexPath(forRow: 0, inSection: 4)].map({tableView.deselectRowAtIndexPath($0, animated: true)})
+            _ = [IndexPath(row: 0, section: 3),IndexPath(row: 0, section: 4)].map({tableView.deselectRow(at: $0, animated: true)})
         }
         
         return indexPath
     }
     
     ///we don't want to allow the user to deselect rows
-    override func tableView(tableView: UITableView, willDeselectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
+    override func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
         return nil
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
         case 0: IAKitPreferences.touchInterpreter = IATouchInterpreter.Force
             
@@ -151,12 +151,12 @@ class IAKitSettingsTableViewController: UITableViewController {
         }
         if indexPath.section < 3 && expandedTIAdjusterIndex != nil && indexPath.section != expandedTIAdjusterIndex?.section {
             tableView.beginUpdates()
-            tableView.deleteRowsAtIndexPaths([expandedTIAdjusterIndex!], withRowAnimation: .Top)
+            tableView.deleteRows(at: [expandedTIAdjusterIndex!], with: .top)
             expandedTIAdjusterIndex = nil
             tableView.endUpdates()
         } else if indexPath.section >= 3 && indexPath.section < 5 && expandedRIMAdjusterIndex != nil && indexPath.section != expandedRIMAdjusterIndex?.section {
             tableView.beginUpdates()
-            tableView.deleteRowsAtIndexPaths([expandedRIMAdjusterIndex!], withRowAnimation: .Top)
+            tableView.deleteRows(at: [expandedRIMAdjusterIndex!], with: .top)
             expandedRIMAdjusterIndex = nil
             tableView.endUpdates()
         }
@@ -165,33 +165,33 @@ class IAKitSettingsTableViewController: UITableViewController {
     
     ///Updates cell selections with defaults from IAKitOPtions
     func refreshSelections(){
-        var selectedTIIndex:NSIndexPath!
-        var selectedRIMIndex:NSIndexPath!
+        var selectedTIIndex:IndexPath!
+        var selectedRIMIndex:IndexPath!
         switch IAKitPreferences.touchInterpreter {
-        case .Force: selectedTIIndex = NSIndexPath(forRow: 0, inSection: 0)
-        case .Duration: selectedTIIndex = NSIndexPath(forRow: 0, inSection: 1)
-        case .ImpactDuration: selectedTIIndex = NSIndexPath(forRow: 0, inSection: 2)
+        case .Force: selectedTIIndex = IndexPath(row: 0, section: 0)
+        case .Duration: selectedTIIndex = IndexPath(row: 0, section: 1)
+        case .ImpactDuration: selectedTIIndex = IndexPath(row: 0, section: 2)
         }
         
         switch IAKitPreferences.rawIntensityMapper {
-        case .Linear: selectedRIMIndex = NSIndexPath(forRow: 0, inSection: 3)
-        case .LogAx: selectedRIMIndex = NSIndexPath(forRow: 0, inSection: 4)
+        case .Linear: selectedRIMIndex = IndexPath(row: 0, section: 3)
+        case .LogAx: selectedRIMIndex = IndexPath(row: 0, section: 4)
         }
         
         if let previouslySelected = tableView.indexPathsForSelectedRows {
             for previousIP in previouslySelected {
                 if previousIP != selectedRIMIndex && previousIP != selectedTIIndex {
-                    tableView.deselectRowAtIndexPath(previousIP, animated: false)
+                    tableView.deselectRow(at: previousIP, animated: false)
                 }
             }
         }
-        tableView.selectRowAtIndexPath(selectedTIIndex, animated: false, scrollPosition: .None)
-        tableView.selectRowAtIndexPath(selectedRIMIndex, animated: false, scrollPosition: UITableViewScrollPosition.None)
+        tableView.selectRow(at: selectedTIIndex, animated: false, scrollPosition: .none)
+        tableView.selectRow(at: selectedRIMIndex, animated: false, scrollPosition: UITableViewScrollPosition.none)
         
     }
     
 
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0: return "Touch Interpreters"
         case 3: return "Raw Intensity Mapping"
@@ -201,7 +201,7 @@ class IAKitSettingsTableViewController: UITableViewController {
     }
     
     
-    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch section {
         case 0: return 28.0
         case 3: return 28.0
@@ -214,16 +214,16 @@ class IAKitSettingsTableViewController: UITableViewController {
 
     
     func setupNameCells(){
-        tiNameCells = [UITableViewCell(style: .Default, reuseIdentifier: "nameCell"),UITableViewCell(style: .Default, reuseIdentifier: "nameCell"),UITableViewCell(style: .Default, reuseIdentifier: "nameCell")]
+        tiNameCells = [UITableViewCell(style: .default, reuseIdentifier: "nameCell"),UITableViewCell(style: .default, reuseIdentifier: "nameCell"),UITableViewCell(style: .default, reuseIdentifier: "nameCell")]
         tiNameCells[0].textLabel?.text = "ForceTouch"
         tiNameCells[1].textLabel?.text = "Duration"
         tiNameCells[2].textLabel?.text = "Impact-Duration"
-        _ = tiNameCells.map({$0.accessoryType = .DetailButton; $0.textLabel?.font = UIFont.systemFontOfSize(20.0); $0.selectionStyle = UITableViewCellSelectionStyle.Blue})
+        _ = tiNameCells.map({$0.accessoryType = .detailButton; $0.textLabel?.font = UIFont.systemFont(ofSize: 20.0); $0.selectionStyle = UITableViewCellSelectionStyle.blue})
         
-        rimNameCells = [UITableViewCell(style: .Default, reuseIdentifier: "nameCell"),UITableViewCell(style: .Default, reuseIdentifier: "nameCell")]
+        rimNameCells = [UITableViewCell(style: .default, reuseIdentifier: "nameCell"),UITableViewCell(style: .default, reuseIdentifier: "nameCell")]
         rimNameCells[0].textLabel?.text = "Linear"
         rimNameCells[1].textLabel?.text = "LogAx"
-        _ = rimNameCells.map({$0.accessoryType = .DetailButton; $0.textLabel?.font = UIFont.systemFontOfSize(20.0); $0.selectionStyle = UITableViewCellSelectionStyle.Blue})
+        _ = rimNameCells.map({$0.accessoryType = .detailButton; $0.textLabel?.font = UIFont.systemFont(ofSize: 20.0); $0.selectionStyle = UITableViewCellSelectionStyle.blue})
     }
 
 }

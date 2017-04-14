@@ -10,11 +10,11 @@ import UIKit
 
 
 ///Configurable cell type used in the RawIntensity param adjustment cells. This one has a label with title, a stepper, and a label for results/value.
-public class LabeledStepperAdjusterCell:UITableViewCell{
+open class LabeledStepperAdjusterCell:UITableViewCell{
     
-    @IBInspectable public var titleLabel:UILabel!
-    @IBInspectable public var stepper:UIStepper!
-    @IBInspectable public var resultLabel:UILabel!
+    @IBInspectable open var titleLabel:UILabel!
+    @IBInspectable open var stepper:UIStepper!
+    @IBInspectable open var resultLabel:UILabel!
     
     public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -24,9 +24,9 @@ public class LabeledStepperAdjusterCell:UITableViewCell{
     
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        titleLabel = aDecoder.decodeObjectForKey("titleLabel") as? UILabel
-        stepper = aDecoder.decodeObjectForKey("stepper") as? UIStepper
-        resultLabel = aDecoder.decodeObjectForKey("resultLabel") as? UILabel
+        titleLabel = aDecoder.decodeObject(forKey: "titleLabel") as? UILabel
+        stepper = aDecoder.decodeObject(forKey: "stepper") as? UIStepper
+        resultLabel = aDecoder.decodeObject(forKey: "resultLabel") as? UILabel
         setupCell()
     }
     
@@ -34,48 +34,48 @@ public class LabeledStepperAdjusterCell:UITableViewCell{
     
     func setupCell(){
         if titleLabel == nil {
-            titleLabel = UILabel(frame: CGRectZero)
+            titleLabel = UILabel(frame: CGRect.zero)
         }
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(titleLabel)
         if stepper == nil {
-            stepper = UIStepper(frame: CGRectZero)
+            stepper = UIStepper(frame: CGRect.zero)
         }
         stepper.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(stepper)
         if resultLabel == nil {
-            resultLabel = UILabel(frame: CGRectZero)
+            resultLabel = UILabel(frame: CGRect.zero)
         }
         resultLabel.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(resultLabel)
         
-        titleLabel.topAnchor.constraintEqualToAnchor(self.contentView.layoutMarginsGuide.topAnchor).active = true
-        titleLabel.leadingAnchor.constraintEqualToAnchor(self.contentView.layoutMarginsGuide.leadingAnchor).active = true
-        titleLabel.bottomAnchor.constraintLessThanOrEqualToAnchor(stepper.topAnchor, constant: -6).active = true
+        titleLabel.topAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.topAnchor).isActive = true
+        titleLabel.leadingAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.leadingAnchor).isActive = true
+        titleLabel.bottomAnchor.constraint(lessThanOrEqualTo: stepper.topAnchor, constant: -6).isActive = true
         
-        stepper.bottomAnchor.constraintEqualToAnchor(self.contentView.layoutMarginsGuide.bottomAnchor).active = true
-        stepper.leadingAnchor.constraintEqualToAnchor(self.contentView.layoutMarginsGuide.leadingAnchor).active = true
+        stepper.bottomAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.bottomAnchor).isActive = true
+        stepper.leadingAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.leadingAnchor).isActive = true
         
-        resultLabel.bottomAnchor.constraintEqualToAnchor(self.contentView.layoutMarginsGuide.bottomAnchor).active = true
-        resultLabel.leadingAnchor.constraintEqualToAnchor(stepper.leadingAnchor).active = true
-        resultLabel.trailingAnchor.constraintEqualToAnchor(self.contentView.layoutMarginsGuide.trailingAnchor).active = true
-        resultLabel.textAlignment = .Right
+        resultLabel.bottomAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.bottomAnchor).isActive = true
+        resultLabel.leadingAnchor.constraint(equalTo: stepper.leadingAnchor).isActive = true
+        resultLabel.trailingAnchor.constraint(equalTo: self.contentView.layoutMarginsGuide.trailingAnchor).isActive = true
+        resultLabel.textAlignment = .right
         
-        stepper.addTarget(self, action: #selector(self.stepperValueChanged(_:)), forControlEvents: .ValueChanged)
+        stepper.addTarget(self, action: #selector(self.stepperValueChanged(_:)), for: .valueChanged)
 
-        titleLabel.font = UIFont.systemFontOfSize(18, weight: UIFontWeightMedium)
+        titleLabel.font = UIFont.systemFont(ofSize: 18, weight: UIFontWeightMedium)
     }
  
     
-    func stepperValueChanged(sender:UIStepper!){
+    func stepperValueChanged(_ sender:UIStepper!){
         print("stepper value changed. Override me")
         
     }
     
-    public override func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(titleLabel, forKey: "titleLabel")
-        aCoder.encodeObject(stepper, forKey: "stepper")
-        aCoder.encodeObject(resultLabel, forKey: "resultLabel")
+    open override func encode(with aCoder: NSCoder) {
+        aCoder.encode(titleLabel, forKey: "titleLabel")
+        aCoder.encode(stepper, forKey: "stepper")
+        aCoder.encode(resultLabel, forKey: "resultLabel")
     }
 }
 

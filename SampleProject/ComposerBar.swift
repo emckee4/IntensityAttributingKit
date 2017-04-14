@@ -35,9 +35,9 @@ class ComposerBar: UIView {
     }
     
     func setupBar(){
-        textEditor = IACompositeTextEditor(frame:CGRectZero)
-        sendButton = ExpandingKeyControl(expansionDirection: .Up)
-        sendButton.backgroundColor = UIColor.clearColor()
+        textEditor = IACompositeTextEditor(frame:CGRect.zero)
+        sendButton = ExpandingKeyControl(expansionDirection: .up)
+        sendButton.backgroundColor = UIColor.clear
         sendButton.cornerRadius = 4.0
         
         self.addSubview(textEditor)
@@ -49,32 +49,32 @@ class ComposerBar: UIView {
         sendButton.translatesAutoresizingMaskIntoConstraints = false
         
         //need constraints: needs to expand (weak resistance to expansion) up until some limit
-        self.heightAnchor.constraintGreaterThanOrEqualToConstant(44.0).active = true
+        self.heightAnchor.constraint(greaterThanOrEqualToConstant: 44.0).isActive = true
         
-        textEditor.leftAnchor.constraintEqualToAnchor(self.leftAnchor, constant: 5.0).active = true
-        textEditor.rightAnchor.constraintEqualToAnchor(sendButton.leftAnchor, constant: -5.0).active = true
-        textEditor.bottomAnchor.constraintEqualToAnchor(self.bottomAnchor, constant: -2.0).active = true
-        textEditor.topAnchor.constraintEqualToAnchor(self.topAnchor, constant: 2.0).active = true        
+        textEditor.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 5.0).isActive = true
+        textEditor.rightAnchor.constraint(equalTo: sendButton.leftAnchor, constant: -5.0).isActive = true
+        textEditor.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -2.0).isActive = true
+        textEditor.topAnchor.constraint(equalTo: self.topAnchor, constant: 2.0).isActive = true        
         
-        sendButton.rightAnchor.constraintEqualToAnchor(self.rightAnchor, constant: -5.0).active = true
-        sendButton.heightAnchor.constraintLessThanOrEqualToAnchor(self.heightAnchor, constant: -4).active = true
-        sendButton.heightAnchor.constraintLessThanOrEqualToConstant(40.0).active = true
-        let topAnchor = sendButton.topAnchor.constraintEqualToAnchor(self.topAnchor, constant: -2.0)
+        sendButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -5.0).isActive = true
+        sendButton.heightAnchor.constraint(lessThanOrEqualTo: self.heightAnchor, constant: -4).isActive = true
+        sendButton.heightAnchor.constraint(lessThanOrEqualToConstant: 40.0).isActive = true
+        let topAnchor = sendButton.topAnchor.constraint(equalTo: self.topAnchor, constant: -2.0)
         topAnchor.priority = 500
-        topAnchor.active = true
+        topAnchor.isActive = true
         
-        sendButton.bottomAnchor.constraintEqualToAnchor(self.bottomAnchor, constant: -2.0).active = true
+        sendButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -2.0).isActive = true
 
         
         
         progressView = UIProgressView()
-        progressView.hidden = true
+        progressView.isHidden = true
         progressView.progress = 0.0
         self.addSubview(progressView)
         progressView.translatesAutoresizingMaskIntoConstraints = false
-        progressView.leftAnchor.constraintEqualToAnchor(self.leftAnchor).active = true
-        progressView.rightAnchor.constraintEqualToAnchor(self.rightAnchor).active = true
-        progressView.topAnchor.constraintEqualToAnchor(self.topAnchor).active = true
+        progressView.leftAnchor.constraint(equalTo: self.leftAnchor).isActive = true
+        progressView.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
+        progressView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         
     }
     

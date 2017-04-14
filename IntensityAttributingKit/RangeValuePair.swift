@@ -26,15 +26,15 @@ struct RangeValuePair<Element:Equatable>: CustomStringConvertible {
         set {self.startIndex = newValue.location; self.endIndex = newValue.location + newValue.length}
     }
     
-    var range:Range<Int>{
+    var range:CountableRange<Int>{
         get{return startIndex..<endIndex}
-        set{startIndex = newValue.startIndex; endIndex = newValue.endIndex}
+        set{startIndex = newValue.lowerBound; endIndex = newValue.upperBound}
     }
     
-    init(value:Element, range:Range<Int>){
+    init(value:Element, range:CountableRange<Int>){
         self.value = value
-        self.startIndex = range.startIndex
-        self.endIndex = range.endIndex
+        self.startIndex = range.lowerBound
+        self.endIndex = range.upperBound
     }
     
     init(value:Element, range:NSRange){
@@ -49,7 +49,7 @@ struct RangeValuePair<Element:Equatable>: CustomStringConvertible {
         self.endIndex = endIndex
     }
     
-    mutating func reindex(by:Int){
+    mutating func reindex(_ by:Int){
         self.startIndex += by
         self.endIndex += by
     }
@@ -58,8 +58,11 @@ struct RangeValuePair<Element:Equatable>: CustomStringConvertible {
 
 extension RangeValuePair where Element:AnyObject {
     ///yields [startIndex, endIndex, value]. Used as an intermediate step to JSON
-    var asArray:[AnyObject] {return [startIndex,endIndex,value]}
+    var asArray:[AnyObject] {return [startIndex as AnyObject,endIndex as AnyObject,value]}
 }
-
+extension RangeValuePair where Element:Any {
+    ///yields [startIndex, endIndex, value]. Used as an intermediate step to JSON
+    var asArray:[Any] {return [startIndex, endIndex, value]}
+}
 
 

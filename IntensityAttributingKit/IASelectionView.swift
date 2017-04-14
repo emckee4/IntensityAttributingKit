@@ -13,20 +13,20 @@ import UIKit
 */
 final class IASelectionView: UIView {
 
-    private(set) var selectionRects:[IATextSelectionRect] = []
-    private(set) var caretRect:CGRect?
-    private(set) var markedTextRect:CGRect?
+    fileprivate(set) var selectionRects:[IATextSelectionRect] = []
+    fileprivate(set) var caretRect:CGRect?
+    fileprivate(set) var markedTextRect:CGRect?
     
-    var selectionColor:UIColor = UIColor.cyanColor().colorWithAlphaComponent(0.25)
-    var markingColor:UIColor = UIColor.yellowColor().colorWithAlphaComponent(0.22)
-    var caretColor:UIColor = UIColor.blueColor().colorWithAlphaComponent(0.5)
+    var selectionColor:UIColor = UIColor.cyan.withAlphaComponent(0.25)
+    var markingColor:UIColor = UIColor.yellow.withAlphaComponent(0.22)
+    var caretColor:UIColor = UIColor.blue.withAlphaComponent(0.5)
     var caretBlinks = true {
         didSet{
-            self.layer.removeAnimationForKey("opacity")
+            self.layer.removeAnimation(forKey: "opacity")
         }
     }
     
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         guard !selectionRects.isEmpty || caretRect != nil || markedTextRect != nil else {return}
         if selectionRects.isEmpty {
             
@@ -40,14 +40,14 @@ final class IASelectionView: UIView {
                 caretColor.setFill()
                 UIRectFill(caretRect!)
                 if caretBlinks && markedTextRect == nil{
-                    self.layer.addAnimation(blinkAnimation, forKey: "opacity")
+                    self.layer.add(blinkAnimation, forKey: "opacity")
                 } else {
-                    self.layer.removeAnimationForKey("opacity")
+                    self.layer.removeAnimation(forKey: "opacity")
                 }
             }
         } else {
             //draw selectionRects
-            self.layer.removeAnimationForKey("opacity")
+            self.layer.removeAnimation(forKey: "opacity")
             selectionColor.setFill()
             for sr in selectionRects {
                 UIRectFill(sr.rect)
@@ -66,41 +66,41 @@ final class IASelectionView: UIView {
     }()
     
     ///Use this to update selectionRects and caretRect. This may mark the entire view as hidden if nothing is selected or unhide itself if something is selected.
-    func updateSelections(rawSelectionRects:[CGRect], caretRect:CGRect?, markEnds:Bool){
+    func updateSelections(_ rawSelectionRects:[CGRect], caretRect:CGRect?, markEnds:Bool){
         self.selectionRects = IATextSelectionRect.generateSelectionArray(rawSelectionRects, markEnds:markEnds)
         self.markedTextRect = nil
         self.caretRect = caretRect
         if selectionRects.isEmpty && caretRect == nil {
-            self.hidden = true
+            self.isHidden = true
         } else {
-            self.hidden = false
+            self.isHidden = false
             self.setNeedsDisplay()
         }
     }
 
     ///If called without parameters then this will clear and hide the selectionView
-    func updateSelections(selectionRects:[IATextSelectionRect] = [], caretRect:CGRect? = nil){
+    func updateSelections(_ selectionRects:[IATextSelectionRect] = [], caretRect:CGRect? = nil){
         self.markedTextRect = nil
         self.selectionRects = selectionRects
         self.caretRect = caretRect
         if selectionRects.isEmpty && caretRect == nil {
-            self.hidden = true
+            self.isHidden = true
         } else {
-            self.hidden = false
+            self.isHidden = false
             self.setNeedsDisplay()
         }
     }
     
     ///Sets markedText and caret, clears selection rects
-    func setTextMarking(markedTextRect:CGRect?,caretRect:CGRect?){
+    func setTextMarking(_ markedTextRect:CGRect?,caretRect:CGRect?){
         selectionRects = []
         self.markedTextRect = markedTextRect
         self.caretRect = caretRect
         if self.markedTextRect == nil && caretRect == nil {
-            self.hidden = true
+            self.isHidden = true
             
         } else {
-            self.hidden = false
+            self.isHidden = false
             self.setNeedsDisplay()
         }
     }
@@ -109,7 +109,7 @@ final class IASelectionView: UIView {
         if self.caretRect != nil {
             caretRect = nil
             if selectionRects.isEmpty && markedTextRect == nil{
-                self.hidden = true
+                self.isHidden = true
             } else {
                 self.setNeedsDisplay()
             }
@@ -121,8 +121,8 @@ final class IASelectionView: UIView {
         selectionRects = []
         caretRect = nil
         markedTextRect = nil
-        layer.removeAnimationForKey("opacity")
-        self.hidden = true
+        layer.removeAnimation(forKey: "opacity")
+        self.isHidden = true
     }
     
     
@@ -131,23 +131,23 @@ final class IASelectionView: UIView {
     }
     
     init(){
-        super.init(frame: CGRectZero)
+        super.init(frame: CGRect.zero)
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        if let sc = aDecoder.decodeObjectForKey("selectionColor") as? UIColor {
+        if let sc = aDecoder.decodeObject(forKey: "selectionColor") as? UIColor {
             selectionColor = sc
         }
-        if let cb = aDecoder.decodeObjectForKey("caretBlinks") as? Bool {
+        if let cb = aDecoder.decodeObject(forKey: "caretBlinks") as? Bool {
             caretBlinks = cb
         }
     }
     
-    override func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
-        aCoder.encodeObject(selectionColor, forKey: "selectionColor")
-        aCoder.encodeObject(caretBlinks, forKey: "caretBlinks")
+    override func encode(with aCoder: NSCoder) {
+        super.encode(with: aCoder)
+        aCoder.encode(selectionColor, forKey: "selectionColor")
+        aCoder.encode(caretBlinks, forKey: "caretBlinks")
     }
 
 }

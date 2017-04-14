@@ -11,17 +11,17 @@ import Foundation
 
 ///Longer presses yield higher raw intensities.
 struct DurationTouchInterpreter:IATouchInterpretingProtocol{
-    private static var _durationMultiplier:Float = {return (NSUserDefaults.standardUserDefaults().objectForKey("DTI:durationMultiplier") as? Float) ?? 2.0}()
+    fileprivate static var _durationMultiplier:Float = {return (UserDefaults.standard.object(forKey: "DTI:durationMultiplier") as? Float) ?? 2.0}()
     static var durationMultiplier:Float {
         get{return _durationMultiplier}
-        set{_durationMultiplier = newValue; NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: "DTI:durationMultiplier")}
+        set{_durationMultiplier = newValue; UserDefaults.standard.set(newValue, forKey: "DTI:durationMultiplier")}
     }
     
 
-    var touchStartTime:NSTimeInterval!
+    var touchStartTime:TimeInterval!
     
     mutating func updateIntensityYieldingRawResult(withTouch touch:UITouch)->Float{
-        if touch.phase == .Began || touchStartTime == nil{
+        if touch.phase == .began || touchStartTime == nil{
             touchStartTime = touch.timestamp
             return 0.0
         } else {
@@ -29,7 +29,7 @@ struct DurationTouchInterpreter:IATouchInterpretingProtocol{
         }
     }
     mutating func endInteractionYieldingRawResult(withTouch touch:UITouch?)->Float{
-        guard let ts = touch?.timestamp where touchStartTime != nil else {touchStartTime = nil; return 0.0}
+        guard let ts = touch?.timestamp, touchStartTime != nil else {touchStartTime = nil; return 0.0}
         let result = min(Float(ts - touchStartTime) * DurationTouchInterpreter.durationMultiplier, 1.0)
         touchStartTime = nil
         return result
@@ -39,40 +39,40 @@ struct DurationTouchInterpreter:IATouchInterpretingProtocol{
     }
     var currentRawValue:Float! {
         guard touchStartTime != nil else {return nil}
-        return min(Float(NSProcessInfo.processInfo().systemUptime - touchStartTime) * DurationTouchInterpreter.durationMultiplier, 1.0)
+        return min(Float(ProcessInfo.processInfo.systemUptime - touchStartTime) * DurationTouchInterpreter.durationMultiplier, 1.0)
     }
 }
 
 
 ///Utilizes both timer based methods of DurationTouchInterpreter as well as the AccelHistory accelerometer data.
 class ImpactDurationTouchInterpreter:IATouchInterpretingProtocol{
-    private static var _durationMultiplier:Float = {return (NSUserDefaults.standardUserDefaults().objectForKey("IDTI:durationMultiplier") as? Float) ?? 2.4}()
+    fileprivate static var _durationMultiplier:Float = {return (UserDefaults.standard.object(forKey: "IDTI:durationMultiplier") as? Float) ?? 2.4}()
     static var durationMultiplier:Float {
         get{return _durationMultiplier}
-        set{_durationMultiplier = newValue; NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: "IDTI:durationMultiplier")}
+        set{_durationMultiplier = newValue; UserDefaults.standard.set(newValue, forKey: "IDTI:durationMultiplier")}
     }
     
-    private static var _impactMultiplier:Float = {return (NSUserDefaults.standardUserDefaults().objectForKey("IDTI:impactMultiplier") as? Float) ?? 0.9}()
+    fileprivate static var _impactMultiplier:Float = {return (UserDefaults.standard.object(forKey: "IDTI:impactMultiplier") as? Float) ?? 0.9}()
     ///Multiplier for max absolute user z force
     static var impactMultiplier:Float {
         get{return _impactMultiplier}
-        set{_impactMultiplier = newValue; NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: "IDTI:impactMultiplier")}
+        set{_impactMultiplier = newValue; UserDefaults.standard.set(newValue, forKey: "IDTI:impactMultiplier")}
     }
     
     static let coefficient:Float = -0.38
     static let impactPower:Float = 0.5
     
-    private static func calcRawResult(maxAbsZ:Float, elapsedTime:NSTimeInterval)->Float{
+    fileprivate static func calcRawResult(_ maxAbsZ:Float, elapsedTime:TimeInterval)->Float{
         let raw = (self.durationMultiplier * Float(elapsedTime)) + (pow(maxAbsZ, self.impactPower) * self.impactMultiplier) + coefficient
         return max(min(raw, 1.0),0.0)
     }
     
     ///
     
-    var touchStartTime:NSTimeInterval!
+    var touchStartTime:TimeInterval!
     
     func updateIntensityYieldingRawResult(withTouch touch:UITouch)->Float{
-        if touch.phase == .Began {
+        if touch.phase == .began {
             touchStartTime = touch.timestamp
             AccelHistory.singleton.resetMaxAbsZ()
             return 0.0
@@ -92,7 +92,7 @@ class ImpactDurationTouchInterpreter:IATouchInterpretingProtocol{
     }
     var currentRawValue:Float! {
         guard touchStartTime != nil else {return nil}
-        return ImpactDurationTouchInterpreter.calcRawResult(Float(AccelHistory.singleton.maxAbsZ), elapsedTime: NSProcessInfo.processInfo().systemUptime - touchStartTime)
+        return ImpactDurationTouchInterpreter.calcRawResult(Float(AccelHistory.singleton.maxAbsZ), elapsedTime: ProcessInfo.processInfo.systemUptime - touchStartTime)
     }
     
 

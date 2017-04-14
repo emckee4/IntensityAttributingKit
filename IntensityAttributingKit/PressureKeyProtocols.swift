@@ -19,7 +19,7 @@ public protocol PressureControl {
 
 ///Protocol for delegate used by PressureKey, PressureView and ExpandingPressureKey
 public protocol PressureKeyActionDelegate:class {
-    func pressureKeyPressed(sender:PressureControl, actionName:String, intensity:Int)
+    func pressureKeyPressed(_ sender:PressureControl, actionName:String, intensity:Int)
 }
 
 

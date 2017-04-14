@@ -16,13 +16,13 @@ final class IAMagnifyingLoup:UIView {
     
     var magnificationFactor:CGFloat = 1.75
     var magnificationCenter:CGPoint?
-    private(set) var magnifyerRadius:CGFloat = 35.0
-    private(set) var loupCenterOffset:CGVector = CGVectorMake(0, 35)
+    fileprivate(set) var magnifyerRadius:CGFloat = 35.0
+    fileprivate(set) var loupCenterOffset:CGVector = CGVector(dx: 0, dy: 35)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.layer.borderColor = UIColor.darkGrayColor().CGColor
+        self.layer.borderColor = UIColor.darkGray.cgColor
         self.layer.borderWidth = 1
         self.layer.cornerRadius = frame.size.width / 2
         self.layer.masksToBounds = true
@@ -37,51 +37,51 @@ final class IAMagnifyingLoup:UIView {
         
     }
     
-    override func encodeWithCoder(aCoder: NSCoder) {
-        super.encodeWithCoder(aCoder)
+    override func encode(with aCoder: NSCoder) {
+        super.encode(with: aCoder)
         
     }
     
     convenience init(viewToMagnify:UIView){
-        self.init(frame:CGRectZero)
+        self.init(frame:CGRect.zero)
         self.viewToMagnify = viewToMagnify
-        self.hidden = true
+        self.isHidden = true
     }
     
     ///magnifies at the given point, using default radius and offset values
-    func magnifyAtPoint(point:CGPoint){
-        self.hidden = false
+    func magnifyAtPoint(_ point:CGPoint){
+        self.isHidden = false
         magnificationCenter = point
         layer.cornerRadius = magnifyerRadius
-        frame = CGRectMake(magnificationCenter!.x - loupCenterOffset.dx - magnifyerRadius,
-                           magnificationCenter!.y - loupCenterOffset.dy - magnifyerRadius,
-                           magnifyerRadius * 2.0, magnifyerRadius * 2.0)
+        frame = CGRect(x: magnificationCenter!.x - loupCenterOffset.dx - magnifyerRadius,
+                           y: magnificationCenter!.y - loupCenterOffset.dy - magnifyerRadius,
+                           width: magnifyerRadius * 2.0, height: magnifyerRadius * 2.0)
         setNeedsDisplay()
     }
     
-    func magnifyAtPoint(point:CGPoint, withRadius radius:CGFloat, offset:CGVector? = nil){
-        self.hidden = false
+    func magnifyAtPoint(_ point:CGPoint, withRadius radius:CGFloat, offset:CGVector? = nil){
+        self.isHidden = false
         magnificationCenter = point
         magnifyerRadius = radius
         if let offset = offset {loupCenterOffset = offset}
         layer.cornerRadius = radius
-        frame = CGRectMake(magnificationCenter!.x - loupCenterOffset.dx - magnifyerRadius,
-                           magnificationCenter!.y - loupCenterOffset.dy - magnifyerRadius,
-                           radius * 2.0, radius * 2.0)
+        frame = CGRect(x: magnificationCenter!.x - loupCenterOffset.dx - magnifyerRadius,
+                           y: magnificationCenter!.y - loupCenterOffset.dy - magnifyerRadius,
+                           width: radius * 2.0, height: radius * 2.0)
         setNeedsDisplay()
     }
     
     
     
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         guard magnificationCenter != nil && viewToMagnify != nil else {return}
-        UIColor.whiteColor().setFill()
+        UIColor.white.setFill()
         UIRectFill(self.bounds)
-        let context = UIGraphicsGetCurrentContext()
-        CGContextTranslateCTM(context, -magnificationCenter!.x * magnificationFactor + magnifyerRadius, -magnificationCenter!.y * magnificationFactor + magnifyerRadius )
-        CGContextScaleCTM(context, magnificationFactor, magnificationFactor)
+        guard let context = UIGraphicsGetCurrentContext() else {return}
+        context.translateBy(x: -magnificationCenter!.x * magnificationFactor + magnifyerRadius, y: -magnificationCenter!.y * magnificationFactor + magnifyerRadius )
+        context.scaleBy(x: magnificationFactor, y: magnificationFactor)
         //viewToMagnify!.layer.renderInContext(context!)
-        viewToMagnify!.drawViewHierarchyInRect(viewToMagnify!.bounds, afterScreenUpdates: true)
+        viewToMagnify!.drawHierarchy(in: viewToMagnify!.bounds, afterScreenUpdates: true)
     }
     
     

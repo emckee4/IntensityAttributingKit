@@ -12,19 +12,19 @@ import Foundation
 
 ///IAAccessoryDelegate delivers actions from the IAAccessory to the IATextView
 protocol IAAccessoryDelegate:class {
-    func accessoryKeyboardChangeButtonPressed(accessory:IAAccessoryVC!)
+    func accessoryKeyboardChangeButtonPressed(_ accessory:IAAccessoryVC!)
     
-    func accessoryOptionButtonPressed(accessory:IAAccessoryVC!)
+    func accessoryOptionButtonPressed(_ accessory:IAAccessoryVC!)
     
     ///Return true to inform the iaAccessory that it should center the button associated with the transformer.
-    func accessoryRequestsTransformerChange(accessory:IAAccessoryVC!, toTransformer:IntensityTransformers)->Bool
+    func accessoryRequestsTransformerChange(_ accessory:IAAccessoryVC!, toTransformer:IntensityTransformers)->Bool
     
-    func accessoryRequestsPickerLaunch(accessory:IAAccessoryVC!)
+    func accessoryRequestsPickerLaunch(_ accessory:IAAccessoryVC!, pickerName:String)
     
-    func accessoryUpdatedDefaultIntensity(accessory:IAAccessoryVC!, withValue value:Int)
+    func accessoryUpdatedDefaultIntensity(_ accessory:IAAccessoryVC!, withValue value:Int)
     
     ///Return true to inform the iaAccessory that it should center the button associated with the smoothing tokenizer.
-    func accessoryRequestsSmoothingChange(accessory:IAAccessoryVC!, toValue:IAStringTokenizing)->Bool
+    func accessoryRequestsSmoothingChange(_ accessory:IAAccessoryVC!, toValue:IAStringTokenizing)->Bool
     
     func iaKeyboardIsShowing()->Bool
 

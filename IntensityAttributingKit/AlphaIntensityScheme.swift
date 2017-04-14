@@ -9,48 +9,48 @@
 import UIKit
 
 /// Varies font opacity as a function of intensity
-public class AlphaIntensityScheme:AnimatedIntensityTransforming {
+open class AlphaIntensityScheme:AnimatedIntensityTransforming {
     
     //MARK:- static IntensityTransforming properties
-    public static let schemeName = "AlphaScheme"
-    public static let stepCount = 8
+    open static let schemeName = "AlphaScheme"
+    open static let stepCount = 8
     
     //MARK:- AnimatedIntensityTransforming properties
     ///Top layer carries non-animating alpha attributed text
-    public static let topLayerAnimates:Bool = false
+    open static let topLayerAnimates:Bool = false
     ///Bottom layer carries animating opaque text
-    public static let bottomLayerAnimates:Bool = true
-    public static let bottomLayerTimingOffset:Double = 0
+    open static let bottomLayerAnimates:Bool = true
+    open static let bottomLayerTimingOffset:Double = 0
     
     
     //MARK:- IntensityTransforming functions:
-    public static func nsAttributesForBinsAndBaseAttributes(bin bin:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
-        var baseFont:UIFont = UIFont.systemFontOfSize(baseAttributes.cSize, weight: UIFontWeightMedium)
+    open static func nsAttributesForBinsAndBaseAttributes(bin:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
+        var baseFont:UIFont = UIFont.systemFont(ofSize: baseAttributes.cSize, weight: UIFontWeightMedium)
         
-        var alphaValue:CGFloat = clamp(CGFloat(bin + 1) / CGFloat(stepCount - 1), lowerBound: 0, upperBound: 1)
+        let alphaValue:CGFloat = clamp(CGFloat(bin + 1) / CGFloat(stepCount - 1), lowerBound: 0, upperBound: 1)
         
         if baseAttributes.bold || baseAttributes.italic {
             var symbolicsToMerge = UIFontDescriptorSymbolicTraits()
             if baseAttributes.bold {
-                symbolicsToMerge.unionInPlace(.TraitBold)
+                symbolicsToMerge.formUnion(.traitBold)
             }
             if baseAttributes.italic {
-                symbolicsToMerge.unionInPlace(.TraitItalic)
+                symbolicsToMerge.formUnion(.traitItalic)
             }
-            let newSymbolicTraits =  baseFont.fontDescriptor().symbolicTraits.union(symbolicsToMerge)
-            let newDescriptor = baseFont.fontDescriptor().fontDescriptorWithSymbolicTraits(newSymbolicTraits)
-            baseFont = UIFont(descriptor: newDescriptor, size: baseAttributes.cSize)
+            let newSymbolicTraits =  baseFont.fontDescriptor.symbolicTraits.union(symbolicsToMerge)
+            let newDescriptor = baseFont.fontDescriptor.withSymbolicTraits(newSymbolicTraits)
+            baseFont = UIFont(descriptor: newDescriptor!, size: baseAttributes.cSize)
         }
         var nsAttributes:[String:AnyObject] = [
             NSFontAttributeName:baseFont,
-            NSForegroundColorAttributeName:UIColor.blackColor().colorWithAlphaComponent(alphaValue)
+            NSForegroundColorAttributeName:UIColor.black.withAlphaComponent(alphaValue)
         ]
         
         if baseAttributes.strikethrough {
-            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
+            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as AnyObject?
         }
         if baseAttributes.underline {
-            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
+            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as AnyObject?
         }        
         
         return nsAttributes
@@ -60,37 +60,37 @@ public class AlphaIntensityScheme:AnimatedIntensityTransforming {
     //MARK:- AnimatedIntensityTransforming functions:
     
     ///NSAttributes for top and bottom layers for animating schemes
-    public static func layeredNSAttributesForBinsAndBaseAttributes(bin bin:Int,baseAttributes:IABaseAttributes)->(top:[String:AnyObject], bottom:[String:AnyObject]) {
+    open static func layeredNSAttributesForBinsAndBaseAttributes(bin:Int,baseAttributes:IABaseAttributes)->(top:[String:AnyObject], bottom:[String:AnyObject]) {
         
-        var baseFont:UIFont = UIFont.systemFontOfSize(baseAttributes.cSize, weight: UIFontWeightMedium)
+        var baseFont:UIFont = UIFont.systemFont(ofSize: baseAttributes.cSize, weight: UIFontWeightMedium)
         
-        var alphaValue:CGFloat = clamp(CGFloat(bin + 1) / CGFloat(stepCount - 1), lowerBound: 0, upperBound: 1)
+        let alphaValue:CGFloat = clamp(CGFloat(bin + 1) / CGFloat(stepCount - 1), lowerBound: 0, upperBound: 1)
         
         if baseAttributes.bold || baseAttributes.italic {
             var symbolicsToMerge = UIFontDescriptorSymbolicTraits()
             if baseAttributes.bold {
-                symbolicsToMerge.unionInPlace(.TraitBold)
+                symbolicsToMerge.formUnion(.traitBold)
             }
             if baseAttributes.italic {
-                symbolicsToMerge.unionInPlace(.TraitItalic)
+                symbolicsToMerge.formUnion(.traitItalic)
             }
-            let newSymbolicTraits =  baseFont.fontDescriptor().symbolicTraits.union(symbolicsToMerge)
-            let newDescriptor = baseFont.fontDescriptor().fontDescriptorWithSymbolicTraits(newSymbolicTraits)
-            baseFont = UIFont(descriptor: newDescriptor, size: baseAttributes.cSize)
+            let newSymbolicTraits =  baseFont.fontDescriptor.symbolicTraits.union(symbolicsToMerge)
+            let newDescriptor = baseFont.fontDescriptor.withSymbolicTraits(newSymbolicTraits)
+            baseFont = UIFont(descriptor: newDescriptor!, size: baseAttributes.cSize)
         }
         var nsAttributes:[String:AnyObject] = [
             NSFontAttributeName:baseFont
         ]
         
         if baseAttributes.strikethrough {
-            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
+            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as AnyObject?
         }
         if baseAttributes.underline {
-            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
+            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as AnyObject?
         }
     
         var topLayerAtts = nsAttributes
-        topLayerAtts[NSForegroundColorAttributeName] = UIColor.blackColor().colorWithAlphaComponent(alphaValue)
+        topLayerAtts[NSForegroundColorAttributeName] = UIColor.black.withAlphaComponent(alphaValue)
         
         return (top:topLayerAtts, bottom:nsAttributes)
         

@@ -13,29 +13,29 @@ Provides an interface for displaying and selecting suggestions on and as provide
 */
 class SuggestionBarView: UIView, PressureKeyActionDelegate {
 
-    private(set) var suggestions:[String] = []
+    fileprivate(set) var suggestions:[String] = []
 
     weak var delegate:SuggestionBarDelegate?
     
-    private(set)var pressureKeys:[PressureKey]!
-    private(set)var stackView:UIStackView!
+    fileprivate(set)var pressureKeys:[PressureKey]!
+    fileprivate(set)var stackView:UIStackView!
     
     var textColor:UIColor? {
         didSet{if textColor != nil {
-            pressureKeys.map({$0.textColor = textColor})
+            _ = pressureKeys.map({$0.textColor = textColor})
             }
         }
     }
     override var backgroundColor: UIColor? {
         didSet {
-            pressureKeys.map({$0.backgroundColor = backgroundColor})
+            _ = pressureKeys.map({$0.backgroundColor = backgroundColor})
         }
     }
     
-    var visibleCellCount:Int {return pressureKeys.reduce(0, combine: {$0 + ($1.hidden ? 0 : 1)})}
+    var visibleCellCount:Int {return pressureKeys.reduce(0, {$0 + ($1.isHidden ? 0 : 1)})}
     
     ///updates the displayed suggestions options. The supplied suggestion array should be orderedby priority for display, with the best suggestions first.
-    func updateSuggestions(newSuggestions:[String]){
+    func updateSuggestions(_ newSuggestions:[String]){
         suggestions = newSuggestions
         for pk in pressureKeys {
             //guard !pk.hidden else {continue}
@@ -61,7 +61,7 @@ class SuggestionBarView: UIView, PressureKeyActionDelegate {
         self.translatesAutoresizingMaskIntoConstraints = false
 //        self.backgroundColor = UIColor.lightGrayColor()
         pressureKeys = []
-        let maxNumberKeys = Int(max(UIScreen.mainScreen().bounds.height,UIScreen.mainScreen().bounds.width)) / 120
+        let maxNumberKeys = Int(max(UIScreen.main.bounds.height,UIScreen.main.bounds.width)) / 120
         for i in 0..<maxNumberKeys{
             let pk = PressureKey()
             pk.delegate = self
@@ -79,13 +79,13 @@ class SuggestionBarView: UIView, PressureKeyActionDelegate {
         
         stackView = UIStackView(arrangedSubviews: pressureKeys)
         self.addSubview(stackView)
-        stackView.topAnchor.constraintEqualToAnchor(self.topAnchor).activateWithPriority(1000)
-        stackView.bottomAnchor.constraintEqualToAnchor(self.bottomAnchor).activateWithPriority(1000)
-        stackView.leadingAnchor.constraintEqualToAnchor(self.leadingAnchor).activateWithPriority(1000)
-        stackView.trailingAnchor.constraintEqualToAnchor(self.trailingAnchor).activateWithPriority(1000)
-        stackView.distribution = .FillEqually
-        stackView.alignment = .Fill
-        stackView.axis = .Horizontal
+        stackView.topAnchor.constraint(equalTo: self.topAnchor).activateWithPriority(1000)
+        stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor).activateWithPriority(1000)
+        stackView.leadingAnchor.constraint(equalTo: self.leadingAnchor).activateWithPriority(1000)
+        stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor).activateWithPriority(1000)
+        stackView.distribution = .fillEqually
+        stackView.alignment = .fill
+        stackView.axis = .horizontal
         stackView.translatesAutoresizingMaskIntoConstraints = false
     }
     
@@ -94,9 +94,9 @@ class SuggestionBarView: UIView, PressureKeyActionDelegate {
         if visibleCellCount != numberOfCellsToMakeVisible {
             for pk in pressureKeys {
                 if pk.tag < numberOfCellsToMakeVisible {
-                    pk.hidden = false
+                    pk.isHidden = false
                 } else {
-                    pk.hidden = true
+                    pk.isHidden = true
                 }
             }
         }
@@ -104,7 +104,7 @@ class SuggestionBarView: UIView, PressureKeyActionDelegate {
     }
     
     ///Groups all selections into a separately named function for convenience and to enable easy changing of internal implementation.
-    func pressureKeyPressed(sender: PressureControl, actionName: String, intensity: Int) {
+    func pressureKeyPressed(_ sender: PressureControl, actionName: String, intensity: Int) {
         guard actionName != "" else {return}
         self.delegate?.suggestionSelected(self, suggestionString: actionName, intensity: intensity)
     }
@@ -114,5 +114,5 @@ class SuggestionBarView: UIView, PressureKeyActionDelegate {
 
 
 protocol SuggestionBarDelegate:class {
-    func suggestionSelected(suggestionBar:SuggestionBarView!, suggestionString:String, intensity:Int)
+    func suggestionSelected(_ suggestionBar:SuggestionBarView!, suggestionString:String, intensity:Int)
 }

@@ -34,38 +34,38 @@ public struct IAKitVisualPreferences:Equatable {
     public init() {
         profileName = "Custom"
         accessoryBackgroundColor = UIColor(white: 0.85, alpha: 1)
-        accessoryButtonBackgroundColor = UIColor.lightGrayColor()
+        accessoryButtonBackgroundColor = UIColor.lightGray
         accessoryTintColor = UIColor(white: 0.2, alpha: 1)
-        accessoryButtonBorderColor = UIColor.darkGrayColor()
+        accessoryButtonBorderColor = UIColor.darkGray
         accessoryButtonCornerRadius = 5.0
         accessoryButtonBorderWidth = 1.0
         
-        kbBackgroundColor = UIColor.lightGrayColor()
+        kbBackgroundColor = UIColor.lightGray
         kbButtonColor = UIColor(white: 0.85, alpha: 1)
-        kbButtonTintColor = UIColor.blackColor()
+        kbButtonTintColor = UIColor.black
         kbSuggestionsBackgroundColor = UIColor(white: 0.85, alpha: 1)
         kbSuggestionsTextColor = UIColor(white: 0.2, alpha: 1)
     }
 
     ///Inits from an NSData archive of a dict of values stored by the convertToArchive() function.
-    init!(archive:NSData!){
+    init!(archive:Data!){
         guard let archive = archive else {return nil}
-        guard let dict = NSKeyedUnarchiver.unarchiveObjectWithData(archive) as? [String:AnyObject] else {return nil}
+        guard let dict = NSKeyedUnarchiver.unarchiveObject(with: archive) as? [String:AnyObject] else {return nil}
         
         guard let profileName = dict[VisualPrefKeys.accessoryBackgroundColor] as? String,
-            accessoryBackgroundColor = dict[VisualPrefKeys.accessoryBackgroundColor] as? UIColor,
-            accessoryButtonBackgroundColor = dict[VisualPrefKeys.accessoryButtonBackgroundColor] as? UIColor,
-            accessoryTintColor = dict[VisualPrefKeys.accessoryTintColor] as? UIColor,
-            accessoryButtonBorderColor = dict[VisualPrefKeys.accessoryButtonBorderColor] as? UIColor,
-            accessoryButtonCornerRadius = dict[VisualPrefKeys.accessoryButtonCornerRadius] as? CGFloat,
-            accessoryButtonBorderWidth = dict[VisualPrefKeys.accessoryButtonBorderWidth] as? CGFloat,
+            let accessoryBackgroundColor = dict[VisualPrefKeys.accessoryBackgroundColor] as? UIColor,
+            let accessoryButtonBackgroundColor = dict[VisualPrefKeys.accessoryButtonBackgroundColor] as? UIColor,
+            let accessoryTintColor = dict[VisualPrefKeys.accessoryTintColor] as? UIColor,
+            let accessoryButtonBorderColor = dict[VisualPrefKeys.accessoryButtonBorderColor] as? UIColor,
+            let accessoryButtonCornerRadius = dict[VisualPrefKeys.accessoryButtonCornerRadius] as? CGFloat,
+            let accessoryButtonBorderWidth = dict[VisualPrefKeys.accessoryButtonBorderWidth] as? CGFloat,
             
-            kbBackgroundColor = dict[VisualPrefKeys.kbBackgroundColor] as? UIColor,
-            kbButtonColor = dict[VisualPrefKeys.kbButtonColor] as? UIColor,
-            kbButtonTintColor = dict[VisualPrefKeys.kbButtonTintColor] as? UIColor,
-            kbSuggestionsBackgroundColor = dict[VisualPrefKeys.kbSuggestionsBackgroundColor] as? UIColor,
-            kbSuggestionsTextColor = dict[VisualPrefKeys.kbSuggestionsTextColor] as? UIColor,
-            kbSuggestionBarScaleFactor = dict[VisualPrefKeys.kbSuggestionBarScaleFactor] as? CGFloat
+            let kbBackgroundColor = dict[VisualPrefKeys.kbBackgroundColor] as? UIColor,
+            let kbButtonColor = dict[VisualPrefKeys.kbButtonColor] as? UIColor,
+            let kbButtonTintColor = dict[VisualPrefKeys.kbButtonTintColor] as? UIColor,
+            let kbSuggestionsBackgroundColor = dict[VisualPrefKeys.kbSuggestionsBackgroundColor] as? UIColor,
+            let kbSuggestionsTextColor = dict[VisualPrefKeys.kbSuggestionsTextColor] as? UIColor,
+            let kbSuggestionBarScaleFactor = dict[VisualPrefKeys.kbSuggestionBarScaleFactor] as? CGFloat
             else {return nil}
         
         self.profileName = profileName
@@ -85,27 +85,27 @@ public struct IAKitVisualPreferences:Equatable {
     }
     
     ///Stores values in a dictionary, then returns an NSData archive of that which can be reconstitued by the init:archive function.
-    func convertToArchive()->NSData{
+    func convertToArchive()->Data{
         var dict:[String:AnyObject] = [:]
-        dict[VisualPrefKeys.profileName] = profileName
+        dict[VisualPrefKeys.profileName] = profileName as AnyObject?
         dict[VisualPrefKeys.accessoryBackgroundColor] = accessoryBackgroundColor
         dict[VisualPrefKeys.accessoryButtonBackgroundColor] = accessoryButtonBackgroundColor
         dict[VisualPrefKeys.accessoryTintColor] = accessoryTintColor
         dict[VisualPrefKeys.accessoryButtonBorderColor] = accessoryButtonBorderColor
-        dict[VisualPrefKeys.accessoryButtonCornerRadius] = accessoryButtonCornerRadius
-        dict[VisualPrefKeys.accessoryButtonBorderWidth] = accessoryButtonBorderWidth
+        dict[VisualPrefKeys.accessoryButtonCornerRadius] = accessoryButtonCornerRadius as AnyObject?
+        dict[VisualPrefKeys.accessoryButtonBorderWidth] = accessoryButtonBorderWidth as AnyObject?
         
         dict[VisualPrefKeys.kbBackgroundColor] = kbBackgroundColor
         dict[VisualPrefKeys.kbButtonColor] = kbButtonColor
         dict[VisualPrefKeys.kbButtonTintColor] = kbButtonTintColor
         dict[VisualPrefKeys.kbSuggestionsBackgroundColor] = kbSuggestionsBackgroundColor
         dict[VisualPrefKeys.kbSuggestionsTextColor] = kbSuggestionsTextColor
-        dict[VisualPrefKeys.kbSuggestionBarScaleFactor] = kbSuggestionBarScaleFactor
-        return NSKeyedArchiver.archivedDataWithRootObject(dict)
+        dict[VisualPrefKeys.kbSuggestionBarScaleFactor] = kbSuggestionBarScaleFactor as AnyObject?
+        return NSKeyedArchiver.archivedData(withRootObject: dict)
     }
     
     ///Dictionary keys used by the archiver
-    private struct VisualPrefKeys {
+    fileprivate struct VisualPrefKeys {
         static let profileName = "IAKitVisualPreferences.profileName"
         
         static let accessoryBackgroundColor = "IAKitVisualPreferences.accessoryBackgroundColor"
@@ -137,13 +137,13 @@ public struct IAKitVisualPreferences:Equatable {
         v.accessoryBackgroundColor = UIColor(white: 0.85, alpha: 1)
         v.accessoryButtonBackgroundColor = UIColor(white: 0.85, alpha: 1)
         v.accessoryTintColor = UIColor(white: 0.2, alpha: 1)
-        v.accessoryButtonBorderColor = UIColor.darkGrayColor()
+        v.accessoryButtonBorderColor = UIColor.darkGray
         v.accessoryButtonCornerRadius = 5.0
         v.accessoryButtonBorderWidth = 0.0
         
-        v.kbBackgroundColor = UIColor.lightGrayColor()
+        v.kbBackgroundColor = UIColor.lightGray
         v.kbButtonColor = UIColor(white: 0.85, alpha: 1)
-        v.kbButtonTintColor = UIColor.blackColor()
+        v.kbButtonTintColor = UIColor.black
         v.kbSuggestionsBackgroundColor = UIColor(white: 0.85, alpha: 1)
         v.kbSuggestionsTextColor = UIColor(white: 0.2, alpha: 1)
         return v
@@ -153,18 +153,18 @@ public struct IAKitVisualPreferences:Equatable {
     public static let Vomit:IAKitVisualPreferences = {
         var v = IAKitVisualPreferences()
         v.profileName = "Vomit"
-        v.accessoryBackgroundColor = UIColor.lightGrayColor()
-        v.accessoryButtonBackgroundColor = UIColor.darkGrayColor()
-        v.accessoryTintColor = UIColor.redColor()
-        v.accessoryButtonBorderColor = UIColor.brownColor()
+        v.accessoryBackgroundColor = UIColor.lightGray
+        v.accessoryButtonBackgroundColor = UIColor.darkGray
+        v.accessoryTintColor = UIColor.red
+        v.accessoryButtonBorderColor = UIColor.brown
         v.accessoryButtonCornerRadius = 5.0
         v.accessoryButtonBorderWidth = 1.0
         
-        v.kbBackgroundColor = UIColor.purpleColor()
-        v.kbButtonColor = UIColor.greenColor()
-        v.kbButtonTintColor = UIColor.orangeColor()
-        v.kbSuggestionsBackgroundColor = UIColor.brownColor()
-        v.kbSuggestionsTextColor = UIColor.yellowColor()
+        v.kbBackgroundColor = UIColor.purple
+        v.kbButtonColor = UIColor.green
+        v.kbButtonTintColor = UIColor.orange
+        v.kbSuggestionsBackgroundColor = UIColor.brown
+        v.kbSuggestionsTextColor = UIColor.yellow
         return v
     }()
     
@@ -172,24 +172,24 @@ public struct IAKitVisualPreferences:Equatable {
     public static let HotdogStand:IAKitVisualPreferences = {
         var v = IAKitVisualPreferences()
         v.profileName = "Hotdog Stand"
-        v.accessoryBackgroundColor = UIColor.yellowColor()
-        v.accessoryButtonBackgroundColor = UIColor.yellowColor()
-        v.accessoryTintColor = UIColor.blackColor()
-        v.accessoryButtonBorderColor = UIColor.darkGrayColor()
+        v.accessoryBackgroundColor = UIColor.yellow
+        v.accessoryButtonBackgroundColor = UIColor.yellow
+        v.accessoryTintColor = UIColor.black
+        v.accessoryButtonBorderColor = UIColor.darkGray
         v.accessoryButtonCornerRadius = 0.0
         v.accessoryButtonBorderWidth = 2.0
         
-        v.kbBackgroundColor = UIColor.redColor()
-        v.kbButtonColor = UIColor.redColor()
-        v.kbButtonTintColor = UIColor.whiteColor()
-        v.kbSuggestionsBackgroundColor = UIColor.yellowColor()
-        v.kbSuggestionsTextColor = UIColor.blackColor()
+        v.kbBackgroundColor = UIColor.red
+        v.kbButtonColor = UIColor.red
+        v.kbButtonTintColor = UIColor.white
+        v.kbSuggestionsBackgroundColor = UIColor.yellow
+        v.kbSuggestionsTextColor = UIColor.black
         return v
     }()
     
 }
 
-@warn_unused_result public func ==(lhs:IAKitVisualPreferences, rhs:IAKitVisualPreferences)->Bool{
+public func ==(lhs:IAKitVisualPreferences, rhs:IAKitVisualPreferences)->Bool{
     return lhs.profileName == rhs.profileName &&
     
     lhs.accessoryBackgroundColor == rhs.accessoryBackgroundColor &&
@@ -208,7 +208,7 @@ public struct IAKitVisualPreferences:Equatable {
     lhs.kbSuggestionBarScaleFactor  == rhs.kbSuggestionBarScaleFactor
 }
 
-@warn_unused_result public func !=(lhs:IAKitVisualPreferences, rhs:IAKitVisualPreferences)->Bool{
+public func !=(lhs:IAKitVisualPreferences, rhs:IAKitVisualPreferences)->Bool{
     return !(lhs == rhs)
 }
 

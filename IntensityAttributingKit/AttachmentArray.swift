@@ -11,7 +11,7 @@ import Foundation
 /**
  The IAAttachmentArray is a sparse array created so that it's indexes could be adjusted easily when inserting/deleting content in the IAString. The underlying data structure is a data array containing tupples of the user facing index (loc) and the IATextAttachment (attach). Functions which interact with the index read or change the loc values of any contained LocAttach tupples.
  */
-public struct IAAttachmentArray:CustomStringConvertible, SequenceType {
+public struct IAAttachmentArray:CustomStringConvertible, Sequence {
     public typealias LocAttach = (loc:Int,attach:IATextAttachment)
     var data:[LocAttach] = []
     
@@ -20,7 +20,7 @@ public struct IAAttachmentArray:CustomStringConvertible, SequenceType {
     
     init!(data:[LocAttach]){
         guard !data.isEmpty else {return}
-        self.data = data.sort({$0.loc < $1.loc})
+        self.data = data.sorted(by: {$0.loc < $1.loc})
         for i in 0..<self.data.count - 1 {
             guard data[i].loc != data[i + 1].loc else {return nil}
         }
@@ -28,14 +28,14 @@ public struct IAAttachmentArray:CustomStringConvertible, SequenceType {
     
     init(){}
     
-    public typealias Generator = Array<LocAttach>.Generator
+    public typealias Iterator = Array<LocAttach>.Iterator
     
-    public func generate() -> Generator {
-        return data.generate()
+    public func makeIterator() -> Iterator {
+        return data.makeIterator()
     }
     
-    private func dataIndexForLoc(loc:Int)->Int?{
-        for (i, item) in data.enumerate() {
+    fileprivate func dataIndexForLoc(_ loc:Int)->Int?{
+        for (i, item) in data.enumerated() {
             if item.loc == loc {
                 return i
             }
@@ -59,21 +59,21 @@ public struct IAAttachmentArray:CustomStringConvertible, SequenceType {
                         data[i] = LocAttach(loc:position, attach:attach)
                         return
                     } else if data[i].loc > position {
-                        data.insert(LocAttach(loc:position, attach:attach), atIndex: i)
+                        data.insert(LocAttach(loc:position, attach:attach), at: i)
                         return
                     }
                 }
                 data.append(LocAttach(loc:position, attach:attach))
             } else {
                 if let di = dataIndexForLoc(position) {
-                    data.removeAtIndex(di)
+                    data.remove(at: di)
                 }
             }
         }
     }
     
     
-    mutating func modifyIndecesAtOrPastLoc(loc:Int, modBy:Int){
+    mutating func modifyIndecesAtOrPastLoc(_ loc:Int, modBy:Int){
         for i in 0..<data.count  {
             if data[i].loc >= loc {
                 data[i].loc += modBy
@@ -81,60 +81,60 @@ public struct IAAttachmentArray:CustomStringConvertible, SequenceType {
         }
     }
     
-    func reindexedSubrange(range:Range<Int>)->IAAttachmentArray{
+    func reindexedSubrange(_ range:CountableRange<Int>)->IAAttachmentArray{
         var results = IAAttachmentArray()
         for item in self.data {
-            if item.loc >= range.startIndex && item.loc < range.endIndex {
-                results.data.append(LocAttach(loc:(item.loc - range.startIndex), attach:item.attach))
+            if item.loc >= range.lowerBound && item.loc < range.upperBound {
+                results.data.append(LocAttach(loc:(item.loc - range.lowerBound), attach:item.attach))
             }
         }
         return results
     }
     
     ///Inserts the attachment or empty space (if nil) at a given index, increments locs past insert position by 1
-    mutating func insertAttachment(attachment:IATextAttachment?, atLoc:Int){
+    mutating func insertAttachment(_ attachment:IATextAttachment?, atLoc:Int){
         guard let attachment = attachment else {modifyIndecesAtOrPastLoc(atLoc, modBy: 1); return}
         let newItem = LocAttach(loc:atLoc, attach:attachment)
         if data.count > 0 {
             modifyIndecesAtOrPastLoc(atLoc, modBy: 1)
-            for (i,item) in self.data.enumerate() {
+            for (i,item) in self.data.enumerated() {
                 if item.loc > atLoc {
-                    self.data.insert(newItem, atIndex: i)
+                    self.data.insert(newItem, at: i)
                     return
                 }
             }
-            self.data.insert(newItem, atIndex: 0)
+            self.data.insert(newItem, at: 0)
         } else {
             data.append(newItem)
         }
         
     }
     
-    mutating func removeSubrange(range:Range<Int>){
+    mutating func removeSubrange(_ range:CountableRange<Int>){
         var shouldRepeat = false
         repeat {
             shouldRepeat = false
-            for (i,item) in self.data.enumerate() {
-                if item.loc >= range.startIndex && item.loc < range.endIndex {
-                    self.data.removeAtIndex(i)
+            for (i,item) in self.data.enumerated() {
+                if item.loc >= range.lowerBound && item.loc < range.upperBound {
+                    self.data.remove(at: i)
                     shouldRepeat = true
                     break
                 }
             }
         } while shouldRepeat
-        modifyIndecesAtOrPastLoc(range.startIndex, modBy: -range.count)
+        modifyIndecesAtOrPastLoc(range.lowerBound, modBy: -range.count)
     }
     
-    mutating func replaceRange(replacement:IAAttachmentArray, ofLength:Int ,replacedRange: Range<Int>){
+    mutating func replaceRange(_ replacement:IAAttachmentArray, ofLength:Int ,replacedRange: CountableRange<Int>){
         removeSubrange(replacedRange)
-        modifyIndecesAtOrPastLoc(replacedRange.startIndex, modBy: ofLength)
+        modifyIndecesAtOrPastLoc(replacedRange.lowerBound, modBy: ofLength)
         for item in replacement.data {
-            self[item.loc + replacedRange.startIndex] = item.attach
+            self[item.loc + replacedRange.lowerBound] = item.attach
         }
         guard validate() else {fatalError("IAAttachmentArray.validate failed")}
     }
     
-    mutating func insertAttachments(attachArray:IAAttachmentArray, ofLength:Int ,atIndex:Int){
+    mutating func insertAttachments(_ attachArray:IAAttachmentArray, ofLength:Int ,atIndex:Int){
         modifyIndecesAtOrPastLoc(atIndex, modBy: ofLength)
         for item in attachArray.data {
             self[item.loc + atIndex] = item.attach
@@ -146,7 +146,7 @@ public struct IAAttachmentArray:CustomStringConvertible, SequenceType {
     func validate()->Bool{
         guard self.data.count > 0 else {return true}
         guard self.data[0].loc >= 0 else {print("validateError: first loc == \(self.data[0].loc)");return false}
-        let sortedData = self.data.sort{$0.loc < $1.loc}
+        let sortedData = self.data.sorted{$0.loc < $1.loc}
         for i in 0..<self.data.count {
             guard self.data[i].loc == sortedData[i].loc && self.data[i].attach == sortedData[i].attach else {return false}
         }
@@ -160,7 +160,8 @@ public struct IAAttachmentArray:CustomStringConvertible, SequenceType {
         for item in self.data {
             descript += "<loc:\(item.loc), \(item.attach)>, "
         }
-        descript.removeRange(descript.endIndex.predecessor().predecessor()..<descript.endIndex)
+        let loc = descript.index(before: descript.index(before: descript.endIndex))
+        descript.removeSubrange(loc..<descript.endIndex)
         return descript + "]"
     }
     
@@ -169,11 +170,11 @@ public struct IAAttachmentArray:CustomStringConvertible, SequenceType {
         return IAAttachmentArray(data: newData)
     }
     
-    func rangeIsEmpty(range:Range<Int>)->Bool{
+    func rangeIsEmpty(_ range:CountableRange<Int>)->Bool{
         for (loc,_) in data {
-            if loc < range.startIndex {
+            if loc < range.lowerBound {
                 continue
-            } else if loc < range.endIndex {
+            } else if loc < range.upperBound {
                 return false
             } else {
                 return true
@@ -182,12 +183,12 @@ public struct IAAttachmentArray:CustomStringConvertible, SequenceType {
         return true
     }
     ///Returns all location-attachment tupples with locations contained in the provided range
-    func attachmentsInRange(range:Range<Int>)->[LocAttach]{
+    func attachmentsInRange(_ range:CountableRange<Int>)->[LocAttach]{
         var results:[LocAttach] = []
         for locAttach in data {
-            if locAttach.loc < range.startIndex {
+            if locAttach.loc < range.lowerBound {
                 continue
-            } else if locAttach.loc < range.endIndex {
+            } else if locAttach.loc < range.upperBound {
                 results.append(locAttach)
             } else {
                 break
@@ -196,9 +197,9 @@ public struct IAAttachmentArray:CustomStringConvertible, SequenceType {
         return results
     }
     
-//    public func setThumbSizes(thumbSize:ThumbSize){
-//        for (_,attach) in self.data {
-//            attach.thumbSize = thumbSize
-//        }
-//    }
+    
+    public func attachment(withLocalID localID:String)->LocAttach?{
+        guard let index = data.index(where: {$0.attach.localID == localID}) else {return nil}
+        return data[index]
+    }
 }

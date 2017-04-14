@@ -31,28 +31,28 @@ public enum IAStringTokenizing:String, CustomStringConvertible {
         }
     }
     
-    public var enumerationOption:NSStringEnumerationOptions!{
+    public var enumerationOption:NSString.EnumerationOptions!{
         switch self {
-        case .Char: return .ByComposedCharacterSequences
-        case .Word: return .ByWords
-        case .Sentence: return .BySentences
-        case .Line: return .ByLines
-        case .Paragraph: return .ByParagraphs
+        case .Char: return .byComposedCharacterSequences
+        case .Word: return .byWords
+        case .Sentence: return .bySentences
+        case .Line: return NSString.EnumerationOptions()
+        case .Paragraph: return .byParagraphs
         default:return nil
         }
         
     }
     
-    public init!(enumerationOption:NSStringEnumerationOptions){
-        if enumerationOption.contains(.ByComposedCharacterSequences){
+    public init!(enumerationOption:NSString.EnumerationOptions){
+        if enumerationOption.contains(.byComposedCharacterSequences){
             self = .Char
-        } else if enumerationOption.contains(.ByWords) {
+        } else if enumerationOption.contains(.byWords) {
             self = .Word
-        } else if enumerationOption.contains(.BySentences){
+        } else if enumerationOption.contains(.bySentences){
             self = .Sentence
-        } else if enumerationOption.contains(.ByLines) {
+        } else if enumerationOption.contains(NSString.EnumerationOptions()) {
             self = .Line
-        }else if enumerationOption.contains(.ByParagraphs){
+        }else if enumerationOption.contains(.byParagraphs){
             self = .Paragraph
         } else {
             return nil
@@ -85,23 +85,23 @@ public enum IAStringTokenizing:String, CustomStringConvertible {
     
     public var granularity:UITextGranularity {
         switch self {
-        case .Char: return .Character
-        case .Word: return .Word
-        case .Sentence: return .Sentence
-        case .Paragraph: return .Paragraph
-        case .Line: return .Line
-        case .Message: return .Document
+        case .Char: return .character
+        case .Word: return .word
+        case .Sentence: return .sentence
+        case .Paragraph: return .paragraph
+        case .Line: return .line
+        case .Message: return .document
         }
     }
     
     init(granularity:UITextGranularity){
         switch granularity {
-        case .Character: self = Char
-        case .Word: self = .Word
-        case .Sentence: self = .Sentence
-        case .Paragraph: self = .Paragraph
-        case .Line: self = .Line
-        case .Document: self = .Message
+        case .character: self = .Char
+        case .word: self = .Word
+        case .sentence: self = .Sentence
+        case .paragraph: self = .Paragraph
+        case .line: self = .Line
+        case .document: self = .Message
         }
     }
     

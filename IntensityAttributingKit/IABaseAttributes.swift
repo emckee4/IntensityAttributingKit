@@ -47,18 +47,18 @@ public struct IABaseAttributes:OptionSetTypeWithIntegerRawValue{
     
     subscript(attribute:IAAttributeName)->AnyObject!{
         switch attribute {
-        case .Size: return self.size
-        case .Bold: return self.bold
-        case .Italic: return self.italic
-        case .Underline: return self.underline
-        case .Strikethrough: return self.strikethrough
+        case .Size: return self.size as AnyObject!
+        case .Bold: return self.bold as AnyObject!
+        case .Italic: return self.italic as AnyObject!
+        case .Underline: return self.underline as AnyObject!
+        case .Strikethrough: return self.strikethrough as AnyObject!
         default: return nil
         }
     }
 }
 
 
-public protocol OptionSetTypeWithIntegerRawValue:OptionSetType, Hashable {
+public protocol OptionSetTypeWithIntegerRawValue:OptionSet, Hashable {
     associatedtype RawValue = Int
     var rawValue:Int {get set}
     var hashValue:Int {get}

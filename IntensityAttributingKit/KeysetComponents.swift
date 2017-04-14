@@ -56,7 +56,7 @@ protocol IAKeyType {
 }
 
 ///This indicates a key with a single value should be presented (of type PressureKeyActionType.CharInsert)
-struct IASingleCharKey:IAKeyType, StringLiteralConvertible, CustomStringConvertible {
+struct IASingleCharKey:IAKeyType, ExpressibleByStringLiteral, CustomStringConvertible {
     var value:String
     
     init(keyChar:String){

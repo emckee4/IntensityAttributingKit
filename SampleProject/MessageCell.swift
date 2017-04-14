@@ -18,8 +18,8 @@ class MessageCell: UITableViewCell {
         didSet{
             if displayMode != nil {
                 switch displayMode! {
-                case .Sending: self.setForSending()
-                case .Receiving: self.setForReceiving()
+                case .sending: self.setForSending()
+                case .receiving: self.setForReceiving()
                 }
             }
         }
@@ -28,8 +28,8 @@ class MessageCell: UITableViewCell {
     static let kVerticalInsets:CGFloat = 4.0
     static let kHorizontalInsets:CGFloat = 4.0
     
-    private var receiverConstraints:[NSLayoutConstraint] = []
-    private var senderConstraints:[NSLayoutConstraint] = []
+    fileprivate var receiverConstraints:[NSLayoutConstraint] = []
+    fileprivate var senderConstraints:[NSLayoutConstraint] = []
     
     
     override init(style:UITableViewCellStyle, reuseIdentifier:String?){
@@ -38,7 +38,7 @@ class MessageCell: UITableViewCell {
     }
     
     init(reuseIdentifier: String?) {
-        super.init(style: .Default, reuseIdentifier: reuseIdentifier)
+        super.init(style: .default, reuseIdentifier: reuseIdentifier)
         setupCell()
     }
     
@@ -57,68 +57,68 @@ class MessageCell: UITableViewCell {
     
     
     func setupCell(){
-        iaTextView = IACompositeTextView(frame: CGRectZero)
+        iaTextView = IACompositeTextView(frame: CGRect.zero)
 
         iaTextView.translatesAutoresizingMaskIntoConstraints = false
         iaTextView.selectable = true
         self.contentView.addSubview(iaTextView)
         
         dateLabel = UILabel()
-        dateLabel.textAlignment = .Center
+        dateLabel.textAlignment = .center
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
-        dateLabel.textAlignment = .Center
-        dateLabel.backgroundColor = UIColor.whiteColor()
+        dateLabel.textAlignment = .center
+        dateLabel.backgroundColor = UIColor.white
         self.contentView.addSubview(dateLabel)
         
         //universal constraints
-        iaTextView.topAnchor.constraintEqualToAnchor(self.contentView.topAnchor, constant: MessageCell.kVerticalInsets).active = true
-        contentView.bottomAnchor.constraintEqualToAnchor(iaTextView.bottomAnchor, constant: MessageCell.kVerticalInsets).active = true
-        dateLabel.bottomAnchor.constraintEqualToAnchor(self.contentView.bottomAnchor, constant: -MessageCell.kVerticalInsets).active = true
+        iaTextView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: MessageCell.kVerticalInsets).isActive = true
+        contentView.bottomAnchor.constraint(equalTo: iaTextView.bottomAnchor, constant: MessageCell.kVerticalInsets).isActive = true
+        dateLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -MessageCell.kVerticalInsets).isActive = true
 
-        iaTextView.widthAnchor.constraintGreaterThanOrEqualToConstant(50.0).active = true
-        iaTextView.heightAnchor.constraintGreaterThanOrEqualToConstant(40.0).active = true
+        iaTextView.widthAnchor.constraint(greaterThanOrEqualToConstant: 50.0).isActive = true
+        iaTextView.heightAnchor.constraint(greaterThanOrEqualToConstant: 40.0).isActive = true
 
-        iaTextView.setContentHuggingPriority(251, forAxis: .Vertical)
-        iaTextView.setContentHuggingPriority(251, forAxis: .Horizontal)
-        dateLabel.setContentCompressionResistancePriority(901, forAxis: .Horizontal)
+        iaTextView.setContentHuggingPriority(251, for: .vertical)
+        iaTextView.setContentHuggingPriority(251, for: .horizontal)
+        dateLabel.setContentCompressionResistancePriority(901, for: .horizontal)
         
-        iaTextView.widthAnchor.constraintLessThanOrEqualToAnchor(self.contentView.widthAnchor, multiplier: 0.75).active = true
-        dateLabel.widthAnchor.constraintLessThanOrEqualToAnchor(self.contentView.widthAnchor, multiplier: 0.25).active = true
+        iaTextView.widthAnchor.constraint(lessThanOrEqualTo: self.contentView.widthAnchor, multiplier: 0.75).isActive = true
+        dateLabel.widthAnchor.constraint(lessThanOrEqualTo: self.contentView.widthAnchor, multiplier: 0.25).isActive = true
         
         //RecConstraints
         receiverConstraints = [
-            iaTextView.leadingAnchor.constraintEqualToAnchor(self.contentView.leadingAnchor, constant: MessageCell.kHorizontalInsets),
-            dateLabel.trailingAnchor.constraintEqualToAnchor(self.contentView.trailingAnchor, constant: -MessageCell.kHorizontalInsets).withPriority(900)
+            iaTextView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: MessageCell.kHorizontalInsets),
+            dateLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -MessageCell.kHorizontalInsets).withPriority(900)
         ]
         //Sending Constraints
         senderConstraints = [
-            iaTextView.trailingAnchor.constraintEqualToAnchor(self.contentView.trailingAnchor, constant: -MessageCell.kHorizontalInsets),
-            dateLabel.leadingAnchor.constraintEqualToAnchor(self.contentView.leadingAnchor, constant:  MessageCell.kHorizontalInsets).withPriority(900)
+            iaTextView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -MessageCell.kHorizontalInsets),
+            dateLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant:  MessageCell.kHorizontalInsets).withPriority(900)
         ]
-        self.selectionStyle = .None
-        self.contentView.opaque = true
+        self.selectionStyle = .none
+        self.contentView.isOpaque = true
         iaTextView.cornerRadius = 8.0
     }
     
     func setForReceiving(){
         iaTextView.backgroundColor = UIColor(white: 0.8, alpha: 1.0)
-        NSLayoutConstraint.deactivateConstraints(senderConstraints)
-        NSLayoutConstraint.activateConstraints(receiverConstraints)
+        NSLayoutConstraint.deactivate(senderConstraints)
+        NSLayoutConstraint.activate(receiverConstraints)
     }
     
     func setForSending(){
         iaTextView.backgroundColor = UIColor(hue: 0.3, saturation: 0.3, brightness: 0.9, alpha: 1.0)
-        NSLayoutConstraint.deactivateConstraints(receiverConstraints)
-        NSLayoutConstraint.activateConstraints(senderConstraints)
+        NSLayoutConstraint.deactivate(receiverConstraints)
+        NSLayoutConstraint.activate(senderConstraints)
         
     }
     
-    static func textViewWidthForCellWidth(cellWidth:CGFloat)->CGFloat {
+    static func textViewWidthForCellWidth(_ cellWidth:CGFloat)->CGFloat {
         return (cellWidth * 0.75) - 1.5 * kHorizontalInsets
     }
 
     enum DisplayMode{
-        case Sending, Receiving
+        case sending, receiving
     }
     
 }

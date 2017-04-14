@@ -15,8 +15,8 @@ class EPKey {
     var actionName:String
     
     var hidden:Bool {
-        set {view.hidden = newValue}
-        get {return view.hidden}
+        set {view.isHidden = newValue}
+        get {return view.isHidden}
     }
     
     ///Init for delegate style actions

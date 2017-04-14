@@ -9,10 +9,10 @@
 import UIKit
 
 
-public class WeightIntensityScheme:IntensityTransforming {
+open class WeightIntensityScheme:IntensityTransforming {
     
-    public static let schemeName = "WeightScheme"
-    public static let stepCount = 9
+    open static let schemeName = "WeightScheme"
+    open static let stepCount = 9
     
     static let weightArray = [
         UIFontWeightUltraLight,
@@ -26,25 +26,25 @@ public class WeightIntensityScheme:IntensityTransforming {
         UIFontWeightBlack
     ]
 
-    public static func nsAttributesForBinsAndBaseAttributes(bin bin:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
+    open static func nsAttributesForBinsAndBaseAttributes(bin:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
         var weight = weightArray[bin]
         if baseAttributes.bold && bin < stepCount - 1 {
-            weight++
+            weight += 1
         }
-        var font = UIFont.systemFontOfSize(baseAttributes.cSize, weight: weight)
+        var font = UIFont.systemFont(ofSize: baseAttributes.cSize, weight: weight)
         if baseAttributes.italic {
-            let newSymbolicTraits = font.fontDescriptor().symbolicTraits.union(.TraitItalic)
-            let newDescriptor = font.fontDescriptor().fontDescriptorWithSymbolicTraits(newSymbolicTraits)
-            font = UIFont(descriptor: newDescriptor, size: baseAttributes.cSize)
+            let newSymbolicTraits = font.fontDescriptor.symbolicTraits.union(.traitItalic)
+            let newDescriptor = font.fontDescriptor.withSymbolicTraits(newSymbolicTraits)
+            font = UIFont(descriptor: newDescriptor!, size: baseAttributes.cSize)
         }
         
         var nsAttributes:[String:AnyObject] = [NSFontAttributeName:font]
         
         if baseAttributes.strikethrough {
-            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
+            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as AnyObject?
         }
         if baseAttributes.underline {
-            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
+            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as AnyObject?
         }
         
         return nsAttributes

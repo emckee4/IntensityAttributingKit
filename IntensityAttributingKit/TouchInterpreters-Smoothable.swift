@@ -22,7 +22,7 @@ protocol TISmoothableHistory:IATouchInterpretingProtocol {
     var maxValue:Float {get set}
     static var tiSmoothing:TISmoothingMethod {get set}
     
-    func processTouch(touch:UITouch)->Float
+    func processTouch(_ touch:UITouch)->Float
 }
 
 extension TISmoothableHistory{
@@ -78,20 +78,20 @@ extension TISmoothableHistory{
         }
     }
     
-    private var avgLastTenPressure:Float {
+    fileprivate var avgLastTenPressure:Float {
         let count = history.count
         guard count > 1 else {return 0.0}
         if count < 10 {
-            return (history[1..<count].reduce(0.0, combine: +) / Float(count - 1)) // / ForceTouchInterpreter.maximumPossibleForce
+            return (history[1..<count].reduce(0.0, +) / Float(count - 1)) // / ForceTouchInterpreter.maximumPossibleForce
         } else {
-            return (history[(count - 10)..<count].reduce(0.0, combine: +) / Float(10)) // / ForceTouchInterpreter.maximumPossibleForce
+            return (history[(count - 10)..<count].reduce(0.0, +) / Float(10)) // / ForceTouchInterpreter.maximumPossibleForce
         }
         
     }
     
-    private var smoothedLastTen:Float {
+    fileprivate var smoothedLastTen:Float {
         let count = history.count
-        guard count > 2 else {return history.maxElement() ?? 0.0}
+        guard count > 2 else {return history.max() ?? 0.0}
         //var truncated:[Float]!
         
         var sum:Float = 0
@@ -121,8 +121,8 @@ extension TISmoothableHistory{
 
 ///The standard interpreter for 3dTouch capable devices. The harder you press, the higher the intensity.
 struct ForceTouchInterpreter:TISmoothableHistory {
-    private static var _tiSmoothing:TISmoothingMethod = {
-        if let tiSmoothingName = (NSUserDefaults.standardUserDefaults().objectForKey("FTI:TISmoothing") as? String) {
+    fileprivate static var _tiSmoothing:TISmoothingMethod = {
+        if let tiSmoothingName = (UserDefaults.standard.object(forKey: "FTI:TISmoothing") as? String) {
             if let tism = TISmoothingMethod(rawValue: tiSmoothingName) {
                 return tism
             }
@@ -131,7 +131,7 @@ struct ForceTouchInterpreter:TISmoothableHistory {
     }()
     static var tiSmoothing:TISmoothingMethod {
         get{return _tiSmoothing}
-        set{_tiSmoothing = newValue; NSUserDefaults.standardUserDefaults().setObject(newValue.rawValue, forKey: "FTI:TISmoothing")}
+        set{_tiSmoothing = newValue; UserDefaults.standard.set(newValue.rawValue, forKey: "FTI:TISmoothing")}
     }
     
     //static var ftOption:FTOptions = .SmoothedLastTen
@@ -140,7 +140,7 @@ struct ForceTouchInterpreter:TISmoothableHistory {
     var history:[Float] = []
     var maxValue:Float = 0.0
     
-    func processTouch(touch:UITouch)->Float{
+    func processTouch(_ touch:UITouch)->Float{
         return Float(touch.force / touch.maximumPossibleForce)
     }
 }
@@ -148,8 +148,8 @@ struct ForceTouchInterpreter:TISmoothableHistory {
 ///Not currently presented as available since the system doesn't make available sufficiently useful/granular radius data.
 struct MajorRadiusTouchInterpreter:TISmoothableHistory {
     
-    private static var _tiSmoothing:TISmoothingMethod = {
-        if let tiSmoothingName = (NSUserDefaults.standardUserDefaults().objectForKey("MRTI:TISmoothing") as? String) {
+    fileprivate static var _tiSmoothing:TISmoothingMethod = {
+        if let tiSmoothingName = (UserDefaults.standard.object(forKey: "MRTI:TISmoothing") as? String) {
             if let tism = TISmoothingMethod(rawValue: tiSmoothingName) {
                 return tism
             }
@@ -158,18 +158,18 @@ struct MajorRadiusTouchInterpreter:TISmoothableHistory {
     }()
     static var tiSmoothing:TISmoothingMethod {
         get{return _tiSmoothing}
-        set{_tiSmoothing = newValue; NSUserDefaults.standardUserDefaults().setObject(newValue.rawValue, forKey: "MRTI:TISmoothing")}
+        set{_tiSmoothing = newValue; UserDefaults.standard.set(newValue.rawValue, forKey: "MRTI:TISmoothing")}
     }
-    private static var _maxRadius = {return (NSUserDefaults.standardUserDefaults().objectForKey("MRTI:maxRadius") as? CGFloat) ?? 50}()
+    fileprivate static var _maxRadius = {return (UserDefaults.standard.object(forKey: "MRTI:maxRadius") as? CGFloat) ?? 50}()
     static var maxRadius:CGFloat {
         get{return _maxRadius}
-        set{_maxRadius = newValue; NSUserDefaults.standardUserDefaults().setObject(newValue, forKey: "MRTI:maxRadius")}
+        set{_maxRadius = newValue; UserDefaults.standard.set(newValue, forKey: "MRTI:maxRadius")}
     }
     
     var history:[Float] = []
     var maxValue:Float = 0.0
     
-    func processTouch(touch:UITouch)->Float{
+    func processTouch(_ touch:UITouch)->Float{
         return Float(touch.majorRadius / MajorRadiusTouchInterpreter.maxRadius)
     }
     

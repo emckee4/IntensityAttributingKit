@@ -9,10 +9,10 @@ public protocol IntensityTransforming {
 
     static var schemeIsAnimatable:Bool {get}
     
-    static func generateStaticSampleFromText(text:String, size:CGFloat)->NSAttributedString
+    static func generateStaticSampleFromText(_ text:String, size:CGFloat)->NSAttributedString
     
-    static func nsAttributesForIntensityAttributes(intensity intensity:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]
-    static func nsAttributesForBinsAndBaseAttributes(bin bin:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]
+    static func nsAttributesForIntensityAttributes(intensity:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]
+    static func nsAttributesForBinsAndBaseAttributes(bin:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]
     
 }
 
@@ -22,24 +22,24 @@ public extension IntensityTransforming {
     static var schemeIsAnimatable:Bool {return false}
 
     ///transforms provided using the transformer while varying the intensity linearly over the length of the sample
-    public static func generateStaticSampleFromText(text:String, size:CGFloat)->NSAttributedString{
+    public static func generateStaticSampleFromText(_ text:String, size:CGFloat)->NSAttributedString{
         let charCount:Int = text.characters.count
         guard charCount > 0 else {return NSAttributedString()}
         let baseAttributes = IABaseAttributes(size:Int(size),options: [])
         guard charCount > 1 else {
-            let atts = self.nsAttributesForIntensityAttributes(intensity:100, baseAttributes: baseAttributes)
+            let atts = self.nsAttributesForIntensityAttributes(intensity:100, baseAttributes: baseAttributes!)
             return NSAttributedString(string: text, attributes: atts)
         }
         let mutableAS = NSMutableAttributedString()
-        for (i,char) in text.characters.enumerate() {
+        for (i,char) in text.characters.enumerated() {
             let thisIntensity:Int = Int((Float(i) / Float(charCount - 1) + 0.001) * 100)
-            let nsAttributes = self.nsAttributesForIntensityAttributes(intensity:thisIntensity, baseAttributes: baseAttributes)
-            mutableAS.appendAttributedString(NSAttributedString(string: String(char), attributes: nsAttributes))
+            let nsAttributes = self.nsAttributesForIntensityAttributes(intensity:thisIntensity, baseAttributes: baseAttributes!)
+            mutableAS.append(NSAttributedString(string: String(char), attributes: nsAttributes))
         }
         return mutableAS
     }
     
-    public static func nsAttributesForIntensityAttributes(intensity intensity:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
+    public static func nsAttributesForIntensityAttributes(intensity:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
         let weightBin = min((IAString.binNumberForSteps(intensity, steps:stepCount) + (baseAttributes.bold ? 1 : 0)), stepCount)
         return self.nsAttributesForBinsAndBaseAttributes(bin: weightBin, baseAttributes: baseAttributes)
     }
@@ -51,8 +51,8 @@ public extension IntensityTransforming {
 ///AnimatedIntensityTransforming protocol adopts and extends the IntensityTransforming protocol to provide options for two layer opacity animations.
 public protocol AnimatedIntensityTransforming:IntensityTransforming{
     ///NSAttributes for top and bottom layers for animating schemes
-    static func layeredNSAttributesForIntensityAttributes(intensity intensity:Int,baseAttributes:IABaseAttributes)->(top:[String:AnyObject], bottom:[String:AnyObject])
-    static func layeredNSAttributesForBinsAndBaseAttributes(bin bin:Int,baseAttributes:IABaseAttributes)->(top:[String:AnyObject], bottom:[String:AnyObject])
+    static func layeredNSAttributesForIntensityAttributes(intensity:Int,baseAttributes:IABaseAttributes)->(top:[String:AnyObject], bottom:[String:AnyObject])
+    static func layeredNSAttributesForBinsAndBaseAttributes(bin:Int,baseAttributes:IABaseAttributes)->(top:[String:AnyObject], bottom:[String:AnyObject])
 
     static var topLayerAnimates:Bool {get}
     static var bottomLayerAnimates:Bool {get}
@@ -65,7 +65,7 @@ public protocol AnimatedIntensityTransforming:IntensityTransforming{
 public extension AnimatedIntensityTransforming {
     final static var schemeIsAnimatable:Bool {return true}
     
-    static func layeredNSAttributesForIntensityAttributes(intensity intensity:Int,baseAttributes:IABaseAttributes)->(top:[String:AnyObject], bottom:[String:AnyObject]){
+    static func layeredNSAttributesForIntensityAttributes(intensity:Int,baseAttributes:IABaseAttributes)->(top:[String:AnyObject], bottom:[String:AnyObject]){
         let weightBin = min((IAString.binNumberForSteps(intensity, steps:stepCount) + (baseAttributes.bold ? 1 : 0)), stepCount)
         return self.layeredNSAttributesForBinsAndBaseAttributes(bin: weightBin, baseAttributes: baseAttributes)
     }

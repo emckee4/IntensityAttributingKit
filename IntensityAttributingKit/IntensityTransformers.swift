@@ -42,7 +42,7 @@ public enum IntensityTransformers:String {
 ///Specifies the duration and the from/to values of the top and bottom layers. If the layer doesn't animate in the given scheme then the values for that layer are ignored.
 public struct IAAnimationParameters:Equatable {
     
-    var duration:NSTimeInterval
+    var duration:TimeInterval
     
     var topLayerFromValue:Float
     var topLayerToValue:Float
@@ -50,7 +50,7 @@ public struct IAAnimationParameters:Equatable {
     var bottomLayerFromValue:Float
     var bottomLayerToValue:Float
     
-    init(duration:NSTimeInterval, topLayerFromValue:Float,topLayerToValue:Float){
+    init(duration:TimeInterval, topLayerFromValue:Float,topLayerToValue:Float){
         self.duration = duration
         self.topLayerFromValue = topLayerFromValue
         self.topLayerToValue = topLayerToValue
@@ -58,7 +58,7 @@ public struct IAAnimationParameters:Equatable {
         self.bottomLayerToValue = 1
     }
     
-    init(duration:NSTimeInterval, bottomLayerFromValue:Float,bottomLayerToValue:Float){
+    init(duration:TimeInterval, bottomLayerFromValue:Float,bottomLayerToValue:Float){
         self.duration = duration
         self.topLayerFromValue = 0
         self.topLayerToValue = 1
@@ -67,7 +67,7 @@ public struct IAAnimationParameters:Equatable {
         
     }
     
-    init(duration:NSTimeInterval, topFrom:Float,topTo:Float,bottomFrom:Float,bottomTo:Float){
+    init(duration:TimeInterval, topFrom:Float,topTo:Float,bottomFrom:Float,bottomTo:Float){
         self.duration = duration
         self.topLayerFromValue = topFrom
         self.topLayerToValue = topTo
@@ -77,6 +77,6 @@ public struct IAAnimationParameters:Equatable {
     
 }
 
-@warn_unused_result public func ==(lhs:IAAnimationParameters,rhs:IAAnimationParameters)->Bool{
+public func ==(lhs:IAAnimationParameters,rhs:IAAnimationParameters)->Bool{
     return lhs.duration == rhs.duration  && lhs.topLayerFromValue == rhs.topLayerFromValue  && lhs.topLayerToValue == rhs.topLayerToValue  && lhs.bottomLayerFromValue == rhs.bottomLayerFromValue  && lhs.bottomLayerToValue == rhs.bottomLayerToValue
 }

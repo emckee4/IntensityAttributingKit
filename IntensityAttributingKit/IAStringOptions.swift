@@ -28,7 +28,7 @@ public struct IAStringOptions:Equatable {
     }
     
     ///The non-nil values of the overridingOptions struct are applied to the values of a copy of the calling struct. If the overridingOptions struct itself is nil then this just returns a copy.
-    func optionsWithOverridesApplied(overridingOptions:IAStringOptions!)->IAStringOptions{
+    func optionsWithOverridesApplied(_ overridingOptions:IAStringOptions!)->IAStringOptions{
         var result = self
         guard overridingOptions != nil else {return result}
         if let overScheme = overridingOptions.renderScheme {
@@ -51,7 +51,7 @@ public struct IAStringOptions:Equatable {
 
 
 
-@warn_unused_result public func ==(lhs:IAStringOptions,rhs:IAStringOptions)->Bool{
+public func ==(lhs:IAStringOptions,rhs:IAStringOptions)->Bool{
     return lhs.animatesIfAvailable == rhs.animatesIfAvailable && lhs.renderScheme == rhs.renderScheme && lhs.preferedSmoothing == rhs.preferedSmoothing && lhs.animationOptions == rhs.animationOptions
 }
 
@@ -68,13 +68,13 @@ extension IAStringOptions {
     func asOptionsDict()->[String:AnyObject]{
         var dict:[String:AnyObject] = [:]
         if self.renderScheme != nil {
-            dict["renderScheme"] = self.renderScheme.rawValue
+            dict["renderScheme"] = self.renderScheme.rawValue as AnyObject?
         }
         if self.preferedSmoothing != nil {
-            dict["preferedSmoothing"] = self.preferedSmoothing.shortLabel
+            dict["preferedSmoothing"] = self.preferedSmoothing.shortLabel as AnyObject?
         }
         if self.animatesIfAvailable != nil {
-            dict["animates"] = self.animatesIfAvailable
+            dict["animates"] = self.animatesIfAvailable as AnyObject?
         }
         return dict
     }
