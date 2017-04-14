@@ -1,4 +1,4 @@
-# IntensityAttributingKit (v3)
+# IntensityAttributingKit (v4)
 © 2016 by Evan McKee
 
 IntensityAttributingKit is a swift framework which provides a means of creating, displaying, and converting text with "intensity" attributes by the user on an iOS device. Ideally the user would have a 3dTouch capable phone so that intensity of a character can be derived from the pressure applied to the key, but intensity can also be applied using touch duration, screen impact data derived from the accelerometer, or a manual control. 
@@ -6,6 +6,8 @@ IntensityAttributingKit is a swift framework which provides a means of creating,
 This project is the base for the IntensityMessaging app intended for release shortly. Check for updates at [www.intensitymessaging.com](https://www.intensitymessaging.com). Until release you can see it in action via the included sample project.
 
 With version 3 the editor and view were rewritten as subclasses of UIView rather than UITextView. Building directly on TextKit enabled more animation options and the removal of some hacky fixes that had been necessitated by Apple's use of private APIs within some of their own objects (like UITextView). 
+
+Version 4 updates the project Swift 3 and iOS 10.0 while also providing new attachment types including videos and locations.
 
 The new IACompositeTextView/Editor classes (derivatives of the IACompositeBase abstract class) use 4 layers to render animations for the intensity rendering schemes that support it. On top is the selectionView which draws selection rects, the text insertion caret, and text marking. Below that is the imageLayerView which draws the thumbnails of any inserted attachments at the proper position which is determined by the layout/typesetting engine in the topTV, which itself will display empty rectangles where an attachment belongs. Beneath these top two views are the top and bottom ThinTextView's. The top ThinTextView is the one responsible for generating sizing information and is the drawer of text in the schemes which don't support animation. When animating, the bottomTV will be drawn with different attributes and some combination of changing opacities between the layers will result in the animation effect for the user. The layers are separated so that images can be properly displayed even when the text layers are animating their opacity. It also may (or may not, I've only eyeball measured this since this design decision was otherwise necessary) improve the performance text drawing in cases when an image needs to be moved around (e.g. when inserting text before an image or resizing textview) but doesn't need to be fully redrawn. Redrawing of images tends to be much more expensive in terms of processing overhead than are translational transforms of already drawn bitmaps. 
 
@@ -49,15 +51,20 @@ These protocols make it remarkably easy to add transformers to the IAKit. The on
 
 
 ##### IAKitPreferences:
-**IAKitPreferences** provides an interface for all of the persistant configurable user preferences. These are stored in the standard NSUserDefaults and cover preferences and overrides for the viewer and editor, as well as a means for setting the IAKitVisualPreferences which govern keyboard/accessory aesthetics. 
+**IAKitPreferences** provides an interface for all of the persistant configurable user preferences. These are stored in the standard NSUserDefaults and cover preferences and overrides for the viewer and editor, as well as a means for setting the IAKitVisualPreferences which govern keyboard/accessory aesthetics. At some point I may move all of these static variables to a non static object to be held by the appDelegate of the running app.
 
-
+##### IATextAttachment:
+Attachments which display thumbnails in text are subclasses of IATextAttachment which in turn is a subclass of NSTextAttachment. This allows us to use the text layout engine of TextKit to layout text with and around the various thumbnail images we draw in another layer. We override attachmentBounds function to return the thumbsize prefered by the textView and we override the image:ForBounds to always return nil. Meanwhile we have an imageForThumbsize which can be called by the imageLayerView of the IATextView to actually provide the properly sized image data. Currently images, videos, and locations are supported. Attachments will automatically cache thumbs and will attempt to generate them as needed before display from either set properties or from local disk URLs where the data is expected to be found. 
 
 ### Setup notes:
-In order to support locating the user automatically in the LocationAttachmentPicker, the following should be added to the main app's info.plist:
+With iOS10 security, the following should be added to the main app's info.plist:
 ```XML
+<key>NSPhotoLibraryUsageDescription</key>
+<string>Send photos you&apos;ve saved</string>
 <key>NSLocationWhenInUseUsageDescription</key>
-<string>Your location is used to show your position in the location picker.</string>
+<string>Send your location if desired</string>
+<key>NSCameraUsageDescription</key>
+<string>Take and send photos and videos</string>
 ```
 `
 
@@ -72,6 +79,8 @@ In order to support locating the user automatically in the LocationAttachmentPic
 ### Possible future improvements:
 - Multiple keysets
 - eventually make more/all keys potentially expanding if performance is sufficient
+
+- Placenames should be user editable in IALocationPicker
 
 - Some of the data structures in the IAString may be less than optimal since they were in part excuses to learn and practice building data structures using swift generics. It probably doesn't matter enough to be a priority.
 
