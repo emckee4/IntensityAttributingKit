@@ -25,9 +25,17 @@ open class IAVideoViewerVC: UIViewController {
     open override func viewDidLoad() {
         super.viewDidLoad()
         
-        //TODO: provide better handling of different locations of the candidate video, either here or in the attachment itself
-        
-        let vidURL = attachment.temporaryVideoURL ?? attachment.localVideoURL ?? attachment.remoteVideoURL ?? URL(string: "")!
+        var vidURL:URL!
+        if let localURL = attachment.localVideoURL, (try? localURL.checkResourceIsReachable()) ?? false {
+            vidURL = localURL
+        } else if let localTempURL = attachment.temporaryVideoURL, (try? localTempURL.checkResourceIsReachable()) ?? false {
+            vidURL = localTempURL
+        } else if let remoteURL = attachment.remoteVideoURL {
+            vidURL = remoteURL
+        } else {
+            print("video attachment has no valid video url") //should never happen
+            vidURL = URL(string:"")!
+        }
         
         let avPlayer = AVPlayer(url:vidURL)
         playerController = AVPlayerViewController()
