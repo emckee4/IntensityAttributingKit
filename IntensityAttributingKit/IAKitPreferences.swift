@@ -18,6 +18,16 @@ open class IAKitPreferences:NSObject {
     
     static let forceTouchAvailable = (UIScreen.main.traitCollection.forceTouchCapability == .available) && (UIDevice.current.name.range(of: "Simulator") == nil)
 
+    public static var imageDirectory:URL! = {
+        return try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+    }()
+    public static var videoDirectory:URL! = {
+        return try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+    }()
+    public static var videoPreviewDirectory:URL! = {
+        return try? FileManager.default.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+    }()
+    
     
     static var contentDownloadDelegate:IAAttachmentDownloadDelegate?
     

@@ -184,9 +184,11 @@ class MessageThreadTableVC: UITableViewController, IATextViewDelegate {
             imageViewer.attachment = imageAttachment
             navController.pushViewController(imageViewer, animated: true)
         } else if let videoAttachment = attachment as? IAVideoAttachment {
-            let videoViewer = IAVideoViewerVC()
-            videoViewer.attachment = videoAttachment
-            navController.pushViewController(videoViewer, animated: true)
+            if let videoViewer = IAVideoViewerVC(attachment: videoAttachment) {
+                navController.pushViewController(videoViewer, animated: true)
+            } else {
+                print("IAVideoViewerVC failed to init: probably no valid url could be found")
+            }
         } else if let locationAttachment = attachment as? IALocationAttachment {
             locationAttachment.openInMaps()
         } else {

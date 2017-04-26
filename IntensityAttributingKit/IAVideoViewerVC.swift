@@ -17,6 +17,7 @@ open class IAVideoViewerVC: UIViewController {
     
     open var playerController:AVPlayerViewController!
     open var attachment:IAVideoAttachment!
+    open var videoURL:URL!
     
     fileprivate var previousNavTranslucency:Bool?
     fileprivate var previousNavBackgroundImage:UIImage?
@@ -25,19 +26,7 @@ open class IAVideoViewerVC: UIViewController {
     open override func viewDidLoad() {
         super.viewDidLoad()
         
-        var vidURL:URL!
-        if let localURL = attachment.localVideoURL, (try? localURL.checkResourceIsReachable()) ?? false {
-            vidURL = localURL
-        } else if let localTempURL = attachment.temporaryVideoURL, (try? localTempURL.checkResourceIsReachable()) ?? false {
-            vidURL = localTempURL
-        } else if let remoteURL = attachment.remoteVideoURL {
-            vidURL = remoteURL
-        } else {
-            print("video attachment has no valid video url") //should never happen
-            vidURL = URL(string:"")!
-        }
-        
-        let avPlayer = AVPlayer(url:vidURL)
+        let avPlayer = AVPlayer(url:videoURL)
         playerController = AVPlayerViewController()
         playerController.player = avPlayer
         self.addChildViewController(playerController)
@@ -66,6 +55,17 @@ open class IAVideoViewerVC: UIViewController {
     
     open override var prefersStatusBarHidden : Bool {
         return true
+    }
+    
+    public init?(attachment:IAVideoAttachment) {
+        guard let vidURL = attachment.bestURLForWatchingVideo else {return nil}
+        super.init(nibName: nil, bundle: nil)
+        self.attachment = attachment
+        self.videoURL = vidURL
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
     }
     
     func setNavbarBackgroundClear(){

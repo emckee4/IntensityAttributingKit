@@ -34,17 +34,19 @@ open class IAImageAttachment:IATextAttachment {
     ///We retain the reference to the remote location but leave management of the download to the app adopting the framework
     open var remoteFileURL:URL?
     ///It's expected that the localFileURL will be fully determined by the filename, i.e. the url will be <some constant path> + <filename>. The localFileURL does not need to be valid yet, but it should point to the eventual location of the downloaded file
-    open var localFileURL:URL?
+    open var localFileURL:URL? {
+        guard let fn = filename else {return nil}
+        return IAKitPreferences.imageDirectory?.appendingPathComponent(fn)
+    }
     open var temporaryFileURL:URL?
     
     ///When true this object is waiting for content to be downloaded and is observing the notifications for image content
     fileprivate(set) open var waitingForDownload:Bool = false
     
-    public init(filename:String,remoteURL:URL,localURL:URL?){
+    public init(filename:String,remoteURL:URL){
         super.init(data: nil, ofType: nil)
         self.filename = filename
         self.remoteFileURL = remoteURL
-        self.localFileURL = localURL
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -58,7 +60,6 @@ open class IAImageAttachment:IATextAttachment {
         }
         
         if let fn = aDecoder.decodeObject(forKey: "filename") as? String {self.filename = fn}
-        if let localURL = aDecoder.decodeObject(forKey: "localFileURL") as? URL {self.localFileURL = localURL}
         if let remoteURL = aDecoder.decodeObject(forKey: "remoteURL") as? URL {self.remoteFileURL = remoteURL}
         
     }
@@ -74,7 +75,7 @@ open class IAImageAttachment:IATextAttachment {
         }
         aCoder.encode(self.filename, forKey: "filename")
         aCoder.encode(self.remoteFileURL, forKey: "remoteURL")
-        aCoder.encode(self.localFileURL, forKey: "localFileURL")
+        //aCoder.encode(self.localFileURL, forKey: "localFileURL")
         
         
     }
@@ -183,9 +184,6 @@ open class IAImageAttachment:IATextAttachment {
         guard let dlFilename = notification.userInfo?["imageFilename"] as? String, self.filename != nil && self.filename! == dlFilename else {return}
         guard notification.userInfo?["downloadError"] == nil else {return}
         
-        if self.localFileURL == nil {
-            self.localFileURL = notification.userInfo?["localFileLocation"] as? URL
-        }
         if let dlImage = notification.userInfo?["image"] as? UIImage {
             self._image = dlImage
             self.emitContentReadyNotification(nil)
