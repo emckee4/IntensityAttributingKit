@@ -58,7 +58,7 @@ open class IALocationAttachment:IATextAttachment {
     }
 
     init!(placemark:IAPlacemark, mapViewDeltaMeters:CLLocationDistance){
-        guard placemark.addressDictionary != nil && placemark.region != nil else {return nil}
+        //guard placemark.addressDictionary != nil && placemark.region != nil else {return nil}
         self.placemark = placemark
         self.mapViewDeltaMeters = mapViewDeltaMeters
         super.init(data: nil, ofType: nil)

@@ -22,6 +22,7 @@ class IALocationPickerVC:UIViewController, MKMapViewDelegate, CLLocationManagerD
 
     var selectedLocation:MKPointAnnotation?
     var selectedPlacemark:CLPlacemark?
+    var lastGeolocatedUserLocation:CLPlacemark?
     
     var userPlacemark:CLPlacemark? {
         didSet{
@@ -194,6 +195,7 @@ class IALocationPickerVC:UIViewController, MKMapViewDelegate, CLLocationManagerD
                     self.mapView.setRegion(convertedRegion, animated: true)
                     self.hasZoomedToUser = true
                 }
+                self.lastGeolocatedUserLocation = placemark
             } else {
                 guard placemark.location?.coordinate != nil else {return}
                 self.selectedPlacemark = placemark
@@ -240,10 +242,16 @@ class IALocationPickerVC:UIViewController, MKMapViewDelegate, CLLocationManagerD
         
         if selection is MKUserLocation {
             //isUser = true
-            if selection.coordinate.isEqualTo(location: userPlacemark?.location?.coordinate ?? CLLocationCoordinate2D()) {
-                finalPlacemark = IAPlacemark(placemark: userPlacemark!)
+            if let upc = userPlacemark?.location?.coordinate, selection.coordinate.isEqualTo(location: upc) {
+            finalPlacemark = IAPlacemark(placemark: userPlacemark!)
+            } else if let upc = userPlacemark?.location?.coordinate, let lastGeoLoc = lastGeolocatedUserLocation?.location?.coordinate, upc.isEqualTo(location: lastGeoLoc, withEpsilon: 0.00009) {
+                finalPlacemark = IAPlacemark(coordinate: selection.coordinate, addressDictionary: lastGeolocatedUserLocation!.addressDictionary as? [String : Any])
             } else {
-                finalPlacemark = IAPlacemark(coordinate: selection.coordinate, addressDictionary: nil)
+                var addressDict:[String:Any]?
+                if let singleUnwrappedName = selection.subtitle, let subName = singleUnwrappedName {
+                    addressDict = ["name":subName]
+                }
+                finalPlacemark = IAPlacemark(coordinate: selection.coordinate, addressDictionary: addressDict)
             }
         } else if selection is MKPointAnnotation {
             //isUser = false
