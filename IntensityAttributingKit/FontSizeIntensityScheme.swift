@@ -14,7 +14,7 @@ open class FontSizeIntensityScheme:IntensityTransforming {
     open static let schemeName = "FontSizeScheme"
     open static let stepCount = 10
     
-    open static func nsAttributesForBinsAndBaseAttributes(bin:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
+    open static func nsAttributesForBinsAndBaseAttributes(bin:Int,baseAttributes:IABaseAttributes)->[String:Any]{
         let size = CGFloat(baseAttributes.size - 5 + bin)
         var baseFont:UIFont = UIFont.systemFont(ofSize: size)
         
@@ -30,13 +30,13 @@ open class FontSizeIntensityScheme:IntensityTransforming {
             let newDescriptor = baseFont.fontDescriptor.withSymbolicTraits(newSymbolicTraits)
             baseFont = UIFont(descriptor: newDescriptor!, size: size)
         }
-        var nsAttributes:[String:AnyObject] = [NSFontAttributeName:baseFont]
+        var nsAttributes:[String:Any] = [NSFontAttributeName:baseFont]
         
         if baseAttributes.strikethrough {
-            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as AnyObject?
+            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as Any?
         }
         if baseAttributes.underline {
-            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as AnyObject?
+            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as Any?
         }
         //TODO:- this should adjust kerning (using NSKernAttributeName) to lessen the variations in space requried due to a transform
         

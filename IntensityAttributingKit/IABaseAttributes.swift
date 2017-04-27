@@ -45,13 +45,13 @@ public struct IABaseAttributes:OptionSetTypeWithIntegerRawValue{
         get{return self.contains(.Strikethrough)}
         set{if newValue { self.insert(.Strikethrough)} else {self.remove(.Strikethrough)} }}
     
-    subscript(attribute:IAAttributeName)->AnyObject!{
+    subscript(attribute:IAAttributeName)->Any!{
         switch attribute {
-        case .Size: return self.size as AnyObject!
-        case .Bold: return self.bold as AnyObject!
-        case .Italic: return self.italic as AnyObject!
-        case .Underline: return self.underline as AnyObject!
-        case .Strikethrough: return self.strikethrough as AnyObject!
+        case .Size: return self.size as Any!
+        case .Bold: return self.bold as Any!
+        case .Italic: return self.italic as Any!
+        case .Underline: return self.underline as Any!
+        case .Strikethrough: return self.strikethrough as Any!
         default: return nil
         }
     }

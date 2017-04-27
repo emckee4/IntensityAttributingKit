@@ -50,7 +50,7 @@ public struct IAKitVisualPreferences:Equatable {
     ///Inits from an NSData archive of a dict of values stored by the convertToArchive() function.
     init!(archive:Data!){
         guard let archive = archive else {return nil}
-        guard let dict = NSKeyedUnarchiver.unarchiveObject(with: archive) as? [String:AnyObject] else {return nil}
+        guard let dict = NSKeyedUnarchiver.unarchiveObject(with: archive) as? [String:Any] else {return nil}
         
         guard let profileName = dict[VisualPrefKeys.accessoryBackgroundColor] as? String,
             let accessoryBackgroundColor = dict[VisualPrefKeys.accessoryBackgroundColor] as? UIColor,
@@ -86,21 +86,21 @@ public struct IAKitVisualPreferences:Equatable {
     
     ///Stores values in a dictionary, then returns an NSData archive of that which can be reconstitued by the init:archive function.
     func convertToArchive()->Data{
-        var dict:[String:AnyObject] = [:]
-        dict[VisualPrefKeys.profileName] = profileName as AnyObject?
+        var dict:[String:Any] = [:]
+        dict[VisualPrefKeys.profileName] = profileName as Any?
         dict[VisualPrefKeys.accessoryBackgroundColor] = accessoryBackgroundColor
         dict[VisualPrefKeys.accessoryButtonBackgroundColor] = accessoryButtonBackgroundColor
         dict[VisualPrefKeys.accessoryTintColor] = accessoryTintColor
         dict[VisualPrefKeys.accessoryButtonBorderColor] = accessoryButtonBorderColor
-        dict[VisualPrefKeys.accessoryButtonCornerRadius] = accessoryButtonCornerRadius as AnyObject?
-        dict[VisualPrefKeys.accessoryButtonBorderWidth] = accessoryButtonBorderWidth as AnyObject?
+        dict[VisualPrefKeys.accessoryButtonCornerRadius] = accessoryButtonCornerRadius as Any?
+        dict[VisualPrefKeys.accessoryButtonBorderWidth] = accessoryButtonBorderWidth as Any?
         
         dict[VisualPrefKeys.kbBackgroundColor] = kbBackgroundColor
         dict[VisualPrefKeys.kbButtonColor] = kbButtonColor
         dict[VisualPrefKeys.kbButtonTintColor] = kbButtonTintColor
         dict[VisualPrefKeys.kbSuggestionsBackgroundColor] = kbSuggestionsBackgroundColor
         dict[VisualPrefKeys.kbSuggestionsTextColor] = kbSuggestionsTextColor
-        dict[VisualPrefKeys.kbSuggestionBarScaleFactor] = kbSuggestionBarScaleFactor as AnyObject?
+        dict[VisualPrefKeys.kbSuggestionBarScaleFactor] = kbSuggestionBarScaleFactor as Any?
         return NSKeyedArchiver.archivedData(withRootObject: dict)
     }
     

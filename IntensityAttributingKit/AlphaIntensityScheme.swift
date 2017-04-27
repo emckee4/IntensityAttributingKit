@@ -24,7 +24,7 @@ open class AlphaIntensityScheme:AnimatedIntensityTransforming {
     
     
     //MARK:- IntensityTransforming functions:
-    open static func nsAttributesForBinsAndBaseAttributes(bin:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
+    open static func nsAttributesForBinsAndBaseAttributes(bin:Int,baseAttributes:IABaseAttributes)->[String:Any]{
         var baseFont:UIFont = UIFont.systemFont(ofSize: baseAttributes.cSize, weight: UIFontWeightMedium)
         
         let alphaValue:CGFloat = clamp(CGFloat(bin + 1) / CGFloat(stepCount - 1), lowerBound: 0, upperBound: 1)
@@ -41,16 +41,16 @@ open class AlphaIntensityScheme:AnimatedIntensityTransforming {
             let newDescriptor = baseFont.fontDescriptor.withSymbolicTraits(newSymbolicTraits)
             baseFont = UIFont(descriptor: newDescriptor!, size: baseAttributes.cSize)
         }
-        var nsAttributes:[String:AnyObject] = [
+        var nsAttributes:[String:Any] = [
             NSFontAttributeName:baseFont,
             NSForegroundColorAttributeName:UIColor.black.withAlphaComponent(alphaValue)
         ]
         
         if baseAttributes.strikethrough {
-            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as AnyObject?
+            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as Any?
         }
         if baseAttributes.underline {
-            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as AnyObject?
+            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as Any?
         }        
         
         return nsAttributes
@@ -60,7 +60,7 @@ open class AlphaIntensityScheme:AnimatedIntensityTransforming {
     //MARK:- AnimatedIntensityTransforming functions:
     
     ///NSAttributes for top and bottom layers for animating schemes
-    open static func layeredNSAttributesForBinsAndBaseAttributes(bin:Int,baseAttributes:IABaseAttributes)->(top:[String:AnyObject], bottom:[String:AnyObject]) {
+    open static func layeredNSAttributesForBinsAndBaseAttributes(bin:Int,baseAttributes:IABaseAttributes)->(top:[String:Any], bottom:[String:Any]) {
         
         var baseFont:UIFont = UIFont.systemFont(ofSize: baseAttributes.cSize, weight: UIFontWeightMedium)
         
@@ -78,15 +78,15 @@ open class AlphaIntensityScheme:AnimatedIntensityTransforming {
             let newDescriptor = baseFont.fontDescriptor.withSymbolicTraits(newSymbolicTraits)
             baseFont = UIFont(descriptor: newDescriptor!, size: baseAttributes.cSize)
         }
-        var nsAttributes:[String:AnyObject] = [
+        var nsAttributes:[String:Any] = [
             NSFontAttributeName:baseFont
         ]
         
         if baseAttributes.strikethrough {
-            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as AnyObject?
+            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as Any?
         }
         if baseAttributes.underline {
-            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as AnyObject?
+            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as Any?
         }
     
         var topLayerAtts = nsAttributes

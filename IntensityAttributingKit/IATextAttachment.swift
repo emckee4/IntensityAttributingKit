@@ -116,10 +116,10 @@ open class IATextAttachment:NSTextAttachment {
     open static let contentReadyNotificationName:String = "IntensityAttributingKit.IATextAttachment.ContentReady"
     
     ///Posts a notification with the class specific contentReadyNotificationName to the default NSNotificationCenter. This is used to indicate to the displaying views that the textattachment subclass has or can immediately generate a new thumb for the content.
-    func emitContentReadyNotification(_ userInfo:[String:AnyObject]?){
-        var updatedInfo:[String:AnyObject] = userInfo ?? [:]
-        updatedInfo["attachmentType"] = self.attachmentType.rawValue as AnyObject?
-        updatedInfo["localID"] = self.localID as AnyObject?
+    func emitContentReadyNotification(_ userInfo:[String:Any]?){
+        var updatedInfo:[String:Any] = userInfo ?? [:]
+        updatedInfo["attachmentType"] = self.attachmentType.rawValue as Any?
+        updatedInfo["localID"] = self.localID as Any?
         let postNotification:(Void)->Void = {
             let notification = Notification(name: Notification.Name(rawValue: type(of: self).contentReadyNotificationName), object: self, userInfo: updatedInfo)
             NotificationCenter.default.post(notification)

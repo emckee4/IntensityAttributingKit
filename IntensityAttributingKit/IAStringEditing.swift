@@ -121,7 +121,7 @@ extension IAString {
 
 extension IAString {
     //set bold/ital/under/strike/size/inten for range
-    func setAttributeValueForRange(_ value:AnyObject,attrName:IAAttributeName,range:CountableRange<Int>){
+    func setAttributeValueForRange(_ value:Any,attrName:IAAttributeName,range:CountableRange<Int>){
         switch attrName {
         case .Size:
             for i in range { self.baseAttributes[i].size = value as! Int}
@@ -140,14 +140,14 @@ extension IAString {
     
     
     ///Returns the value for the range if it's constant over that range, or nil if otherwise. Size always returns an average.
-    func getAttributeValueForRange(_ attrName:IAAttributeName,range:CountableRange<Int>)->AnyObject?{
+    func getAttributeValueForRange(_ attrName:IAAttributeName,range:CountableRange<Int>)->Any?{
         switch attrName {
         case .Intensity:
             let startVal = self.intensities[range.lowerBound]
             for item in self.intensities[range]{
                 guard startVal == item else {return nil}
             }
-            return startVal as AnyObject?
+            return startVal as Any?
         case .Size:
             //let value = self.baseAttributes[range.startIndex].size
             var sum:Int = 0
@@ -155,31 +155,31 @@ extension IAString {
                 //guard rvpVal.size == value else {return nil}
                 sum += range.count * rvpVal.size
             }
-            return (sum / range.count) as AnyObject
+            return (sum / range.count) as Any
         case .Bold:
             let value = self.baseAttributes[range.lowerBound].bold
             for (_, rvpVal) in self.baseAttributes.rvpsCoveringRange(range) {
                 if rvpVal.bold != value {return nil}
             }
-            return value as AnyObject?
+            return value as Any?
         case .Italic:
             let value = self.baseAttributes[range.lowerBound].italic
             for (_, rvpVal) in self.baseAttributes.rvpsCoveringRange(range) {
                 if rvpVal.italic != value {return nil}
             }
-            return value as AnyObject?
+            return value as Any?
         case .Underline:
             let value = self.baseAttributes[range.lowerBound].underline
             for (_, rvpVal) in self.baseAttributes.rvpsCoveringRange(range) {
                 if rvpVal.underline != value {return nil}
             }
-            return value as AnyObject?
+            return value as Any?
         case .Strikethrough:
             let value = self.baseAttributes[range.lowerBound].strikethrough
             for (_, rvpVal) in self.baseAttributes.rvpsCoveringRange(range) {
                 if rvpVal.strikethrough != value {return nil}
             }
-            return value as AnyObject?
+            return value as Any?
         }
         
     }

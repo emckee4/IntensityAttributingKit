@@ -126,18 +126,18 @@ open class IAVideoAttachment:IATextAttachment {
     }
     
     override func imageForThumbSize(_ thumbSize:IAThumbSize)->UIImage?{
-        let cachingName = thumbCatchName(forSize: thumbSize)
-        if let thumb = IATextAttachment.thumbCache.object(forKey: cachingName as AnyObject) as? UIImage {
+        let cachingName = thumbCatchName(forSize: thumbSize) as NSString
+        if let thumb = IATextAttachment.thumbCache.object(forKey: cachingName) as? UIImage {
             return thumb
         } else if previewImage != nil {
             //let thumb = previewImage!.resizeImageToFit(maxSize: thumbSize.size)
             let thumb = previewImage!.resizeImageWithScaleAspectFit(thumbSize.size,backgroundColor: UIColor.black)
-            IATextAttachment.thumbCache.setObject(thumb, forKey: cachingName as AnyObject)
+            IATextAttachment.thumbCache.setObject(thumb, forKey: cachingName)
             return thumb
         } else if localPreviewURL != nil, let image = UIImage(contentsOfFile: localPreviewURL!.path) {
             previewImage = image
             let thumb = previewImage!.resizeImageWithScaleAspectFit(thumbSize.size,backgroundColor: UIColor.black)
-            IATextAttachment.thumbCache.setObject(thumb, forKey: cachingName as AnyObject)
+            IATextAttachment.thumbCache.setObject(thumb, forKey: cachingName)
             return thumb
         }
         return nil

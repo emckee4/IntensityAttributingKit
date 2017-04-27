@@ -18,7 +18,7 @@ open class IAStringArchive:NSObject, NSCoding {
     
     required public init?(coder aDecoder: NSCoder) {
         
-        guard let dict = aDecoder.decodeObject(forKey: "iaStringDictArchive") as? [String:AnyObject] else {self.iaString = IAString();super.init();return nil}
+        guard let dict = aDecoder.decodeObject(forKey: "iaStringDictArchive") as? [String:Any] else {self.iaString = IAString();super.init();return nil}
         guard let newIAString = IAString(dict: dict) else {self.iaString = IAString();super.init();return nil}
         self.iaString = newIAString
         super.init()

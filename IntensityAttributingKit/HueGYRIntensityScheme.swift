@@ -29,7 +29,7 @@ open class HueGYRIntensityScheme:AnimatedIntensityTransforming {
         return UIColor(hue: hue, saturation: 1.0, brightness: 0.8, alpha: 1.0)
     }
     
-    open static func nsAttributesForBinsAndBaseAttributes(bin:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
+    open static func nsAttributesForBinsAndBaseAttributes(bin:Int,baseAttributes:IABaseAttributes)->[String:Any]{
         var baseFont:UIFont = UIFont.systemFont(ofSize: baseAttributes.cSize)
         
         if baseAttributes.bold || baseAttributes.italic {
@@ -44,13 +44,13 @@ open class HueGYRIntensityScheme:AnimatedIntensityTransforming {
             let newDescriptor = baseFont.fontDescriptor.withSymbolicTraits(newSymbolicTraits)
             baseFont = UIFont(descriptor: newDescriptor!, size: baseAttributes.cSize)
         }
-        var nsAttributes:[String:AnyObject] = [NSFontAttributeName:baseFont]
+        var nsAttributes:[String:Any] = [NSFontAttributeName:baseFont]
         
         if baseAttributes.strikethrough {
-            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as AnyObject?
+            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as Any?
         }
         if baseAttributes.underline {
-            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as AnyObject?
+            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as Any?
         }
         
         ///Do color text stuff here
@@ -63,7 +63,7 @@ open class HueGYRIntensityScheme:AnimatedIntensityTransforming {
     
     //MARK:- AnimatedIntensityTransforming functions:
     
-    open static func layeredNSAttributesForBinsAndBaseAttributes(bin:Int,baseAttributes:IABaseAttributes)->(top:[String:AnyObject], bottom:[String:AnyObject]) {
+    open static func layeredNSAttributesForBinsAndBaseAttributes(bin:Int,baseAttributes:IABaseAttributes)->(top:[String:Any], bottom:[String:Any]) {
         
         var baseFont:UIFont = UIFont.systemFont(ofSize: baseAttributes.cSize)
         
@@ -79,13 +79,13 @@ open class HueGYRIntensityScheme:AnimatedIntensityTransforming {
             let newDescriptor = baseFont.fontDescriptor.withSymbolicTraits(newSymbolicTraits)
             baseFont = UIFont(descriptor: newDescriptor!, size: baseAttributes.cSize)
         }
-        var nsAttributes:[String:AnyObject] = [NSFontAttributeName:baseFont]
+        var nsAttributes:[String:Any] = [NSFontAttributeName:baseFont]
         
         if baseAttributes.strikethrough {
-            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as AnyObject?
+            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as Any?
         }
         if baseAttributes.underline {
-            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as AnyObject?
+            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as Any?
         }
         
         ///Do color text stuff here

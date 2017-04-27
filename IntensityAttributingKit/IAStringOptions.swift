@@ -57,7 +57,7 @@ public func ==(lhs:IAStringOptions,rhs:IAStringOptions)->Bool{
 
 //Extensions for converting to/from dictionaries to facilitate JSON conversion
 extension IAStringOptions {
-    init!(optionsDict:[String:AnyObject]!){
+    init!(optionsDict:[String:Any]!){
         guard optionsDict != nil else {return nil}
         self.renderScheme = IntensityTransformers(rawOptional: (optionsDict["renderScheme"] as? String))
         self.preferedSmoothing = IAStringTokenizing(shortLabel: (optionsDict["preferedSmoothing"] as? String))
@@ -65,16 +65,16 @@ extension IAStringOptions {
     }
     
     ///animationOptions are discarded by default
-    func asOptionsDict()->[String:AnyObject]{
-        var dict:[String:AnyObject] = [:]
+    func asOptionsDict()->[String:Any]{
+        var dict:[String:Any] = [:]
         if self.renderScheme != nil {
-            dict["renderScheme"] = self.renderScheme.rawValue as AnyObject?
+            dict["renderScheme"] = self.renderScheme.rawValue
         }
         if self.preferedSmoothing != nil {
-            dict["preferedSmoothing"] = self.preferedSmoothing.shortLabel as AnyObject?
+            dict["preferedSmoothing"] = self.preferedSmoothing.shortLabel
         }
         if self.animatesIfAvailable != nil {
-            dict["animates"] = self.animatesIfAvailable as AnyObject?
+            dict["animates"] = self.animatesIfAvailable
         }
         return dict
     }

@@ -116,7 +116,7 @@ open class IAString {
             self.baseAttributes.appendRepeatedValue(IABaseAttributes(rawValue:intRVP[2]), count: intRVP[1] - intRVP[0])
         }
         
-        if let newLinks = dict[IAStringKeys.linkRVPs] as? [[AnyObject]]{
+        if let newLinks = dict[IAStringKeys.linkRVPs] as? [[Any]]{
             for textRVP in newLinks {
                 if let urlString = textRVP[2] as? String, let start = textRVP[0] as? Int, let end = textRVP[1] as? Int {
                     if let url = URL(string: urlString) {
@@ -124,7 +124,7 @@ open class IAString {
                     }
                 }
             }
-        } else if let newURLs = dict[IAStringKeys.nsurlRVPs] as? [[AnyObject]] {
+        } else if let newURLs = dict[IAStringKeys.nsurlRVPs] as? [[Any]] {
             for urlRVP in newURLs {
                 if let url = (urlRVP[2] as? URL), let start = urlRVP[0] as? Int, let end = urlRVP[1] as? Int {
                     self.links.append(RangeValuePair(value: url, startIndex: start, endIndex: end))
@@ -139,7 +139,7 @@ open class IAString {
             for (key, attach) in iaAttachments.sorted(by: {$0.0 < $1.0}) {
                 self.attachments[key] = attach
             }
-        } else if let newAttachments = dict[IAStringKeys.attachments] as? [Int:AnyObject]{
+        } else if let newAttachments = dict[IAStringKeys.attachments] as? [String:[String:Any]]{
             //(loc, attachInfo)
             for (_) in newAttachments {
                 print("IAString.init(dict:) received attachment \(newAttachments) in non IATA form")
@@ -152,7 +152,7 @@ open class IAString {
             }
         }
         
-        if let opts = IAStringOptions(optionsDict: (dict[IAStringKeys.options] as? [String:AnyObject])) {
+        if let opts = IAStringOptions(optionsDict: (dict[IAStringKeys.options] as? [String:Any])) {
             self.baseOptions = opts
         } else {
             self.baseOptions = IAKitPreferences.iaStringDefaultBaseOptions

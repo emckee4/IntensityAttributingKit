@@ -26,7 +26,7 @@ open class WeightIntensityScheme:IntensityTransforming {
         UIFontWeightBlack
     ]
 
-    open static func nsAttributesForBinsAndBaseAttributes(bin:Int,baseAttributes:IABaseAttributes)->[String:AnyObject]{
+    open static func nsAttributesForBinsAndBaseAttributes(bin:Int,baseAttributes:IABaseAttributes)->[String:Any]{
         var weight = weightArray[bin]
         if baseAttributes.bold && bin < stepCount - 1 {
             weight += 1
@@ -38,13 +38,13 @@ open class WeightIntensityScheme:IntensityTransforming {
             font = UIFont(descriptor: newDescriptor!, size: baseAttributes.cSize)
         }
         
-        var nsAttributes:[String:AnyObject] = [NSFontAttributeName:font]
+        var nsAttributes:[String:Any] = [NSFontAttributeName:font]
         
         if baseAttributes.strikethrough {
-            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as AnyObject?
+            nsAttributes[NSStrikethroughStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as Any?
         }
         if baseAttributes.underline {
-            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as AnyObject?
+            nsAttributes[NSUnderlineStyleAttributeName] = NSUnderlineStyle.styleSingle.rawValue as Any?
         }
         
         return nsAttributes

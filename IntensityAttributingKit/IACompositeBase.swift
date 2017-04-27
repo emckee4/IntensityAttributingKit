@@ -466,9 +466,9 @@ open class IACompositeBase:UIView {
         //let copiedText = iaString.text.subStringFromRange(selectedRange!)
         //let iaArchive = IAStringArchive.archive(iaString.copy(true))
         let iaArchive = IAStringArchive.archive(copyOfSelected)
-        var pbItem:[String:AnyObject] = [:]
-        pbItem[UTITypes.PlainText] = copyOfSelected.text as AnyObject?
-        pbItem[UTITypes.IAStringArchive] = iaArchive as AnyObject?
+        var pbItem:[String:Any] = [:]
+        pbItem[UTITypes.PlainText] = copyOfSelected.text as Any?
+        pbItem[UTITypes.IAStringArchive] = iaArchive as Any?
         pb.items = [pbItem]
     }
     
