@@ -58,7 +58,7 @@ open class IAString {
     
     //////////////////////////////////////
     
-    open var avgIntensity:Int {return intensities.reduce(0, +) / intensities.count}
+    open var avgIntensity:Int {return intensities.reduce(0, +) / max(intensities.count, 1)}
     
     open var hasAttachmentsWithPlaceholders:Bool {
         for (_,attach) in self.attachments {
@@ -108,7 +108,13 @@ open class IAString {
         self.text = newText
         self.length = self.text.utf16.count
         //array
-        self.intensities = newIntensities
+        if newIntensities.count < self.length {
+            let extendIntensitiesBy = self.length - newIntensities.count //ensure there are enough intensity values for text
+            self.intensities = newIntensities + Array<Int>.init(repeating: 0, count: extendIntensitiesBy)
+        } else {
+            self.intensities = newIntensities
+        }
+        
         
         //arrays of VWRs
         self.baseAttributes = CollapsingArray<IABaseAttributes>()
