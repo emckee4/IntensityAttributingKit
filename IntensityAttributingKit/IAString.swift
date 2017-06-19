@@ -163,7 +163,7 @@ open class IAString {
         } else {
             self.baseOptions = IAKitPreferences.iaStringDefaultBaseOptions
         }
-        
+        guard self.validateIndexes() else {return nil}
     }
     
     ///This is intended for initialization of IAIntermediate within the module. It provides only minimal sanity checks.
@@ -244,5 +244,9 @@ open class IAString {
         } else {
             return nil
         }
+    }
+    
+    func validateIndexes()->Bool {
+        return self.length == self.intensities.count && self.length == (self.baseAttributes.endIndex as Int)
     }
 }
