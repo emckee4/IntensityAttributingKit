@@ -20,7 +20,7 @@ public struct IAStringOptions:Equatable {
     ///Contains parameters like duration, animating layers, alpha levels, etc. If this is nil on an animating IAString then the transformers default parameters will be used
     public var animationOptions:IAAnimationParameters?
     
-    init(renderScheme:IntensityTransformers! = IAKitPreferences.defaultTransformer, preferedSmoothing:IAStringTokenizing! = IAKitPreferences.defaultTokenizer, animates:Bool! = true, animationOptions:IAAnimationParameters? = nil){
+    public init(renderScheme:IntensityTransformers! = IAKitPreferences.defaultTransformer, preferedSmoothing:IAStringTokenizing! = IAKitPreferences.defaultTokenizer, animates:Bool! = true, animationOptions:IAAnimationParameters? = nil){
         self.renderScheme = renderScheme
         self.preferedSmoothing = preferedSmoothing
         self.animatesIfAvailable = animates

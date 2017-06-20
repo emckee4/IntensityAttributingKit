@@ -176,7 +176,7 @@ open class IAString {
         self.baseOptions = baseOptions
     }
     
-    init(text:String, intensity:Int, attributes:IABaseAttributes, baseOptions:IAStringOptions = IAKitPreferences.iaStringDefaultBaseOptions){
+    public init(text:String, intensity:Int, attributes:IABaseAttributes, baseOptions:IAStringOptions = IAKitPreferences.iaStringDefaultBaseOptions){
         self.text = text
         self.length = self.text.utf16.count
         self.intensities = Array<Int>(repeating: intensity,count: self.length)
