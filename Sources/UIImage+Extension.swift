@@ -29,7 +29,7 @@ extension UIImage {
         return scaledImage!
     }
     
-    func resizeImageWithScaleAspectFit(_ targetSize:CGSize, backgroundColor:UIColor? = nil)->UIImage{
+    public func resizeImageWithScaleAspectFit(_ targetSize:CGSize, backgroundColor:UIColor? = nil)->UIImage{
         
         let newRect = AVMakeRect(aspectRatio: self.size, insideRect: CGRect(origin: CGPoint.zero,size: targetSize))
         
