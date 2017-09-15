@@ -59,9 +59,9 @@ public func ==(lhs:IAStringOptions,rhs:IAStringOptions)->Bool{
 extension IAStringOptions {
     init!(optionsDict:[String:Any]!){
         guard optionsDict != nil else {return nil}
-        self.renderScheme = IntensityTransformers(rawOptional: (optionsDict["renderScheme"] as? String))
-        self.preferedSmoothing = IAStringTokenizing(shortLabel: (optionsDict["preferedSmoothing"] as? String))
-        self.animatesIfAvailable = optionsDict["animates"] as? Bool
+        self.renderScheme = IntensityTransformers(rawOptional: (optionsDict["renderScheme"] as? String)) ?? IAKitPreferences.defaultTransformer
+        self.preferedSmoothing = IAStringTokenizing(withName: (optionsDict["preferedSmoothing"] as? String)) ?? IAKitPreferences.defaultTokenizer
+        self.animatesIfAvailable = (optionsDict["animates"] as? Bool) ?? true
     }
     
     ///animationOptions are discarded by default

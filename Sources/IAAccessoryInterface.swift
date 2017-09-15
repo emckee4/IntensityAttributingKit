@@ -32,7 +32,7 @@ extension IAAccessoryVC: PressureKeyActionDelegate {
     }
     
     func tokenizerButtonPressed(_ actionName:String!){
-        guard let tokenizer = IAStringTokenizing(shortLabel: actionName) else {return}
+        guard let tokenizer = IAStringTokenizing(withName: actionName) else {return}
         if self.delegate?.accessoryRequestsSmoothingChange(self, toValue: tokenizer) ?? false {
             tokenizerButton.centerKeyWithActionName(actionName)
         }

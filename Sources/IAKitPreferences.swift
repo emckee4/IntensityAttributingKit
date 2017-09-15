@@ -104,7 +104,7 @@ open class IAKitPreferences:NSObject {
     }
     
     fileprivate static var _defaultTokenizer:IAStringTokenizing = {
-        return IAStringTokenizing(shortLabel: (UserDefaults.standard.object(forKey: Keys.dTokenizerName) as? String) ?? "") ?? IAStringTokenizing.Char
+        return IAStringTokenizing(withName: (UserDefaults.standard.object(forKey: Keys.dTokenizerName) as? String) ?? "") ?? IAStringTokenizing.Char
     }()
     open static var defaultTokenizer:IAStringTokenizing{
         get {return _defaultTokenizer}
@@ -126,7 +126,7 @@ open class IAKitPreferences:NSObject {
     
     fileprivate static var _overridesTokenizer:IAStringTokenizing? = {
         guard let tokenizerName = UserDefaults.standard.object(forKey: Keys.oTokenizerName) as? String else {return nil}
-        return IAStringTokenizing(shortLabel: tokenizerName)
+        return IAStringTokenizing(withName: tokenizerName)
     }()
     open static var overridesTokenizer:IAStringTokenizing? {
         get {return _overridesTokenizer}
