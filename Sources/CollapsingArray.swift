@@ -9,9 +9,8 @@
 import Foundation
 
 ///Data structure protocol designed to represent series of values which include long stretches of unchanges values. Arguably a linked list might perform better for the same purposes though it shouldn't matter for the length of IAStrings we're using. This maps more cleanly to the format we use in the JSON representations.
-protocol ExclusiveRangeMappingProtocol:MutableCollection, RangeReplaceableCollection, CustomStringConvertible {
-    associatedtype Element:Equatable
-    associatedtype Index:Strideable,Hashable,ExpressibleByIntegerLiteral
+protocol ExclusiveRangeMappingProtocol:MutableCollection, RangeReplaceableCollection, CustomStringConvertible where Element: Equatable, Index: Strideable, Index: Hashable, Index: ExpressibleByIntegerLiteral {
+    
     var data:[RangeValuePair<Element>] {get set}
     
     var startIndex:Index {get}

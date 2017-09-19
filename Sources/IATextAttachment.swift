@@ -120,7 +120,7 @@ open class IATextAttachment:NSTextAttachment {
         var updatedInfo:[String:Any] = userInfo ?? [:]
         updatedInfo["attachmentType"] = self.attachmentType.rawValue as Any?
         updatedInfo["localID"] = self.localID as Any?
-        let postNotification:(Void)->Void = {
+        let postNotification:()->Void = {
             let notification = Notification(name: Notification.Name(rawValue: type(of: self).contentReadyNotificationName), object: self, userInfo: updatedInfo)
             NotificationCenter.default.post(notification)
         }

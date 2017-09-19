@@ -22,7 +22,7 @@ open class ExpandingKeyBase: UIView {
     
     
     ///this is private set until means for reordering the subviews are added
-    @IBInspectable open var expansionDirection:EKDirection = .up {
+    open var expansionDirection:EKDirection = .up {
         didSet{
             if oldValue.hasForwardLayoutDirection != expansionDirection.hasForwardLayoutDirection && !epKeys.isEmpty{
                 layoutKeysForExpansionDirection()

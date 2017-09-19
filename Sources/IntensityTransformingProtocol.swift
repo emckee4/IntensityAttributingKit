@@ -63,7 +63,7 @@ public protocol AnimatedIntensityTransforming:IntensityTransforming{
 }
 
 public extension AnimatedIntensityTransforming {
-    final static var schemeIsAnimatable:Bool {return true}
+    static var schemeIsAnimatable:Bool {return true}
     
     static func layeredNSAttributesForIntensityAttributes(intensity:Int,baseAttributes:IABaseAttributes)->(top:[String:Any], bottom:[String:Any]){
         let weightBin = min((IAString.binNumberForSteps(intensity, steps:stepCount) + (baseAttributes.bold ? 1 : 0)), stepCount)
