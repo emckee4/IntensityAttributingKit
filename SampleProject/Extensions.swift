@@ -24,7 +24,7 @@ public extension String {
 extension NSLayoutConstraint {
     ///Modifies priority of self inplace and returns self. Useful for one-liner init and config.
     func withPriority(_ priority:Float)->NSLayoutConstraint{
-        self.priority = priority
+        self.priority = UILayoutPriority(rawValue: priority)
         return self
     }
 }

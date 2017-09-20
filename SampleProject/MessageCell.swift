@@ -78,9 +78,9 @@ class MessageCell: UITableViewCell {
         iaTextView.widthAnchor.constraint(greaterThanOrEqualToConstant: 50.0).isActive = true
         iaTextView.heightAnchor.constraint(greaterThanOrEqualToConstant: 40.0).isActive = true
 
-        iaTextView.setContentHuggingPriority(251, for: .vertical)
-        iaTextView.setContentHuggingPriority(251, for: .horizontal)
-        dateLabel.setContentCompressionResistancePriority(901, for: .horizontal)
+        iaTextView.setContentHuggingPriority(UILayoutPriority(rawValue: 251), for: .vertical)
+        iaTextView.setContentHuggingPriority(UILayoutPriority(rawValue: 251), for: .horizontal)
+        dateLabel.setContentCompressionResistancePriority(UILayoutPriority(rawValue: 901), for: .horizontal)
         
         iaTextView.widthAnchor.constraint(lessThanOrEqualTo: self.contentView.widthAnchor, multiplier: 0.75).isActive = true
         dateLabel.widthAnchor.constraint(lessThanOrEqualTo: self.contentView.widthAnchor, multiplier: 0.25).isActive = true

@@ -147,7 +147,7 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
     }
     
     
-    func handleAppBecameActive(_ notification:Notification){
+    @objc func handleAppBecameActive(_ notification:Notification){
         composerBar.textEditor.delegate = self
     }
     
@@ -155,7 +155,7 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
     /**We want to use the keyboardDismissModeInteractive to handle dismisals of the keyboard when editing. This works fine except that the composerBar doesn't track the top of the accessory by default since it's in a different view hierarchy than the input views. Instead it uses notifications to animate its apparant tracking of the top of the input accessory.
      In order to make this work properly we need to determine when we're in mid interactive dismissal (we can consider when this pan's location drags below the top of the accessory's last position as given by the keyboard notifications). Once we've crossed that threshhold we call beginInteractiveKBDismissal() which renders the composerBar as an image, attaches that image to the top of the accessory (using tempImageView), then hides the composerBar and sets kbIsInInteractiveDismissal to true until the next keyboard frame change notification, which will occur at the end of the gesture, regardless of its results.
      */
-    func pan(_ sender:UIPanGestureRecognizer!){
+    @objc func pan(_ sender:UIPanGestureRecognizer!){
         guard sender.state == UIGestureRecognizerState.changed else {return}
         guard composerBar?.textEditor?.inputAccessoryViewController?.inputView != nil && composerBar!.textEditor!.isFirstResponder else {return}
         guard lastOffset != nil else {return}
@@ -171,7 +171,7 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
         
     }
 
-    func kbFrameChange(_ notification:Notification!){
+    @objc func kbFrameChange(_ notification:Notification!){
         //print(notification.name, notification.userInfo!)
         guard notification.name == NSNotification.Name.UIKeyboardWillChangeFrame else {return}
         guard let frameEnd = (notification?.userInfo?[UIKeyboardFrameEndUserInfoKey] as AnyObject).cgRectValue, let duration = notification?.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? TimeInterval, let curve = notification.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? Int else {return}
@@ -237,7 +237,7 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
         }
     }
     
-    func changeKBTheme(){
+    @objc func changeKBTheme(){
         switch IAKitPreferences.visualPreferences {
         
         case IAKitVisualPreferences.Default:

@@ -60,7 +60,7 @@ class ComposerBar: UIView {
         sendButton.heightAnchor.constraint(lessThanOrEqualTo: self.heightAnchor, constant: -4).isActive = true
         sendButton.heightAnchor.constraint(lessThanOrEqualToConstant: 40.0).isActive = true
         let topAnchor = sendButton.topAnchor.constraint(equalTo: self.topAnchor, constant: -2.0)
-        topAnchor.priority = 500
+        topAnchor.priority = UILayoutPriority(rawValue: 500)
         topAnchor.isActive = true
         
         sendButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -2.0).isActive = true

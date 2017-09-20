@@ -143,7 +143,7 @@ class MessageThreadTableVC: UITableViewController, IATextViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MessageCell") as! MessageCell
         configureCell(cell, message: forMessage)
         cell.iaTextView.preferedMaxLayoutWidth = tableView.bounds.width * 0.74
-        return cell.contentView.systemLayoutSizeFitting(CGSize(width: tableView.bounds.width, height: 1000), withHorizontalFittingPriority: UILayoutPriorityRequired, verticalFittingPriority: 200).height
+        return cell.contentView.systemLayoutSizeFitting(CGSize(width: tableView.bounds.width, height: 1000), withHorizontalFittingPriority: UILayoutPriority.required, verticalFittingPriority: UILayoutPriority(rawValue: 200)).height
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
