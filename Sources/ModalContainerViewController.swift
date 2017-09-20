@@ -33,8 +33,8 @@ class ModalContainerViewController: UIViewController {
         dismissButton.setImage(xImage, for: UIControlState())
         dismissButton.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(dismissButton)
-        dismissButton.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor).isActive = true
-        dismissButton.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        dismissButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).isActive = true
+        dismissButton.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         dismissButton.widthAnchor.constraint(equalToConstant: kDismissButtonSize).activateWithPriority(1000)
         dismissButton.heightAnchor.constraint(equalToConstant: kDismissButtonSize).activateWithPriority(1000)
         dismissButton.addTarget(self, action: #selector(ModalContainerViewController.dismissButtonPressed), for: .touchUpInside)
@@ -48,12 +48,12 @@ class ModalContainerViewController: UIViewController {
         guard let child = childViewControllers.first else {return}
         self.view.addSubview(child.view)
         child.view.translatesAutoresizingMaskIntoConstraints = false
-        child.view.leftAnchor.constraint(equalTo: self.view.leftAnchor).activateWithPriority(1000)
-        child.view.rightAnchor.constraint(equalTo: self.view.rightAnchor).activateWithPriority(1000)
-        child.view.bottomAnchor.constraint(equalTo: self.bottomLayoutGuide.topAnchor).activateWithPriority(1000)
+        child.view.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor).activateWithPriority(1000)
+        child.view.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor).activateWithPriority(1000)
+        child.view.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).activateWithPriority(1000)
         
         if dismissButtonOverlays {
-            child.view.topAnchor.constraint(equalTo: self.topLayoutGuide.bottomAnchor).activateWithPriority(1000)
+            child.view.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor).activateWithPriority(1000)
             self.view.bringSubview(toFront: effectView)
             self.view.bringSubview(toFront: dismissButton)
         } else {
