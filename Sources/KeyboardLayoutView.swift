@@ -329,29 +329,29 @@ class KeyboardLayoutView:UIInputView, PressureKeyActionDelegate, SuggestionBarDe
     override func layoutSubviews() {
         super.layoutSubviews()
         if suggestionsBar.isHidden == false {
-            let heightMinusInsetsAndSpacing = self.bounds.height - edgeInsets.top - edgeInsets.bottom - (4 * verticalSpacing)
+            let heightMinusInsetsAndSpacing = self.bounds.height - safeAreaInsets.top - safeAreaInsets.bottom - (4 * verticalSpacing)
             //(height - insets - 4*spacing) / 4.75
             let svHeight = floor(heightMinusInsetsAndSpacing / (4.0 + suggestionBarScaleFactor))
             let suggBarHeight = floor(heightMinusInsetsAndSpacing - (4.0 * svHeight))
-            let commonWidth = bounds.width - edgeInsets.left - edgeInsets.right
+            let commonWidth = bounds.width - safeAreaInsets.left - safeAreaInsets.right
             
-            suggestionsBar.frame = CGRect(x: edgeInsets.left, y: edgeInsets.top, width: commonWidth, height: suggBarHeight)
+            suggestionsBar.frame = CGRect(x: safeAreaInsets.left, y: safeAreaInsets.top, width: commonWidth, height: suggBarHeight)
             
             
-            qwertyStackView.frame = CGRect(x: edgeInsets.left, y: (edgeInsets.top + suggBarHeight + verticalSpacing),width: commonWidth, height: svHeight)
-            asdfStackView.frame = CGRect(x: edgeInsets.left, y: (edgeInsets.top + suggBarHeight + 2 * verticalSpacing + svHeight), width: commonWidth, height: svHeight)
-            zxcvStackView.frame = CGRect(x: edgeInsets.left, y: (edgeInsets.top + suggBarHeight + 3 * verticalSpacing + 2 * svHeight), width: commonWidth, height: svHeight)
-            bottomStackView.frame = CGRect(x: edgeInsets.left, y: (edgeInsets.top + suggBarHeight + 4 * verticalSpacing + 3 * svHeight), width: commonWidth, height: svHeight)
+            qwertyStackView.frame = CGRect(x: safeAreaInsets.left, y: (safeAreaInsets.top + suggBarHeight + verticalSpacing),width: commonWidth, height: svHeight)
+            asdfStackView.frame = CGRect(x: safeAreaInsets.left, y: (safeAreaInsets.top + suggBarHeight + 2 * verticalSpacing + svHeight), width: commonWidth, height: svHeight)
+            zxcvStackView.frame = CGRect(x: safeAreaInsets.left, y: (safeAreaInsets.top + suggBarHeight + 3 * verticalSpacing + 2 * svHeight), width: commonWidth, height: svHeight)
+            bottomStackView.frame = CGRect(x: safeAreaInsets.left, y: (safeAreaInsets.top + suggBarHeight + 4 * verticalSpacing + 3 * svHeight), width: commonWidth, height: svHeight)
         } else {
-            let heightMinusInsetsAndSpacing = self.bounds.height - edgeInsets.top - edgeInsets.bottom - (3 * verticalSpacing)
+            let heightMinusInsetsAndSpacing = self.bounds.height - safeAreaInsets.top - safeAreaInsets.bottom - (3 * verticalSpacing)
             //(height - insets - 4*spacing) / 4.75
             let svHeight = floor(heightMinusInsetsAndSpacing / 4.0 )
-            let commonWidth = bounds.width - edgeInsets.left - edgeInsets.right
+            let commonWidth = bounds.width - safeAreaInsets.left - safeAreaInsets.right
             
-            qwertyStackView.frame = CGRect(x: edgeInsets.left, y: (edgeInsets.top),width: commonWidth, height: svHeight)
-            asdfStackView.frame = CGRect(x: edgeInsets.left, y: (edgeInsets.top  + 1 * verticalSpacing + svHeight), width: commonWidth, height: svHeight)
-            zxcvStackView.frame = CGRect(x: edgeInsets.left, y: (edgeInsets.top + 2 * verticalSpacing + 2 * svHeight), width: commonWidth, height: svHeight)
-            bottomStackView.frame = CGRect(x: edgeInsets.left, y: (edgeInsets.top + 3 * verticalSpacing + 3 * svHeight), width: commonWidth, height: svHeight)
+            qwertyStackView.frame = CGRect(x: safeAreaInsets.left, y: (safeAreaInsets.top),width: commonWidth, height: svHeight)
+            asdfStackView.frame = CGRect(x: safeAreaInsets.left, y: (safeAreaInsets.top  + 1 * verticalSpacing + svHeight), width: commonWidth, height: svHeight)
+            zxcvStackView.frame = CGRect(x: safeAreaInsets.left, y: (safeAreaInsets.top + 2 * verticalSpacing + 2 * svHeight), width: commonWidth, height: svHeight)
+            bottomStackView.frame = CGRect(x: safeAreaInsets.left, y: (safeAreaInsets.top + 3 * verticalSpacing + 3 * svHeight), width: commonWidth, height: svHeight)
             
         }
     }

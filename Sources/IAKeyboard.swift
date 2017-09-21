@@ -44,21 +44,17 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
     fileprivate var textChangeInProgress = false
     //MARK:- View lifecyle functions
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        textChecker = UITextChecker()
-        
+    override func loadView() {
         keyboardView = KeyboardLayoutView(frame: CGRect.zero, inputViewStyle: .keyboard)
         keyboardView.translatesAutoresizingMaskIntoConstraints = false
         keyboardView.backgroundColor = self.backgroundColor
         inputView = keyboardView
-        keyboardView.topAnchor.constraint(equalTo: (inputView?.topAnchor)!).isActive = true
-        keyboardView.bottomAnchor.constraint(equalTo: (inputView?.bottomAnchor)!).isActive = true
-        keyboardView.leftAnchor.constraint(equalTo: (inputView?.leftAnchor)!).isActive = true
-        keyboardView.rightAnchor.constraint(equalTo: (inputView?.rightAnchor)!).isActive = true
-        inputView?.translatesAutoresizingMaskIntoConstraints = false
         keyboardView.delegate = self
-        
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        textChecker = UITextChecker()
         self.inputView?.layer.rasterizationScale = UIScreen.main.scale
         self.inputView?.layer.shouldRasterize = true
         updateKeyMapping()
