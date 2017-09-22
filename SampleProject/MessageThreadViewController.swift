@@ -107,9 +107,9 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
         //messageThreadView.bottomAnchor.constraintEqualToAnchor(composerBar.topAnchor).active = true
         messageThreadView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
         
-        composerBar.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
-        composerBar.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
-        composerBottomConstraint = composerBar.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0)
+        composerBar.leftAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leftAnchor).isActive = true
+        composerBar.rightAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.rightAnchor).isActive = true
+        composerBottomConstraint = composerBar.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
         composerBottomConstraint.isActive = true
         composerBar.heightAnchor.constraint(greaterThanOrEqualToConstant: 30).isActive = true
         
@@ -163,24 +163,22 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
         if loc.y > (lastOffset! + self.view.bounds.height) {
             if kbIsInInteractiveDismissal == false {
                 beginInteractiveKBDismissal()
-                
             }
-            let offset = -(self.view.window!.frame.height - loc.y)
-            self.composerBottomConstraint.constant = offset
+            let offset = -(self.view.window!.frame.height - loc.y - self.view.safeAreaInsets.bottom)
+            self.composerBottomConstraint.constant = min(offset, 0)
         }
         
     }
 
     @objc func kbFrameChange(_ notification:Notification!){
-        //print(notification.name, notification.userInfo!)
         guard notification.name == NSNotification.Name.UIKeyboardWillChangeFrame else {return}
         guard let frameEnd = (notification?.userInfo?[UIKeyboardFrameEndUserInfoKey] as AnyObject).cgRectValue, let duration = notification?.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as? TimeInterval, let curve = notification.userInfo?[UIKeyboardAnimationCurveUserInfoKey] as? Int else {return}
 
         if kbIsInInteractiveDismissal{
             endInteractiveKBDismissal()
         }
-        let offset = -(self.view.window!.frame.height - frameEnd.origin.y)
-        self.composerBottomConstraint.constant = offset
+        let offset = -(self.view.window!.frame.height - frameEnd.origin.y - self.view.safeAreaInsets.bottom)
+        self.composerBottomConstraint.constant = min(offset, 0)
         lastOffset = offset
         
         //should check that this isn't a case where a drag to dismiss just ended, in which case we dont need to animate
