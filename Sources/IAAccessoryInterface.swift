@@ -34,14 +34,14 @@ extension IAAccessoryVC: PressureKeyActionDelegate {
     func tokenizerButtonPressed(_ actionName:String!){
         guard let tokenizer = IAStringTokenizing(withName: actionName) else {return}
         if self.delegate?.accessoryRequestsSmoothingChange(self, toValue: tokenizer) ?? false {
-            tokenizerButton.centerKeyWithActionName(actionName)
+            iaAccessoryView.tokenizerButton.centerKeyWithActionName(actionName)
         }
     }
     
     func transformButtonPressed(_ actionName:String!){
         guard let transformer = IntensityTransformers(rawOptional: actionName) else {return}
         if self.delegate?.accessoryRequestsTransformerChange(self, toTransformer:transformer) ?? false {
-            self.transformButton.centerKeyWithActionName(actionName)
+            self.iaAccessoryView.transformButton.centerKeyWithActionName(actionName)
         }
     }
     
@@ -51,8 +51,8 @@ extension IAAccessoryVC: PressureKeyActionDelegate {
     }
     
     func updateDisplayedIntensity(_ toValue:Int){
-        self.intensityButton.text = "\(toValue)"
-        self.intensitySlider.value = Float(toValue)
+        self.iaAccessoryView?.intensityButton.text = "\(toValue)"
+        self.iaAccessoryView?.intensitySlider.value = Float(toValue)
     }
     
     func pressureKeyPressed(_ sender: PressureControl, actionName: String, intensity: Int) {
@@ -61,11 +61,11 @@ extension IAAccessoryVC: PressureKeyActionDelegate {
     }
     
     func setTransformKeyForScheme(_ transformerScheme:IntensityTransformers){
-        self.transformButton.centerKeyWithActionName(transformerScheme.rawValue)
+        self.iaAccessoryView.transformButton.centerKeyWithActionName(transformerScheme.rawValue)
     }
     
     func setTokenizerKeyValue(_ value:IAStringTokenizing){
-        tokenizerButton.centerKeyWithActionName(value.shortLabel)
+        iaAccessoryView.tokenizerButton.centerKeyWithActionName(value.shortLabel)
     }
     
 }

@@ -88,6 +88,7 @@
 		C080B54F1C99EAB900DEC424 /* ModalContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080B54E1C99EAB900DEC424 /* ModalContainerViewController.swift */; };
 		C08253B11BE571910017AC14 /* LockingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08253B01BE571910017AC14 /* LockingKey.swift */; };
 		C08253B61BE572AE0017AC14 /* ExpandingPressureKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08253B51BE572AE0017AC14 /* ExpandingPressureKey.swift */; };
+		C082C5231F746CCD00018AC9 /* IAAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C082C5221F746CCD00018AC9 /* IAAccessoryView.swift */; };
 		C084E9111CDE56E7009D387D /* IAMagnifyingLoup.swift in Sources */ = {isa = PBXBuildFile; fileRef = C084E9101CDE56E7009D387D /* IAMagnifyingLoup.swift */; };
 		C0870FC41CAF10B30071A5F1 /* IAStringOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0870FC31CAF10B30071A5F1 /* IAStringOptions.swift */; };
 		C089D2A01D761E6D009AEF7D /* IALocationManagerDelegateShim.swift in Sources */ = {isa = PBXBuildFile; fileRef = C089D29F1D761E6D009AEF7D /* IALocationManagerDelegateShim.swift */; };
@@ -240,6 +241,7 @@
 		C080B54E1C99EAB900DEC424 /* ModalContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalContainerViewController.swift; sourceTree = "<group>"; };
 		C08253B01BE571910017AC14 /* LockingKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LockingKey.swift; sourceTree = "<group>"; };
 		C08253B51BE572AE0017AC14 /* ExpandingPressureKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ExpandingPressureKey.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		C082C5221F746CCD00018AC9 /* IAAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAAccessoryView.swift; sourceTree = "<group>"; };
 		C084E9101CDE56E7009D387D /* IAMagnifyingLoup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAMagnifyingLoup.swift; sourceTree = "<group>"; };
 		C0870FC31CAF10B30071A5F1 /* IAStringOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringOptions.swift; sourceTree = "<group>"; };
 		C089D29F1D761E6D009AEF7D /* IALocationManagerDelegateShim.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IALocationManagerDelegateShim.swift; sourceTree = "<group>"; };
@@ -316,6 +318,7 @@
 			isa = PBXGroup;
 			children = (
 				C0E5D7C21BDEA47E00A0A814 /* IAAccessoryVC.swift */,
+				C082C5221F746CCD00018AC9 /* IAAccessoryView.swift */,
 				C0095D911C65328A00D37A75 /* IAAccessoryInterface.swift */,
 				C08EE1021CB845AB0030FC3E /* IAAccessoryDelegateProtocol.swift */,
 			);
@@ -859,6 +862,7 @@
 				C01E0F511D53E50800C5471B /* IATouchInterpreter.swift in Sources */,
 				C04533AB1CA5CD6500B374D0 /* AlphaIntensityScheme.swift in Sources */,
 				C069B2BA1C627DB1008834D3 /* IAStringArchive.swift in Sources */,
+				C082C5231F746CCD00018AC9 /* IAAccessoryView.swift in Sources */,
 				C09574821C59442300724F02 /* IAStringConversion.swift in Sources */,
 				C0FCC1161F195869007F54D3 /* IAKitVisualPreferences.swift in Sources */,
 				C0A258D11C922FC0003287AB /* NSHashTable+Extension.swift in Sources */,
