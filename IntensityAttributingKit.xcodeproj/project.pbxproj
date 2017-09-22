@@ -59,7 +59,6 @@
 		C0607A0D1D5BC4B30027A72F /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0607A081D5BC4B30027A72F /* MessageCell.swift */; };
 		C0607A0F1D5BC4B30027A72F /* MessageThreadTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0607A0A1D5BC4B30027A72F /* MessageThreadTableVC.swift */; };
 		C0607A101D5BC4B30027A72F /* MessageThreadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0607A0B1D5BC4B30027A72F /* MessageThreadViewController.swift */; };
-		C0607A111D5BC4B30027A72F /* ComposerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0607A0C1D5BC4B30027A72F /* ComposerBar.swift */; };
 		C0607A131D5BC5CC0027A72F /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0607A121D5BC5CC0027A72F /* Message.swift */; };
 		C0607A151D5BC8320027A72F /* DateConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0607A141D5BC8320027A72F /* DateConversion.swift */; };
 		C0607A171D5BC8B80027A72F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0607A161D5BC8B80027A72F /* Extensions.swift */; };
@@ -89,6 +88,7 @@
 		C08253B11BE571910017AC14 /* LockingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08253B01BE571910017AC14 /* LockingKey.swift */; };
 		C08253B61BE572AE0017AC14 /* ExpandingPressureKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08253B51BE572AE0017AC14 /* ExpandingPressureKey.swift */; };
 		C082C5231F746CCD00018AC9 /* IAAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C082C5221F746CCD00018AC9 /* IAAccessoryView.swift */; };
+		C082C5261F75B9D400018AC9 /* IAComposerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C082C5251F75B9D400018AC9 /* IAComposerBar.swift */; };
 		C084E9111CDE56E7009D387D /* IAMagnifyingLoup.swift in Sources */ = {isa = PBXBuildFile; fileRef = C084E9101CDE56E7009D387D /* IAMagnifyingLoup.swift */; };
 		C0870FC41CAF10B30071A5F1 /* IAStringOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0870FC31CAF10B30071A5F1 /* IAStringOptions.swift */; };
 		C089D2A01D761E6D009AEF7D /* IALocationManagerDelegateShim.swift in Sources */ = {isa = PBXBuildFile; fileRef = C089D29F1D761E6D009AEF7D /* IALocationManagerDelegateShim.swift */; };
@@ -212,7 +212,6 @@
 		C0607A081D5BC4B30027A72F /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		C0607A0A1D5BC4B30027A72F /* MessageThreadTableVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageThreadTableVC.swift; sourceTree = "<group>"; };
 		C0607A0B1D5BC4B30027A72F /* MessageThreadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MessageThreadViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		C0607A0C1D5BC4B30027A72F /* ComposerBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposerBar.swift; sourceTree = "<group>"; };
 		C0607A121D5BC5CC0027A72F /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		C0607A141D5BC8320027A72F /* DateConversion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateConversion.swift; sourceTree = "<group>"; };
 		C0607A161D5BC8B80027A72F /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -242,6 +241,7 @@
 		C08253B01BE571910017AC14 /* LockingKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LockingKey.swift; sourceTree = "<group>"; };
 		C08253B51BE572AE0017AC14 /* ExpandingPressureKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ExpandingPressureKey.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		C082C5221F746CCD00018AC9 /* IAAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAAccessoryView.swift; sourceTree = "<group>"; };
+		C082C5251F75B9D400018AC9 /* IAComposerBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAComposerBar.swift; sourceTree = "<group>"; };
 		C084E9101CDE56E7009D387D /* IAMagnifyingLoup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAMagnifyingLoup.swift; sourceTree = "<group>"; };
 		C0870FC31CAF10B30071A5F1 /* IAStringOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringOptions.swift; sourceTree = "<group>"; };
 		C089D29F1D761E6D009AEF7D /* IALocationManagerDelegateShim.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IALocationManagerDelegateShim.swift; sourceTree = "<group>"; };
@@ -490,7 +490,6 @@
 				C0607A081D5BC4B30027A72F /* MessageCell.swift */,
 				C0607A0A1D5BC4B30027A72F /* MessageThreadTableVC.swift */,
 				C0607A0B1D5BC4B30027A72F /* MessageThreadViewController.swift */,
-				C0607A0C1D5BC4B30027A72F /* ComposerBar.swift */,
 				C0607A191D5BD70E0027A72F /* Main.storyboard */,
 				C0607A121D5BC5CC0027A72F /* Message.swift */,
 				C06079F91D5BC2FA0027A72F /* ViewController.swift */,
@@ -595,6 +594,14 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		C082C5241F75B9AA00018AC9 /* MessengingComponents */ = {
+			isa = PBXGroup;
+			children = (
+				C082C5251F75B9D400018AC9 /* IAComposerBar.swift */,
+			);
+			name = MessengingComponents;
+			sourceTree = "<group>";
+		};
 		C089D29E1D761E2E009AEF7D /* LocationAttachmentRelated */ = {
 			isa = PBXGroup;
 			children = (
@@ -618,6 +625,7 @@
 		C0A258D21C92363F003287AB /* Config Views+VCs */ = {
 			isa = PBXGroup;
 			children = (
+				C082C5241F75B9AA00018AC9 /* MessengingComponents */,
 				C080B54C1C989DB300DEC424 /* IAKitSettingsTableViewController.swift */,
 				C080B54E1C99EAB900DEC424 /* ModalContainerViewController.swift */,
 				C080B5431C98930600DEC424 /* AdjustmentCells */,
@@ -847,6 +855,7 @@
 				C054D99E1C3DAB9100D852DE /* IATextAttachment.swift in Sources */,
 				C08253B11BE571910017AC14 /* LockingKey.swift in Sources */,
 				C0E5D7C51BDEA4E400A0A814 /* UIImage+Extension.swift in Sources */,
+				C082C5261F75B9D400018AC9 /* IAComposerBar.swift in Sources */,
 				C080B54B1C9895F000DEC424 /* LogAxRIMAdjustmentCell.swift in Sources */,
 				C080B5451C98933900DEC424 /* DurationTIAdjustmentCell.swift in Sources */,
 				C0870FC41CAF10B30071A5F1 /* IAStringOptions.swift in Sources */,
@@ -927,7 +936,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0607A0F1D5BC4B30027A72F /* MessageThreadTableVC.swift in Sources */,
-				C0607A111D5BC4B30027A72F /* ComposerBar.swift in Sources */,
 				C0607A101D5BC4B30027A72F /* MessageThreadViewController.swift in Sources */,
 				C06079FA1D5BC2FA0027A72F /* ViewController.swift in Sources */,
 				C0607A171D5BC8B80027A72F /* Extensions.swift in Sources */,

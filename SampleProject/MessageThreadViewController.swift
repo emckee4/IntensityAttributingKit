@@ -9,9 +9,9 @@
 import UIKit
 import IntensityAttributingKit
 
-class MessageThreadViewController: UIViewController, IACompositeTextEditorDelegate, ComposerBarDelegate {
+class MessageThreadViewController: UIViewController, IACompositeTextEditorDelegate, IAComposerBarDelegate {
 
-    var composerBar:ComposerBar!
+    var composerBar:IAComposerBar!
     var messageThreadTableVC:MessageThreadTableVC!
     weak var messageThreadView:UIView!
     
@@ -100,7 +100,7 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
         messageThreadView.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
         messageThreadView.rightAnchor.constraint(equalTo: self.view.rightAnchor).isActive = true
         
-        composerBar = ComposerBar()
+        composerBar = IAComposerBar()
         self.view.addSubview(composerBar)
         composerBar.textEditor.delegate = self
         composerBar.delegate = self

@@ -1,5 +1,5 @@
 //
-//  ComposerBar.swift
+//  IAComposerBar.swift
 //  IntensityMessaging
 //
 //  Created by Evan Mckee on 12/2/15.
@@ -7,29 +7,32 @@
 //
 
 import UIKit
-import IntensityAttributingKit
 
-
-class ComposerBar: UIView {
+public class IAComposerBar: UIView {
     
-    var textEditor:IACompositeTextEditor!
-    var sendButton:ExpandingKeyControl!
-    var progressView:UIProgressView!
-    weak var delegate:ComposerBarDelegate?
+    public var textEditor:IACompositeTextEditor!
+    public var sendButton:ExpandingKeyControl!
+    public var progressView:UIProgressView!
+    public weak var delegate:IAComposerBarDelegate?
+    public var composerBarBib:UIView!
     
-    override var bounds: CGRect {
+    public override var bounds: CGRect {
         didSet {if bounds.size.height != oldValue.size.height {
-                delegate?.composerBarHeightChanged()
+            delegate?.composerBarHeightChanged()
             }
         }
     }
     
-    override init(frame: CGRect) {
+    public override var backgroundColor: UIColor? {
+        didSet{composerBarBib.backgroundColor = backgroundColor}
+    }
+    
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         setupBar()
     }
-
-    required init?(coder aDecoder: NSCoder) {
+    
+    public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setupBar()
     }
@@ -54,18 +57,16 @@ class ComposerBar: UIView {
         textEditor.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 5.0).isActive = true
         textEditor.rightAnchor.constraint(equalTo: sendButton.leftAnchor, constant: -5.0).isActive = true
         textEditor.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -2.0).isActive = true
-        textEditor.topAnchor.constraint(equalTo: self.topAnchor, constant: 2.0).isActive = true        
+        textEditor.topAnchor.constraint(equalTo: self.topAnchor, constant: 2.0).isActive = true
         
         sendButton.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -5.0).isActive = true
         sendButton.heightAnchor.constraint(lessThanOrEqualTo: self.heightAnchor, constant: -4).isActive = true
         sendButton.heightAnchor.constraint(lessThanOrEqualToConstant: 40.0).isActive = true
         let topAnchor = sendButton.topAnchor.constraint(equalTo: self.topAnchor, constant: -2.0)
-        topAnchor.priority = UILayoutPriority(rawValue: 500)
+        topAnchor.priority = 500
         topAnchor.isActive = true
         
         sendButton.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -2.0).isActive = true
-
-        
         
         progressView = UIProgressView()
         progressView.isHidden = true
@@ -76,11 +77,19 @@ class ComposerBar: UIView {
         progressView.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
         progressView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         
+        composerBarBib = UIView()
+        composerBarBib.translatesAutoresizingMaskIntoConstraints = false
+        composerBarBib.backgroundColor = self.backgroundColor
+        self.insertSubview(composerBarBib, at: 0)
+        composerBarBib.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+        composerBarBib.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: 50).isActive = true
+        composerBarBib.leftAnchor.constraint(equalTo: self.leftAnchor, constant: -60).isActive = true
+        composerBarBib.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 60).isActive = true
     }
     
     
 }
 
-protocol ComposerBarDelegate:class {
+public protocol IAComposerBarDelegate:class {
     func composerBarHeightChanged()
 }
