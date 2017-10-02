@@ -89,6 +89,7 @@
 		C08253B61BE572AE0017AC14 /* ExpandingPressureKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08253B51BE572AE0017AC14 /* ExpandingPressureKey.swift */; };
 		C082C5231F746CCD00018AC9 /* IAAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C082C5221F746CCD00018AC9 /* IAAccessoryView.swift */; };
 		C082C5261F75B9D400018AC9 /* IAComposerBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C082C5251F75B9D400018AC9 /* IAComposerBar.swift */; };
+		C082C5311F78352800018AC9 /* IACompositeTextEditorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C082C5301F78352800018AC9 /* IACompositeTextEditorDelegate.swift */; };
 		C084E9111CDE56E7009D387D /* IAMagnifyingLoup.swift in Sources */ = {isa = PBXBuildFile; fileRef = C084E9101CDE56E7009D387D /* IAMagnifyingLoup.swift */; };
 		C0870FC41CAF10B30071A5F1 /* IAStringOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0870FC31CAF10B30071A5F1 /* IAStringOptions.swift */; };
 		C089D2A01D761E6D009AEF7D /* IALocationManagerDelegateShim.swift in Sources */ = {isa = PBXBuildFile; fileRef = C089D29F1D761E6D009AEF7D /* IALocationManagerDelegateShim.swift */; };
@@ -242,6 +243,7 @@
 		C08253B51BE572AE0017AC14 /* ExpandingPressureKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ExpandingPressureKey.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		C082C5221F746CCD00018AC9 /* IAAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAAccessoryView.swift; sourceTree = "<group>"; };
 		C082C5251F75B9D400018AC9 /* IAComposerBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAComposerBar.swift; sourceTree = "<group>"; };
+		C082C5301F78352800018AC9 /* IACompositeTextEditorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IACompositeTextEditorDelegate.swift; sourceTree = "<group>"; };
 		C084E9101CDE56E7009D387D /* IAMagnifyingLoup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAMagnifyingLoup.swift; sourceTree = "<group>"; };
 		C0870FC31CAF10B30071A5F1 /* IAStringOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringOptions.swift; sourceTree = "<group>"; };
 		C089D29F1D761E6D009AEF7D /* IALocationManagerDelegateShim.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IALocationManagerDelegateShim.swift; sourceTree = "<group>"; };
@@ -400,6 +402,7 @@
 				C06BC1FB1CD9272100196F8B /* IACTE+GestureRecognizers.swift */,
 				C01FFFAD1CC6B38900AFD366 /* IACTE+UITextInput.swift */,
 				C01FFFAB1CC6B1C400AFD366 /* IACTE+IAKeyboardPresenting.swift */,
+				C082C5301F78352800018AC9 /* IACompositeTextEditorDelegate.swift */,
 				C0F42CFA1C5FE13700FA7BB0 /* IATEPhotoPicking.swift */,
 			);
 			name = IACompositeTextEditor;
@@ -841,6 +844,7 @@
 				C0F350381D73D91000FDE724 /* IAVideoViewerVC.swift in Sources */,
 				C080B5401C98842F00DEC424 /* LabeledSliderView.swift in Sources */,
 				C089D2A21D761EF2009AEF7D /* IALocationPickerVC.swift in Sources */,
+				C082C5311F78352800018AC9 /* IACompositeTextEditorDelegate.swift in Sources */,
 				C03B97871E9420D8005127A5 /* EmbeddableStackView.swift in Sources */,
 				C0F350351D73C34900FDE724 /* IAImageViewerVC.swift in Sources */,
 				C045339E1CA4794600B374D0 /* LabeledStepperAdjusterCell.swift in Sources */,

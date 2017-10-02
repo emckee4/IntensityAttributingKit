@@ -221,11 +221,11 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
         kbIsInInteractiveDismissal = false
     }
     
-    func iaTextEditorRequestsPresentationOfOptionsVC(_ iaTextEditor: IACompositeTextEditor) -> Bool {
-        return true
+    func iaTextEditorRequestsPresentationOfOptionsVC(_ iaTextEditor: IACompositeTextEditor) -> UIViewController? {
+        return self
     }
-    func iaTextEditorRequestsPresentationOfContentPicker(_ iaTextEditor: IACompositeTextEditor) -> Bool {
-        return true
+    func iaTextEditorRequestsPresentationOfContentPicker(_ iaTextEditor: IACompositeTextEditor) -> UIViewController? {
+        return self
     }
     
     ///We watch this delegate function so that we can update the contentInset of the tableview when the top composerBar changes for reasons other than keyboard frame change. The contentInset changes resulting from keyboard frame change are handled in kbFrameChange().

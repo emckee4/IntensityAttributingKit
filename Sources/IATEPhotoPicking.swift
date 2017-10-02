@@ -17,7 +17,7 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
     
     ///If the IATextEditorDelegate returns true then this function will launch the image picker vc on the root view controller of the window holding the text editor. This may be more of a divergence from the MVC pattern than usual but it allows this Framework to be a little more self contained and easy to implement in other projects. The simplest alternative is to instantiate the picker VC and pass it to the delegate to be presented or discarded, but this method works and keeps things easy for now.
     func launchPhotoPicker(){
-        guard self.delegate?.iaTextEditorRequestsPresentationOfContentPicker?(self) == true else {return}
+        guard let presentingVC = self.delegate?.iaTextEditorRequestsPresentationOfContentPicker?(self) else {return}
         if UIImagePickerController.isCameraDeviceAvailable(.rear) {
             let alert = UIAlertController(title: "Insert Photo", message: "Choose source", preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action) -> Void in
@@ -26,7 +26,7 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
                 imagePicker.allowsEditing = true
                 imagePicker.delegate = self
                 imagePicker.sourceType = .photoLibrary
-                self.window?.rootViewController?.present(imagePicker, animated: true, completion: nil)
+                presentingVC.present(imagePicker, animated: true, completion: nil)
             }))
             alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action) -> Void in
                 guard  Thread.isMainThread else {fatalError()}
@@ -34,7 +34,7 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
                 imagePicker.allowsEditing = true
                 imagePicker.delegate = self
                 imagePicker.sourceType = .camera
-                self.window?.rootViewController?.present(imagePicker, animated: true, completion: nil)
+                presentingVC.present(imagePicker, animated: true, completion: nil)
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.window?.rootViewController?.present(alert, animated: true, completion: nil)
@@ -44,12 +44,12 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
             imagePicker.allowsEditing = true
             imagePicker.delegate = self
             imagePicker.sourceType = .photoLibrary
-            self.window?.rootViewController?.present(imagePicker, animated: true, completion: nil)
+            presentingVC.present(imagePicker, animated: true, completion: nil)
         }
     }
     
     func launchVideoPicker(){
-        guard self.delegate?.iaTextEditorRequestsPresentationOfContentPicker?(self) == true else {return}
+        guard let presentingVC = self.delegate?.iaTextEditorRequestsPresentationOfContentPicker?(self) else {return}
         let picker = UIImagePickerController()
         picker.mediaTypes = [kUTTypeMovie as String]
         picker.videoQuality = IAKitPreferences.videoAttachmentQuality
@@ -61,14 +61,14 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
                 picker.allowsEditing = true
                 picker.delegate = self
                 picker.sourceType = .photoLibrary
-                self.window?.rootViewController?.present(picker, animated: true, completion: nil)
+                presentingVC.present(picker, animated: true, completion: nil)
             }))
             alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action) -> Void in
                 guard  Thread.isMainThread else {fatalError()}
                 picker.allowsEditing = true
                 picker.delegate = self
                 picker.sourceType = .camera
-                self.window?.rootViewController?.present(picker, animated: true, completion: nil)
+                presentingVC.present(picker, animated: true, completion: nil)
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.window?.rootViewController?.present(alert, animated: true, completion: nil)
@@ -77,7 +77,7 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
             picker.allowsEditing = true
             picker.delegate = self
             picker.sourceType = .photoLibrary
-            self.window?.rootViewController?.present(picker, animated: true, completion: nil)
+            presentingVC.present(picker, animated: true, completion: nil)
         }
     }
     
@@ -124,11 +124,11 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
     
     
     func launchLocationPicker(){
-        guard self.delegate?.iaTextEditorRequestsPresentationOfContentPicker?(self) == true else {return}
+        guard let presentingVC = self.delegate?.iaTextEditorRequestsPresentationOfContentPicker?(self) else {return}
         
         let lp = IALocationPickerVC()
         lp.delegate = self
-        self.window?.rootViewController?.present(lp, animated: true, completion: nil)
+        presentingVC.present(lp, animated: true, completion: nil)
     }
     
     func locationPickerController(_ picker: IALocationPickerVC, location: IAPlacemark, mapViewDeltaMeters:CLLocationDistance) {

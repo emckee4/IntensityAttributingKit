@@ -90,12 +90,19 @@ extension IACompositeTextEditor: IAAccessoryDelegate {
     }
     
     func accessoryOptionButtonPressed(_ accessory:IAAccessoryVC!){
-        guard delegate?.iaTextEditorRequestsPresentationOfOptionsVC?(self) == true else {return}
+        guard let presentingVC = delegate?.iaTextEditorRequestsPresentationOfOptionsVC?(self) else {return}
         let optionsVC = IAKitSettingsTableViewController()
         let modalContainer = ModalContainerViewController()
         modalContainer.addChildViewController(optionsVC)
-        modalContainer.dismissalCompletionBlock = {_ = self.becomeFirstResponder()}
-        self.window?.rootViewController?.present(modalContainer, animated: true, completion: nil)
+//        modalContainer.cardView = optionsVC.view
+//        modalContainer.cardView.addSubview(optionsVC.view)
+//        optionsVC.view.translatesAutoresizingMaskIntoConstraints = false
+//        optionsVC.view.topAnchor.constraint(equalTo: modalContainer.cardView.safeAreaLayoutGuide.topAnchor, constant: 30).isActive = true
+//        optionsVC.view.bottomAnchor.constraint(equalTo: modalContainer.cardView.safeAreaLayoutGuide.bottomAnchor).isActive = true
+//        optionsVC.view.leftAnchor.constraint(equalTo: modalContainer.cardView.safeAreaLayoutGuide.leftAnchor).isActive = true
+//        optionsVC.view.rightAnchor.constraint(equalTo: modalContainer.cardView.safeAreaLayoutGuide.rightAnchor).isActive = true
+        presentingVC.present(modalContainer, animated: true, completion: nil)
+        //self.
     }
     
     func accessoryRequestsPickerLaunch(_ accessory:IAAccessoryVC!,pickerName:String){

@@ -484,12 +484,3 @@ open class IACompositeTextEditor:IACompositeBase, UITextInput {
 
 }
 
-
-
-
-
-@objc public protocol IACompositeTextEditorDelegate:class {
-    ///The default implementation of this will present the view controller using the delegate adopter
-    @objc optional func iaTextEditorRequestsPresentationOfOptionsVC(_ iaTextEditor:IACompositeTextEditor)->Bool
-    @objc optional func iaTextEditorRequestsPresentationOfContentPicker(_ iaTextEditor:IACompositeTextEditor)->Bool
-}
