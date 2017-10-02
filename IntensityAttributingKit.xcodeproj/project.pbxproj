@@ -84,7 +84,6 @@
 		C080B5491C9895D700DEC424 /* LinearRIMAdjustmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080B5481C9895D700DEC424 /* LinearRIMAdjustmentCell.swift */; };
 		C080B54B1C9895F000DEC424 /* LogAxRIMAdjustmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080B54A1C9895F000DEC424 /* LogAxRIMAdjustmentCell.swift */; };
 		C080B54D1C989DB300DEC424 /* IAKitSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080B54C1C989DB300DEC424 /* IAKitSettingsTableViewController.swift */; };
-		C080B54F1C99EAB900DEC424 /* ModalContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C080B54E1C99EAB900DEC424 /* ModalContainerViewController.swift */; };
 		C08253B11BE571910017AC14 /* LockingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08253B01BE571910017AC14 /* LockingKey.swift */; };
 		C08253B61BE572AE0017AC14 /* ExpandingPressureKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08253B51BE572AE0017AC14 /* ExpandingPressureKey.swift */; };
 		C082C5231F746CCD00018AC9 /* IAAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C082C5221F746CCD00018AC9 /* IAAccessoryView.swift */; };
@@ -111,6 +110,14 @@
 		C0E5D7C51BDEA4E400A0A814 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E5D7C41BDEA4E400A0A814 /* UIImage+Extension.swift */; };
 		C0E5D7C81BDEA52C00A0A814 /* OtherExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E5D7C71BDEA52C00A0A814 /* OtherExtensions.swift */; };
 		C0E669B21D82478D005A9EF3 /* IAPlacemark.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E669B11D82478D005A9EF3 /* IAPlacemark.swift */; };
+		C0E66A341F82CC2100941ECA /* IACardModalManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E66A301F82CC2000941ECA /* IACardModalManager.swift */; };
+		C0E66A351F82CC2100941ECA /* IACardModalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E66A311F82CC2000941ECA /* IACardModalViewController.swift */; };
+		C0E66A361F82CC2100941ECA /* IACardModalPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E66A321F82CC2000941ECA /* IACardModalPresenter.swift */; };
+		C0E66A371F82CC2100941ECA /* IACardModalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E66A331F82CC2000941ECA /* IACardModalAnimator.swift */; };
+		C0E66A3E1F82CCBC00941ECA /* IAModalOverBlurManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E66A3A1F82CCBC00941ECA /* IAModalOverBlurManager.swift */; };
+		C0E66A3F1F82CCBC00941ECA /* IAModalOverBlurPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E66A3B1F82CCBC00941ECA /* IAModalOverBlurPresenter.swift */; };
+		C0E66A401F82CCBC00941ECA /* IAModalOverBlurVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E66A3C1F82CCBC00941ECA /* IAModalOverBlurVC.swift */; };
+		C0E66A411F82CCBC00941ECA /* IAModalOverBlurAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E66A3D1F82CCBC00941ECA /* IAModalOverBlurAnimator.swift */; };
 		C0E68E6D1C10C1AF005162F7 /* EKDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E68E6C1C10C1AF005162F7 /* EKDirection.swift */; };
 		C0E68E6F1C10C1D5005162F7 /* EPKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E68E6E1C10C1D5005162F7 /* EPKey.swift */; };
 		C0F3502F1D70CE1F00FDE724 /* IAImageAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F3502E1D70CE1F00FDE724 /* IAImageAttachment.swift */; };
@@ -238,7 +245,6 @@
 		C080B5481C9895D700DEC424 /* LinearRIMAdjustmentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinearRIMAdjustmentCell.swift; sourceTree = "<group>"; };
 		C080B54A1C9895F000DEC424 /* LogAxRIMAdjustmentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogAxRIMAdjustmentCell.swift; sourceTree = "<group>"; };
 		C080B54C1C989DB300DEC424 /* IAKitSettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAKitSettingsTableViewController.swift; sourceTree = "<group>"; };
-		C080B54E1C99EAB900DEC424 /* ModalContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalContainerViewController.swift; sourceTree = "<group>"; };
 		C08253B01BE571910017AC14 /* LockingKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LockingKey.swift; sourceTree = "<group>"; };
 		C08253B51BE572AE0017AC14 /* ExpandingPressureKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ExpandingPressureKey.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		C082C5221F746CCD00018AC9 /* IAAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAAccessoryView.swift; sourceTree = "<group>"; };
@@ -267,6 +273,14 @@
 		C0E5D7C41BDEA4E400A0A814 /* UIImage+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		C0E5D7C71BDEA52C00A0A814 /* OtherExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OtherExtensions.swift; sourceTree = "<group>"; };
 		C0E669B11D82478D005A9EF3 /* IAPlacemark.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAPlacemark.swift; sourceTree = "<group>"; };
+		C0E66A301F82CC2000941ECA /* IACardModalManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IACardModalManager.swift; sourceTree = "<group>"; };
+		C0E66A311F82CC2000941ECA /* IACardModalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IACardModalViewController.swift; sourceTree = "<group>"; };
+		C0E66A321F82CC2000941ECA /* IACardModalPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IACardModalPresenter.swift; sourceTree = "<group>"; };
+		C0E66A331F82CC2000941ECA /* IACardModalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IACardModalAnimator.swift; sourceTree = "<group>"; };
+		C0E66A3A1F82CCBC00941ECA /* IAModalOverBlurManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAModalOverBlurManager.swift; sourceTree = "<group>"; };
+		C0E66A3B1F82CCBC00941ECA /* IAModalOverBlurPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAModalOverBlurPresenter.swift; sourceTree = "<group>"; };
+		C0E66A3C1F82CCBC00941ECA /* IAModalOverBlurVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAModalOverBlurVC.swift; sourceTree = "<group>"; };
+		C0E66A3D1F82CCBC00941ECA /* IAModalOverBlurAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAModalOverBlurAnimator.swift; sourceTree = "<group>"; };
 		C0E68E6C1C10C1AF005162F7 /* EKDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EKDirection.swift; sourceTree = "<group>"; };
 		C0E68E6E1C10C1D5005162F7 /* EPKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EPKey.swift; sourceTree = "<group>"; };
 		C0F3502E1D70CE1F00FDE724 /* IAImageAttachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = IAImageAttachment.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -628,9 +642,9 @@
 		C0A258D21C92363F003287AB /* Config Views+VCs */ = {
 			isa = PBXGroup;
 			children = (
+				C0E66A231F82C87200941ECA /* CustomModals */,
 				C082C5241F75B9AA00018AC9 /* MessengingComponents */,
 				C080B54C1C989DB300DEC424 /* IAKitSettingsTableViewController.swift */,
-				C080B54E1C99EAB900DEC424 /* ModalContainerViewController.swift */,
 				C080B5431C98930600DEC424 /* AdjustmentCells */,
 			);
 			name = "Config Views+VCs";
@@ -656,6 +670,37 @@
 				C0A258D01C922FC0003287AB /* NSHashTable+Extension.swift */,
 			);
 			name = "General Extensions";
+			sourceTree = "<group>";
+		};
+		C0E66A231F82C87200941ECA /* CustomModals */ = {
+			isa = PBXGroup;
+			children = (
+				C0E66A421F82CCCC00941ECA /* ModalOverBlur */,
+				C0E66A391F82CC6200941ECA /* CardModal */,
+			);
+			path = CustomModals;
+			sourceTree = "<group>";
+		};
+		C0E66A391F82CC6200941ECA /* CardModal */ = {
+			isa = PBXGroup;
+			children = (
+				C0E66A331F82CC2000941ECA /* IACardModalAnimator.swift */,
+				C0E66A301F82CC2000941ECA /* IACardModalManager.swift */,
+				C0E66A321F82CC2000941ECA /* IACardModalPresenter.swift */,
+				C0E66A311F82CC2000941ECA /* IACardModalViewController.swift */,
+			);
+			name = CardModal;
+			sourceTree = "<group>";
+		};
+		C0E66A421F82CCCC00941ECA /* ModalOverBlur */ = {
+			isa = PBXGroup;
+			children = (
+				C0E66A3D1F82CCBC00941ECA /* IAModalOverBlurAnimator.swift */,
+				C0E66A3A1F82CCBC00941ECA /* IAModalOverBlurManager.swift */,
+				C0E66A3B1F82CCBC00941ECA /* IAModalOverBlurPresenter.swift */,
+				C0E66A3C1F82CCBC00941ECA /* IAModalOverBlurVC.swift */,
+			);
+			name = ModalOverBlur;
 			sourceTree = "<group>";
 		};
 		C0E68E691C10C14F005162F7 /* ExpandingKeys */ = {
@@ -829,6 +874,7 @@
 			files = (
 				C002E1F21CB334B1008E78A1 /* IATextRange.swift in Sources */,
 				C031CC061BDD948700521393 /* IAKeyboard.swift in Sources */,
+				C0E66A3E1F82CCBC00941ECA /* IAModalOverBlurManager.swift in Sources */,
 				C0479E681CC02CA50032A5C6 /* IACompositeTextView+Animations.swift in Sources */,
 				C0304B221D6E37E700E5FD73 /* IAAttachmentType.swift in Sources */,
 				C08253B61BE572AE0017AC14 /* ExpandingPressureKey.swift in Sources */,
@@ -853,6 +899,7 @@
 				C089D2A01D761E6D009AEF7D /* IALocationManagerDelegateShim.swift in Sources */,
 				C06B1D531BEE8C4F009F427A /* PressureKeyProtocols.swift in Sources */,
 				C070DFF01CA0A46B00840CBE /* ToggleCell.swift in Sources */,
+				C0E66A361F82CC2100941ECA /* IACardModalPresenter.swift in Sources */,
 				C06BC1FC1CD9272100196F8B /* IACTE+GestureRecognizers.swift in Sources */,
 				C031CBEA1BDB097600521393 /* IntensityTransformingProtocol.swift in Sources */,
 				C01839F61C615FDE0009316E /* IAStringEditing.swift in Sources */,
@@ -882,6 +929,7 @@
 				C070DFF21CA0A62100840CBE /* SpellCheckToggleCell.swift in Sources */,
 				C084E9111CDE56E7009D387D /* IAMagnifyingLoup.swift in Sources */,
 				C014A4851CA3265600D6312C /* Range+Extensions.swift in Sources */,
+				C0E66A401F82CCBC00941ECA /* IAModalOverBlurVC.swift in Sources */,
 				C0304B201D6E368900E5FD73 /* IAPlaceholder.swift in Sources */,
 				C0A258CF1C9200EC003287AB /* TouchInterpreters-DurationBased.swift in Sources */,
 				C031CBE91BDB097600521393 /* IntensityTransformers.swift in Sources */,
@@ -893,16 +941,17 @@
 				C014A4831CA325FC00D6312C /* String+Extensions.swift in Sources */,
 				C09574801C58259C00724F02 /* IAStringKeys.swift in Sources */,
 				C06B1D271BEC5FCC009F427A /* KeysetComponents.swift in Sources */,
+				C0E66A411F82CCBC00941ECA /* IAModalOverBlurAnimator.swift in Sources */,
 				C080B53E1C97997800DEC424 /* RawIntensityAdjustmentCellBase.swift in Sources */,
 				C01FFFA41CC6A7E900AFD366 /* IACompositeTextEditor.swift in Sources */,
 				C0095D921C65328A00D37A75 /* IAAccessoryInterface.swift in Sources */,
 				C01FFFAE1CC6B38900AFD366 /* IACTE+UITextInput.swift in Sources */,
 				C01839F41C614B270009316E /* IAStringPrinting.swift in Sources */,
-				C080B54F1C99EAB900DEC424 /* ModalContainerViewController.swift in Sources */,
 				C0E5D7C81BDEA52C00A0A814 /* OtherExtensions.swift in Sources */,
 				C038B3EC1C69311200069F9C /* ExpandingKeyBase.swift in Sources */,
 				C0F3502F1D70CE1F00FDE724 /* IAImageAttachment.swift in Sources */,
 				C0D4474A1BE6BC16003204E7 /* RawIntensity.swift in Sources */,
+				C0E66A351F82CC2100941ECA /* IACardModalViewController.swift in Sources */,
 				C06B1D4E1BED2DCC009F427A /* PressureView.swift in Sources */,
 				C0E5D7C31BDEA47E00A0A814 /* IAAccessoryVC.swift in Sources */,
 				C01BDA9D1C571926004CF045 /* CollapsingArray.swift in Sources */,
@@ -921,7 +970,10 @@
 				C0326E231CF27C2700E6161F /* IAImageLayerView.swift in Sources */,
 				C0304B1E1D6E29D100E5FD73 /* IAThumbSize.swift in Sources */,
 				C04533B21CAAF2FC00B374D0 /* IACompositeTextView.swift in Sources */,
+				C0E66A3F1F82CCBC00941ECA /* IAModalOverBlurPresenter.swift in Sources */,
+				C0E66A371F82CC2100941ECA /* IACardModalAnimator.swift in Sources */,
 				C0F350331D713EAE00FDE724 /* IALocationAttachment.swift in Sources */,
+				C0E66A341F82CC2100941ECA /* IACardModalManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,7 +8,7 @@
 
 import UIKit
 
-///This holds the IAKit adjustment cells necessary for configuring intensity interpreters. It will typically be presented within the ModalContainerViewController when the gear icon is pressed on the IAAccessory.
+///This holds the IAKit adjustment cells necessary for configuring intensity interpreters. It will typically be presented within the IACardModalViewController when the gear icon is pressed on the IAAccessory.
 class IAKitSettingsTableViewController: UITableViewController {
 
     var tiNameCells:[UITableViewCell]!
@@ -36,6 +36,7 @@ class IAKitSettingsTableViewController: UITableViewController {
         tableView.estimatedRowHeight = 40.0
         tableView.rowHeight =  UITableViewAutomaticDimension
         self.tableView.allowsMultipleSelection = true
+        tableView.bounces = false
         
         //mark as highlighted/selected those cells that are current in the IAKitPreferences
         

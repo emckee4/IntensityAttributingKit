@@ -1,4 +1,4 @@
-# IntensityAttributingKit (v4)
+# IntensityAttributingKit (v4.2)
 © 2016 by Evan McKee
 
 IntensityAttributingKit is a swift framework which provides a means of creating, displaying, and converting text with "intensity" attributes by the user on an iOS device. Ideally the user would have a 3dTouch capable phone so that intensity of a character can be derived from the pressure applied to the key, but intensity can also be applied using touch duration, screen impact data derived from the accelerometer, or a manual control. 
@@ -10,6 +10,8 @@ With version 3 the editor and view were rewritten as subclasses of UIView rather
 Version 4 updates the project Swift 3 and iOS 10.0 while also providing new attachment types including videos and locations.
 
 The new IACompositeTextView/Editor classes (derivatives of the IACompositeBase abstract class) use 4 layers to render animations for the intensity rendering schemes that support it. On top is the selectionView which draws selection rects, the text insertion caret, and text marking. Below that is the imageLayerView which draws the thumbnails of any inserted attachments at the proper position which is determined by the layout/typesetting engine in the topTV, which itself will display empty rectangles where an attachment belongs. Beneath these top two views are the top and bottom ThinTextView's. The top ThinTextView is the one responsible for generating sizing information and is the drawer of text in the schemes which don't support animation. When animating, the bottomTV will be drawn with different attributes and some combination of changing opacities between the layers will result in the animation effect for the user. The layers are separated so that images can be properly displayed even when the text layers are animating their opacity. It also may (or may not, I've only eyeball measured this since this design decision was otherwise necessary) improve the performance text drawing in cases when an image needs to be moved around (e.g. when inserting text before an image or resizing textview) but doesn't need to be fully redrawn. Redrawing of images tends to be much more expensive in terms of processing overhead than are translational transforms of already drawn bitmaps. 
+
+Version 4.2 moves the base sdk to iOS 11, implementing Safe Areas necessary for proper display on the iPhone X. It also adds a few bells and whistles in the form of some improved custom modals.
 
 ### Components classes:
 
@@ -83,6 +85,8 @@ With iOS10 security, the following should be added to the main app's info.plist:
 - Placenames should be user editable in IALocationPicker
 
 - Some of the data structures in the IAString may be less than optimal since they were in part excuses to learn and practice building data structures using swift generics. It probably doesn't matter enough to be a priority.
+- Add some correction schemes for malformed IAStrings
+- Convert to swift 4 with sweet Codable protocol. Swift 4 string changes could make this process a challenge or clean things up ¯\_(ツ)_/¯
 
 - Additional render scheme ideas:
 - animated/pulsating sizing
