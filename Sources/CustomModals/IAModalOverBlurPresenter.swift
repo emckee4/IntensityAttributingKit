@@ -16,23 +16,22 @@ class IAModalOverBlurPresenter: UIPresentationController {
         return v
     }()
     
-    override var frameOfPresentedViewInContainerView: CGRect {
-        guard containerView != nil else {return CGRect.zero}
-        let preferedSize = size(forChildContentContainer: presentedViewController, withParentContainerSize: containerView!.bounds.size)
-        return childViewFrame(inContainerViewOfSize: containerView!.bounds.size, preferedSize: preferedSize)
-    }
-    
     override var shouldRemovePresentersView: Bool {return false}
     
+    override func containerViewWillLayoutSubviews() {
+        super.containerViewWillLayoutSubviews()
+        updatePresentedViewPosition()
+    }
+    
     override func presentationTransitionWillBegin() {
-        print("presentationTransitionWillBegin")
         guard let containerView = containerView else {print("containerView nil"); return}
         containerView.insertSubview(effectsView, at: 0)
         effectsView.topAnchor.constraint(equalTo: containerView.topAnchor).isActive = true
         effectsView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor).isActive = true
         effectsView.leftAnchor.constraint(equalTo: containerView.leftAnchor).isActive = true
         effectsView.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
-
+        updatePresentedViewPosition()
+        
         guard let coordinator = presentedViewController.transitionCoordinator else {
             effectsView.effect = UIBlurEffect(style: .regular)
             return
@@ -64,22 +63,18 @@ class IAModalOverBlurPresenter: UIPresentationController {
         }
     }
     
-    override func size(forChildContentContainer container: UIContentContainer, withParentContainerSize parentSize: CGSize) -> CGSize {
-        return container.preferredContentSize
-    }
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        let destFrame = childViewFrame(inContainerViewOfSize: size, preferedSize: presentedViewController.preferredContentSize)
-        coordinator.animate(alongsideTransition: { (context) in
-            self.presentedView?.frame = destFrame
-        })
-    }
-
-    func childViewFrame(inContainerViewOfSize cvSize:CGSize, preferedSize:CGSize) -> CGRect {
-        let origin = CGPoint(x: (cvSize.width - preferedSize.width) / 2,
-                             y: (cvSize.height - preferedSize.height) / 2)
-        return CGRect(origin: origin, size: preferedSize)
+    /** Calling this frequently serves as a workaround for cases when modals are presented on top of this modal
+     which themselves remove the presenters view.
+     */
+    private func updatePresentedViewPosition() {
+        guard let containerView = containerView, let presentedView = presentedView else {return}
+        if !containerView.subviews.contains(presentedView) {
+            containerView.addSubview(presentedView)
+        }
+        if presentedView.frame != containerView.bounds {
+            presentedView.frame = containerView.bounds
+        }
     }
     
 }
+

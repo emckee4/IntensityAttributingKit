@@ -33,35 +33,51 @@ class IAModalOverBlurAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     
     private func animatePresentation(withContext transitionContext: UIViewControllerContextTransitioning) {
         let containerView = transitionContext.containerView
-        guard let modalView = transitionContext.view(forKey: .to), let modalVC = transitionContext.viewController(forKey: .to) as? IAModalOverBlurVC else {
-            transitionContext.completeTransition(false)
-            return
+        guard let modalView = transitionContext.view(forKey: .to),
+            let modalVC = transitionContext.viewController(forKey: .to) as? IAModalOverBlurVC,
+            let modalContentView = modalVC.contentView else {
+                transitionContext.completeTransition(false)
+                return
         }
-        modalView.frame = sourceView?.frame ?? CGRect(origin: transitionContext.containerView.center, size: CGSize.zero)
-        modalView.alpha = 0.5
-        containerView.addSubview(modalView)
-        let endFrameOrigin = CGPoint(x: (containerView.bounds.size.width - modalVC.preferredContentSize.width) / 2,
-                                     y: (containerView.bounds.size.height - modalVC.preferredContentSize.height) / 2)
-        let endFrame = CGRect(origin: endFrameOrigin, size: modalVC.preferredContentSize)
+        modalContentView.frame = sourceView?.frame ?? CGRect(origin: transitionContext.containerView.center, size: CGSize.zero)
+        modalContentView.alpha = 0.5
+        modalView.addSubview(modalContentView)
+        if !containerView.subviews.contains(modalView) {
+            containerView.addSubview(modalView)
+        }
         
-        UIView.animate(withDuration: duration / 3, animations: {
-            modalView.alpha = 1
-        })
-        UIView.animate(withDuration: duration, delay: 0, options: UIViewAnimationOptions.beginFromCurrentState, animations: {
-            modalView.frame = endFrame
+        let endFrame = modalVC.desiredFrameForContentView(inContainerViewOfSize: containerView.bounds.size)
+        UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .calculationModeCubicPaced, .layoutSubviews], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.25, animations: {
+                modalContentView.alpha = 1
+            })
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1, animations: {
+                modalContentView.frame = endFrame
+            })
         }) { (result) in
             transitionContext.completeTransition(result)
         }
     }
     
     private func animateDismissal(withContext transitionContext: UIViewControllerContextTransitioning) {
-        let modalView = transitionContext.view(forKey: .from)
+        guard let _ = transitionContext.view(forKey: .from),
+            let modalVC = transitionContext.viewController(forKey: .from) as? IAModalOverBlurVC,
+            let modalContentView = modalVC.contentView else {
+                transitionContext.completeTransition(false)
+                return
+        }
         let destRect = sourceView?.frame ?? CGRect(origin: transitionContext.containerView.center, size: CGSize.zero)
-        UIView.animate(withDuration: dismissalDuration / 3, delay: 2 * dismissalDuration / 3, options: [], animations: {
-            modalView?.alpha = 0.5
-        }, completion: nil)
-        UIView.animate(withDuration: dismissalDuration, delay: 0, options: UIViewAnimationOptions.beginFromCurrentState, animations: {
-            modalView?.frame = destRect
+        let snap = modalContentView.snapshotView(afterScreenUpdates: false)!
+        snap.contentMode = .scaleAspectFill
+        modalContentView.addSubview(snap)
+        snap.frame = modalContentView.bounds
+        UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .calculationModeCubicPaced, .layoutSubviews], animations: {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1, animations: {
+                modalContentView.frame = destRect
+            })
+            UIView.addKeyframe(withRelativeStartTime: 0.75, relativeDuration: 0.25, animations: {
+                modalContentView.alpha = 0.5
+            })
         }) { (result) in
             transitionContext.completeTransition(result)
         }

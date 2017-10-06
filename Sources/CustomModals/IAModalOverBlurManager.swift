@@ -31,10 +31,9 @@ extension IAModalOverBlurManager: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         return IAModalOverBlurPresenter(presentedViewController: presented, presenting: presenting)
     }
-
+    
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         transitionAnimator.presenting = false
         return transitionAnimator
     }
 }
-
