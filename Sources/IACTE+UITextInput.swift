@@ -69,7 +69,7 @@ extension IACompositeTextEditor {
 
     
     public func setMarkedText(_ markedText: String?, selectedRange: NSRange) {
-        fatalError("setMarkedText not properly implemented")
+        handleInconsistancy("setMarkedText not properly implemented")
     }
     
     public func unmarkText() {
@@ -127,7 +127,7 @@ extension IACompositeTextEditor {
     }
     
     public func characterRange(byExtending position: UITextPosition, in direction: UITextLayoutDirection) -> UITextRange? {
-        guard let position = (position as? IATextPosition) else {fatalError("UITextInput.characterRangeByExtendingPosition received non IATextPositions as a parameters")}
+        guard let position = (position as? IATextPosition) else {handleInconsistancy("UITextInput.characterRangeByExtendingPosition received non IATextPositions as a parameters"); return nil}
         return characterRangeByExtendingIAPosition(position, inDirection: direction)
     }
     
@@ -135,8 +135,8 @@ extension IACompositeTextEditor {
         return UITextWritingDirection.leftToRight
     }
     public func setBaseWritingDirection(_ writingDirection: UITextWritingDirection, for range: UITextRange) {
-        if writingDirection == .leftToRight {
-            print("setBaseWritingDirection: received baseWriting direction other than natural. Ignoring.")
+        if writingDirection == .rightToLeft {
+            print("setBaseWritingDirection: received baseWriting direction rightToLeft. Ignoring.")
         }
     }
     

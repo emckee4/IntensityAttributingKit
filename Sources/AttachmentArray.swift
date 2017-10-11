@@ -131,7 +131,9 @@ public struct IAAttachmentArray:CustomStringConvertible, Sequence {
         for item in replacement.data {
             self[item.loc + replacedRange.lowerBound] = item.attach
         }
+        #if DEBUG
         guard validate() else {fatalError("IAAttachmentArray.validate failed")}
+        #endif
     }
     
     mutating func insertAttachments(_ attachArray:IAAttachmentArray, ofLength:Int ,atIndex:Int){
@@ -139,7 +141,9 @@ public struct IAAttachmentArray:CustomStringConvertible, Sequence {
         for item in attachArray.data {
             self[item.loc + atIndex] = item.attach
         }
+        #if DEBUG
         guard validate() else {fatalError("IAAttachmentArray.validate failed")}
+        #endif
     }
     
     

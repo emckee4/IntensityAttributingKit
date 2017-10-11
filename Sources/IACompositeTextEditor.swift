@@ -481,6 +481,12 @@ open class IACompositeTextEditor:IACompositeBase, UITextInput {
         self.addGestureRecognizer(longPressGR)
     }
 
-
+    func handleInconsistancy(_ message:String?) {
+        #if DEBUG
+            fatalError(message ?? "")
+        #else
+            self.resetEditor()
+        #endif
+    }
 }
 

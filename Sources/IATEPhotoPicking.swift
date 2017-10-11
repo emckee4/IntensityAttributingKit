@@ -21,7 +21,6 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
         if UIImagePickerController.isCameraDeviceAvailable(.rear) {
             let alert = UIAlertController(title: "Insert Photo", message: "Choose source", preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action) -> Void in
-                guard  Thread.isMainThread else {fatalError()}
                 let imagePicker = UIImagePickerController()
                 imagePicker.allowsEditing = true
                 imagePicker.delegate = self
@@ -29,7 +28,6 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
                 presentingVC.present(imagePicker, animated: true, completion: nil)
             }))
             alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action) -> Void in
-                guard  Thread.isMainThread else {fatalError()}
                 let imagePicker = UIImagePickerController()
                 imagePicker.allowsEditing = true
                 imagePicker.delegate = self
@@ -39,7 +37,6 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.window?.rootViewController?.present(alert, animated: true, completion: nil)
         } else {
-            guard  Thread.isMainThread else {fatalError()}
             let imagePicker = UIImagePickerController()
             imagePicker.allowsEditing = true
             imagePicker.delegate = self
@@ -57,14 +54,12 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
         if UIImagePickerController.isCameraDeviceAvailable(.rear) {
             let alert = UIAlertController(title: "Insert Video", message: "Choose source", preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: "Video Library", style: .default, handler: { (action) -> Void in
-                guard  Thread.isMainThread else {fatalError()}
                 picker.allowsEditing = true
                 picker.delegate = self
                 picker.sourceType = .photoLibrary
                 presentingVC.present(picker, animated: true, completion: nil)
             }))
             alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action) -> Void in
-                guard  Thread.isMainThread else {fatalError()}
                 picker.allowsEditing = true
                 picker.delegate = self
                 picker.sourceType = .camera
@@ -73,7 +68,6 @@ extension IACompositeTextEditor:UIImagePickerControllerDelegate, UINavigationCon
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             self.window?.rootViewController?.present(alert, animated: true, completion: nil)
         } else {
-            guard  Thread.isMainThread else {fatalError()}
             picker.allowsEditing = true
             picker.delegate = self
             picker.sourceType = .photoLibrary
