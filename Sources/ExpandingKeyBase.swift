@@ -31,6 +31,25 @@ open class ExpandingKeyBase: UIView {
         }
     }
     
+    public var expansionCaretColor:UIColor? = UIColor.red {
+        didSet {
+            if expansionCaretColor == nil {
+                expansionCaretLayer = nil
+            } else {
+                expansionCaretLayer = generateExpansionCaretLayer()
+            }
+        }
+    }
+    private var expansionCaretLayer:CAShapeLayer! {
+        willSet {
+            if newValue == nil {
+                expansionCaretLayer?.removeFromSuperlayer()
+            } else {
+                self.layer.insertSublayer(newValue, at: 999)
+            }
+        }
+    }
+    
     @IBInspectable open var cornerRadius:CGFloat = 0.0 {
         didSet{self.layer.cornerRadius = cornerRadius; _ = epKeys.map({$0.view.layer.cornerRadius = cornerRadius})}
     }
@@ -112,7 +131,9 @@ open class ExpandingKeyBase: UIView {
         
         self.translatesAutoresizingMaskIntoConstraints = false
         self.isMultipleTouchEnabled = false
-        
+        if expansionCaretColor != nil {
+            expansionCaretLayer = generateExpansionCaretLayer()
+        }
     }
     
     
@@ -233,6 +254,7 @@ open class ExpandingKeyBase: UIView {
 
             //Revealing:
             setHiddenForExpansionState()
+            expansionCaretLayer?.isHidden = true
         }
         
     }
@@ -259,6 +281,7 @@ open class ExpandingKeyBase: UIView {
         case .right:
             self.rightSVConstraint.constant = 0.0
         }
+        expansionCaretLayer?.isHidden = false
     }
     
     fileprivate func setHiddenForExpansionState(){
@@ -424,4 +447,21 @@ open class ExpandingKeyBase: UIView {
         super.touchesCancelled(touches, with: event)
     }
     
+    private func generateExpansionCaretLayer()->CAShapeLayer! {
+        guard let color = expansionCaretColor?.cgColor else {return nil}
+        let layer = CAShapeLayer()
+        let path = CGMutablePath()
+        path.addLines(between: [
+            CGPoint(x: 3, y:0),
+            CGPoint(x: 0, y:3),
+            CGPoint(x: 6, y:3)])
+        layer.path = path
+        layer.strokeColor = color
+        layer.fillColor = color
+        layer.lineWidth = 0.5
+        layer.frame = CGRect(x: 3, y: 2, width: 10, height: 10)
+        return layer
+    }
+    
 }
+
