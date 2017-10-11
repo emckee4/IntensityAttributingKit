@@ -29,8 +29,8 @@ This is now a subclass of ExpandingKeyBase.
         var alpha:CGFloat = 1.0
         backgroundColor!.getWhite(&white, alpha: &alpha)
         let intensity = touchIntensity.currentIntensity ?? 0
-        let newAlpha:CGFloat = max(alpha * CGFloat(1 + intensity), 1.0)
-        let newWhite:CGFloat = white * CGFloat(1 - intensity)
+        let newAlpha:CGFloat = min(alpha * CGFloat(1 + intensity), 1.0)
+        let newWhite:CGFloat = white * CGFloat(100 - intensity) / 100
         return UIColor(white: newWhite, alpha: newAlpha)
     }
     
