@@ -131,7 +131,7 @@ class MessageThreadViewController: UIViewController, IACompositeTextEditorDelega
     }
     
     
-    func sendMessageButtonPressed(_ actionName:String!){
+    @objc func sendMessageButtonPressed(_ actionName:String!){
         self.view.endEditing(false)
         guard composerBar.textEditor.iaString!.length > 0 else {return}
         if actionName == "sendNormal" {
