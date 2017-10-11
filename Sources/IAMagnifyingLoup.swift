@@ -81,7 +81,7 @@ final class IAMagnifyingLoup:UIView {
         context.translateBy(x: -magnificationCenter!.x * magnificationFactor + magnifyerRadius, y: -magnificationCenter!.y * magnificationFactor + magnifyerRadius )
         context.scaleBy(x: magnificationFactor, y: magnificationFactor)
         //viewToMagnify!.layer.renderInContext(context!)
-        viewToMagnify!.drawHierarchy(in: viewToMagnify!.bounds, afterScreenUpdates: true)
+        viewToMagnify!.drawHierarchy(in: viewToMagnify!.bounds, afterScreenUpdates: false)
     }
     
     
