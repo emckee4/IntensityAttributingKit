@@ -38,8 +38,8 @@ class PressureKey:UILabel, PressureControl {
         var white:CGFloat = -1.0
         var alpha:CGFloat = 1.0
         self._baseBackgroundColor!.getWhite(&white, alpha: &alpha)
-        let newAlpha:CGFloat = max(alpha * CGFloat(1 + intensity), 1.0)
-        let newWhite:CGFloat = white * CGFloat(1 - intensity)
+        let newAlpha:CGFloat = min(alpha * CGFloat(1 + intensity), 1.0)
+        let newWhite:CGFloat = white * CGFloat(100 - intensity) / 100
         super.backgroundColor = UIColor(white: newWhite, alpha: newAlpha)
     }
     ///When the touch ends this sets the background color to normal

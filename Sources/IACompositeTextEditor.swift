@@ -398,8 +398,8 @@ open class IACompositeTextEditor:IACompositeBase, UITextInput {
     func attributesUpdated(){
         if selectedRange?.count > 0 {
             let subString = iaString.iaSubstringFromRange(selectedRange!)
-            subString.setIntensityValueForRange(selectedRange!, toValue: currentIntensity)
-            subString.baseAttributes.setValueForRange(baseAttributes, range: selectedRange!)
+            subString.setIntensityValueForRange(0..<selectedRange!.count, toValue: currentIntensity)
+            subString.baseAttributes.setValueForRange(baseAttributes, range: 0..<selectedRange!.count)
             replaceIAStringRange(subString, range: selectedRange!, closeSelectedRange: false)
         }
     }

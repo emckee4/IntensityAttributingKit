@@ -30,6 +30,9 @@ struct DurationTouchInterpreter:IATouchInterpretingProtocol{
     }
     mutating func endInteractionYieldingRawResult(withTouch touch:UITouch?)->Float{
         guard let ts = touch?.timestamp, touchStartTime != nil else {touchStartTime = nil; return 0.0}
+        if touchStartTime == nil {
+            touchStartTime = ts
+        }
         let result = min(Float(ts - touchStartTime) * DurationTouchInterpreter.durationMultiplier, 1.0)
         touchStartTime = nil
         return result
@@ -77,12 +80,18 @@ class ImpactDurationTouchInterpreter:IATouchInterpretingProtocol{
             AccelHistory.singleton.resetMaxAbsZ()
             return 0.0
         } else {
+            if touchStartTime == nil {
+                touchStartTime = touch.timestamp
+            }
             return ImpactDurationTouchInterpreter.calcRawResult(Float(AccelHistory.singleton.maxAbsZ), elapsedTime: touch.timestamp - touchStartTime)
         }
     }
     func endInteractionYieldingRawResult(withTouch touch:UITouch?)->Float{
         guard let ts = touch?.timestamp else {touchStartTime = nil;return 0.0}
         let z = Float(AccelHistory.singleton.maxAbsZ)
+        if touchStartTime == nil {
+            touchStartTime = ts
+        }
         let elapsed = ts - touchStartTime
         touchStartTime = nil
         return ImpactDurationTouchInterpreter.calcRawResult(z, elapsedTime: elapsed)

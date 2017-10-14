@@ -176,11 +176,12 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
         ///Returns true if the reversed text begins with whitespace characters, then is followed by puncuation, false otherwise. (e.g. "X. " would return true while "sfs", "s  ", or "X." would return false.
         func easierThanRegex(_ text:String)->Bool{
             guard text.isEmpty == false else {return false}
-            guard CharacterSet.whitespacesAndNewlines.contains(UnicodeScalar(text.utf16.last!)!) else {return false}
+            guard let last = text.utf16.last, let lastScalar = UnicodeScalar(last),  CharacterSet.whitespacesAndNewlines.contains(lastScalar) else {return false}
             for rChar in preceedingText.utf16.reversed() {
-                if CharacterSet.whitespacesAndNewlines.contains(UnicodeScalar(rChar)!) {
+                guard let rCharScalar = UnicodeScalar(rChar) else {return false}
+                if CharacterSet.whitespacesAndNewlines.contains(rCharScalar) {
                     continue
-                } else if puncCharset.contains(UnicodeScalar(rChar)!) {
+                } else if puncCharset.contains(rCharScalar) {
                     return true
                 } else {
                     return false
