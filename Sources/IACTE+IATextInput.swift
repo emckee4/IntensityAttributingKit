@@ -109,12 +109,15 @@ extension IACompositeTextEditor {
         let convertedPoint = self.convert(point, to: topTV)
         var fraction:CGFloat = 0
         let glyphIndex = topTV.layoutManager.glyphIndex(for: convertedPoint, in: topTV.textContainer, fractionOfDistanceThroughGlyph: &fraction )
+        let charIndex = topTV.layoutManager.characterIndexForGlyph(at: glyphIndex)
+        
+        guard let frontPosition = IATextPosition(utf16Location:charIndex, iaString:iaString) else {
+            return endOfDocument as! IATextPosition
+        }
         if fraction < 0.5 {
-            let charIndex = topTV.layoutManager.characterIndexForGlyph(at: glyphIndex)
-            return IATextPosition(utf16Location:charIndex, iaString:iaString)
+            return frontPosition
         } else {
-            let charIndex = topTV.layoutManager.characterIndexForGlyph(at: glyphIndex + 1)
-            return IATextPosition(utf16Location:charIndex, iaString:iaString)
+            return (tokenizer.position(from: frontPosition, toBoundary: .character, inDirection: 0) ?? endOfDocument) as! IATextPosition
         }
     }
     
@@ -135,9 +138,12 @@ extension IACompositeTextEditor {
         var fraction:CGFloat = 0
         let glyphIndex = topTV.layoutManager.glyphIndex(for: convertedPoint, in: topTV.textContainer, fractionOfDistanceThroughGlyph: &fraction )
         
-        let startIndex = topTV.layoutManager.characterIndexForGlyph(at: glyphIndex)
-        let endIndex = topTV.layoutManager.characterIndexForGlyph(at: glyphIndex + 1)
-        return IATextRange(range: startIndex..<endIndex, iaString:iaString)
+        //let startIndex = topTV.layoutManager.characterIndexForGlyph(at: glyphIndex)
+        //let endIndex = topTV.layoutManager.characterIndexForGlyph(at: glyphIndex + 1)
+        let charIndex = topTV.layoutManager.characterIndexForGlyph(at: glyphIndex)
+        let startIndex = IATextPosition(utf16Location: charIndex, iaString: iaString)!
+        let endIndex = (tokenizer.position(from: startIndex, toBoundary: .character, inDirection: 0) ?? endOfDocument) as! IATextPosition
+        return IATextRange(start: startIndex, end: endIndex)
     }
     
     ///Returns the next boundary after the position unless the position is itself a boundary in which case it returns itself

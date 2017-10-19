@@ -93,6 +93,7 @@
 		C0870FC41CAF10B30071A5F1 /* IAStringOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0870FC31CAF10B30071A5F1 /* IAStringOptions.swift */; };
 		C088F57F1F96A5C6001B5640 /* IACTE+IATextInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = C088F57E1F96A5C6001B5640 /* IACTE+IATextInput.swift */; };
 		C088F5811F96D96C001B5640 /* IATextPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = C088F5801F96D96C001B5640 /* IATextPosition.swift */; };
+		C088F5831F98384D001B5640 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C088F5821F98384D001B5640 /* Array+Extensions.swift */; };
 		C089D2A01D761E6D009AEF7D /* IALocationManagerDelegateShim.swift in Sources */ = {isa = PBXBuildFile; fileRef = C089D29F1D761E6D009AEF7D /* IALocationManagerDelegateShim.swift */; };
 		C089D2A21D761EF2009AEF7D /* IALocationPickerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C089D2A11D761EF2009AEF7D /* IALocationPickerVC.swift */; };
 		C08B42FF1CD282F7002F2840 /* IATextSelectionRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08B42FE1CD282F7002F2840 /* IATextSelectionRect.swift */; };
@@ -256,6 +257,7 @@
 		C0870FC31CAF10B30071A5F1 /* IAStringOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAStringOptions.swift; sourceTree = "<group>"; };
 		C088F57E1F96A5C6001B5640 /* IACTE+IATextInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IACTE+IATextInput.swift"; sourceTree = "<group>"; };
 		C088F5801F96D96C001B5640 /* IATextPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IATextPosition.swift; sourceTree = "<group>"; };
+		C088F5821F98384D001B5640 /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		C089D29F1D761E6D009AEF7D /* IALocationManagerDelegateShim.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IALocationManagerDelegateShim.swift; sourceTree = "<group>"; };
 		C089D2A11D761EF2009AEF7D /* IALocationPickerVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = IALocationPickerVC.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		C08B42FE1CD282F7002F2840 /* IATextSelectionRect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IATextSelectionRect.swift; sourceTree = "<group>"; };
@@ -674,6 +676,7 @@
 				C014A4841CA3265600D6312C /* Range+Extensions.swift */,
 				C014A4821CA325FC00D6312C /* String+Extensions.swift */,
 				C0A258D01C922FC0003287AB /* NSHashTable+Extension.swift */,
+				C088F5821F98384D001B5640 /* Array+Extensions.swift */,
 			);
 			name = "General Extensions";
 			sourceTree = "<group>";
@@ -909,6 +912,7 @@
 				C0E66A361F82CC2100941ECA /* IACardModalPresenter.swift in Sources */,
 				C06BC1FC1CD9272100196F8B /* IACTE+GestureRecognizers.swift in Sources */,
 				C031CBEA1BDB097600521393 /* IntensityTransformingProtocol.swift in Sources */,
+				C088F5831F98384D001B5640 /* Array+Extensions.swift in Sources */,
 				C01839F61C615FDE0009316E /* IAStringEditing.swift in Sources */,
 				C054D99E1C3DAB9100D852DE /* IATextAttachment.swift in Sources */,
 				C08253B11BE571910017AC14 /* LockingKey.swift in Sources */,
@@ -1225,6 +1229,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = SampleProject/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1243,6 +1248,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_NONNULL = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = SampleProject/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

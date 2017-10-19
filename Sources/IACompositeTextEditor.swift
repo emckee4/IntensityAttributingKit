@@ -258,9 +258,11 @@ open class IACompositeTextEditor:IACompositeBase, UITextInput {
             //this should only run if the imageviews are located after the deletion point
             repositionImageViews()
         }
-        
-        let newTextPos = position(from: beginningOfDocument, offset: range.lowerBound )!
-        selectedTextRange = textRange(from: newTextPos, to: newTextPos)
+        if let newTextPos = iaPositionFromPosition((beginningOfDocument as! IATextPosition), utf16Offset: range.lowerBound) {
+            selectedTextRange = textRange(from: newTextPos, to: newTextPos)
+        } else {
+            selectedTextRange = textRange(from: endOfDocument, to: endOfDocument)
+        }
         markedRange = nil
         inputDelegate?.textDidChange(self)
     }

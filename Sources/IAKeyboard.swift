@@ -36,6 +36,10 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
 
     
     var textChecker:UITextChecker!
+    
+    var checkerLang:String {
+        return self.textInputMode?.primaryLanguage ?? Locale.preferredLanguages.first ?? "en_US"
+    }
     fileprivate let puncCharset = CharacterSet(charactersIn: ".?!")
     
     ///If the last space inserted was inserted as a result of a suggestion insertion then we will remove it when inserting certain punctuation
@@ -150,6 +154,7 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
     }
     
     override func textDidChange(_ textInput: UITextInput?) {
+        textChangeInProgress = false
         guard delegate?.keyboardIsIAKeyboard ?? false else {return}
         updateSuggestionBar()
         autoCapsIfNeeded()
@@ -171,7 +176,7 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
             self.shiftKey?.isSelected = true; updateKeyMapping();return
         }
         let preceedingTextStart = max(editor.selectedRange!.lowerBound - 4, 0)
-        let preceedingText = editor.text(in: IATextRange(range: preceedingTextStart..<editor.selectedRange!.lowerBound))!
+        guard let precedingRange = IATextRange(range: preceedingTextStart..<editor.selectedRange!.lowerBound, iaString:editor.iaString), let preceedingText = editor.text(in: precedingRange) else {return}
         
         ///Returns true if the reversed text begins with whitespace characters, then is followed by puncuation, false otherwise. (e.g. "X. " would return true while "sfs", "s  ", or "X." would return false.
         func easierThanRegex(_ text:String)->Bool{
@@ -203,10 +208,9 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
         guard suggestionBarActive else {return}
         let suggestionsBar = keyboardView.suggestionsBar
         if let editor = delegate as? IACompositeTextEditor, editor.selectedRange != nil {
-            let lang = self.textInputMode?.primaryLanguage ?? Locale.preferredLanguages.first!
             if editor.selectedRange!.isEmpty {
                 //get range and text for correction
-                let iaPosition = editor.selectedIATextRange!.iaStart
+                guard let iaPosition = editor.selectedIATextRange?.iaStart else {return}
                 
                 if editor.tokenizer.isPosition(iaPosition, withinTextUnit: .word, inDirection: 0) {
                     //we're inside of a word but not at its end. Consider trying corrections
@@ -215,15 +219,14 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
                 } else if let rangeOfCurrentWord = editor.tokenizer.rangeEnclosingPosition(iaPosition, with: .word, inDirection: 1) as? IATextRange { //editor.tokenizer.isPosition(iaPosition, withinTextUnit: .Word, inDirection: 1)
                     //the pos should be within a text unit and at its end --- we will highlight here
                     
-                    var suggestions:[String]!
-                    if rangeOfCurrentWord.nsrange().length > 2 {
-                        suggestions = (textChecker.guesses(forWordRange: rangeOfCurrentWord.nsrange(),in: editor.iaString.text, language: lang) ?? [])
-                    }
-//                    if suggestions == nil {
-//                        suggestions = (textChecker.completionsForPartialWordRange(rangeOfCurrentWord.nsrange(), inString: editor.iaString.text, language: lang) as? [String])
+//                    if rangeOfCurrentWord.count > 1 {
+//                        suggestions = (textChecker.completions(forPartialWordRange: nsRangeOfCurrentWord, in: editor.iaString.text, language: checkerLang))
 //                    }
-                    
-                    if suggestions?.isEmpty == false {
+//                    if suggestions == nil {
+//                        suggestions = (textChecker.guesses(forWordRange: nsRangeOfCurrentWord,in: editor.iaString.text, language: checkerLang) ?? [])
+//                    }
+                    let suggestions = bestSuggestions(forRange: rangeOfCurrentWord, inString: editor.iaString.text, preferCompletions: true)
+                    if suggestions.isEmpty == false {
                         editor.markedTextRange = rangeOfCurrentWord
                         suggestionsBar?.updateSuggestions(suggestions)
                     } else {
@@ -240,7 +243,7 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
                 //check if selected range starts/ends on word boundaries. If so we can make suggestions.
                 if editor.tokenizer.isPosition(editor.selectedIATextRange!.iaStart, atBoundary: .word, inDirection: 1) &&
                     editor.tokenizer.isPosition(editor.selectedIATextRange!.iaEnd, atBoundary: .word, inDirection: 0) {
-                    let suggestions:[String] = (textChecker.completions(forPartialWordRange: editor.selectedRange!.nsRange, in: editor.iaString.text, language: lang)) ?? []
+                    let suggestions:[String] = (textChecker.completions(forPartialWordRange: editor.selectedRange!.nsRange, in: editor.iaString.text, language: checkerLang)) ?? []
                     suggestionsBar?.updateSuggestions(suggestions)
                 } else {
                     //we aren't cleanly on boundaries so we won't be making suggestions
@@ -269,6 +272,26 @@ class IAKeyboard: UIInputViewController, KeyboardViewDelegate, SuggestionBarDele
     var suggestionBarActive:Bool {
         get{return !keyboardView.suggestionsBar.isHidden}
         set{keyboardView.suggestionsBar.isHidden = !newValue}
+    }
+    
+    func bestSuggestions(forRange: IATextRange, inString string:String, preferCompletions:Bool = true) -> [String] {
+        let nsRange = forRange.nsrange(inString: string)
+        let completions = (textChecker.completions(forPartialWordRange: nsRange, in: string, language: checkerLang)) ?? []
+        let corrections = (textChecker.guesses(forWordRange: nsRange,in: string, language: checkerLang) ?? [])
+        var corrIter = corrections.makeIterator()
+        var results:[String] = []
+        if preferCompletions {
+            if let corVal = corrIter.next() {results.append(corVal)}
+            results.append(contentsOf: completions)
+            while let corVal = corrIter.next() {results.append(corVal)}
+        } else {
+            for _ in 0..<2 {
+                if let corVal = corrIter.next() {results.append(corVal)}
+            }
+            results.append(contentsOf: completions)
+            while let corVal = corrIter.next() {results.append(corVal)}
+        }
+        return results.withoutDuplicates()
     }
     
 }

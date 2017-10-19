@@ -37,17 +37,19 @@ open class IATextRange:UITextRange {
         super.init()
     }
     
-    init(range:CountableRange<Int>, string:String){
+    init!(range:CountableRange<Int>, string:String){
         let start = String.Index(encodedOffset: range.startIndex)
         let end = String.Index(encodedOffset: range.endIndex)
+        guard string.validate(index: start, allowEndIndex: true) && string.validate(index: end, allowEndIndex: true) else {return nil}
         self.iaStart = IATextPosition(string.distance(from: string.startIndex, to: start))
         self.iaEnd = IATextPosition(string.distance(from: string.startIndex, to: end))
         super.init()
     }
     
-    init(nsrange:NSRange, string:String){
+    init!(nsrange:NSRange, string:String){
         let start = String.Index(encodedOffset: nsrange.location)
         let end = String.Index(encodedOffset: nsrange.location + nsrange.length)
+        guard string.validate(index: start, allowEndIndex: true) && string.validate(index: end, allowEndIndex: true) else {return nil}
         self.iaStart = IATextPosition(string.distance(from: string.startIndex, to: start))
         self.iaEnd = IATextPosition(string.distance(from: string.startIndex, to: end))
         super.init()
@@ -68,11 +70,11 @@ open class IATextRange:UITextRange {
     
     //MARK:- IAString variants
     
-    convenience init(range:CountableRange<Int>, iaString:IAString){
+    convenience init!(range:CountableRange<Int>, iaString:IAString){
         self.init(range: range, string: iaString.text)
     }
     
-    convenience init(nsrange:NSRange, iaString:IAString){
+    convenience init!(nsrange:NSRange, iaString:IAString){
         self.init(nsrange:nsrange, string:iaString.text)
     }
     
