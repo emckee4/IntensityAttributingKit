@@ -95,22 +95,22 @@ open class IACompositeTextEditor:IACompositeBase, UITextInput {
     }
     
     open var endOfDocument: UITextPosition  {
-        get{return IATextPosition(iaString.length)}
+        get{return IATextPosition(iaString.text.count)}
     }
     
     var documentRange:IATextRange {
-        return IATextRange(range:0..<iaString.length)
+        return IATextRange(start:IATextPosition(0), end: IATextPosition(iaString.text.count))
     }
 
     open var selectedTextRange: UITextRange? {
         get {guard selectedRange != nil else {return nil}
-            return IATextRange(range: selectedRange!)
+            return IATextRange(range: selectedRange!, iaString:iaString)
         }
         set {
             if newValue == nil {
                 selectedRange = nil
             } else if let iaNewVal = newValue as? IATextRange {
-                selectedRange = iaNewVal.range()
+                selectedRange = iaNewVal.range(inIAString: iaString)
             } else {
                 print("selectedTextRange received non IATextRange object")
             }
@@ -119,22 +119,22 @@ open class IACompositeTextEditor:IACompositeBase, UITextInput {
     
     var selectedIATextRange:IATextRange? {
         get {guard selectedRange != nil else {return nil}
-            return IATextRange(range: selectedRange!)
+            return IATextRange(range: selectedRange!, iaString:iaString)
         }
         set {
-            selectedRange = newValue?.range()
+            selectedRange = newValue?.range(inIAString: iaString)
         }
     }
     
     open internal(set) var markedTextRange: UITextRange? {
         get {guard markedRange != nil else {return nil}
-            return IATextRange(range: markedRange!)
+            return IATextRange(range: markedRange!, iaString:iaString)
         }
         set {
             if newValue == nil {
                 markedRange = nil
             } else if let iaNewVal = newValue as? IATextRange {
-                markedRange = iaNewVal.range()
+                markedRange = iaNewVal.range(inIAString: iaString)
             } else {
                 print("markedTextRange received non IATextRange object")
             }
@@ -209,8 +209,11 @@ open class IACompositeTextEditor:IACompositeBase, UITextInput {
         
         if closeSelectedRange {
             let offset = range.lowerBound + replacement.length
-            let newTextPos = position(from: beginningOfDocument, offset: offset )!
-            selectedTextRange = textRange(from: newTextPos, to: newTextPos)
+            if let newTextPos = (beginningOfDocument as! IATextPosition).withUTF16Offset(offset, iaString: iaString) {
+                selectedTextRange = textRange(from: newTextPos, to: newTextPos)
+            } else {
+                selectedTextRange = textRange(from: endOfDocument, to: endOfDocument)
+            }
         } else {
             selectedRange = modRange
         }

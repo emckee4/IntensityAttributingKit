@@ -57,14 +57,16 @@ extension IACompositeTextEditor {
     //MARK:- UITextInput Functions
     
     public func text(in range: UITextRange) -> String? {
-        guard let range = (range as? IATextRange)?.range() else {print("text in range received non IATextRange as a parameter"); return nil}
-        return iaString.text.subStringFromRange(range)
+        guard let stringRange = (range as? IATextRange)?.stringRange(string: iaString.text) else {
+            return nil
+        }
+        return iaString.text.substring(with: stringRange)
     }
     
     public func replace(_ range: UITextRange, withText text: String) {
         guard let iaRange = (range as? IATextRange) else {print("UITextInput.replaceRange received non IATextRange as a parameter"); return}
         let replacement = IAString(text: text, intensity: currentIntensity, attributes: baseAttributes)
-        replaceIAStringRange(replacement, range: iaRange.range())
+        replaceIAStringRange(replacement, range: iaRange.range(inIAString:iaString))
     }
 
     
@@ -83,6 +85,7 @@ extension IACompositeTextEditor {
         return iaTextRangeFromPosition(fromPosition, toPosition: toPosition)
     }
     
+    ///Uses character offset, not utf16 offset
     public func position(from position: UITextPosition, offset: Int) -> UITextPosition? {
         guard let position = (position as? IATextPosition) else {print("UITextInput.positionFromPosition received non IATextPosition as a parameters"); return nil}
         return iaPositionFromPosition(position, offset: offset)
@@ -175,139 +178,6 @@ extension IACompositeTextEditor {
     }
 
     public var textInputView: UIView {return self}
-    
-    
-    
-    
-    ///////////////////////////////////////////////////////////////////
-    //MARK:- Native implementations (using IATextRange/Position objects
-    
-    func textInIARange(_ range: IATextRange) -> IAString {
-        return iaString.iaSubstringFromRange(range.range())
-    }
-    
-    public func iaTextRangeFromPosition(_ fromPosition: IATextPosition, toPosition: IATextPosition) -> IATextRange? {
-        guard fromPosition.position >= 0 && toPosition.position <= iaString.length else {return nil}
-        return IATextRange(start: fromPosition, end: toPosition)
-    }
-    
-    public func iaPositionFromPosition(_ position: IATextPosition, offset: Int) -> IATextPosition? {
-        let newLoc = position.position + offset
-        guard newLoc >= 0 && newLoc <= iaString.length else {
-            //print("UITextInput.positionFromPosition: new position would be out of bounds: \(position), + \(offset)");
-            return nil}
-        return position.positionWithOffset(offset)
-    }
-    
-    ///Layout direction is presently hard coded
-    public func iaPositionFromPosition(_ position: IATextPosition, inDirection direction: UITextLayoutDirection, offset: Int) -> IATextPosition? {
-        return iaPositionFromPosition(position, offset: offset)
-    }
-    
-    func compareIAPosition(_ position: IATextPosition, toPosition other: IATextPosition) -> ComparisonResult {
-        return (position.position as NSNumber).compare(other.position as NSNumber)
-    }
-    
-    func offsetFromIAPosition(_ from: IATextPosition, toPosition: IATextPosition) -> Int {
-        return toPosition.position - from.position
-    }
-    ///Hardcoded with left to right. Note this doesn't respect glyph boundaries, just like the native implementation of UITextView's function.
-    public func iaPositionWithinRange(_ range: IATextRange, farthestInDirection direction: UITextLayoutDirection) -> IATextPosition? {
-        if direction == .up || direction == .left {
-            return range.iaStart
-        } else {
-            return range.iaEnd
-        }
-    }
-    
-    ///This yields the same results as the function in UITextView, though I'm not entirely sure what this function is for or why (why doesn't it at least extend to the end of a non-decomposable glyph?)
-    func characterRangeByExtendingIAPosition(_ position: IATextPosition, inDirection direction: UITextLayoutDirection) -> IATextRange? {
-        if direction == .left {
-            return IATextRange(start: position.positionWithOffset(-1),end: position)
-        } else {
-            return IATextRange(start: position,end: position.positionWithOffset(1))
-        }
-    }
-    
-//    func baseWritingDirectionForIAPosition(position: IATextPosition, inDirection direction: UITextStorageDirection) -> UITextWritingDirection {}
-//    public func iaSetBaseWritingDirection(writingDirection: UITextWritingDirection, forRange range: IATextRange) {
-//    }
-    
-    
-    //MARK: IA geometry testing
-    
-    func firstRectForIARange(_ range: IATextRange) -> CGRect {
-        var actualRange = NSRange()
-        topTV.layoutManager.glyphRange(forCharacterRange: range.nsrange(), actualCharacterRange: &actualRange)
-        var firstRect = CGRect.zero
-        topTV.layoutManager.enumerateEnclosingRects(forGlyphRange: actualRange, withinSelectedGlyphRange: NSMakeRange(NSNotFound, 0), in: topTV.textContainer) { (rect, stop) in
-            firstRect = rect
-            stop.initialize(to: true)
-        }
-        return self.convert(firstRect, from: topTV)
-    }
-    
-    ///Note: This assumes forward layout direction with left-to-right writing. Caret width is fixed at 2 points
-    func caretRectForIAPosition(_ position: IATextPosition) -> CGRect {
-        return caretRectForIntPosition(position.position)
-    }
-    
-    /// Writing Direction and isVertical are hardcoded in this to .Natural and false, respectively.
-    func iaSelectionRectsForRange(_ range: IATextRange) -> [IATextSelectionRect]{
-        return selectionRectsForIntRange(range.range())
-    }
-    
-    ///Yields the character index of the following glyph if the point is more than halfway towards the far side of the glyph. Returns the IATextPostion object.
-    func closestIAPositionToPoint(_ point:CGPoint)->IATextPosition {
-        let convertedPoint = self.convert(point, to: topTV)
-        var fraction:CGFloat = 0
-        let glyphIndex = topTV.layoutManager.glyphIndex(for: convertedPoint, in: topTV.textContainer, fractionOfDistanceThroughGlyph: &fraction )
-        if fraction < 0.5 {
-            let charIndex = topTV.layoutManager.characterIndexForGlyph(at: glyphIndex)
-            return IATextPosition(charIndex)
-        } else {
-            let charIndex = topTV.layoutManager.characterIndexForGlyph(at: glyphIndex + 1)
-            return IATextPosition(charIndex)
-        }
-    }
-    
-    func closestIAPositionToPoint(_ point: CGPoint, withinRange range: IATextRange) -> IATextPosition {
-        let pos = self.closestIAPositionToPoint(point)
-        if range.contains(pos) {
-            return pos
-        } else if range.iaStart > pos {
-            return range.iaStart
-        } else {
-            return range.iaEnd
-        }
-    }
-    
-    ///Currently not using fraction value
-    func characterIATextRangeAtPoint(_ point: CGPoint)->IATextRange {
-        let convertedPoint = self.convert(point, to: topTV)
-        var fraction:CGFloat = 0
-        let glyphIndex = topTV.layoutManager.glyphIndex(for: convertedPoint, in: topTV.textContainer, fractionOfDistanceThroughGlyph: &fraction )
-        
-        let startIndex = topTV.layoutManager.characterIndexForGlyph(at: glyphIndex)
-        let endIndex = topTV.layoutManager.characterIndexForGlyph(at: glyphIndex + 1)
-        return IATextRange(range: startIndex..<endIndex)
-    }
-        
-    ///Returns the next boundary after the position unless the position is itself a boundary in which case it returns itself
-    func nextBoundaryIncludingOrAfterIAPosition(_ position:IATextPosition)->IATextPosition{
-        if position.position == 0 {
-            return position
-        } else if position == endOfDocument {
-            return position
-        } else if tokenizer.isPosition(position, atBoundary: .word, inDirection: 1) {
-            return position
-        } else if let newPos = tokenizer.position(from: position, toBoundary: .word, inDirection: 0) as? IATextPosition{
-            return newPos
-        } else {
-            return endOfDocument as! IATextPosition
-        }
-        
-    }
     
 }
 
