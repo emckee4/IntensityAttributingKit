@@ -8,48 +8,6 @@
 
 import UIKit
 
-///IATextPosition is the UITextPosition subclass necessary for reimplementation of UITextInput. The position is integer is public in the unlike the superclass in which it is private and inaccessable.
-open class IATextPosition:UITextPosition, ExpressibleByIntegerLiteral, Comparable {
-    let position:Int
-    
-    required public init(integerLiteral value: IntegerLiteralType) {
-        self.position = value
-        super.init()
-    }
-    
-    public init(_ position:Int) {
-        self.position = position
-        super.init()
-    }
-    
-    open override var description: String {
-        return position.description
-    }
-    
-    open func positionWithOffset(_ offset:Int)->IATextPosition{
-        return IATextPosition(self.position + offset)
-    }
-}
-
-public func ==(lhs:IATextPosition,rhs:IATextPosition)->Bool {
-    return lhs.position == rhs.position
-}
-public func !=(lhs:IATextPosition,rhs:IATextPosition)->Bool {
-    return !(lhs == rhs)
-}
-public func >=(lhs:IATextPosition,rhs:IATextPosition)->Bool {
-    return lhs.position >= rhs.position
-}
-public func <=(lhs:IATextPosition,rhs:IATextPosition)->Bool {
-    return lhs.position <= rhs.position
-}
-public func >(lhs:IATextPosition,rhs:IATextPosition)->Bool {
-    return lhs.position > rhs.position
-}
-public func <(lhs:IATextPosition,rhs:IATextPosition)->Bool {
-    return lhs.position < rhs.position
-}
-
 ///IATextRange is the UITextRange subclass necessary for reimplementation of UITextInput. It provides convenience functions for converting to/from CountableRange<Int> and NSRange types.
 open class IATextRange:UITextRange {
     
@@ -69,31 +27,72 @@ open class IATextRange:UITextRange {
         return iaStart == iaEnd
     }
     
+    open var count:Int {
+        return iaEnd.position - iaStart.position
+    }
+    
     init(start:IATextPosition,end:IATextPosition){
         self.iaStart = start
         self.iaEnd = end
         super.init()
     }
     
-    init(range:CountableRange<Int>){
-        self.iaStart = IATextPosition(range.lowerBound)
-        self.iaEnd = IATextPosition(range.upperBound)
+    init(range:CountableRange<Int>, string:String){
+        let start = String.Index(encodedOffset: range.startIndex)
+        let end = String.Index(encodedOffset: range.endIndex)
+        self.iaStart = IATextPosition(string.distance(from: string.startIndex, to: start))
+        self.iaEnd = IATextPosition(string.distance(from: string.startIndex, to: end))
         super.init()
     }
     
-    init(nsrange:NSRange){
-        self.iaStart = IATextPosition(nsrange.location)
-        self.iaEnd = IATextPosition(nsrange.location + nsrange.length)
+    init(nsrange:NSRange, string:String){
+        let start = String.Index(encodedOffset: nsrange.location)
+        let end = String.Index(encodedOffset: nsrange.location + nsrange.length)
+        self.iaStart = IATextPosition(string.distance(from: string.startIndex, to: start))
+        self.iaEnd = IATextPosition(string.distance(from: string.startIndex, to: end))
         super.init()
     }
     
-    func range()->CountableRange<Int>{
-        return iaStart.position..<iaEnd.position
+    ///UTF16 index based countable range
+    func range(inString string:String)->CountableRange<Int>{
+        let startOffset = string.index(string.startIndex, offsetBy: self.iaStart.position).encodedOffset
+        let endOffset = string.index(string.startIndex, offsetBy: self.iaEnd.position).encodedOffset
+        return startOffset..<endOffset
     }
-    func nsrange()->NSRange{
-        return NSMakeRange(iaStart.position, iaEnd.position - iaStart.position)
+    
+    func nsrange(inString string:String)->NSRange{
+        let startOffset = string.index(string.startIndex, offsetBy: self.iaStart.position).encodedOffset
+        let endOffset = string.index(string.startIndex, offsetBy: self.iaEnd.position).encodedOffset
+        return NSRange(location: startOffset, length: endOffset - startOffset)
     }
-
+    
+    //MARK:- IAString variants
+    
+    convenience init(range:CountableRange<Int>, iaString:IAString){
+        self.init(range: range, string: iaString.text)
+    }
+    
+    convenience init(nsrange:NSRange, iaString:IAString){
+        self.init(nsrange:nsrange, string:iaString.text)
+    }
+    
+    ///UTF16 index based countable range
+    func range(inIAString iaString:IAString)->CountableRange<Int>{
+        return range(inString: iaString.text)
+    }
+    
+    func nsrange(inIAString iaString:IAString)->NSRange{
+        return nsrange(inString: iaString.text)
+    }
+    
+    func stringRange(string:String) -> Range<String.Index>? {
+        let start = string.index(string.startIndex, offsetBy: iaStart.position)
+        guard let end = string.index(string.startIndex, offsetBy: iaEnd.position, limitedBy: string.endIndex) else {
+            return nil
+        }
+        return start..<end
+    }
+    
     open override var description: String {
         return "IATextRange(\(iaStart),\(iaEnd))"
     }
@@ -101,14 +100,16 @@ open class IATextRange:UITextRange {
     func contains(_ position:IATextPosition)->Bool{
         return position >= iaStart && position < iaEnd
     }
+
+    public static func ==(lhs:IATextRange,rhs:IATextRange)->Bool {
+        return lhs.iaStart == rhs.iaStart && lhs.iaEnd == rhs.iaEnd
+    }
+    
+    public static func !=(lhs:IATextRange,rhs:IATextRange)->Bool {
+        return !(lhs == rhs)
+    }
 }
 
-public func ==(lhs:IATextRange,rhs:IATextRange)->Bool {
-    return lhs.iaStart == rhs.iaStart && lhs.iaEnd == rhs.iaEnd
-}
 
-public func !=(lhs:IATextRange,rhs:IATextRange)->Bool {
-    return !(lhs == rhs)
-}
 
 

@@ -56,5 +56,10 @@ extension String {
         return outputString
     }
     
+    ///Validates an index as existing in this string
+    func validate(index:String.Index, allowEndIndex:Bool = false) -> Bool {
+        return self.indices.contains(index) || (allowEndIndex && self.endIndex == index)
+    }
+    
 }
 
