@@ -163,7 +163,10 @@ open class IAString {
         } else {
             self.baseOptions = IAKitPreferences.iaStringDefaultBaseOptions
         }
-        guard self.validateIndexes() else {return nil}
+        guard self.validateIndexes() else {
+            print("index validation failed")
+            return nil
+        }
     }
     
     ///This is intended for initialization of IAIntermediate within the module. It provides only minimal sanity checks.
@@ -185,7 +188,7 @@ open class IAString {
     }
     
     ///Initializes an empty IAString with default options
-    init(){
+    public init(){
         self.text = ""
         self.length = 0
         self.baseAttributes = CollapsingArray<IABaseAttributes>()
