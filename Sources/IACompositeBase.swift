@@ -273,7 +273,7 @@ open class IACompositeBase:UIView {
             self.iaString = IAString()
         }
         topTV.invalidateIntrinsicContentSize()
-        let options = iaString.baseOptions.optionsWithOverridesApplied(IAKitPreferences.iaStringOverridingOptions)
+        let options = self.iaString.baseOptions.optionsWithOverridesApplied(IAKitPreferences.iaStringOverridingOptions)
         
         let willAnimate = options.animatesIfAvailable == true && options.renderScheme.isAnimatable
         
