@@ -39,20 +39,21 @@ class IAModalOverBlurAnimator: NSObject, UIViewControllerAnimatedTransitioning {
                 transitionContext.completeTransition(false)
                 return
         }
-        modalContentView.frame = sourceView?.frame ?? CGRect(origin: transitionContext.containerView.center, size: CGSize.zero)
+        let endFrame = modalVC.desiredFrameForContentView(inContainerViewOfSize: containerView.bounds.size)
+        modalContentView.frame = endFrame
         modalContentView.alpha = 0.5
         modalView.addSubview(modalContentView)
         if !containerView.subviews.contains(modalView) {
             containerView.addSubview(modalView)
         }
-        
-        let endFrame = modalVC.desiredFrameForContentView(inContainerViewOfSize: containerView.bounds.size)
+        let scaleTransform = CGAffineTransform(scaleX: 0, y: 0)
+        modalContentView.transform = scaleTransform
         UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .calculationModeCubicPaced, .layoutSubviews], animations: {
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.25, animations: {
                 modalContentView.alpha = 1
             })
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1, animations: {
-                modalContentView.frame = endFrame
+                modalContentView.transform = CGAffineTransform(scaleX: 1, y: 1)
             })
         }) { (result) in
             transitionContext.completeTransition(result)
@@ -66,14 +67,12 @@ class IAModalOverBlurAnimator: NSObject, UIViewControllerAnimatedTransitioning {
                 transitionContext.completeTransition(false)
                 return
         }
-        let destRect = sourceView?.frame ?? CGRect(origin: transitionContext.containerView.center, size: CGSize.zero)
-        let snap = modalContentView.snapshotView(afterScreenUpdates: false)!
-        snap.contentMode = .scaleAspectFill
-        modalContentView.addSubview(snap)
-        snap.frame = modalContentView.bounds
+        let scaleTransform = CGAffineTransform(scaleX: 1, y: 1)
+        //let destRect = sourceView?.frame ?? CGRect(origin: transitionContext.containerView.center, size: CGSize.zero)
+        modalContentView.transform = scaleTransform
         UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .calculationModeCubicPaced, .layoutSubviews], animations: {
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1, animations: {
-                modalContentView.frame = destRect
+                modalContentView.transform = CGAffineTransform(scaleX: 0, y: 0)
             })
             UIView.addKeyframe(withRelativeStartTime: 0.75, relativeDuration: 0.25, animations: {
                 modalContentView.alpha = 0.5
